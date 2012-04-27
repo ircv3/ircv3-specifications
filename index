@@ -1,0 +1,113 @@
+%pragma page-title("IRCv3 Working Group");
+
+# Atheme.org IRCv3 Working Group
+
+The IRCv3 Working Group is a group of IRC client and server software authors working to
+enhance, improve, maintain and standardize the current IRC protocol.  Logically, it is
+an activity of [atheme.org](http://atheme.org) but represents the interests of many parties.
+
+Other stakeholders in the IRC protocol, such as IRC networks and IRC network operators are
+invited to participate.  If you would like to discuss IRCv3 standardization efforts over
+IRC itself, you may find us at `irc.atheme.org #ircv3`.
+
+The IRCv3 working group is incubated by [atheme.org](http://www.atheme.org).
+
+## Participants
+
+The IRCv3 working group contains participants from the following organizations (and more):
+
+ * [atheme.org](http://www.atheme.org)
+ * [EsperNet](http://www.esper.net)
+ * [freenode](http://www.freenode.net)
+ * [InspIRCd](http://inspircd.github.com)
+ * [IRCCloud](http://www.irccloud.com)
+ * [Mibbit](http://www.mibbit.com)
+ * [mIRC](http://www.mirc.co.uk)
+ * [Nefarious IRCu](http://evilnet.sourceforge.net)
+ * [QuakeNet](http://www.quakenet.org)
+ * [Undernet](http://www.undernet.org)
+ * [UnrealIRCd](http://www.unrealircd.org)
+
+To participate, contribute to our specifications and extensions registry on [GitHub](http://github.com/atheme/ircv3-specifications).
+
+## Specifications
+
+Right now the IRCv3 specification is distributed as a series of extension specifications to
+IRC protocol version 2.7, also known as RFC1459.  To understand the basis of the IRC version 3
+protocol, please read RFC1459 followed by the extension specifications.  A unified specification
+draft is being worked on which will replace RFC1459 at a later date.
+
+### Base Extensions
+
+The following extensions comprise the core functionality of the IRC version 3.1 client protocol.
+
+ * [IRC Version 3.1: Capability Negotiation](/specification/capability-negotiation-3.1)
+
+ * [IRC Version 3.1: `multi-prefix` Extension](/extensions/multi-prefix-3.1)
+
+ * [IRC Version 3.1: `sasl` Extension](/extensions/sasl-3.1)
+
+### Optional Extensions
+
+The following extensions comprise the extended functionality of the IRC version 3.1 client protocol.
+
+ * [IRC Version 3.1: `account-notify` Extension](/extensions/account-notify-3.1)
+
+ * [IRC Version 3.1: `away-notify` Extension](/extensions/away-notify-3.1)
+
+ * [IRC Version 3.1: `extended-join` Extension](/extensions/extended-join-3.1)
+
+ * [IRC Version 3.1: `tls` Extension](/extensions/tls-3.1)
+
+## Next Version
+
+There is no work presently being done as 3.1 has been released.  Submit new extensions for
+consideration for 3.2!
+
+## Extension Registry
+
+The IRCv3 Working Group maintains a registry of "work-in-progress" extensions that have not yet
+been accepted as part of an IRC protocol version.  IRC software vendors may provide additional
+extensions that have not yet been added to this registry.  We recommend that extensions not in
+the registry use appropriate namespacing as described in the capability negotiation specification.
+
+A [list of extensions](/extensions/index) documented in the extension registry is available.
+
+To submit an extension to the extension registry, please contact us via IRC for now.  Extension
+specifications should be submitted in Markdown format.
+
+## IRCv3.1 Compliant Software
+
+This software is compliant natively; other software may be compliant with extensions.
+
+### Servers
+
+ * [charybdis](http://www.stack.nl/~jilles/irc/#charybdis) 3.0 or later
+ * [InspIRCd](http://inspircd.github.com) 1.2 or later
+ * [shadowircd](http://www.shadowircd.net/) 6.0 or later
+ * [UnrealIRCd](http://www.unrealircd.org/) 3.2.10 or later
+
+### Desktop Clients
+
+ * [Colloquy](http://www.colloquy.info) 2.4 or later
+ * [Konversation](http://konversation.kde.org/) 1.5 or later
+ * [KVirc](http://www.kvirc.org) 4.0 or later
+ * [Limechat](http://www.limechat.net/mac/) 2.23 or later
+ * [Quassel](http://www.quassel-irc.org) 0.6.1 or later
+ * [Textual](http://www.codeux-software.com/textual) 2.1 or later
+
+### Web Clients
+
+ * [Iris](http://www.atheme.net/download-iris.php)
+ * [Mibbit](http://www.mibbit.com)
+
+### Mobile Clients
+
+ * [AndChat](http://www.andchat.com/) 1.3.8 or later
+ * [Android IRC](http://www.countercultured.net/android/) 1.8.21 or later
+ * [AndroIRC](http://www.androirc.com/) 2.0 or later
+ * [Colloquy](http://www.colloquy.info)
+ * [IRC7](http://www.softwaremk.org/irc/) 1.6 or later
+ * [Limechat](http://www.limechat.net/iphone/) 2.10 or later
+ * [YAAIC](http://www.yaaic.org/) 0.9 or later
+
