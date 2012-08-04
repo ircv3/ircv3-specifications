@@ -48,6 +48,8 @@ The following extensions comprise the core functionality of the IRC version 3.1 
 
  * [IRC Version 3.1: `sasl` Extension](/extensions/sasl-3.1)
 
+ * [IRC Version 3.2: Message Tags](/specification/message-tags-3.2)
+
 ### Optional Extensions
 
 The following extensions comprise the extended functionality of the IRC version 3.1 client protocol.
@@ -60,17 +62,19 @@ The following extensions comprise the extended functionality of the IRC version 
 
  * [IRC Version 3.1: `tls` Extension](/extensions/tls-3.1)
 
+ * [IRC Version 3.2: `server-time` Extension](/extensions/server-time-3.2)
+
 ## Next Version
 
-There is no work presently being done as 3.1 has been released.  Submit new extensions for
-consideration for 3.2!
+IRC 3.1 has been released.  Submit new extensions for consideration for 3.2!
 
 ## Extension Registry
 
 The IRCv3 Working Group maintains a registry of "work-in-progress" extensions that have not yet
 been accepted as part of an IRC protocol version.  IRC software vendors may provide additional
 extensions that have not yet been added to this registry.  We recommend that extensions not in
-the registry use appropriate namespacing as described in the capability negotiation specification.
+the registry use appropriate namespacing as described in the capability negotiation specification
+and in the message tags specification.
 
 A [list of extensions](/extensions/index) documented in the extension registry is available.
 
