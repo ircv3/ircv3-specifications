@@ -9,7 +9,7 @@ Clients indicate support for the extension by requesting a capability server-tim
 
 	CAP REQ :server-time
 
-When enabled, the server-time extension enables optional `time` message tag which can be used in messages from server to client.
+When enabled, the server-time extension enables optional `time` [message tag](/specification/message-tags-3.2) which can be used in messages from server to client.
 The value of the tag has the following syntax:
 
 	<value> ::= <A sequence of digits representing a Unix timestamp> '.' <3 digits representing number of milliseconds>
