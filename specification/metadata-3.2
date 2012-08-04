@@ -1,0 +1,183 @@
+# Metadata Specification
+
+Copyright (c) 2012 Kiyoshi Aman <kiyoshi.aman@gmail.com>
+(CC BY-SA 3.0 Unported).
+
+## Introduction
+
+It is generally useful to associate metadata with one's IRC presence, e.g. to
+make one's homepage or non-IRC contact details more discoverable. There are
+several mechanisms for doing this, but they typically rely on the presence of
+services and aren't really suitable for transient metadata such as a user's
+current location.
+
+This proposal aims to codify two coexisting mechanisms for working with
+metadata: first, persisting metadata may be configured through services via
+NickServ or an appropriate user authentication agent; second, transient
+metadata may be configured through a client --> server event created
+specifically for this purpose. Both mechanisms will behave identically, save
+that services-driven metadata will be encapsulated via PRIVMSG.
+
+## METADATA
+
+All metadata subcommands will flow through the METADATA event. If an error
+condition arises, it must be responded to with ERR_EVENTERROR with appropriate
+text. Metadata may apply to channels, as well; in that case, an optional
+argument is provided prior to the subcommand, as outlined in the format for
+each, if supported.
+
+### METADATA LIST
+
+This subcommand shall list all currently-set metadata keys along with their
+values. An optional string may be given to reduce the list to keys which match
+the string; the string may contain wildcards. The response will be one or more
+RPL_KEYVALUE events and a closing RPL_ENDOFLIST event. The format of METADATA
+LIST shall be as follows:
+
+`METADATA [channel] LIST [:string]`
+
+### METADATA SET
+
+This subcommand shall set a required key to an optional value. If no value is
+given, the key is removed; otherwise, the value is assigned to the key. The
+response shall be one RPL_KEYVALUE event and one RPL_ENDOFLIST event. The
+format of METADATA SET shall be as follows:
+
+`METADATA [channel] SET key [:value]`
+
+### METADATA CLEAR
+
+This subcommand shall remove all metadata, equivalently to using METADATA SET
+on all keys with an empty value. The format of METADATA CLEAR shall be as
+follows:
+
+`METADATA [channel] CLEAR`
+
+### METADATA SUBSCRIBE
+
+This subcommand shall notify the user when the target issues a modification to
+a given key. The response shall be a RPL_SUBSCRIPTION event listing all
+subscribed keys. The format of METADATA SUBSCRIBE is as follows:
+
+`METADATA SUBSCRIBE <Target> :<Key1>[,<Key2>[...]]`
+
+Channels cannot be subscribed to metadata changes. Notifications will employ
+the NOTIFY event, documented later in this section.
+
+### METADATA UNSUBSCRIBE
+
+This subcommand shall undo the effects of METADATA SUBSCRIBE for the specified
+target/key(s). The response shall be a RPL_SUBSCRIPTION event listing any
+remaining keys for the target, or no keys if there are no subscriptions left
+for the target. Failing to specify any keys instead removes all subscriptions
+from the target. The format for METADATA UNSUBSCRIBE is as follows:
+
+`METADATA UNSUBSCRIBE <Target> [:<Key1>[,<Key2>[...]]`
+
+Channels cannot be subscribed to metadata changes, therefore this subcommand is
+also invalid for channels.
+
+## NOTIFY
+
+Notifications, e.g. from metadata subscriptions, shall be passed to the client
+using the NOTIFY event, the format of which is as follows:
+
+`NOTIFY <Type> <Key> :<Value>`
+
+where Type, for this specification, shall be 'metadata'. Future specifications
+may expand upon and extend this event for other uses, e.g. for use by IRC
+proxies and similar software.
+
+## Metadata Restrictions
+
+Keys shall be restricted to the ranges A–Z, a–z, and 0–9, and are
+case-insensitive; they shall, moreover, be namespaced using the period (.) as a
+separator. Values are unrestricted, except that they shall be UTF-8; binary
+data shall be prefixed with the 'data:' URI, followed by an encoding identifier
+(e.g. 'base64'), followed by a colon (:). The use of binary data in values
+shall be discouraged.
+
+### Key Registry
+
+There shall be a key registry, with the intention of standardizing keys for
+ease of use among server and client authors. It shall be maintained by the
+IRCv3 working group or a suitably-delegated authority. Several namespaces
+will be defined initially, as follows:
+
+* The 'server' namespace is intended for keys which the user cannot set, such
+  as SSL certificate fingerprints.
+* The 'user' namespace is intended for keys which the user can set and which
+  carry meaning relevant only, or mostly, to users.
+* The 'client' namespace is intended for keys which the user can set and which
+  describe the user's client.
+* The 'ext' namespace is intended for keys which have not been formally
+  registered. Server and client authors are advised that they cannot rely on
+  this namespace to carry any standardized meaning. The main namespaces may be
+  replicated under this namespace, except for 'private'.
+* The 'private' namespace is intended for server-internal keys and may only be
+  seen with the appropriate server operator permissions. Keys in this
+  namespace are not required to be registered.
+
+### Predefined Keys
+
+The following keys are predefined for the purposes of the key registry outlined
+above:
+
+Key             Meaning
+server.certfp   SSL certificate fingerprint
+user.email      User's email address
+user.phone      User's phone number
+user.website    User's website
+user.im.*       IM handles; the * is replaced with the relevant service name
+user.playing    Music the user is currently listening to
+user.status     The user's current status
+client.name     Client's name
+client.version  Client version
+
+## WHOIS
+
+Metadata shall appear in WHOIS output using RPL_WHOISKEYVALUE if any is defined
+for the user.
+
+## Services
+
+Metadata should be presentable via NickServ or similar service in order to
+allow for persistent metadata; the format for encapsulating METADATA events for
+persistance is as follows:
+
+`PRIVMSG <Service> :<Metadata command>`
+
+where <Service> is the relevant service and <Metadata command> is any METADATA
+subcommand as outlined previously. Responses shall be presented appropriately
+to the service rather than through RPL_* or ERR_* events.
+
+In addition, services may display metadata by using the INFO command with the
+relevant service and account name.
+
+## IRC Daemons
+
+IRCds shall have a blacklist or whitelist and may have an option to enforce
+keys against either or neither of them. Implementations may block keys which
+might result in impersonation. It is an error for metadata to have any effect
+on server operations.
+
+## Numerics
+
+The format for the numerics provided shall be as follows:
+
+`ERR_EVENTERROR -> <Event> :<Error text>`
+
+`RPL_KEYVALUE -> <Key> [:<Value>]`
+
+`RPL_SUBSCRIPTION -> <Type> <Target> [:<Key>]`
+
+(<Type> for this spec is 'metadata')
+
+`RPL_ENDOFLIST -> <List type> :end of list`
+
+(for this spec, the <List type> would be 'metadata')
+
+`RPL_WHOISKEYVALUE -> <Key> :<Value>`
+
+The actual numerics associated with the definitions shall be defined by the
+IRCv3 working group.
