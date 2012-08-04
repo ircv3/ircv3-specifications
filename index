@@ -64,6 +64,8 @@ The following extensions comprise the extended functionality of the IRC version 
 
  * [IRC Version 3.2: `server-time` Extension](/extensions/server-time-3.2)
 
+ * [IRC Version 3.2: Metadata](/specification/metadata-3.2)
+
 ## Next Version
 
 IRC 3.1 has been released.  Submit new extensions for consideration for 3.2!
