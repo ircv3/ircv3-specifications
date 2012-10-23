@@ -28,19 +28,27 @@ The IRCv3 working group contains participants from the following organizations (
  * [QuakeNet](http://www.quakenet.org)
  * [Undernet](http://www.undernet.org)
  * [UnrealIRCd](http://www.unrealircd.org)
+ * [ZNC](http://znc.in)
 
 To participate, contribute to our specifications and extensions registry on [GitHub](http://github.com/atheme/ircv3-specifications).
 
-## Specifications
+# Specifications
 
 Right now the IRCv3 specification is distributed as a series of extension specifications to
-IRC protocol version 2.7, also known as RFC1459.  To understand the basis of the IRC version 3
-protocol, please read RFC1459 followed by the extension specifications.  A unified specification
-draft is being worked on which will replace RFC1459 at a later date.
+IRC protocol version 2.7, also known as [RFC1459](http://tools.ietf.org/html/rfc1459).
+To understand the basis of the IRC version 3 protocol, please read RFC1459 followed
+by the extension specifications.  A unified specification draft is being worked on
+which will replace RFC1459 at a later date.
+
+Each version of IRCv3 contains base extensions, which comprise the core functionality
+of the IRC version 3 client protocol, and optional extensions, which comprise
+the extended functionality of the protocol.
+
+## IRCv3.1
+
+Current released version of IRC protocol is 3.1
 
 ### Base Extensions
-
-The following extensions comprise the core functionality of the IRC version 3.1 client protocol.
 
  * [IRC Version 3.1: Capability Negotiation](/specification/capability-negotiation-3.1)
 
@@ -48,11 +56,7 @@ The following extensions comprise the core functionality of the IRC version 3.1 
 
  * [IRC Version 3.1: `sasl` Extension](/extensions/sasl-3.1)
 
- * [IRC Version 3.2: Message Tags](/specification/message-tags-3.2)
-
 ### Optional Extensions
-
-The following extensions comprise the extended functionality of the IRC version 3.1 client protocol.
 
  * [IRC Version 3.1: `account-notify` Extension](/extensions/account-notify-3.1)
 
@@ -62,15 +66,9 @@ The following extensions comprise the extended functionality of the IRC version 
 
  * [IRC Version 3.1: `tls` Extension](/extensions/tls-3.1)
 
- * [IRC Version 3.2: `server-time` Extension](/extensions/server-time-3.2)
-
- * [IRC Version 3.2: Metadata](/specification/metadata-3.2)
-
 ## Next Version
 
-IRC 3.1 has been released.  Submit new extensions for consideration for 3.2!
-
-## Extension Registry
+Submit new extensions for consideration for 3.2!
 
 The IRCv3 Working Group maintains a registry of "work-in-progress" extensions that have not yet
 been accepted as part of an IRC protocol version.  IRC software vendors may provide additional
@@ -78,24 +76,35 @@ extensions that have not yet been added to this registry.  We recommend that ext
 the registry use appropriate namespacing as described in the capability negotiation specification
 and in the message tags specification.
 
-A [list of extensions](/extensions/index) documented in the extension registry is available.
+To submit an extension to the extension registry, please contact us via IRC for now
+(`irc.atheme.org #ircv3`).  Extension specifications should be submitted in Markdown format.
 
-To submit an extension to the extension registry, please contact us via IRC for now.  Extension
-specifications should be submitted in Markdown format.
+### Base Extensions
 
-## IRCv3.1 Compliant Software
+ * [IRC Version 3.2: Message Tags](/specification/message-tags-3.2)
+
+### Optional Extensions
+
+ * [IRC Version 3.2: `server-time` Extension](/extensions/server-time-3.2)
+
+ * [IRC Version 3.2: Metadata](/specification/metadata-3.2)
+
+# IRCv3.1 Compliant Software
 
 This software is compliant natively; other software may be compliant with extensions.
 
-### Servers
+## Servers
 
  * [charybdis](http://www.stack.nl/~jilles/irc/#charybdis) 3.0 or later
  * [InspIRCd](http://inspircd.github.com) 1.2 or later
  * [shadowircd](http://www.shadowircd.net/) 6.0 or later
  * [UnrealIRCd](http://www.unrealircd.org/) 3.2.10 or later
+
+## Bouncers
+
  * [ZNC](http://znc.in/) 0.207 or later
 
-### Desktop Clients
+## Desktop Clients
 
  * [Colloquy](http://www.colloquy.info) 2.4 or later
  * [Conspire](http://confluence.atheme.org/display/CON) 0.20 or later
@@ -106,12 +115,12 @@ This software is compliant natively; other software may be compliant with extens
  * [Textual](http://www.codeux-software.com/textual) 2.1 or later
  * [Weechat](http://www.weechat.org) 0.3.2 or later
 
-### Web Clients
+## Web Clients
 
  * [Iris](http://www.atheme.net/download-iris.php)
  * [Mibbit](http://www.mibbit.com)
 
-### Mobile Clients
+## Mobile Clients
 
  * [AndChat](http://www.andchat.com/) 1.3.8 or later
  * [Android IRC](http://www.countercultured.net/android/) 1.8.21 or later
