@@ -1,0 +1,116 @@
+MONITOR - Protocol for notification of when clients become online/offline
+             Lee Hardy <lee -at- leeh.co.uk>
+$Id: monitor.txt 3520 2007-06-30 22:15:35Z jilles $
+-------------------------------------------------------------------------
+
+Currently, ISON requests by clients use a large amount of bandwidth.  It is
+expected that it is more efficient for this to be done by the server at the 
+expense of cpu cycles.  The WATCH implementation that was designed to counter 
+this is (in my opinion) severely flawed.  This protocol was designed to 
+provide a cleaner implementation.
+
+The command used throughout this specification is "MONITOR".
+
+Each use of the MONITOR command takes a special modifier, indicating
+the operation being performed.  The client MUST NOT attempt to specify
+more than one modifier.  Only one special modifier may be used per MONITOR
+command.
+
+Thus it is impossible to combine additions to the list with removals from
+the list -- these MUST be done with two seperate commands.
+
+A client MUST NOT issue the MONITOR command more than once per second.
+Any attempts to do so will generate an error.
+
+In commands and numerics where multiple nicknames may occur, the length of
+the nickname list is limited only by the buffer size of 512 chars, as
+defined in RFC1459.
+
+Support of this specification is indicated by the MONITOR token in
+RPL_ISUPPORT (005).  This token takes an optional parameter, of the maximum
+amount of nicknames a client may have in their monitor list.  If no
+parameter is specified, there is no limit.  A typical token would be:
+MONITOR=100
+
+MONITOR + nick[,nick2]*
+-----------------------
+Adds the given list of nicknames to the list of nicknames being monitored.
+
+If any of the nicknames being added are online, the server will generate
+RPL_MONONLINE numerics listing those nicknames that are online.
+
+If any of the nicknames being added are offline, the server will generate
+RPL_MONOFFLINE numerics listing those nicknames that are offline.
+
+MONITOR - nick[,nick2]*
+-----------------------
+Removes the given list of nicknames from the list of nicknames being
+monitored.  No output will be returned for use of this command.
+
+MONITOR C
+---------
+Clears the list of nicknames being monitored.  No output will be returned
+for use of this command.
+
+MONITOR L
+---------
+Outputs the current list of nicknames being monitored.  All output will use
+RPL_MONLIST, and the output will be terminated with RPL_ENDOFMONLIST
+
+MONITOR S
+---------
+Outputs for each nickname in the list being monitored, whether the client is
+online or offline.  All nicks that are online will be sent using 
+RPL_MONONLINE, all nicks that are offline will be sent using RPL_MONOFFLINE.
+
+
+Numeric replies
+---------------
+
+730 - RPL_MONONLINE
+-------------------
+:<server> 730 <nick> :nick!user@host[,nick!user@host]*
+
+This numeric is used to indicate to a client that either a nickname has just
+become online, or that a nickname they have added to their monitor list is
+online.
+
+The server may send "*" instead of the target nick (<nick>). (This makes it
+possible to send the exact same message to all clients monitoring a certain
+nick.)
+
+731 - RPL_MONOFFLINE
+--------------------
+:<server> 731 <nick> :nick[,nick1]*
+
+This numeric is used to indicate to a client that either a nickname has just
+left the irc network, or that a nickname they have added to their monitor
+list is offline.
+
+The argument is a chained list of nicknames that are offline.
+
+As with 730 the server may send "*" instead of the target nick.
+
+732 - RPL_MONLIST
+-----------------
+:<server> 732 <nick> :nick[,nick1]*
+
+This numeric is used to indicate to a client the list of nicknames they have
+in their monitor list.
+
+733 - RPL_ENDOFMONLIST
+------------------------
+:<server> 733 <nick> :End of MONITOR list
+
+This numeric is used to indicate to a client the end of a monitor list.
+
+734 - ERR_MONLISTFULL
+---------------------
+:<server> 734 <nick> <limit> <nicks> :Monitor list is full.
+
+This numeric is used to indicate to a client that their monitor list is
+full, so the command failed.  The <limit> parameter is the maximum number of 
+nicknames a client may have in their list, the <nicks> parameter is the list
+of nicknames, as the client sent them, that cannot be added.
+
+

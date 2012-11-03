@@ -82,6 +82,7 @@ To submit an extension to the extension registry, please contact us via IRC for 
 ### Base Extensions
 
  * [IRC Version 3.2: Message Tags](/specification/message-tags-3.2)
+ * [IRC Version 3.2: `MONITOR` Extension](/specification/monitor-3.2)
 
 ### Optional Extensions
 
