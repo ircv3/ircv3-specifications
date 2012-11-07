@@ -29,7 +29,9 @@ This specification adds the `metadata-notify` capability for notifications.
 Please see the 'Metadata Notifications' section for more information.
 
 Targets specified by the following subcommands MUST be an asterisk (`*`) when
-used for a user's own metadata, or a mask accepted by the IRC daemon.
+used for a user's own metadata, a valid nickname, or a valid mask as determined
+by the IRC server. Invalid targets MUST be responded to with
+`ERR_TARGETINVALID`.
 
 ### METADATA LIST
 
@@ -53,9 +55,10 @@ format of `METADATA SET` MUST be as follows:
 `METADATA <Target> SET <Key> [:Value]`
 
 It is an error for users to set keys for other users, for services accounts
-other than their own (without an appropriate operator privilege), or for
-implementation-defined keys which would require special access which the
-user does not possess.
+other than their own (without an appropriate operator privilege), for channels
+for which they lack implementation-defined permission, or for
+implementation-defined keys which would require special access which the user
+does not possess.
 
 *Errors*: ERR_KEYINVALID, ERR_KEYNOTSET, ERR_KEYNOPERMISSION
 
@@ -75,12 +78,15 @@ subcommand.
 Notifications, e.g. from metadata subscriptions, MUST be passed to the client
 using the incoming METADATA verb, the format of which is as follows:
 
-`METADATA <Target> <Key> :<Value>`
+`METADATA <Source> <Target> <Key> :<Value>`
 
-`<Target>` refers to the target specified by the `MONITOR` command.
+`<Source>` identifies the source of the change. `<Target>` refers to the target
+specified by the `MONITOR` command.
 
 This specification extends `MONITOR` to enable metadata notifications using the
-above verb.
+above verb. Clients MUST handle all `METADATA` verbs, regardless of
+subscription status. Notifications MUST be sent for the client's own keys,
+regardless of subscription status.
 
 ## Metadata Restrictions
 
@@ -121,6 +127,7 @@ The following keys are predefined for the purposes of the key registry outlined
 above:
 
 | Key            | Meaning                                                      |
+| -------------- | ------------------------------------------------------------ |
 | server.certfp  | SSL certificate fingerprint                                  |
 | user.email     | User's email address                                         |
 | user.phone     | User's phone number                                          |
@@ -159,21 +166,25 @@ relevant service and account name.
 
 IRCds MAY have a blacklist or whitelist and may have an option to enforce
 keys against either or neither of them. Implementations may block keys which
-might result in impersonation. It is an error for metadata to have any effect
-on server operations.
+might result in impersonation. It is an error for user-set metadata to have
+any effect on server operations.
 
 If `METADATA` is supported, it MUST be specified in RPL_ISUPPORT using the
 `METADATA` key.
 
 ## Numerics
 
-The format for the numerics provided MUST be as follows:
+The numerics 760 through 769 MUST be reserved for metadata, carrying the
+following labels and formats:
 
-`RPL_KEYVALUE -> <Key> [:<Value>]`
+| No. | Label               | Format                              |
+| --- | ------------------- | ----------------------------------- |
+| 760 | RPL_WHOISKEYVALUE   | `<Key> :<Value`                     |
+| 761 | RPL_KEYVALUE        | `<Key>[ :<Value>]`                  |
+| 762 | RPL_METADATAEND     | `:end of metadata`                  |
+| 765 | ERR_TARGETINVALID   | `<Target> :invalid metadata target` |
+| 766 | ERR_NOMATCHINGKEYS  | `<String> :no matching keys`        |
+| 767 | ERR_KEYINVALID      | `<Key> :invalid metadata key`       |
+| 768 | ERR_KEYNOTSET       | `<Target> <Key> :key not set`       |
+| 769 | ERR_KEYNOPERMISSION | `<Target> <Key> :permission denied` |
 
-`RPL_METADATAEND -> :end of metadata`
-
-`RPL_WHOISKEYVALUE -> <Key> :<Value>`
-
-The actual numerics associated with the definitions MUST be defined by the
-IRCv3 working group.
