@@ -34,6 +34,9 @@ This ensures back-compatibility with [standard IRC protocol][rfc1459],
 because no capabilities are enabled by default,
 and therefore messages can't have any tags unless client explicitly enables such capabilities.
 
+The 512 byte message limit as specified by [RFC 1459][rfc1459] MUST NOT include the message tags and
+the trailing space after them in the message.
+
 Rules for naming message tags
 -----------------------------
 
