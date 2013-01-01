@@ -17,6 +17,7 @@ The IRCv3 working group is incubated by [atheme.org](http://www.atheme.org).
 The IRCv3 working group contains participants from the following organizations (and more):
 
  * [atheme.org](http://www.atheme.org)
+ * [BitchX] (http://www.bitchx.ca)
  * [EsperNet](http://www.esper.net)
  * [freenode](http://www.freenode.net)
  * [InspIRCd](http://inspircd.github.com)
@@ -102,7 +103,7 @@ This software is compliant natively; other software may be compliant with extens
  * [ZNC](http://znc.in/) 0.207 or later
 
 ## Desktop Clients
-
+ * [BitchX] (http://www.bitchx.ca) 1.2 or later
  * [Colloquy](http://www.colloquy.info) 2.4 or later
  * [Conspire](http://tortois.es/conspire) 0.20 or later
  * [Konversation](http://konversation.kde.org/) 1.5 or later
