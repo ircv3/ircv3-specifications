@@ -51,19 +51,14 @@ Current released version of IRC protocol is 3.1
 ### Base Extensions
 
  * [IRC Version 3.1: Capability Negotiation](/specification/capability-negotiation-3.1)
-
  * [IRC Version 3.1: `multi-prefix` Extension](/extensions/multi-prefix-3.1)
-
  * [IRC Version 3.1: `sasl` Extension](/extensions/sasl-3.1)
 
 ### Optional Extensions
 
  * [IRC Version 3.1: `account-notify` Extension](/extensions/account-notify-3.1)
-
  * [IRC Version 3.1: `away-notify` Extension](/extensions/away-notify-3.1)
-
  * [IRC Version 3.1: `extended-join` Extension](/extensions/extended-join-3.1)
-
  * [IRC Version 3.1: `tls` Extension](/extensions/tls-3.1)
 
 ## Next Version
@@ -84,7 +79,7 @@ To submit an extension to the extension registry, please contact us via IRC for 
  * [IRC Version 3.2: Message Tags](/specification/message-tags-3.2)
  * [IRC Version 3.2: Message Intents](/specification/message-intents-3.2)
  * [IRC Version 3.2: Metadata](/specification/metadata-3.2)
- * [IRC Version 3.2: `MONITOR` Extension](/specification/monitor-3.2)
+ * [IRC Version 3.2: `monitor` Extension](/specification/monitor-3.2)
 
 ### Optional Extensions
 
@@ -111,7 +106,7 @@ This software is compliant natively; other software may be compliant with extens
  * [Colloquy](http://www.colloquy.info) 2.4 or later
  * [Conspire](http://tortois.es/conspire) 0.20 or later
  * [Konversation](http://konversation.kde.org/) 1.5 or later
- * [KVirc](http://www.kvirc.net) 4.0 or later
+ * [KVIrc](http://www.kvirc.net) 4.0 or later
  * [Limechat](http://limechat.net/mac/) 2.23 or later
  * [Quassel](http://www.quassel-irc.org) 0.6.1 or later
  * [Textual](http://www.codeux.com/textual) 2.1 or later
