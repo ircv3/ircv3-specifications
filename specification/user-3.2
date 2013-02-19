@@ -30,9 +30,10 @@ performs a whois upon them before a cloak mode takes effect). This enables
 them to disable or enable modes. The input, if a valid modestring, should be
 interpreted as a mode set upon onself as described in [RFC 1459, section 4.2.3.2][rfc1459].
 The mode is to be interpreted as a normal parameter passed to MODE, but only if
-it begins with + or -. Any mode which an unprivileged user may set upon
-themselves may be requested. A server may deny any modes which the user does
-not have privilege to set (such as +o). 
+it begins with + or -. Modes which require parameters should be ignored with a
+warning. Any mode which an unprivileged user may set upon themselves may be
+requested. A server may deny any modes which the user does not have privilege
+to set (such as +o). 
 
 hostname, if set to a valid fully-qualified domain name, is to be construed as
 the server the user used as the DNS name to connect with. The server shall not
