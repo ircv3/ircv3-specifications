@@ -38,10 +38,10 @@ by the IRC server. Invalid targets MUST be responded to with
 ### METADATA LIST
 
 This subcommand MUST list all currently-set metadata keys along with their
-values. An optional string may be given to reduce the list to keys which match
-the string; the string may contain wildcards. The response will be one or more
-`RPL_KEYVALUE` events and a closing `RPL_METADATAEND` event. The format of
-`METADATA LIST` MUST be as follows:
+values. An optional string may be given to reduce the list to matching keys.
+Multiple keys may be given, separated by spaces. The response will be one or
+more `RPL_KEYVALUE` events and a closing `RPL_METADATAEND` event. The format
+of `METADATA LIST` MUST be as follows:
 
 `METADATA <Target> LIST [:String]`
 
