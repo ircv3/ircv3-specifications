@@ -7,9 +7,9 @@ Unlimited redistribution and modification of this document is allowed
 provided that the above copyright notice and this permission notice
 remains in tact.
 
-The chghost client capability allows a client to directly capture a host or use 
-change without having to do a fake quit and join. This capability MUST be
-referred to as 'chghost' at capability negotiation time.
+The chghost client capability allows a server to directly inform clients about a
+host or user change without having to send a fake quit and join. This capability
+MUST be referred to as 'chghost' at capability negotiation time.
 
 When enabled, clients will get the CHGHOST message to designate the host of a
 user changing for clients on common channels with them.
@@ -19,8 +19,8 @@ The CHGHOST message is one of the following:
     :nick!user@host CHGHOST user new.host.goes.here
 
 This message represents that the user identified by nick!user@host has changed
-host to another value. The first parameter is the user of the client. The last
-parameter is the new host the client is using.
+host to another value. The first parameter is the user of the client. The
+second parameter is the new host the client is using.
 
 On irc daemons with support for changing the user portion of a client, the
 second form may appear:
