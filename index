@@ -80,6 +80,7 @@ To submit an extension to the extension registry, please contact us via IRC for 
  * [IRC Version 3.2: Message Intents](/specification/message-intents-3.2)
  * [IRC Version 3.2: Metadata](/specification/metadata-3.2)
  * [IRC Version 3.2: `monitor` Extension](/specification/monitor-3.2)
+ * [IRC Version 3.2: `account-tag` Extension](/extensions/account-tag-3.2.md)
 
 ### Optional Extensions
 
