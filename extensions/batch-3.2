@@ -23,22 +23,28 @@ is concluded.
 
 The following syntax MUST be used when starting a batch:
 
-	BATCH [optional reference tag]
+	BATCH +reference-tag
 
 The following syntax MUST be used when ending a batch:
 
-	BATCH -[optional reference tag]
+	BATCH -reference-tag
 
-If there is no reference tag, then the reference tag should be left blank.
+Reference tag MUST contain only ASCII letters, numbers, and/or hyphen, and MUST be case-sensitive.
+
+The batched events MUST use `batch` message tag refering to the batch's reference tag.
+
+`BATCH` verb itself MUST NOT have `batch` message tag.
+
+Client SHOULD start processing the batched events only when received the end of the batch.
 
 ## Example
 
 Here is an example of the BATCH verb being used:
 
-	BATCH yXNAbvnRHTRBv
-	:nenolod!nenolod@localhost QUIT :*.net *.split
-	:jilles!jilles@localhost QUIT :*.net *.split
-	BATCH -yXNAbvnRHTRBv
+	:irc.server.net BATCH +yXNAbvnRHTRBv
+	@batch=yXNAbvnRHTRBv :nenolod!nenolod@localhost QUIT :*.net *.split
+	@batch=yXNAbvnRHTRBv :jilles!jilles@localhost QUIT :*.net *.split
+	:irc.server.net BATCH -yXNAbvnRHTRBv
 
 The client could then realize that both nenolod and jilles quit due to a
 netsplit without having to guess.
