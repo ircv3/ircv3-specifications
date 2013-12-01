@@ -108,3 +108,41 @@ C: CAP END
 S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
 (usual welcome messages)
 </pre>
+
+## Numerics used by this extension
+
+`900` aka RPL\_LOGGEDIN is sent when the user's account name is set (whether by SASL or otherwise).
+
+    :server 900 <nick> <nick>!<ident>@<host> <account> :You are now logged in as <user>
+
+`901` aka RPL\_LOGGEDOUT is sent when the user's account name is unset (whether by SASL or otherwise).
+
+    :server 901 <nick> <nick>!<ident>@<host> :You are now logged out
+
+`902` aka ERR\_NICKLOCKED is sent when the SASL authentication fails because the account is currently locked out, held, or otherwise administratively made unavailable.
+
+    :server 902 <nick> :You must use a nick assigned to you.
+
+`903` aka RPL\_SASLSUCCESS is sent when the SASL authentication finishes successfully. It usually goes along with `900`.
+
+    :server 903 <nick> :SASL authentication successful
+
+`904` aka ERR\_SASLFAIL is sent when the SASL authentication fails because of invalid credentials or other errors not explicitly mentioned by other numerics.
+
+    :server 904 <nick> :SASL authentication failed
+
+`905` aka ERR\_SASLTOOLONG is sent when credentials are valid, but the SASL authentication fails because the client-sent `AUTHENTICATE` command was too long (i.e. the parameter longer than 400 bytes).
+
+    :server 905 <nick> :SASL message too long
+
+`906` aka ERR\_SASLABORTED is sent when the SASL authentication is aborted because the client sent an `AUTHENTICATE` command with `*` as the parameter.
+
+    :server 906 <nick> :SASL authentication aborted
+
+`907` aka ERR\_SASLALREADY is sent when the client attempts to initiate SASL authentication after it has already finished successfully for that connection.
+
+    :server 907 <nick> :You have already authenticated using SASL
+
+`908` aka RPL\_SASLMECHS is sent when the client requests a list of SASL mechanisms supported by the server (or network, services). The numeric contains a comma-separated list of mechanisms.
+
+    :server 908 <nick> <mechanisms> :are available SASL mechanisms
