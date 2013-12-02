@@ -35,12 +35,16 @@ are not used, and instead the following are specified:
 | Type       | Description                                    |
 | ---------- | ---------------------------------------------- |
 | string     | ASCII text string                              |
-| int        | Integer                                        |
+| int        | 32-bit signed integer                          |
+| uint       | 32-bit unsigned integer                        |
+| long       | 64-bit signed integer                          |
+| ulong      | 64-bit unsigned integer                        |
 | float      | Floating-point number (clients may round this) |
 | timestamp  | A Unix/ISO timestamp (TBD which)               |
 | server     | A server name                                  |
 | ip         | IP address (v4 or v6)                          |
 | nick       | A nickname                                     |
+| channel    | A channel                                      |
 | bytes      | Number of bytes                                |
 
 The string, int, and float types are left to client interpretation for handling
