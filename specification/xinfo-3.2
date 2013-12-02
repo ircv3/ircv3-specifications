@@ -56,7 +56,7 @@ human reading only).
 ## Adoption
 
 Upon adopting and implementing this proposal, server authors should remove stats
-support, and translate the appropriate `STATS` command to an XINFO command.
+support, and translate the appropriate `STATS` command to an `XINFO` command.
 
 ## RFC STATS and OUTPUT
 
@@ -84,10 +84,10 @@ Other stats letters may be added to this spec after further consideration.
 The numerics 772 through 775 must be reserved for XINFO, carrying the following
 labels and formats:
 
-| No. | Label            | Format                                                        |
-| --- | ---------------- | ------------------------------------------------------------- |
-| 772 | ERR_NOSUCHXINFO  | `:<server> 772 <nick> <topic> :No such XINFO topic available` |
-| 773 | RPL_XINFOENTRY   | `:<server> 773 <nick> <key> <value> [[<key> <value>] ...]`    |
-| 774 | RPL_XINFOEND     | `:<server> 774 <nick> :End of XINFO request`                  |
-| 775 | RPL_XINFOTYPE    | `:<server> 775 <nick> <key> <type> [[<key> <type>] ...]`      |
+| No. | Label            | Format                                                                |
+| --- | ---------------- | --------------------------------------------------------------------- |
+| 772 | ERR_NOSUCHXINFO  | `:<server> 772 <nick> <topic> :No such XINFO topic available`         |
+| 773 | RPL_XINFOENTRY   | `:<server> 773 <nick> <topic> <key> <value> [[<key> <value>] ...]`    |
+| 774 | RPL_XINFOEND     | `:<server> 774 <nick> <topic> :End of XINFO request`                  |
+| 775 | RPL_XINFOTYPE    | `:<server> 775 <nick> <topic> <key> <type> [[<key> <type>] ...]`      |
 
