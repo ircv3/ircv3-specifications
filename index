@@ -21,7 +21,7 @@ The IRCv3 working group contains participants from the following organizations (
  * [EsperNet](http://www.esper.net)
  * [freenode](http://www.freenode.net)
  * [InspIRCd](http://inspircd.github.com)
- * [IRCCloud](http://www.irccloud.com)
+ * [IRCCloud](https://www.irccloud.com)
  * [Mibbit](http://www.mibbit.com)
  * [mIRC](http://www.mirc.co.uk)
  * [Nefarious IRCu](https://github.com/evilnet/nefarious/wiki)
@@ -102,6 +102,7 @@ This software is compliant natively; other software may be compliant with extens
 ## Bouncers
 
  * [ZNC](http://znc.in/) 0.207 or later
+ * [IRCCloud](https://www.irccloud.com)
 
 ## Desktop Clients
  * [BitchX](http://www.bitchx.ca) 1.2 or later
