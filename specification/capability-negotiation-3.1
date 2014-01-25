@@ -40,7 +40,9 @@ The subcommands for `CAP` are: `LS`, `LIST`, `REQ`, `ACK`, `NAK`, `CLEAR` and `E
 
 The `LS`, `LIST`, `REQ`, `ACK` and `NAK` subcommands may be followed by a single parameter
 containing a space-seperated list of capabilities.  If more than one capability is named,
-the RFC1459 designated sentinel (`:`) for a multi-parameter argument must be present.
+the RFC1459 designated sentinel (`:`) for a multi-parameter argument must be present. The
+list of capabilties MUST be parsed from left to right and capabilities SHOULD only be sent
+once per command. If a capability is sent multiple times, the last one received takes priority.
 
 If a client sends a subcommand which is not in the list above or otherwise issues an
 invalid command, then numeric 410 (ERR_INVALIDCAPCMD) should be sent.  The first parameter
