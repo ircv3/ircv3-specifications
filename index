@@ -134,3 +134,6 @@ This software is compliant natively; other software may be compliant with extens
  * [YAAIC](http://www.yaaic.org/) 0.9 or later
  * [Palaver](http://palaverapp.com/)
 
+## Libraries
+
+ * [Net::Async::IRC](https://metacpan.org/pod/Net::Async::IRC)
