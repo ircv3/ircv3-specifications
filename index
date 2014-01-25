@@ -20,7 +20,7 @@ The IRCv3 working group contains participants from the following organizations (
  * [BitchX](http://www.bitchx.ca)
  * [EsperNet](http://www.esper.net)
  * [freenode](http://www.freenode.net)
- * [InspIRCd](http://inspircd.github.com)
+ * [InspIRCd](http://www.inspircd.org/)
  * [IRCCloud](https://www.irccloud.com)
  * [Mibbit](http://www.mibbit.com)
  * [mIRC](http://www.mirc.co.uk)
@@ -95,7 +95,7 @@ This software is compliant natively; other software may be compliant with extens
 ## Servers
 
  * [charybdis](http://www.stack.nl/~jilles/irc/#charybdis) 3.0 or later
- * [InspIRCd](http://inspircd.github.com) 1.2 or later
+ * [InspIRCd](http://www.inspircd.org/) 1.2 or later
  * [shadowircd](https://github.com/shadowircd/shadowircd) 6.0 or later
  * [UnrealIRCd](http://www.unrealircd.org/) 3.2.10 or later
 
@@ -108,7 +108,7 @@ This software is compliant natively; other software may be compliant with extens
  * [BitchX](http://www.bitchx.ca) 1.2 or later
  * [Colloquy](http://www.colloquy.info) 2.4 or later
  * [Conspire](http://tortois.es/conspire) 0.20 or later
- * [HexChat](http://hexchat.org) 2.9.4 or later
+ * [HexChat](http://hexchat.github.io) 2.9.4 or later
  * [Konversation](http://konversation.kde.org/) 1.5 or later
  * [KVIrc](http://www.kvirc.net) 4.0 or later
  * [Limechat](http://limechat.net/mac/) 2.23 or later
