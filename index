@@ -94,9 +94,9 @@ This software is compliant natively; other software may be compliant with extens
 
 ## Servers
 
- * [charybdis](http://www.stack.nl/~jilles/irc/#charybdis) 3.0 or later
+ * [Charybdis](http://www.stack.nl/~jilles/irc/#charybdis) 3.0 or later
  * [InspIRCd](http://www.inspircd.org/) 1.2 or later
- * [shadowircd](https://github.com/shadowircd/shadowircd) 6.0 or later
+ * [Elemental IRCd](https://github.com/lyska/elemental-ircd)
  * [UnrealIRCd](http://www.unrealircd.org/) 3.2.10 or later
 
 ## Bouncers
@@ -105,6 +105,7 @@ This software is compliant natively; other software may be compliant with extens
  * [IRCCloud](https://www.irccloud.com)
 
 ## Desktop Clients
+
  * [BitchX](http://www.bitchx.ca) 1.2 or later
  * [Colloquy](http://www.colloquy.info) 2.4 or later
  * [Conspire](http://tortois.es/conspire) 0.20 or later
