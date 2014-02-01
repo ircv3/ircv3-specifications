@@ -23,7 +23,7 @@ is concluded.
 
 The following syntax MUST be used when starting a batch:
 
-	BATCH +reference-tag
+	BATCH +reference-tag num-of-lines
 
 The following syntax MUST be used when ending a batch:
 
@@ -33,6 +33,9 @@ Reference tag MUST contain only ASCII letters, numbers, and/or hyphen, and MUST 
 
 The batched events MUST use `batch` message tag refering to the batch's reference tag.
 
+Number of the batched events MUST be no bigger than "num-of-lines" specified during start of the batch,
+but MAY be less.
+
 `BATCH` verb itself MUST NOT have `batch` message tag.
 
 Client SHOULD start processing the batched events only when received the end of the batch.
@@ -41,7 +44,7 @@ Client SHOULD start processing the batched events only when received the end of 
 
 Here is an example of the BATCH verb being used:
 
-	:irc.server.net BATCH +yXNAbvnRHTRBv
+	:irc.server.net BATCH +yXNAbvnRHTRBv 2
 	@batch=yXNAbvnRHTRBv :nenolod!nenolod@localhost QUIT :*.net *.split
 	@batch=yXNAbvnRHTRBv :jilles!jilles@localhost QUIT :*.net *.split
 	:irc.server.net BATCH -yXNAbvnRHTRBv
