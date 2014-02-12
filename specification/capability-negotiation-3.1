@@ -62,10 +62,8 @@ is received.
 
 Example:
 
-```
-Client: CAP LS
-Server: CAP * LS :multi-prefix sasl
-```
+    Client: CAP LS
+    Server: CAP * LS :multi-prefix sasl
 
 ### The CAP LIST subcommand
 
@@ -77,10 +75,8 @@ If no capabilities are active, an empty parameter must be sent.
 
 Example:
 
-```
-Client: CAP LIST
-Server: CAP * LIST :multi-prefix
-```
+    Client: CAP LIST
+    Server: CAP * LIST :multi-prefix
 
 ### The CAP REQ subcommand
 
@@ -96,10 +92,8 @@ is received.
 
 Example:
 
-```
-Client: CAP REQ :multi-prefix sasl
-Server: CAP * ACK :multi-prefix sasl
-```
+    Client: CAP REQ :multi-prefix sasl
+    Server: CAP * ACK :multi-prefix sasl
 
 ### The CAP ACK subcommand
 
