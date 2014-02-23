@@ -1,6 +1,7 @@
 # IRC `BATCH` extension
 
 Copyright (c) 2012 William Pitcock <nenolod@dereferenced.org>.
+Copyright (c) 2014 Kythyria Tieran <kythyria@berigora.net>
 
 Unlimited redistribution and modification is allowed provided that the above
 copyright notice and this permission notice remains intact.
@@ -36,9 +37,15 @@ The batched events MUST use `batch` message tag refering to the batch's referenc
 Number of the batched events MUST be no bigger than "num-of-lines" specified during start of the batch,
 but MAY be less.
 
-`BATCH` verb itself MUST NOT have `batch` message tag.
+The `BATCH` verb may itself carry a `batch` tag, indicating that this batch is contained within the one
+indicated by the tag. Only one tag may be used with the `batch` tag, and an inner tag automatically
+implies all tags outer to itself.
 
-Client SHOULD start processing the batched events only when received the end of the batch.
+If a client receives the end of a batch without receiving the end of any batches it contains, it MUST
+consider those inner batches to implicitly be closed. If subsequent events or batch ends are received
+tagged as belonging to a batch that isn't currently open, the tagging or end should be ignored.
+
+Client SHOULD start processing the batched events only when they have received the end of the batch.
 
 ## Example
 
