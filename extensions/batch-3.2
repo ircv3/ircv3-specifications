@@ -24,7 +24,7 @@ is concluded.
 
 The following syntax MUST be used when starting a batch:
 
-	BATCH +reference-tag
+	BATCH +reference-tag type [<parameter 1> [<parameter 2> ... [<parameter n>]]]
 
 The following syntax MUST be used when ending a batch:
 
@@ -32,6 +32,9 @@ The following syntax MUST be used when ending a batch:
 
 The reference tag MUST be treated as an opaque identifier.
 Reference tag MUST contain only ASCII letters, numbers, and/or hyphen, and MUST be case-sensitive.
+
+The `type` parameter indicates how messages are associated. The meaning of the
+additional parameters (if any) depend on the type.
 
 The batched events MUST use `batch` message tag refering to the batch's reference tag.
 
@@ -45,17 +48,21 @@ tagged as belonging to a batch that isn't currently open, the tagging or end sho
 
 Client SHOULD start processing the batched events only when they have received the end of the batch.
 
-An empty batch is allowed, and SHOULD be treated as a no-op.
+An empty batch is allowed, and SHOULD be treated as a no-op, unless demanded otherwise
+by the specification for that batch type.
  
-## Example
+## Specifications for batch types
 
-Here is an example of the BATCH verb being used:
+Batch types are specified by IRCv3 extensions, vendor-specific types MUST be
+prefixed the same way as how vendor-specific capabilities are prefixed.
+See [capability negotiation](/specification/capability-negotiation-3.1) for the
+exact details.
 
-	:irc.server.net BATCH +yXNAbvnRHTRBv 2
-	@batch=yXNAbvnRHTRBv :nenolod!nenolod@localhost QUIT :*.net *.split
-	@batch=yXNAbvnRHTRBv :jilles!jilles@localhost QUIT :*.net *.split
-	:irc.server.net BATCH -yXNAbvnRHTRBv
+While batch types are similiar to capabilities in this aspect, unlike
+capabilities, batch types are not advertised by servers nor explicitly
+requested by clients.
 
-The client could then realize that both nenolod and jilles quit due to a
-netsplit without having to guess.
+To submit a new batch type please follow the extension submission procedure
+[found here](/index).
 
+ * [IRC Version 3.2: `NETSPLIT` and `NETJOIN`](/extensions/batch/netsplit)
