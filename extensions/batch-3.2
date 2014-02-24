@@ -2,6 +2,7 @@
 
 Copyright (c) 2012 William Pitcock <nenolod@dereferenced.org>.
 Copyright (c) 2014 Kythyria Tieran <kythyria@berigora.net>
+Copyright (c) 2014 Alexey Sokolov <alexey-irc@asokolov.org>
 
 Unlimited redistribution and modification is allowed provided that the above
 copyright notice and this permission notice remains intact.
@@ -38,19 +39,15 @@ additional parameters (if any) depend on the type.
 
 The batched events MUST use `batch` message tag refering to the batch's reference tag.
 
-The `BATCH` verb may itself carry a `batch` tag, indicating that this batch is contained within the one
-indicated by the tag. Only one tag may be used with the `batch` tag, and an inner tag automatically
-implies all tags outer to itself.
-
-If a client receives the end of a batch without receiving the end of any batches it contains, it MUST
-consider those inner batches to implicitly be closed. If subsequent events or batch ends are received
-tagged as belonging to a batch that isn't currently open, the tagging or end should be ignored.
-
 Client SHOULD start processing the batched events only when they have received the end of the batch.
+
+Start of a batch MAY be inside another batch itself, but in that case messages tagged
+with this new batch MUST NOT appear until this "start" message is actually processed
+(until the batch containing this "start" message ends itself).
 
 An empty batch is allowed, and SHOULD be treated as a no-op, unless demanded otherwise
 by the specification for that batch type.
- 
+
 ## Specifications for batch types
 
 Batch types are specified by IRCv3 extensions, vendor-specific types MUST be
@@ -66,3 +63,41 @@ To submit a new batch type please follow the extension submission procedure
 [found here](/index).
 
  * [IRC Version 3.2: `NETSPLIT` and `NETJOIN`](/extensions/batch/netsplit)
+
+## Examples
+
+### A simple batch
+
+	:irc.host BATCH +yXNAbvnRHTRBv NETSPLIT irc.hub other.host
+	@batch=yXNAbvnRHTRBv :aji!a@a QUIT :irc.hub other.host
+	@batch=yXNAbvnRHTRBv :nenolod!a@a QUIT :irc.hub other.host
+	:nick!user@host PRIVMSG #channel :This is not in batch, so processed immediately
+	@batch=yXNAbvnRHTRBv :jilles!a@a QUIT :irc.hub other.host
+	:irc.host BATCH -yXNAbvnRHTRBv
+
+### Interleaving batches
+
+	:irc.host BATCH +1 example.com/foo
+	@batch=1 :nick!user@host PRIVMSG #channel :Message 1
+	:irc.host BATCH +2 example.com/foo
+	@batch=1 :nick!user@host PRIVMSG #channel :Message 2
+	@batch=2 :nick!user@host PRIVMSG #channel :Message 4
+	@batch=1 :nick!user@host PRIVMSG #channel :Message 3
+	:irc.host BATCH -1
+	@batch=2 :nick!user@host PRIVMSG #channel :Message 5
+	:irc.host BATCH -2
+
+Client should show the messages on the channel in order 1,2,3,4,5
+
+### Nested batch
+
+	:irc.host BATCH +outer example.com/foo
+	:irc.host BATCH +inner example.com/bar
+	@batch=inner :nick!user@host PRIVMSG #channel :Hi
+	@batch=outer :irc.host BATCH -inner
+	:irc.host BATCH -outer
+
+Notice that PRIVMSG line will be processed when batch `outer` ends,
+because end of batch `inner` is tagged by batch `outer`.
+Order of starts of these two batches don't matter.
+
