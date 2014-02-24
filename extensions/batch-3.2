@@ -24,18 +24,16 @@ is concluded.
 
 The following syntax MUST be used when starting a batch:
 
-	BATCH +reference-tag num-of-lines
+	BATCH +reference-tag
 
 The following syntax MUST be used when ending a batch:
 
 	BATCH -reference-tag
 
+The reference tag MUST be treated as an opaque identifier.
 Reference tag MUST contain only ASCII letters, numbers, and/or hyphen, and MUST be case-sensitive.
 
 The batched events MUST use `batch` message tag refering to the batch's reference tag.
-
-Number of the batched events MUST be no bigger than "num-of-lines" specified during start of the batch,
-but MAY be less.
 
 The `BATCH` verb may itself carry a `batch` tag, indicating that this batch is contained within the one
 indicated by the tag. Only one tag may be used with the `batch` tag, and an inner tag automatically
@@ -47,6 +45,8 @@ tagged as belonging to a batch that isn't currently open, the tagging or end sho
 
 Client SHOULD start processing the batched events only when they have received the end of the batch.
 
+An empty batch is allowed, and SHOULD be treated as a no-op.
+ 
 ## Example
 
 Here is an example of the BATCH verb being used:
