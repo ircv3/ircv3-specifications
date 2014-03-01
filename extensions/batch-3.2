@@ -39,11 +39,14 @@ additional parameters (if any) depend on the type.
 
 The batched events MUST use `batch` message tag refering to the batch's reference tag.
 
+For every started batch, server MUST end that batch.
 Client SHOULD start processing the batched events only when they have received the end of the batch.
 
 Start of a batch MAY be inside another batch itself, but in that case messages tagged
 with this new batch MUST NOT appear until this "start" message is actually processed
 (until the batch containing this "start" message ends itself).
+
+End of a batch MAY be inside another batch itself. That's useful to mark a batch as nested to the other batch.
 
 An empty batch is allowed, and SHOULD be treated as a no-op, unless demanded otherwise
 by the specification for that batch type.
