@@ -1,0 +1,52 @@
+Using SRV records with IRC (TCP protocol)
+=========================================
+
+Copyirhgt (c) 2014 Patrick Godschalk <argure@argure.nl>
+
+Unlimited redistribution and modification of this document is allowed
+provided that the above copyright notice and this permission notice
+remains in tact.
+
+This specification defines the recommended behaviour of servers and
+clients for using SRV records.
+
+The SRV RR is defined in RFC 2782:
+<https://tools.ietf.org/html/rfc2782>
+
+Servers
+-------
+IRC servers that listen using the tcp protocol, SHOULD have a SRV
+record for the domain name being advertised.
+
+For example, an IRC server with the advertised domain name of
+<irc.example.org> listening on 194 for irc, and 994 for ircs:
+
+    _irc._tcp.irc.example.org    IN    SRV    0 5 194 irc.example.org
+    _ircs._tcp.irc.example.org   IN    SRV    0 5 994 irc.example.org
+
+When listening on multiple ports, a SRV record MUST be assigned for
+each of these.
+
+For example, the above IRC server also listening on 6667 for irc, and
+6697 for ircs:
+
+    _irc._tcp.irc.example.org    IN    SRV    0 5 194 irc.exapmle.org
+    _irc._tcp.irc.example.org    IN    SRV    1 5 6667 irc.example.org
+    _ircs._tcp.irc.example.org   IN    SRV    0 5 994 irc.example.org
+    _ircs._tcp.irc.example.org   IN    SRV    1 5 6697 irc.example.org
+
+
+Clients
+-------
+
+Clients that attempt to connect using the tcp protocol, SHOULD attempt
+to look up the SRV record(s) of the domain name attempting to connect
+to. The client MUST attempt to look up records for both irc and ircs
+to define if the server supports connections for irc, ircs, or both.
+
+If the name server returns valid SRV records, the client SHOULD
+inform the user of
+
+    a) whether the name server advertises support for irc, ircs or
+       both
+    b) the ports advertised by the name server for irc and/or ircs
