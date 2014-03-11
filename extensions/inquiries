@@ -1,0 +1,76 @@
+# Client to client inquiries
+ 
+## Introduction
+ 
+Several of the existing messages sent by CTCP are inappropriate for transmission
+using the [message intents] framework and a PRIVMSG, as they do not represent an
+ordinary message and in some cases (such as TIME) if translated to use an intent
+tag would give the peculiar case where the PRIVMSG has no actual message, all of
+the information being carried in the intent tag.
+ 
+This latter case, while not prohibited by RFC 1459, is nonetheless prohibited by
+several major ircds.
+ 
+## Capability
+ 
+A client MUST request the `inquiry` capability in order to send or receive these
+messages.
+ 
+## INQUIRE
+ 
+Represents an inquiry from one client to another. The format is as follows:
+ 
+    INQUIRE <Target> <Command> [<argument>, ...]
+ 
+Target identifies the entity being inquired of, while Command specifies the kind
+of inquiry. Any arguments may be optional, depending on the command used.
+ 
+## IQRESULT
+ 
+Represents a response to a previous `INQUIRE`
+ 
+    IQRESULT <Target> <Command> [<argument>, ...]
+ 
+The target and command are the sender of the original INQUIRE and the original
+command. The arguments are whatever response is appropriate for the command.
+ 
+## IQERROR
+ 
+Response to a malformed or unknown INQUIRE. Clients should send this in response
+to any INQUIRE whose command is unrecognised or arguments malformed. It replaces
+the ERRMSG command used in CTCP.
+ 
+    IQERROR <target> <command> :<message>
+
+<message> should be human-readable text.
+
+## Sending to channels
+
+When receiving an INQUIRE directed at a channel, clients should respond directly
+to the sender, not via the channel.
+
+## Known commands
+ 
+Some existing CTCP commands don't belong here: ACTION modifies PRIVMSG and hence
+is an intent on that message, while VERSION and USERINFO are metadata and should
+be handled by that specification.
+ 
+### TIME
+ 
+Request the target's idea of the local time. The inquiry has no arguments, while
+the result has one argument, the current time. There is no existing standard for
+the representation of the time.
+ 
+### PING
+ 
+Requests a response. An argument is optional in the request, but if present, the
+response must contain exactly the same arguments.
+ 
+## Translation
+ 
+Servers MUST translate INQUIRY, IQRESULT, and IQERROR messages to the CTCP forms
+if sending them to a client which has not enabled the `inquiry` capability. They
+MAY translate in the other direction for CTCP commands they know are appropriate
+for use with INQUIRY (ie, not ACTION).
+ 
+[message intents]: http://ircv3.org/specification/message-intents-3.2
