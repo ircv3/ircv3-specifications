@@ -34,23 +34,17 @@ Represents a response to a previous `INQUIRE`
 The target and command are the sender of the original INQUIRE and the original
 command. The arguments are whatever response is appropriate for the command.
  
-## IQERROR
- 
-Response to a malformed or unknown INQUIRE. Clients should send this in response
-to any INQUIRE whose command is unrecognised or arguments malformed. It replaces
-the ERRMSG command used in CTCP.
- 
-    IQERROR <target> <command> :<message>
-
-<message> should be human-readable text.
-
 ## Sending to channels
 
-When receiving an INQUIRE directed at a channel, clients should respond directly
-to the sender, not via the channel.
+Clients may send INQUIRE messages with channels as the target, subject to normal
+access control for the channel in question. Upon receiving such messages clients
+should respond to the sender as normal.
+
+Clients MUST NOT send IQRESULT messages to channels. Servers MUST respond to any
+such messages with an ERR_CANNOTSENDTOCHAN numeric.
 
 If the ircd implements a channel mode that blocks non-ACTION CTCP messages, that
-mode MUST also block INQUIRE, IQRESULT, and IQERROR.
+mode MUST also block INQUIRE and IQRESULT.
 
 ## Known commands
  
@@ -71,9 +65,8 @@ response must contain exactly the same arguments.
  
 ## Translation
  
-Servers MUST translate INQUIRY, IQRESULT, and IQERROR messages to the CTCP forms
-if sending them to a client which has not enabled the `inquiry` capability. They
-MAY translate in the other direction for CTCP commands they know are appropriate
-for use with INQUIRY (ie, not ACTION).
+Servers MUST translate INQUIRY and IQRESULT messages to CTCP if they are sent to
+a client which has not enabled the `inquiry` capability. They MAY also translate
+in the opposite direction for non-ACTION CTCP messages.
  
 [message intents]: http://ircv3.org/specification/message-intents-3.2
