@@ -49,6 +49,9 @@ the ERRMSG command used in CTCP.
 When receiving an INQUIRE directed at a channel, clients should respond directly
 to the sender, not via the channel.
 
+If the ircd implements a channel mode that blocks non-ACTION CTCP messages, that
+mode MUST also block INQUIRE, IQRESULT, and IQERROR.
+
 ## Known commands
  
 Some existing CTCP commands don't belong here: ACTION modifies PRIVMSG and hence
