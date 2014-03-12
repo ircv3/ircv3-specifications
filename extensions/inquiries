@@ -36,9 +36,10 @@ command. The arguments are whatever response is appropriate for the command.
  
 ## Sending to channels
 
-Clients may send INQUIRE messages with channels as the target, subject to normal
-access control for the channel in question. Upon receiving such messages clients
-should respond to the sender as normal.
+Clients MAY send INQUIRE messages with channels as the target, subject to normal
+access control for the channel in question. As with PRIVMSG, the server forwards
+the message to all other users in the channel. A client receiving such a message
+SHOULD respond in the same manner as if the inquiry had been sent directly to it.
 
 Clients MUST NOT send IQRESULT messages to channels. Servers MUST respond to any
 such messages with an ERR_CANNOTSENDTOCHAN numeric.
