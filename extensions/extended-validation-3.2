@@ -1,0 +1,25 @@
+extended-validation nicknames for IRC
+-------------------------------------
+
+Copyright (c) 2014 William Pitcock <nenolod@dereferenced.org>.
+
+The `@ev` tag.
+--------------
+
+The `@ev` tag indicates whether or not the message comes from a source that is believed by
+IRCD to be "trusted".  This is intentionally left up to the implementor, as there may be
+multiple ways of establishing trust.
+
+If the ev tag is present, it means that the message is "trusted."
+
+An example of the `@ev` tag:
+
+    @ev;account=Diablo-D3 :Diablo-D3!~pmcfarland@adterrasperaspera.com PRIVMSG #offtopic :I have a $10 million deposit pending on my ATM CARD from Nigeria, isn't that cool?
+
+Altering the display of messages with the `@ev` tag.
+----------------------------------------------------
+
+We suggest that an IRC client which suppots the `@ev` tag renders the Nickname in green-on-white text,
+to display that the highest trust level has been attained.
+
+Messages without the `@ev` tag should not have any special visual feedback.
