@@ -19,6 +19,10 @@ When enabled, the server MUST notify clients about all new capabilities
 and about existing capabilities that are no longer available via the messages
 specified in this document.
 
+The `cap-notify` capability MUST be implicitly enabled if client requested `CAP LS 3.2`, as described in spec of `CAP LS 3.2`.
+In that case `cap-notify` MAY be presented in response of `CAP LS`, but server MAY choose not to.
+This is for easier adoptation by old software of new features of capabilities negotiation.
+
 ## Subcommands
 
 This specification introduces two new CAP subcommands: `NEW` and `DEL`.
