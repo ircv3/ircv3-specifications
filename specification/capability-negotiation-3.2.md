@@ -55,6 +55,6 @@ a value:
 Example where the client uses CAP 3.2 and gets a multiline reply:
 
     Client: CAP LS 3.2
-    Server: CAP * LS :* multi-prefix extended-join account-notify batch invite-notify tls
-    Server: CAP * LS :* cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
+    Server: CAP * LS * :multi-prefix extended-join account-notify batch invite-notify tls
+    Server: CAP * LS * :cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
     Server: CAP * LS :userhost-in-names sasl=EXTERNAL,DH-AES,DH-BLOWFISH,ECDSA-NIST256P-CHALLENGE,PLAIN
