@@ -30,7 +30,7 @@ The client SHOULD send the latest raw version of the capability negotiation
 protocol it supports as the next argument of the command after LS.
 If no other arguments are present, version 3.1 is assumed.
 
-### Capabilitities with values
+### Capabilities with values
 
 Servers MAY specify additional data for each capability using the
 `<name>[=<value>]` format.
