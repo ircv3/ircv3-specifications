@@ -1,17 +1,16 @@
 %pragma page-title("IRCv3 Working Group");
 
-# Atheme.org IRCv3 Working Group
+# IRCv3 Working Group
 
 The IRCv3 Working Group is a group of IRC client and server software authors working to
-enhance, improve, maintain and standardize the current IRC protocol.  Logically, it is
-an activity of [atheme.org](http://atheme.org) but represents the interests of many parties.
+enhance, improve, maintain and standardize the current IRC protocol.
+It was created by [atheme.org](http://atheme.org) but now represents the interests of many parties.
 
 Other stakeholders in the IRC protocol, such as IRC networks and IRC network operators are
 invited to participate.  If you would like to discuss IRCv3 standardization efforts over
 IRC itself, you may find us at `irc.atheme.org #ircv3`.
 
-The IRCv3 working group is incubated by [atheme.org](http://www.atheme.org).  Please also
-read our [charter](/charter) before participating.
+Please also read our [charter](/charter) before participating.
 
 ## Participants
 
@@ -29,8 +28,9 @@ The IRCv3 working group contains participants from the following organizations (
  * [ngIRCd](http://ngircd.barton.de)
  * [Undernet](http://www.undernet.org)
  * [UnrealIRCd](http://www.unrealircd.org)
+ * [ZNC](http://znc.in)
 
-To participate, contribute to our specifications and extensions registry on [GitHub](http://github.com/atheme/ircv3-specifications).
+To participate, contribute to our specifications and extensions registry on [GitHub](http://github.com/ircv3/ircv3-specifications).
 
 # Specifications
 
