@@ -8,12 +8,12 @@ Copyright (c) 2012 Kyle Fuller <inbox@kylefuller.co.uk>
 Additional optional tags are added to the start of each message.
 The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is extended to look as follows:
 
-	<message> ::= ['@' <tags> <SPACE>] [':' <prefix> <SPACE> ] <command> <params> <crlf>
-	<tags>    ::= <tag> [';' <tag>]*
-	<tag>     ::= <key> ['=' <value>]
-	<key>     ::= [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
-	<value>   ::= <sequence of any characters except NUL, BELL, CR, LF, semicolon (`;`) and SPACE>
-	<vendor>  ::= <host>
+	<message>       ::= ['@' <tags> <SPACE>] [':' <prefix> <SPACE> ] <command> <params> <crlf>
+	<tags>          ::= <tag> [';' <tag>]*
+	<tag>           ::= <key> ['=' <escaped value>]
+	<key>           ::= [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
+	<escaped value> ::= <sequence of any characters except NUL, BELL, CR, LF, semicolon (`;`) and SPACE>
+	<vendor>        ::= <host>
 
 Every message tag is enabled by a capability. The same capability can be used for several tags, if these tags
 are intended to be used together.
@@ -39,6 +39,25 @@ So the total size of a message becomes limited by 1024 bytes: 512 bytes for mess
 
 If a message has multiple tags, order of the tags MUST NOT matter.
 The same tag MUST NOT appear on the same message two or more times.
+
+Escaping values
+---------------
+
+The mapping between characters in tag values and their representation in `<escaped value>` MUST be this:
+
+| Character     | Sequence in `<escaped value>` |
+|---------------|-------------------------------|
+| ; (semicolon) | \: (backslash and colon)      |
+| SPACE         | \s                            |
+| NUL           | \0 (backslash and 0 digit)    |
+| \             | \\                            |
+| CR            | \r                            |
+| LF            | \n                            |
+| BELL          | \a                            |
+| all others    | the character itself          |
+
+Reason: more common URL-escaping eats more space, while IRC message's length is very limited.
+Also having semicolon as `\:` makes it easy to split the `<tags>` string by `;` first.
 
 Rules for naming message tags
 -----------------------------
