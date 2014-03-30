@@ -34,13 +34,13 @@ The following syntax MUST be used when ending a batch:
 The reference tag MUST be treated as an opaque identifier.
 Reference tag MUST contain only ASCII letters, numbers, and/or hyphen, and MUST be case-sensitive.
 
-The `type` parameter indicates how messages are associated. The meaning of the
-additional parameters (if any) depend on the type.
+The `type` parameter indicates how messages are associated.
+The meaning of the additional parameters (if any) depend on the type.
 
 The batched events MUST use `batch` message tag refering to the batch's reference tag.
 
 For every started batch, server MUST end that batch.
-Client SHOULD start processing the batched events only when they have received the end of the batch.
+Client MAY start processing the batched events only when they have received the end of the batch.
 
 Start of a batch MAY be inside another batch itself, but in that case messages tagged
 with this new batch MUST NOT appear until this "start" message is actually processed
@@ -61,6 +61,11 @@ exact details.
 While batch types are similiar to capabilities in this aspect, unlike
 capabilities, batch types are not advertised by servers nor explicitly
 requested by clients.
+
+Client MAY use the type to change how the messages are presented to the user,
+e.g. by collapsing them into one message.
+Client MAY ignore the type and process messages one by one.
+For example, that happens if the type is unknown to the client.
 
 To submit a new batch type please follow the extension submission procedure
 [found here](/index).
@@ -90,7 +95,7 @@ To submit a new batch type please follow the extension submission procedure
 	@batch=2 :nick!user@host PRIVMSG #channel :Message 5
 	:irc.host BATCH -2
 
-Client should show the messages on the channel in order 1,2,3,4,5
+Client should show the messages on the channel in order 1,2,3,4,5, or in order 1,2,4,3,5.
 
 ### Nested batch
 
@@ -102,5 +107,5 @@ Client should show the messages on the channel in order 1,2,3,4,5
 
 Notice that PRIVMSG line will be processed when batch `outer` ends,
 because end of batch `inner` is tagged by batch `outer`.
-Order of starts of these two batches don't matter.
+The order in which these two batches start doesn't matter.
 
