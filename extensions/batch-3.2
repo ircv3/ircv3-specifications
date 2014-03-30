@@ -62,7 +62,7 @@ While batch types are similiar to capabilities in this aspect, unlike
 capabilities, batch types are not advertised by servers nor explicitly
 requested by clients.
 
-Client MAY use the type to change the way how the messages are presented to user,
+Client MAY use the type to change how the messages are presented to the user,
 e.g. by collapsing them into one message.
 Client MAY ignore the type and process messages one by one.
 For example, that happens if the type is unknown to the client.
@@ -107,5 +107,5 @@ Client should show the messages on the channel in order 1,2,3,4,5, or in order 1
 
 Notice that PRIVMSG line will be processed when batch `outer` ends,
 because end of batch `inner` is tagged by batch `outer`.
-The order of starts of these two batches doesn't matter.
+The order in which these two batches start doesn't matter.
 
