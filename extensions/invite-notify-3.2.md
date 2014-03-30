@@ -14,7 +14,7 @@ remains in tact.
 The `invite-notify` client capability allows a client to specify that it
 would like to be notified when users are invited to channels.
 
-The name of this client capability MUST be named `invite-notify`.
+This client capability MUST be named `invite-notify`.
 
 This capability is designed to replace the traditional "X has invited
 Y to #chan" server notices, and to provide a standard way that allows
