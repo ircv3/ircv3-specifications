@@ -9,7 +9,7 @@ remains in tact.
 
 ## Description
 
-The name of this client capability MUST be named `cap-notify`.
+This client capability MUST be named `cap-notify`.
 
 The `cap-notify` client capability allows a client to be notified when
 the client capability offering (i.e. capabilities listed in `CAP LS`)
