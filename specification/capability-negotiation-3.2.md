@@ -44,6 +44,11 @@ If the reply consists of multiple lines (due to IRC line length limitations)
 all but the last subcommand MUST have a parameter containing only an asterisk
 (`*`) preceding the capability list.
 
+### Subcommands
+
+Two new CAP subcommands are introduced: `NEW` and `DEL`.
+Refer to specification of `cap-notify` for details about them.
+
 ## Examples
 
 Example where the client uses CAP 3.2 and the reply contains a cap with
