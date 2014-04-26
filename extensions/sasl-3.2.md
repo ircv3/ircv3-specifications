@@ -40,13 +40,13 @@ out to be not available.
 
 Example where the server only supports the EXTERNAL mechanism:
 
-    Client: CAP LS 3.2
+    Client: CAP LS 302
     Server: CAP * LS :sasl=EXTERNAL
 
 Example where the server supports multiple authentication mechanisms and the client
 picks its favorite and attempts to use it:
 
-    Client: CAP LS 3.2
+    Client: CAP LS 302
     Client: NICK modernclient
     Client: USER modernclient 0 0 :Modern Client
     Server: CAP * LS :sasl=EXTERNAL,FOO,DH-AES,BAR,DH-BLOWFISH,FOOBAR,PLAIN batch cap-notify

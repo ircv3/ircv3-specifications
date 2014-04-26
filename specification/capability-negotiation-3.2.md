@@ -21,7 +21,7 @@ remains in tact.
 The LS subcommand now has an additional argument which is the raw version
 number of the latest capability negotiation protocol supported by the client.
 
-This document describes version `3.2`.
+This document describes version `302`.
 
 Servers MUST NOT send messages described by this document if the client
 only supports version 3.1.
@@ -53,12 +53,12 @@ or later support in the initial `CAP LS`.
 Example where the client uses CAP 3.2 and the reply contains a cap with
 a value:
 
-    Client: CAP LS 3.2
+    Client: CAP LS 302
     Server: CAP * LS :multi-prefix sasl=EXTERNAL
 
 Example where the client uses CAP 3.2 and gets a multiline reply:
 
-    Client: CAP LS 3.2
+    Client: CAP LS 302
     Server: CAP * LS * :multi-prefix extended-join account-notify batch invite-notify tls
     Server: CAP * LS * :cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
     Server: CAP * LS :userhost-in-names sasl=EXTERNAL,DH-AES,DH-BLOWFISH,ECDSA-NIST256P-CHALLENGE,PLAIN
