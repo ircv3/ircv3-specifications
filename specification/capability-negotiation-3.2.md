@@ -32,8 +32,8 @@ If no other arguments are present, version 3.1 is assumed.
 
 ### Capabilities with values
 
-Servers MAY specify additional data for each capability using the
-`<name>[=<value>]` format.
+Servers and clients MAY specify additional data for each capability using the
+`<name>=<value>` format, if allowed by specification of the capability.
 
 The meaning of the value (if present) depends on the capability in question.
 
@@ -60,6 +60,13 @@ a value:
 
     Client: CAP LS 302
     Server: CAP * LS :multi-prefix sasl=EXTERNAL
+    Client: CAP REQ :sasl multi-prefix
+
+Example where the client uses CAP 3.2 and requests a cap with a value:
+
+    Client: CAP LS 3.2
+    Server: CAP * LS :batch example.com/foo
+    Client: CAP REQ :example.com/foo=bar
 
 Example where the client uses CAP 3.2 and gets a multiline reply:
 
