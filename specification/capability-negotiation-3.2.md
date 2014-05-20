@@ -60,6 +60,7 @@ a value:
 
     Client: CAP LS 302
     Server: CAP * LS :multi-prefix sasl=EXTERNAL
+    Client: CAP REQ :sasl multi-prefix
 
 Example where the client uses CAP 3.2 and gets a multiline reply:
 
