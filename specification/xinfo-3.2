@@ -1,0 +1,93 @@
+# XINFO Specification
+
+Copyright (c) 2013 Elizabeth Myers <elizabeth@interlinked.me>.
+
+Unlimited redistribution and modification is allowed provided that the above
+copyright notice and this permission notice remains intact.
+
+## Introduction
+
+Stats numerics are a total, unsolvable disaster in IRC. Some of the largest
+conflicts in the numerics list are in the
+[stats numerics](http://prismbackup.us/~elizabeth/numerics/allconflicts.txt).
+In addition, they all do different things and have slightly different formats.
+This proposal will replace stats numerics with a key : value pair.
+
+## XINFO command
+
+The `XINFO` command issued by clients shall be framed as follows:
+
+`XINFO <verb> [<server>]`
+
+Upon issuing this command, servers shall return an RPL_XINFOTYPE describing the
+format followed by one or more LINES formatted in accordance with the
+RPL_XINFOENTRY format described in the Numerics table.
+
+The interpretation of a given key and value pair is dependent on the XINFO
+subcommand.
+
+## Basic types
+
+An RPL_XINFOTYPE command is a format specifier that describes to the client how
+to display the information given. For security reasons, C formatting specifiers
+are not used, and instead the following are specified:
+
+| Type       | Description                                                                           |
+| ---------- | ------------------------------------------------------------------------------------- |
+| string     | ASCII text string                                                                     |
+| int        | 32-bit signed integer                                                                 |
+| uint       | 32-bit unsigned integer                                                               |
+| long       | 64-bit signed integer                                                                 |
+| ulong      | 64-bit unsigned integer                                                               |
+| float      | Floating-point number - preferably binary64 (servers and/or clients may round this)   |
+| size[type] | A numerical size. Type may be specified as any of the numerical types (default uint). |
+| timestamp  | A Unix/ISO timestamp (TBD which)                                                      |
+| server     | A server name                                                                         |
+| ip         | IP address (v4 or v6)                                                                 |
+| mask       | Hostmask                                                                              |
+| nick       | A nickname                                                                            |
+| channel    | A channel                                                                             |
+| bytes      | Number of bytes                                                                       |
+
+The string, int, and float types are left to client interpretation for handling
+and should not be construed as having any meaning to clients (being text for
+human reading only).
+
+## Adoption
+
+Upon adopting and implementing this proposal, server authors should remove stats
+support, and translate the appropriate `STATS` command to an `XINFO` command.
+
+## RFC STATS and OUTPUT
+
+The following RFC1459/2812 stats should be reinterpreted as the following:
+
+| Stat | XINFO name          |
+| ---- | ------------------- |
+| c    | CONNECTS            |
+| h    | HUBS                |
+| i    | ALLOW               |
+| k    | KLINES              |
+| n    | CONNECTS (obsolete) |
+| l    | LINKINFO            |
+| o    | OPERS               |
+| p    | ONLINEOPS           |
+| q    | QUARANTINE          |
+| U    | SERVICES            |
+| u    | UPTIME              |
+| y    | CLASS               |
+
+Other stats letters may be added to this spec after further consideration.
+
+## Numerics
+
+The numerics 772 through 775 must be reserved for XINFO, carrying the following
+labels and formats:
+
+| No. | Label            | Format                                                                |
+| --- | ---------------- | --------------------------------------------------------------------- |
+| 772 | ERR_NOSUCHXINFO  | `:<server> 772 <nick> <topic> :No such XINFO topic available`         |
+| 773 | RPL_XINFOENTRY   | `:<server> 773 <nick> <topic> <key> <value> [[<key> <value>] ...]`    |
+| 774 | RPL_XINFOEND     | `:<server> 774 <nick> <topic> :End of XINFO request`                  |
+| 775 | RPL_XINFOTYPE    | `:<server> 775 <nick> <topic> <key> <type> [[<key> <type>] ...]`      |
+
