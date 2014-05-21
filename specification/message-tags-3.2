@@ -12,7 +12,7 @@ The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is exte
 	<tags>          ::= <tag> [';' <tag>]*
 	<tag>           ::= <key> ['=' <escaped value>]
 	<key>           ::= [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
-	<escaped value> ::= <sequence of any characters except NUL, BELL, CR, LF, semicolon (`;`) and SPACE>
+	<escaped value> ::= <sequence of any characters except NUL, CR, LF, semicolon (`;`) and SPACE>
 	<vendor>        ::= <host>
 
 Every message tag is enabled by a capability. The same capability can be used for several tags, if these tags
@@ -53,7 +53,6 @@ The mapping between characters in tag values and their representation in `<escap
 | \             | \\                            |
 | CR            | \r                            |
 | LF            | \n                            |
-| BELL          | \a                            |
 | all others    | the character itself          |
 
 Reason: more common URL-escaping eats more space, while IRC message's length is very limited.
