@@ -105,6 +105,7 @@ This software is compliant natively; other software may be compliant with extens
  * [Nefarious IRCu](https://github.com/evilnet/nefarious2) 2.0 or later
  * ShadowIRCd 6.0 or later _(dead)_
  * [UnrealIRCd](http://www.unrealircd.org/) 3.2.10 or later
+ * [IRCCloud](https://www.irccloud.com)
 
 ## Bouncers
 
@@ -129,6 +130,7 @@ This software is compliant natively; other software may be compliant with extens
  * [Iris](http://www.atheme.net/iris.html)
  * [Mibbit](http://www.mibbit.com)
  * [Kiwi IRC](https://kiwiirc.com)
+ * [IRCCloud](https://www.irccloud.com)
 
 ## Mobile Clients
 
@@ -140,6 +142,7 @@ This software is compliant natively; other software may be compliant with extens
  * [Limechat](http://limechat.net/iphone/) 2.10 or later
  * [YAAIC](http://www.yaaic.org/) 0.9 or later
  * [Palaver](http://palaverapp.com/)
+ * [IRCCloud](https://www.irccloud.com)
 
 ## Libraries
 
