@@ -76,23 +76,23 @@ To submit an extension to the extension registry, please contact us via IRC for 
 
 ### Base Extensions
 
- * [IRC Version 3.2: Message Tags](/specification/message-tags-3.2.md)
  * [IRC Version 3.2: Message Intents](/specification/message-intents-3.2.md)
+ * [IRC Version 3.2: Message Tags](/specification/message-tags-3.2.md)
  * [IRC Version 3.2: Metadata](/specification/metadata-3.2.md)
- * [IRC Version 3.2: `monitor` Extension](/specification/monitor-3.2.md)
  * [IRC Version 3.2: `account-tag` Extension](/extensions/account-tag-3.2.md)
+ * [IRC Version 3.2: `monitor` Extension](/specification/monitor-3.2.md)
 
 ### Optional Extensions
 
- * [IRC Version 3.2: `server-time` Extension](/extensions/server-time-3.2.md)
  * [IRC Version 3.2: `batch` Extension](/extensions/batch-3.2.md)
- * [IRC Version 3.2: `userhost-in-names` Extension](/extensions/userhost-in-names-3.2.md)
  * [IRC Version 3.2: `chghost` Extension](/extensions/chghost-3.2.md)
+ * [IRC Version 3.2: `server-time` Extension](/extensions/server-time-3.2.md)
+ * [IRC Version 3.2: `userhost-in-names` Extension](/extensions/userhost-in-names-3.2.md)
 
 ## Additional Documentation
 
- * [SASL: DH-BLOWFISH mechanism](/documentation/sasl-dh-blowfish.md)
  * [SASL: DH-AES mechanism](/documentation/sasl-dh-aes.md)
+ * [SASL: DH-BLOWFISH mechanism](/documentation/sasl-dh-blowfish.md)
 
 # IRCv3.1 Compliant Software
 
