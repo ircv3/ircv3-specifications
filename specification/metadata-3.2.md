@@ -153,7 +153,7 @@ for the user.
 
 Metadata SHOULD be presentable via NickServ or similar service in order to
 allow for persistent metadata; the format for encapsulating `METADATA` events
-for persistance MUST be as follows:
+for persistence MUST be as follows:
 
 `PRIVMSG <Service> :<Metadata command>`
 

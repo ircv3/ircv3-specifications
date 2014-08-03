@@ -37,7 +37,7 @@ Reference tag MUST contain only ASCII letters, numbers, and/or hyphen, and MUST 
 The `type` parameter indicates how messages are associated.
 The meaning of the additional parameters (if any) depend on the type.
 
-The batched events MUST use `batch` message tag refering to the batch's reference tag.
+The batched events MUST use `batch` message tag referring to the batch's reference tag.
 
 For every started batch, server MUST end that batch.
 Client MAY start processing the batched events only when they have received the end of the batch.
@@ -58,7 +58,7 @@ prefixed the same way as how vendor-specific capabilities are prefixed.
 See [capability negotiation](/specification/capability-negotiation-3.1) for the
 exact details.
 
-While batch types are similiar to capabilities in this aspect, unlike
+While batch types are similar to capabilities in this aspect, unlike
 capabilities, batch types are not advertised by servers nor explicitly
 requested by clients.
 

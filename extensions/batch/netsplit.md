@@ -13,7 +13,7 @@ This document describes the format of the NETSPLIT and NETJOIN batch
 types.
 
 When a netsplit occurs, the server MUST put all resulting QUITs into
-a single NETSPLIT batch. Similiarly, all netjoin-related JOINs MUST be
+a single NETSPLIT batch. Similarly, all netjoin-related JOINs MUST be
 put into a *single* NETJOIN batch. Both types have 2 arguments, which are
 the names of the servers that are splitting or joining, or *.net *.split
 and *.net *.join if the server has chosen to hide links.

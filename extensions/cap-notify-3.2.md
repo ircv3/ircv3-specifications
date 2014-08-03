@@ -22,7 +22,7 @@ specified in this document.
 The `cap-notify` capability MUST be implicitly enabled if the client requests
 `CAP LS 302`, as described in the [capability negotiation 3.2 specification](/specification/capability-negotiation-3.2.md).
 In that case `cap-notify` MAY be presented in response to `CAP LS`, but the
-server MAY choose not to. This is to ease the adoptation of new features.
+server MAY choose not to. This is to ease the adaptation of new features.
 
 ## Subcommands
 

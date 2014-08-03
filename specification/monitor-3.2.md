@@ -23,7 +23,7 @@ more than one modifier.  Only one special modifier may be used per `MONITOR`
 command.
 
 Thus it is impossible to combine additions to the list with removals from
-the list -- these MUST be done with two seperate commands.
+the list -- these MUST be done with two separate commands.
 
 In commands and numerics where multiple targets may occur, the length of
 the target list is limited only by the buffer size of 512 chars, as

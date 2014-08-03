@@ -33,15 +33,15 @@ not use any IRCv3 capabilities.
 
 The client capability negotiation extension is implemented by the addition of one command
 with several subcommands.  The command added is named `CAP`.  `CAP` takes a single
-required subcommand, optionally followed by a single parameter of space-seperated capability
+required subcommand, optionally followed by a single parameter of space-separated capability
 identifiers.  Each capability in the list may be preceded by a capability modifier.
 
 The subcommands for `CAP` are: `LS`, `LIST`, `REQ`, `ACK`, `NAK`, `CLEAR` and `END`.
 
 The `LS`, `LIST`, `REQ`, `ACK` and `NAK` subcommands may be followed by a single parameter
-containing a space-seperated list of capabilities.  If more than one capability is named,
+containing a space-separated list of capabilities.  If more than one capability is named,
 the RFC1459 designated sentinel (`:`) for a multi-parameter argument must be present. The
-list of capabilties MUST be parsed from left to right and capabilities SHOULD only be sent
+list of capabilities MUST be parsed from left to right and capabilities SHOULD only be sent
 once per command. If a capability is sent multiple times, the last one received takes priority.
 
 If a client sends a subcommand which is not in the list above or otherwise issues an
@@ -175,7 +175,7 @@ There are two capability namespaces:
 ## Capability Modifiers
 
 There are three capability modifiers specified by this standard.  If a capability modifier is
-to be used, it MUST directly procede the capability identifier.
+to be used, it MUST directly proceed the capability identifier.
 
 The capability modifiers are:
 
