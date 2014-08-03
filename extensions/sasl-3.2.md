@@ -8,9 +8,9 @@ remains in tact.
 
 ## Description
 
-This document describes how [SASL authentication](extensions/sasl-3.1)
+This document describes how [SASL authentication](/extensions/sasl-3.1)
 makes use of the
-[capability negotiation protocol updates introduced in 3.2](specification/capability-negotiation-3.2.md).
+[capability negotiation protocol updates introduced in 3.2](/specification/capability-negotiation-3.2.md).
 
 ## Mechanism list in CAP LS
 
