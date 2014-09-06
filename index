@@ -109,11 +109,11 @@ This software is compliant natively; other software may be compliant with extens
 
  * [Charybdis](http://www.stack.nl/~jilles/irc/#charybdis) 3.0 or later
  * [Elemental IRCd](https://github.com/lyska/elemental-ircd)
+ * [IRCCloud](https://www.irccloud.com)
  * [InspIRCd](http://www.inspircd.org/) 1.2 or later
  * [Nefarious IRCu](https://github.com/evilnet/nefarious2) 2.0 or later
  * ShadowIRCd 6.0 or later _(dead)_
  * [UnrealIRCd](http://www.unrealircd.org/) 3.2.10 or later
- * [IRCCloud](https://www.irccloud.com)
 
 ## Bouncers
 
@@ -135,10 +135,10 @@ This software is compliant natively; other software may be compliant with extens
 
 ## Web Clients
 
- * [Iris](http://www.atheme.net/iris.html)
- * [Mibbit](http://www.mibbit.com)
- * [Kiwi IRC](https://kiwiirc.com)
  * [IRCCloud](https://www.irccloud.com)
+ * [Iris](http://www.atheme.net/iris.html)
+ * [Kiwi IRC](https://kiwiirc.com)
+ * [Mibbit](http://www.mibbit.com)
 
 ## Mobile Clients
 
@@ -147,10 +147,10 @@ This software is compliant natively; other software may be compliant with extens
  * [AndroIRC](http://www.androirc.com/) 2.0 or later
  * [Colloquy](http://www.colloquy.info)
  * [IRC7](http://www.softwaremk.org/irc/) 1.6 or later
- * [Limechat](http://limechat.net/iphone/) 2.10 or later
- * [YAAIC](http://www.yaaic.org/) 0.9 or later
- * [Palaver](http://palaverapp.com/)
  * [IRCCloud](https://www.irccloud.com)
+ * [Limechat](http://limechat.net/iphone/) 2.10 or later
+ * [Palaver](http://palaverapp.com/)
+ * [YAAIC](http://www.yaaic.org/) 0.9 or later
 
 ## Bots
 
@@ -158,7 +158,7 @@ This software is compliant natively; other software may be compliant with extens
 
 ## Libraries
 
+ * [cinch](https://github.com/cinchrb/cinch)
+ * [Communi](https://communi.github.io)
  * [Net::Async::IRC](https://metacpan.org/pod/Net::Async::IRC)
  * [pydle](https://pypi.python.org/pypi/pydle)
- * [cinch](https://github.com/cinchrb/cinch)
- * [Communi](http://communi.github.io)
