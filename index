@@ -152,6 +152,10 @@ This software is compliant natively; other software may be compliant with extens
  * [Palaver](http://palaverapp.com/)
  * [IRCCloud](https://www.irccloud.com)
 
+## Bots
+
+ * [Willie](http://willie.dftba.net) 4.1.0 or later
+
 ## Libraries
 
  * [Net::Async::IRC](https://metacpan.org/pod/Net::Async::IRC)
