@@ -1,7 +1,12 @@
 # SASL authentication
 
 This document describes the client protocol for SASL authentication, as
-implemented in charybdis and atheme.
+implemented in Charybdis and Atheme.
+
+The SASL protocol in general is documented in
+[RFC 4422](https://tools.ietf.org/html/rfc4422), along with the 'EXTERNAL'
+mechanism. The most commonly used 'PLAIN' mechanism is documented in
+[RFC 4616](https://tools.ietf.org/html/rfc4616).
 
 SASL authentication relies on the
 [CAP client capability framework](/specification/capability-negotiation-3.1).
