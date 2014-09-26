@@ -69,7 +69,7 @@ Outputs the current list of targets being monitored.  All output will use
 Outputs for each target in the list being monitored, whether the client is
 online or offline.  All targets that are online will be sent using 
 `RPL_MONONLINE`, all targets that are offline will be sent using
-`RPL_MONOFFLINE`.
+`RPL_MONOFFLINE`, and the output will be terminated with `RPL_ENDOFMONLIST`.
 
 # Numeric replies
 
