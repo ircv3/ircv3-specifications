@@ -38,18 +38,18 @@ The `type` parameter indicates how messages are associated.
 The meaning of the additional parameters (if any) depend on the type.
 
 The batched events MUST use `batch` message tag referring to the batch's reference tag.
+Messages before start and after end of a batch (including start and end messages of that batch) MUST NOT refer to that batch.
 
 For every started batch, server MUST end that batch.
-Client MAY start processing the batched events only when they have received the end of the batch.
-
-Start of a batch MAY be inside another batch itself, but in that case messages tagged
-with this new batch MUST NOT appear until this "start" message is actually processed
-(until the batch containing this "start" message ends itself).
-
-End of a batch MAY be inside another batch itself. That's useful to mark a batch as nested to the other batch.
+Client MAY delay processing the batched events until they have received and/or processed the end of the batch.
 
 An empty batch is allowed, and SHOULD be treated as a no-op, unless demanded otherwise
 by the specification for that batch type.
+
+Start and end messages of one batch MAY refer to another batch.
+If they do, they both MUST have batch tag, and they MUST refer to the same batch.
+This means that one batch is nested to another.
+Client MAY delay processing messages of inner batches to the end of outermost batch.
 
 ## Specifications for batch types
 
@@ -95,12 +95,12 @@ To submit a new batch type please follow the extension submission procedure
 	@batch=2 :nick!user@host PRIVMSG #channel :Message 5
 	:irc.host BATCH -2
 
-Client should show the messages on the channel in order 1,2,3,4,5, or in order 1,2,4,3,5.
+Client may show the messages on the channel in order 1,2,3,4,5, or in order 1,4,2,3,5, among others.
 
 ### Nested batch
 
 	:irc.host BATCH +outer example.com/foo
-	:irc.host BATCH +inner example.com/bar
+	@batch=outer :irc.host BATCH +inner example.com/bar
 	@batch=inner :nick!user@host PRIVMSG #channel :Hi
 	@batch=outer :irc.host BATCH -inner
 	:irc.host BATCH -outer
