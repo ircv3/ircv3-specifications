@@ -77,10 +77,8 @@ To submit an extension to the extension registry, please contact us via IRC for 
 ### Base Extensions
 
  * [IRC Version 3.2: Capability Negotiation 3.2](/specification/capability-negotiation-3.2.md)
- * [IRC Version 3.2: Message Intents](/specification/message-intents-3.2.md)
  * [IRC Version 3.2: Message Tags](/specification/message-tags-3.2.md)
  * [IRC Version 3.2: Metadata](/specification/metadata-3.2.md)
- * [IRC Version 3.2: `account-tag` Extension](/extensions/account-tag-3.2.md)
  * [IRC Version 3.2: `monitor` Extension](/specification/monitor-3.2.md)
 
 ### Optional Extensions
@@ -94,6 +92,10 @@ To submit an extension to the extension registry, please contact us via IRC for 
  * [IRC Version 3.2: `self-message` Extension](/extensions/self-message-3.2.md)
  * [IRC Version 3.2: `server-time` Extension](/extensions/server-time-3.2.md)
  * [IRC Version 3.2: `userhost-in-names` Extension](/extensions/userhost-in-names-3.2.md)
+
+### Experimental Extensions
+
+ * [IRC Version 3.3: Message Intents](/specification/message-intents-3.3.md)
 
 ## Additional Documentation
 
