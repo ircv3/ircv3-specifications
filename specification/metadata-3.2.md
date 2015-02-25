@@ -23,17 +23,13 @@ that services-driven metadata will be encapsulated via `PRIVMSG`.
 ## METADATA
 
 All metadata subcommands will flow through the outgoing `METADATA` verb.
-Metadata may apply to channels, as well; in that case, an optional
-argument is provided prior to the subcommand, as outlined in the format for
-each, if supported.
 
 This specification adds the `metadata-notify` capability for notifications.
 Please see the 'Metadata Notifications' section for more information.
 
 Targets specified by the following subcommands MUST be an asterisk (`*`) when
-used for a user's own metadata, a valid nickname, or a valid mask as determined
-by the IRC server. Invalid targets MUST be responded to with
-`ERR_TARGETINVALID`.
+used for a user's own metadata, a valid nickname, or a channel name. Invalid
+targets MUST be responded to with `ERR_TARGETINVALID`.
 
 ### METADATA LIST
 
@@ -45,7 +41,7 @@ of `METADATA LIST` MUST be as follows:
 
 `METADATA <Target> LIST [:String]`
 
-*Errors*: ERR_NOMATCHINGKEYS
+*Errors*: `ERR_NOMATCHINGKEYS`
 
 ### METADATA SET
 
@@ -57,16 +53,15 @@ format of `METADATA SET` MUST be as follows:
 `METADATA <Target> SET <Key> [:Value]`
 
 It is an error for users to set keys for other users, for services accounts
-other than their own (without an appropriate operator privilege), for channels
-for which they lack implementation-defined permission, or for
+other than their own (without an appropriate operator privilege), or for
 implementation-defined keys which would require special access which the user
 does not possess.
 
-*Errors*: ERR_KEYINVALID, ERR_KEYNOTSET, ERR_KEYNOPERMISSION
+*Errors*: `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`
 
 ### METADATA CLEAR
 
-This subcommand MUST remove all metadata, equivalently to using METADATA SET
+This subcommand MUST remove all metadata, equivalently to using `METADATA SET`
 on all keys with an empty value. The format of `METADATA CLEAR` MUST be as
 follows:
 
@@ -78,7 +73,7 @@ subcommand.
 ## Metadata Notifications
 
 Notifications, e.g. from metadata subscriptions, MUST be passed to the client
-using the incoming METADATA verb, the format of which is as follows:
+using the incoming `METADATA` verb, the format of which is as follows:
 
 `METADATA <Source> <Target> <Key> :<Value>`
 
@@ -92,8 +87,8 @@ regardless of subscription status.
 
 ## Metadata Restrictions
 
-Keys MUST be restricted to the ranges A-Z, a-z, and 0-9, and are
-case-insensitive; they MUST, moreover, be namespaced using the period (.) as a
+Keys MUST be restricted to the ranges `A-Z`, `a-z`, and `0-9`, and are
+case-insensitive; they MUST, moreover, be namespaced using the period (`.`) as a
 separator. Values are unrestricted, except that they MUST be UTF-8; binary data
 MUST use the 'data:' URI scheme as standardized by browsers and SHOULD be
 discouraged.
@@ -108,9 +103,14 @@ will be defined initially, as follows:
 * The 'server' namespace is intended for keys which the user cannot set, such
   as SSL certificate fingerprints. Some keys MAY have restricted visibility.
 * The 'user' namespace is intended for keys which the user can set and which
-  carry meaning relevant only, or mostly, to users.
+  carry meaning relevant only, or mostly, to users. Keys in this namespace
+  CANNOT be set for channels.
 * The 'client' namespace is intended for keys which the user can set and which
-  describe the user's client.
+  describe the user's client. Keys in this namespace CANNOT be set for
+  channels.
+* The 'channel' namespace is intended for keys related to channels, such as
+  channel homepages, administrative contact information, and so on. Keys in
+  this namespace CANNOT be set for users.
 * The 'ext' namespace is intended for keys which have not been formally
   registered. Server and client authors are advised that they cannot rely on
   this namespace to carry any standardized meaning. The main namespaces MAY be
@@ -128,17 +128,20 @@ communicated to the user via `RPL_ISUPPORT` as a numeric value on the
 The following keys are predefined for the purposes of the key registry outlined
 above:
 
-| Key            | Meaning                                                      |
-| -------------- | ------------------------------------------------------------ |
-| server.certfp  | SSL certificate fingerprint                                  |
-| user.email     | User's email address                                         |
-| user.phone     | User's phone number                                          |
-| user.website   | User's website                                               |
-| user.im.*      | IM handles; the * is replaced with the relevant service name |
-| user.playing   | Music the user is currently listening to                     |
-| user.status    | The user's current status                                    |
-| client.name    | Client's name                                                |
-| client.version | Client version                                               |
+| Key             | Meaning                                                      |
+| --------------- | ------------------------------------------------------------ |
+| server.certfp   | SSL certificate fingerprint                                  |
+| user.email      | User's email address                                         |
+| user.phone      | User's phone number                                          |
+| user.website    | User's website                                               |
+| user.im.*       | IM handles; the * is replaced with the relevant service name |
+| user.playing    | Music the user is currently listening to                     |
+| user.status     | The user's current status                                    |
+| client.name     | Client's name                                                |
+| client.version  | Client version                                               |
+| channel.website | Channel's website                                            |
+| channel.contact | Administrative contact info, e.g. email or IM addresses      |
+| channel.motd    | The channel's message of the day, if any                     |
 
 Except for `server.certfp`, all of these keys SHOULD be considered to be
 free-flowing text with no inherent meaning. `server.certfp` MUST be presented
@@ -159,19 +162,18 @@ for persistence MUST be as follows:
 
 where `<Service>` is the relevant service and `<Metadata command>` is any 
 `METADATA` subcommand as outlined previously. Responses MUST be presented
-appropriately to the service rather than through RPL_* or ERR_* events.
+appropriately to the service rather than through `RPL_*` or `ERR_*` events.
 
 In addition, services MAY display metadata via the `INFO` command with the
 relevant service and account name.
 
 ## IRC Daemons
 
-IRCds MAY have a blacklist or whitelist and may have an option to enforce
-keys against either or neither of them. Implementations may block keys which
-might result in impersonation. It is an error for user-set metadata to have
-any effect on server operations.
+IRC servers may choose to accept or deny any key for any reason, and SHOULD
+implement a blacklist or whitelist functionality for this purpose, configurable
+by the server operators.
 
-If `METADATA` is supported, it MUST be specified in RPL_ISUPPORT using the
+If `METADATA` is supported, it MUST be specified in `RPL_ISUPPORT` using the
 `METADATA` key.
 
 ## Numerics
@@ -179,16 +181,16 @@ If `METADATA` is supported, it MUST be specified in RPL_ISUPPORT using the
 The numerics 760 through 769 MUST be reserved for metadata, carrying the
 following labels and formats:
 
-| No. | Label               | Format                              |
-| --- | ------------------- | ----------------------------------- |
-| 760 | RPL_WHOISKEYVALUE   | `<Target> <Key> :<Value`            |
-| 761 | RPL_KEYVALUE        | `<Target> <Key>[ :<Value>]`         |
-| 762 | RPL_METADATAEND     | `:end of metadata`                  |
-| 765 | ERR_TARGETINVALID   | `<Target> :invalid metadata target` |
-| 766 | ERR_NOMATCHINGKEYS  | `<String> :no matching keys`        |
-| 767 | ERR_KEYINVALID      | `<Key> :invalid metadata key`       |
-| 768 | ERR_KEYNOTSET       | `<Target> <Key> :key not set`       |
-| 769 | ERR_KEYNOPERMISSION | `<Target> <Key> :permission denied` |
+| No. | Label                 | Format                              |
+| --- | --------------------- | ----------------------------------- |
+| 760 | `RPL_WHOISKEYVALUE`   | `<Target> <Key> :<Value`            |
+| 761 | `RPL_KEYVALUE`        | `<Target> <Key>[ :<Value>]`         |
+| 762 | `RPL_METADATAEND`     | `:end of metadata`                  |
+| 765 | `ERR_TARGETINVALID`   | `<Target> :invalid metadata target` |
+| 766 | `ERR_NOMATCHINGKEYS`  | `<String> :no matching keys`        |
+| 767 | `ERR_KEYINVALID`      | `<Key> :invalid metadata key`       |
+| 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`       |
+| 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied` |
 
 For `RPL_WHOISKEYVALUE`, the `<Target>` is the usual WHOIS target. For
 all other numerics, the `<Target>` is the nick or valid server-defined
