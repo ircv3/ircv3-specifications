@@ -2,16 +2,28 @@
 # MONITOR - Protocol for notification of when clients become online/offline
 
 Copyright (c) Lee Hardy <lee -at- leeh.co.uk>, Kiyoshi Aman
-<kiyoshi.aman@gmail.com>.
+<kiyoshi.aman@gmail.com>, William Pitcock <nenolod@dereferenced.org>
 
 # Introduction
 
-Currently, ISON requests by clients use a large amount of bandwidth.  It is
+Currently, `ISON` requests by clients use a large amount of bandwidth.  It is
 expected that it is more efficient for this to be done by the server at the 
-expense of cpu cycles.  The WATCH implementation that was designed to counter 
-this is undocumented and apparently differs between implementations. This
-protocol was designed to provide a cleaner implementation. This specification
-deprecates and replaces the `WATCH` command and related functionality.
+expense of cpu cycles.  This specification deprecates both the `ISON` and
+legacy `WATCH` extensions.
+
+## `WATCH` vs. `MONITOR`
+
+The `WATCH` implementation suffers from quite a few problems. First, the
+implementation of the `WATCH` command is non-standard, and differs between
+different vendor implementations of the `WATCH` command.
+
+The `MONITOR` extension enhances the legacy `WATCH` command by providing
+documented, standardized, `ISON` style notifications instead of one numeric
+per watch-list entry as with `WATCH`. Further, the `MONITOR` implementation
+is allowed to multicast notifications to every client which has a subscription
+to a target whom is subject to a state change. The `MONITOR` implementation
+also enhances user privacy by disallowing subscription to hostmasks,
+allowing users to avoid nick-change stalking.
 
 # `MONITOR` Command
 
