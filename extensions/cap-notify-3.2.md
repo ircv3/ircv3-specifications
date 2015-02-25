@@ -20,9 +20,10 @@ and about existing capabilities that are no longer available via the messages
 specified in this document.
 
 The `cap-notify` capability MUST be implicitly enabled if the client requests
-`CAP LS 302`, as described in the [capability negotiation 3.2 specification](/specification/capability-negotiation-3.2.md).
-Further, the `cap-notify` capability MUST NOT be allowed to be disabled if the
-client requests `CAP LS 302`.  This is to ease the adaptation of new features.
+`CAP LS` with a version of 302 or newer (`CAP LS 302`), as described in the
+[capability negotiation 3.2 specification](/specification/capability-negotiation-3.2.md).
+Further, the `cap-notify` capability MAY NOT be disabled if the client requests
+`CAP LS` with a version of 302 or newer.  This is to ease the adaptation of new features.
 
 ## Subcommands
 
