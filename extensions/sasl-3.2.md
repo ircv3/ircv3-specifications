@@ -2,6 +2,8 @@
 
 Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>
 
+Copyright (c) 2015 William Pitcock <nenolod@dereferenced.org>
+
 Unlimited redistribution and modification of this document is allowed
 provided that the above copyright notice and this permission notice
 remains in tact.
@@ -10,7 +12,20 @@ remains in tact.
 
 This document describes how [SASL authentication](/extensions/sasl-3.1)
 makes use of the
-[capability negotiation protocol updates introduced in 3.2](/specification/capability-negotiation-3.2.md).
+[capability negotiation protocol updates introduced in 3.2](/specification/capability-negotiation-3.2.md),
+and adds support for reauthentication if authentication is lost via the [cap-notify](/extensions/cap-notify-3.2.md)
+capability.
+
+## Advertisement of `sasl` capability when authentication is unavailable
+
+Servers MUST NOT advertise the `sasl` capability if the authentication layer is
+unavailable.
+
+Servers MUST `NAK` any `sasl` capability request if the authentication layer is
+unavailable.
+
+If a client requires pre-authentication and is unable to obtain the `sasl` capability,
+then the client MUST disconnect and MAY retry the connection.
 
 ## Mechanism list in CAP LS
 
@@ -26,6 +41,24 @@ negotiation protocol that allows values (i.e. 3.2).
 
 Clients MUST handle the case when the value contains one or more mechanisms
 they do not understand.
+
+## Integration with `cap-notify`
+
+The `sasl` capability is integrated with the new `cap-notify` framework, such that
+if `cap-notify` is an active capability, the client will be notified about status
+changes concerning the availability of `sasl` authentication.
+
+Servers MUST advertise availability of the `sasl` capability to any clients which have
+requested the `cap-notify` notification.
+
+## SASL Reauthentication
+
+Servers MUST allow a client, authenticated or otherwise, to reauthenticate by
+sending a new `AUTHENTICATE` message at any time.
+
+Servers MAY disconnect ANY client at any time as a result of failed authentication,
+including both unregistered and registered clients, but MUST provide the reason
+for the authentication failure prior to disconnection.
 
 ## Usage
 
@@ -55,3 +88,31 @@ picks its favorite and attempts to use it:
     Client: AUTHENTICATE PLAIN
     Server: AUTHENTICATE +
     Client: AUTHENTICATE ...
+
+Example where the server later adds support for authentication, such as regaining
+access to an authentication server after a netsplit:
+
+    Server: CAP modernclient NEW :sasl=PLAIN
+    Client: CAP REQ :sasl
+    Server: CAP modernclient ACK :sasl
+    Client: AUTHENTICATE PLAIN
+    Server: AUTHENTICATE +
+    Client: AUTHENTICATE ...
+
+Example where the server disconnects a client for excessive reauthentications:
+
+    Client: CAP REQ :sasl
+    Server: CAP modernclient ACK :sasl
+    Client: AUTHENTICATE PLAIN
+    Server: AUTHENTICATE +
+    Client: AUTHENTICATE ...
+    Server: :irc.server.tld 904 modernclient :SASL authentication failed
+    Client: AUTHENTICATE PLAIN
+    Server: AUTHENTICATE +
+    Client: AUTHENTICATE ...
+    Server: :irc.server.tld 904 modernclient :SASL authentication failed
+    Client: AUTHENTICATE PLAIN
+    Server: AUTHENTICATE +
+    Client: AUTHENTICATE ...
+    Server: :irc.server.tld 904 modernclient :SASL authentication failed
+    Server: ERROR :Too many SASL authentication failures
