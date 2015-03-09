@@ -13,27 +13,26 @@ several mechanisms for doing this, but they typically rely on the presence of
 services and aren't really suitable for transient metadata such as a user's
 current location.
 
-This proposal aims to codify two coexisting mechanisms for working with
-metadata: first, persisting metadata may be configured through services via
-NickServ or an appropriate user authentication agent; second, transient
-metadata may be configured through a client --> server event created
-specifically for this purpose. Both mechanisms will behave identically, save
-that services-driven metadata will be encapsulated via `PRIVMSG`.
+This proposal aims to codify one mechanism for working with metadata: metadata
+may be configured through a client-to-server event created specifically for
+this purpose.
 
 ## METADATA
 
 All metadata subcommands will flow through the outgoing `METADATA` verb.
-Metadata may apply to channels, as well; in that case, an optional
-argument is provided prior to the subcommand, as outlined in the format for
-each, if supported.
 
 This specification adds the `metadata-notify` capability for notifications.
 Please see the 'Metadata Notifications' section for more information.
 
-Targets specified by the following subcommands MUST be an asterisk (`*`) when
-used for a user's own metadata, a valid nickname, or a valid mask as determined
-by the IRC server. Invalid targets MUST be responded to with
+For the purposes of this specification, 'targets' are entities for which
+metadata may be set. Such entities MUST be a valid nickname or channel. As a
+convenient shorthand, an asterisk (`*`) MAY be specified to indicate that the
+target is the client itself. Invalid targets MUST be responded to with
 `ERR_TARGETINVALID`.
+
+Implementations MUST provide a mechanism for controlling the ability to set or
+clear metadata on channels. Such mechanisms SHALL respond to unauthorized
+attempts with `ERR_KEYNOPERMISSION`.
 
 ### METADATA LIST
 
@@ -45,151 +44,174 @@ of `METADATA LIST` MUST be as follows:
 
 `METADATA <Target> LIST [:String]`
 
-*Errors*: ERR_NOMATCHINGKEYS
+Servers MAY omit certain metadata, based on an implementation-defined mechanism
+for doing so. Such omissions MUST NOT be disclosed.
+
+*Errors*: `ERR_NOMATCHINGKEYS`
 
 ### METADATA SET
 
 This subcommand MUST set a required key to an optional value. If no value is
 given, the key is removed; otherwise, the value is assigned to the key. The
-response MUST be one `RPL_KEYVALUE` event and one `RPL_METADATAEND` event. The
-format of `METADATA SET` MUST be as follows:
+response MUST be one `RPL_KEYVALUE` event, representing what was actually
+stored by the server, and one `RPL_METADATAEND` event. The format of
+ `METADATA SET` MUST be as follows:
 
 `METADATA <Target> SET <Key> [:Value]`
 
-It is an error for users to set keys for other users, for services accounts
-other than their own (without an appropriate operator privilege), for channels
-for which they lack implementation-defined permission, or for
-implementation-defined keys which would require special access which the user
-does not possess.
+It is an error for users to set keys on targets for which they lack
+authorization from the server, and the server MUST respond with
+`ERR_KEYNOPERMISSION`.
 
-*Errors*: ERR_KEYINVALID, ERR_KEYNOTSET, ERR_KEYNOPERMISSION
+*Errors*: `ERR_METADATALIMIT`, `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`
 
 ### METADATA CLEAR
 
-This subcommand MUST remove all metadata, equivalently to using METADATA SET
-on all keys with an empty value. The format of `METADATA CLEAR` MUST be as
-follows:
+This subcommand MUST remove all metadata, equivalently to using `METADATA SET`
+on all currently-set keys with an empty value. The format of `METADATA CLEAR`
+MUST be as follows:
 
 `METADATA <Target> CLEAR`
 
-This subcommand has the same conditions and errors as the `METADATA SET`
-subcommand.
+The server MUST respond with one `RPL_KEYVALUE` event per cleared key and one
+`RPL_METADATAEND` event. It is an error for users to use this subcommand on
+targets for which they lack authorization from the server. Servers MAY reject
+this subcommand for channels, using `ERR_KEYNOPERMISSION` with an asterisk
+(`*`) in the `<Key>` field.
 
 ## Metadata Notifications
 
-Notifications, e.g. from metadata subscriptions, MUST be passed to the client
-using the incoming METADATA verb, the format of which is as follows:
+Metadata notifications are enabled by requesting the `metadata-notify`
+capability during capability negotiation. When negotiated, this capability
+extends `MONITOR` behaviour to include subscribing users to notifications for
+those users they are currently monitoring. Clients are also subscribed to
+notifications for channels they join. Clients may discontinue notifications
+for users by issuing a disabling `MONITOR` command, and for channels by
+parting the channel. Clients are automatically subscribed to notifications for
+their own metadata.
 
-`METADATA <Source> <Target> <Key> :<Value>`
+Notifications use the `METADATA` event, the format of which is as follows:
 
-`<Source>` identifies the source of the change. `<Target>` refers to the target
-specified by the `MONITOR` command.
+`METADATA <Target> <Key> :<Value>`
 
-This specification extends `MONITOR` to enable metadata notifications using the
-above verb. Clients MUST handle all `METADATA` verbs, regardless of
-subscription status. Notifications MUST be sent for the client's own keys,
-regardless of subscription status.
+`<Target>` refers to the entity which had its metadata changed.
+
+Clients MUST handle all metadata notifications, whether they explicitly
+requested them or not.
+
+Metadata propagates to clients automatically under certain conditions:
+
+1. Upon authentication and successful negotiation of `metadata-notify`, clients
+   MUST have their non-transient metadata propagated to them. If none exists,
+   servers MUST send `ERR_METADATAEND`.
+2. Clients SHOULD have current metadata propagated to them.
+3. Clients who enable `metadata-notify` after issuing `MONITOR` commands to
+   subscribe to users SHOULD have current metadata propagated to them for those
+   users.
 
 ## Metadata Restrictions
 
-Keys MUST be restricted to the ranges A-Z, a-z, and 0-9, and are
-case-insensitive; they MUST, moreover, be namespaced using the period (.) as a
-separator. Values are unrestricted, except that they MUST be UTF-8; binary data
-MUST use the 'data:' URI scheme as standardized by browsers and SHOULD be
-discouraged.
-
-### Key Registry
-
-There shall be a key registry, with the intention of standardizing keys for
-ease of use among server and client authors. It shall be maintained by the
-IRCv3 working group or a suitably-delegated authority. Several namespaces
-will be defined initially, as follows:
-
-* The 'server' namespace is intended for keys which the user cannot set, such
-  as SSL certificate fingerprints. Some keys MAY have restricted visibility.
-* The 'user' namespace is intended for keys which the user can set and which
-  carry meaning relevant only, or mostly, to users.
-* The 'client' namespace is intended for keys which the user can set and which
-  describe the user's client.
-* The 'ext' namespace is intended for keys which have not been formally
-  registered. Server and client authors are advised that they cannot rely on
-  this namespace to carry any standardized meaning. The main namespaces MAY be
-  replicated under this namespace, except for 'private'.
-* The 'private' namespace is intended for server-internal keys and MUST be seen
-  only with the appropriate server operator permissions. Keys in this
-  namespace are not required to be registered.
+Keys MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:`, and are
+case-insensitive. Values are unrestricted, except that they MUST be UTF-8.
+Server and client authors cannot assume that keys will carry specific
+formatting or meaning.
 
 If a limit is set for keys, it MUST only apply to user-set keys and MUST be
 communicated to the user via `RPL_ISUPPORT` as a numeric value on the
 `METADATA` key.
 
-### Predefined Keys
-
-The following keys are predefined for the purposes of the key registry outlined
-above:
-
-| Key            | Meaning                                                      |
-| -------------- | ------------------------------------------------------------ |
-| server.certfp  | SSL certificate fingerprint                                  |
-| user.email     | User's email address                                         |
-| user.phone     | User's phone number                                          |
-| user.website   | User's website                                               |
-| user.im.*      | IM handles; the * is replaced with the relevant service name |
-| user.playing   | Music the user is currently listening to                     |
-| user.status    | The user's current status                                    |
-| client.name    | Client's name                                                |
-| client.version | Client version                                               |
-
-Except for `server.certfp`, all of these keys SHOULD be considered to be
-free-flowing text with no inherent meaning. `server.certfp` MUST be presented
-as hexadecimal.
-
 ## WHOIS
 
-Metadata MUST appear in `WHOIS` output using `RPL_WHOISKEYVALUE` if any is defined
-for the user.
-
-## Services
-
-Metadata SHOULD be presentable via NickServ or similar service in order to
-allow for persistent metadata; the format for encapsulating `METADATA` events
-for persistence MUST be as follows:
-
-`PRIVMSG <Service> :<Metadata command>`
-
-where `<Service>` is the relevant service and `<Metadata command>` is any 
-`METADATA` subcommand as outlined previously. Responses MUST be presented
-appropriately to the service rather than through RPL_* or ERR_* events.
-
-In addition, services MAY display metadata via the `INFO` command with the
-relevant service and account name.
+A subset of metadata MAY be sent via the `RPL_WHOISKEYVALUE` event; this
+subset SHALL be set explicitly, rather than informatively or as a side-effect
+of other events. For a complete view of user metadata, see `METADATA LIST`.
 
 ## IRC Daemons
 
-IRCds MAY have a blacklist or whitelist and may have an option to enforce
-keys against either or neither of them. Implementations may block keys which
-might result in impersonation. It is an error for user-set metadata to have
-any effect on server operations.
+IRC servers may choose to accept or deny any key for any reason, and SHOULD
+implement a blacklist or whitelist functionality for this purpose, configurable
+by the server operators.
 
-If `METADATA` is supported, it MUST be specified in RPL_ISUPPORT using the
-`METADATA` key.
+If `METADATA` is supported, it MUST be specified in `RPL_ISUPPORT` using the
+`METADATA` key. Servers MAY specify a limit on the number of explicitly-set
+keys per-user; the format in that case MUST be `METADATA=<integer>`, where
+`<integer>` is the limit.
 
 ## Numerics
 
 The numerics 760 through 769 MUST be reserved for metadata, carrying the
 following labels and formats:
 
-| No. | Label               | Format                              |
-| --- | ------------------- | ----------------------------------- |
-| 760 | RPL_WHOISKEYVALUE   | `<Target> <Key> :<Value`            |
-| 761 | RPL_KEYVALUE        | `<Target> <Key>[ :<Value>]`         |
-| 762 | RPL_METADATAEND     | `:end of metadata`                  |
-| 765 | ERR_TARGETINVALID   | `<Target> :invalid metadata target` |
-| 766 | ERR_NOMATCHINGKEYS  | `<String> :no matching keys`        |
-| 767 | ERR_KEYINVALID      | `<Key> :invalid metadata key`       |
-| 768 | ERR_KEYNOTSET       | `<Target> <Key> :key not set`       |
-| 769 | ERR_KEYNOPERMISSION | `<Target> <Key> :permission denied` |
+| No. | Label                 | Format                                   |
+| --- | --------------------- | ---------------------------------------- |
+| 760 | `RPL_WHOISKEYVALUE`   | `<Target> <Key> <Visibility> :<Value>`   |
+| 761 | `RPL_KEYVALUE`        | `<Target> <Key> <Visibility>[ :<Value>]` |
+| 762 | `RPL_METADATAEND`     | `:end of metadata`                       |
+| 764 | `ERR_METADATALIMIT`   | `<Target> :metadata limit reached`       |
+| 765 | `ERR_TARGETINVALID`   | `<Target> :invalid metadata target`      |
+| 766 | `ERR_NOMATCHINGKEYS`  | `<Key> :no matching keys`                |
+| 767 | `ERR_KEYINVALID`      | `<Key> :invalid metadata key`            |
+| 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`            |
+| 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied`      |
 
-For `RPL_WHOISKEYVALUE`, the `<Target>` is the usual WHOIS target. For
-all other numerics, the `<Target>` is the nick or valid server-defined
-mask which triggered the numeric response.
+The `Visibility` field MUST be 0 for fields visibile to non-operators and 1 or
+greater for fields visible only to operators.
+
+## Examples
+
+Setting metadata for self:
+
+    METADATA * SET url :http://www.example.com
+    :irc.example.com 761 * url :http://www.example.com
+    :irc.example.com 762 :end of metadata
+
+Setting metadata for channel:
+
+    METADATA #example SET url :http://www.example.com
+    :irc.example.com 761 #example url :http://www.example.com
+    :irc.example.com 762 :end of metadata
+
+Setting metadata for another user, no permission:
+
+    METADATA user1 SET url :http://www.example.com
+    :irc.example.com 769 user1 url :permission denied
+
+Setting metadata for self, limit reached:
+
+    METADATA * SET url :http://www.example.com
+    :irc.example.com 764 * :metadata limit reached
+
+Setting metadata for an invalid target:
+
+    METADATA $a:user SET url :http://www.example.com
+    :irc.example.com 765 $a:user :invalid metadata target
+
+Setting metadata with an invalid key:
+
+    METADATA user1 SET $url$ :http://www.example.com
+    :irc.example.com 767 $url$ :invalid metadata key
+
+Listing metadata, no filter:
+
+    METADATA user1 LIST
+    :irc.example.com 761 user1 url :http://www.example.com
+    :irc.example.com 761 user1 im.xmpp :user1@xmpp.example.com
+    :irc.example.com 762 :end of metadata
+
+Listing metadata, filtering with no results:
+
+    METADATA user1 LIST :blargh splot
+    :irc.example.com 766 user1 blargh :no matching keys
+    :irc.example.com 766 user1 splot :no matching keys
+
+User sets metadata on a channel:
+
+    :user1!~user@somewhere.example.com METADATA #example url 0 :http://www.example.com
+
+External server updates metadata on a channel:
+
+    :irc.example.com METADATA #example url 0 :http://wiki.example.com
+
+External server sets metadata on a user:
+
+    :irc.example.com METADATA user1 account 0 :user1
