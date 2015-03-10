@@ -218,3 +218,14 @@ External server updates metadata on a channel:
 External server sets metadata on a user:
 
     :irc.example.com METADATA user1 account * :user1
+
+### Non-normative
+
+The following examples describe how an implementation might use certain
+features. Unlike previous examples, they are in no way intended to guide
+implementations' behaviour.
+
+Notification for a user becoming an operator:
+
+    :OperServ!OperServ@services.int METADATA user1 services.operclass oper:auspex :services-root
+
