@@ -95,8 +95,9 @@ Notifications use the `METADATA` event, the format of which is as follows:
 `METADATA <Target> <Key> <Visibility> :<Value>`
 
 `<Target>` refers to the entity which had its metadata changed. `<Visibility>`
-MUST be `*` for keys visible to non-operators or an opaque token for keys
-visible only to operators.
+MUST be `*` for keys visible to non-operators or a token which describes the
+key's visibility status in an implementation-defined way; for instance, it may
+be a permission level or flag.
 
 Clients MUST handle all metadata notifications, whether they explicitly
 requested them or not.
