@@ -35,5 +35,5 @@ John joined #chan during the leap second of June 2012 (notice the :60)
 
 	@time=2012-06-30T23:59:60.419Z :John!~john@1.2.3.4 JOIN #chan
 
-[cap]: http://ircv3.atheme.org/specification/capability-negotiation-3.1
-[message tag]: http://ircv3.atheme.org/specification/message-tags-3.2
+[cap]: /specification/capability-negotiation-3.1
+[message tag]: /specification/message-tags-3.2
