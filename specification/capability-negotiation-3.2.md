@@ -53,6 +53,13 @@ or later support in the initial `CAP LS`.
 Two new CAP subcommands are introduced: `NEW` and `DEL`.
 Refer to [the specification of `cap-notify`](/extensions/cap-notify-3.2.md) for details about them.
 
+### Deprecation of sticky (`=`) and ack-required (`~`) capability modifiers
+
+Servers SHOULD NOT denote capabilities which are sticky with the `=` capability modifier.  Instead,
+they should send a `NAK` to any request which would disable the sticky capability.
+
+Capabilities MUST NOT require an `ACK` from the client to be activated.
+
 ## Examples
 
 Example where the client uses CAP 3.2 and the reply contains a cap with
