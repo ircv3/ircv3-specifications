@@ -88,13 +88,15 @@ those users they are currently monitoring. Clients are also subscribed to
 notifications for channels they join. Clients may discontinue notifications
 for users by issuing a disabling `MONITOR` command, and for channels by
 parting the channel. Clients are automatically subscribed to notifications for
-their own metadata.
+their own metadata, excluding changes made by the clients themselves.
 
 Notifications use the `METADATA` event, the format of which is as follows:
 
-`METADATA <Target> <Key> :<Value>`
+`METADATA <Target> <Key> <Visibility> :<Value>`
 
-`<Target>` refers to the entity which had its metadata changed.
+`<Target>` refers to the entity which had its metadata changed. `<Visibility>`
+MUST be `*` for keys visible to non-operators or an opaque token for keys
+visible only to operators.
 
 Clients MUST handle all metadata notifications, whether they explicitly
 requested them or not.
@@ -154,21 +156,21 @@ following labels and formats:
 | 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`            |
 | 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied`      |
 
-The `Visibility` field MUST be 0 for fields visibile to non-operators and 1 or
-greater for fields visible only to operators.
+The `<Visibility>` field for numerics follows the same rules and requirements
+as specified for notifications' visibility.
 
 ## Examples
 
 Setting metadata for self:
 
     METADATA * SET url :http://www.example.com
-    :irc.example.com 761 * url :http://www.example.com
+    :irc.example.com 761 * url * :http://www.example.com
     :irc.example.com 762 :end of metadata
 
 Setting metadata for channel:
 
     METADATA #example SET url :http://www.example.com
-    :irc.example.com 761 #example url :http://www.example.com
+    :irc.example.com 761 #example url * :http://www.example.com
     :irc.example.com 762 :end of metadata
 
 Setting metadata for another user, no permission:
@@ -194,8 +196,8 @@ Setting metadata with an invalid key:
 Listing metadata, no filter:
 
     METADATA user1 LIST
-    :irc.example.com 761 user1 url :http://www.example.com
-    :irc.example.com 761 user1 im.xmpp :user1@xmpp.example.com
+    :irc.example.com 761 user1 url * :http://www.example.com
+    :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
     :irc.example.com 762 :end of metadata
 
 Listing metadata, filtering with no results:
@@ -206,12 +208,12 @@ Listing metadata, filtering with no results:
 
 User sets metadata on a channel:
 
-    :user1!~user@somewhere.example.com METADATA #example url 0 :http://www.example.com
+    :user1!~user@somewhere.example.com METADATA #example url * :http://www.example.com
 
 External server updates metadata on a channel:
 
-    :irc.example.com METADATA #example url 0 :http://wiki.example.com
+    :irc.example.com METADATA #example url * :http://wiki.example.com
 
 External server sets metadata on a user:
 
-    :irc.example.com METADATA user1 account 0 :user1
+    :irc.example.com METADATA user1 account * :user1
