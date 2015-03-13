@@ -5,13 +5,8 @@ the command sender's services account to commands sent to the client that has
 requested this capability. It supersedes the `identify-msg` extension.
 
 The tag MUST be named `account`, and contain the sender's current services
-username.
-
-If the user is not identified to any services account, the tag MUST NOT be
-sent.  Exception: If the ircd reliably knows that the sender is a trusted
-network service (e.g. is on an U:lined server), `!service` MUST be sent as the
-value.  (No known services present their pseudo-clients as having any account
-name, therefore no conflicts are expected here.)
+username. (If the user is not identified to any services account, the tag MUST
+NOT be sent.)
 
 The tag MUST be added by the ircd to all commands sent by a user (e.g. PRIVMSG,
 MODE, NOTICE, and all others). The tag also MUST be added by the ircd to all
