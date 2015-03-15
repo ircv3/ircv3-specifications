@@ -34,20 +34,41 @@ Implementations MUST provide a mechanism for controlling the ability to set or
 clear metadata on channels. Such mechanisms SHALL respond to unauthorized
 attempts with `ERR_KEYNOPERMISSION`.
 
+Implementations MAY provide a mechanism for limiting visibility of certain
+metadata to certain users. Such mechanism is implementation-defined;
+for instance, it may depend on some permission level or a flag.
+
+### METADATA GET
+
+This command allows lookup of some keys. The format MUST be as follows:
+
+`METADATA <Target> GET key1 key2 ...`
+
+Multiple keys may be given.
+The response will be either `RPL_KEYVALUE`, `ERR_KEYINVALID`
+or `ERR_NOMATCHINGKEYS` for every key in order.
+
+Servers MAY replace certain metadata, which is considered not visible for the
+requesting user, with `ERR_NOMATCHINGKEYS` or with `ERR_KEYNOPERMISSION`.
+
+*Errors*: `ERR_NOMATCHINGKEYS`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`.
+
 ### METADATA LIST
 
+The format MUST be as follows:
+
+`METADATA <Target> LIST
+
 This subcommand MUST list all currently-set metadata keys along with their
-values. An optional string may be given to reduce the list to matching keys.
-Multiple keys may be given, separated by spaces. The response will be one or
-more `RPL_KEYVALUE` events and a closing `RPL_METADATAEND` event. The format
-of `METADATA LIST` MUST be as follows:
+values. The response will be zero or more `RPL_KEYVALUE` events,
+	following by `RPL_METADATAEND` event.
 
-`METADATA <Target> LIST [:String]`
+Servers MAY omit certain metadata, which is considered not visible for
+the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
 
-Servers MAY omit certain metadata, based on an implementation-defined mechanism
-for doing so. Such omissions MUST NOT be disclosed.
+In case of invalid target `RPL_METADATAEND` MUST be not sent.
 
-*Errors*: `ERR_NOMATCHINGKEYS`
+*Errors*: `ERR_NOMATCHINGKEYS`, `ERR_KEYNOPERMISSION`.
 
 ### METADATA SET
 
@@ -95,7 +116,7 @@ Notifications use the `METADATA` event, the format of which is as follows:
 `METADATA <Target> <Key> <Visibility> :<Value>`
 
 `<Target>` refers to the entity which had its metadata changed. `<Visibility>`
-MUST be `*` for keys visible to non-operators or a token which describes the
+MUST be `*` for keys visible to everyone, or a token which describes the
 key's visibility status in an implementation-defined way; for instance, it may
 be a permission level or flag.
 
@@ -194,18 +215,20 @@ Setting metadata with an invalid key:
     METADATA user1 SET $url$ :http://www.example.com
     :irc.example.com 767 $url$ :invalid metadata key
 
-Listing metadata, no filter:
+Listing metadata, with an implementation-defined visibility field:
 
     METADATA user1 LIST
     :irc.example.com 761 user1 url * :http://www.example.com
     :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
+    :irc.example.com 761 user1 bot-likeliness-score visible-only-for-admin :42
     :irc.example.com 762 :end of metadata
 
-Listing metadata, filtering with no results:
+Getting several keys of metadata of the same user:
 
-    METADATA user1 LIST :blargh splot
+    METADATA user1 GET blargh splot im.xmpp
     :irc.example.com 766 user1 blargh :no matching keys
     :irc.example.com 766 user1 splot :no matching keys
+    :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
 
 User sets metadata on a channel:
 
