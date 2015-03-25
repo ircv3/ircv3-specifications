@@ -60,8 +60,10 @@ The format MUST be as follows:
 `METADATA <Target> LIST
 
 This subcommand MUST list all currently-set metadata keys along with their
-values. The response will be zero or more `RPL_KEYVALUE` events,
-	following by `RPL_METADATAEND` event.
+values. If there are one or more keys to list, the response will be one or more
+`RPL_KEYVALUE` events, followed by one `RPL_METADATAEND` event. If there are
+zero keys to list, the response will be one `ERR_NOMATCHINGKEYS` event with an
+asterisk (`*`) in the `<Key>` field.
 
 Servers MAY omit certain metadata, which is considered not visible for
 the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
