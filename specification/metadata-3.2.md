@@ -46,12 +46,12 @@ This command allows lookup of some keys. The format MUST be as follows:
 
 Multiple keys may be given.
 The response will be either `RPL_KEYVALUE`, `ERR_KEYINVALID`
-or `ERR_NOMATCHINGKEYS` for every key in order.
+or `ERR_NOMATCHINGKEY` for every key in order.
 
 Servers MAY replace certain metadata, which is considered not visible for the
-requesting user, with `ERR_NOMATCHINGKEYS` or with `ERR_KEYNOPERMISSION`.
+requesting user, with `ERR_NOMATCHINGKEY` or with `ERR_KEYNOPERMISSION`.
 
-*Errors*: `ERR_NOMATCHINGKEYS`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`.
+*Errors*: `ERR_NOMATCHINGKEY`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`.
 
 ### METADATA LIST
 
@@ -68,7 +68,7 @@ the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
 
 In case of invalid target `RPL_METADATAEND` MUST be not sent.
 
-*Errors*: `ERR_NOMATCHINGKEYS`, `ERR_KEYNOPERMISSION`.
+*Errors*: `ERR_KEYNOPERMISSION`.
 
 ### METADATA SET
 
@@ -173,7 +173,7 @@ following labels and formats:
 | 762 | `RPL_METADATAEND`     | `:end of metadata`                       |
 | 764 | `ERR_METADATALIMIT`   | `<Target> :metadata limit reached`       |
 | 765 | `ERR_TARGETINVALID`   | `<Target> :invalid metadata target`      |
-| 766 | `ERR_NOMATCHINGKEYS`  | `<Key> :no matching keys`                |
+| 766 | `ERR_NOMATCHINGKEY`   | `<Key> :no matching key`                 |
 | 767 | `ERR_KEYINVALID`      | `<Key> :invalid metadata key`            |
 | 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`            |
 | 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied`      |
@@ -226,8 +226,8 @@ Listing metadata, with an implementation-defined visibility field:
 Getting several keys of metadata of the same user:
 
     METADATA user1 GET blargh splot im.xmpp
-    :irc.example.com 766 user1 blargh :no matching keys
-    :irc.example.com 766 user1 splot :no matching keys
+    :irc.example.com 766 user1 blargh :no matching key
+    :irc.example.com 766 user1 splot :no matching key
     :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
 
 User sets metadata on a channel:
