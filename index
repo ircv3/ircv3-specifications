@@ -8,7 +8,7 @@ It was created by [atheme.org](http://atheme.org) but now represents the interes
 
 Other stakeholders in the IRC protocol, such as IRC networks and IRC network operators are
 invited to participate.  If you would like to discuss IRCv3 standardization efforts over
-IRC itself, you may find us at `irc.atheme.org #ircv3`.
+IRC itself, you may find us at `#ircv3` on [freenode](https://freenode.net).
 
 Please also read our [charter](/charter) before participating.
 
@@ -71,8 +71,8 @@ extensions that have not yet been added to this registry.  We recommend that ext
 the registry use appropriate namespacing as described in the capability negotiation specification
 and in the message tags specification.
 
-To submit an extension to the extension registry, please contact us via IRC for now
-(`irc.atheme.org #ircv3`).  Extension specifications should be submitted in Markdown format.
+To submit an extension to the extension registry, please contact us via IRC for now (`#ircv3`
+on [freenode](https://freenode.net)).  Extension specifications should be submitted in Markdown format.
 
 ### Base Extensions
 
