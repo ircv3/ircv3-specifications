@@ -123,6 +123,9 @@ for users by issuing a disabling `MONITOR` command, and for channels by
 parting the channel. Clients are automatically subscribed to notifications for
 their own metadata, excluding changes made by the clients themselves.
 
+Client subscriptions to a channel includes notifications for other users in
+the channel, regardless of `MONITOR` state.
+
 Notifications use the `METADATA` event, the format of which is as follows:
 
 `METADATA <Target> <Key> <Visibility> :<Value>`
