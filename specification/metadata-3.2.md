@@ -80,6 +80,9 @@ stored by the server, and one `RPL_METADATAEND` event. The format of
 
 `METADATA <Target> SET <Key> [:Value]`
 
+Servers MUST respond to requests to remove a key that is not set with an
+`ERR_KEYNOTSET` event.
+
 Servers MAY respond to certain keys, considered not settable by the requesting
 user, with `ERR_KEYNOPERMISSION`.
 
