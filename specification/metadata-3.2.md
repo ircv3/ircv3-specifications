@@ -80,6 +80,9 @@ stored by the server, and one `RPL_METADATAEND` event. The format of
 
 `METADATA <Target> SET <Key> [:Value]`
 
+Servers MAY respond to certain keys, considered not settable by the requesting
+user, with `ERR_KEYNOPERMISSION`.
+
 It is an error for users to set keys on targets for which they lack
 authorization from the server, and the server MUST respond with
 `ERR_KEYNOPERMISSION`.
@@ -95,10 +98,16 @@ MUST be as follows:
 `METADATA <Target> CLEAR`
 
 The server MUST respond with one `RPL_KEYVALUE` event per cleared key and one
-`RPL_METADATAEND` event. It is an error for users to use this subcommand on
-targets for which they lack authorization from the server. Servers MAY reject
-this subcommand for channels, using `ERR_KEYNOPERMISSION` with an asterisk
-(`*`) in the `<Key>` field.
+`RPL_METADATAEND` event.
+
+Servers MAY omit certain metadata, which is considered not settable by
+the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
+
+It is an error for users to use this subcommand on targets for which they lack
+authorization from the server. Servers MAY reject this subcommand for channels,
+using `ERR_KEYNOPERMISSION` with an asterisk (`*`) in the `<Key>` field.
+
+*Errors*: `ERR_KEYNOPERMISSION`
 
 ## Metadata Notifications
 
