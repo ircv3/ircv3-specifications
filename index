@@ -87,9 +87,9 @@ on [freenode](https://freenode.net)).  Extension specifications should be submit
  * [IRC Version 3.2: `batch` Extension](/extensions/batch-3.2.md)
  * [IRC Version 3.2: `cap-notify` Extension](/extensions/cap-notify-3.2.md)
  * [IRC Version 3.2: `chghost` Extension](/extensions/chghost-3.2.md)
+ * [IRC Version 3.2: `echo-message` Extension](/extensions/echo-message-3.2.md)
  * [IRC Version 3.2: `invite-notify` Extension](/extensions/invite-notify-3.2.md)
  * [IRC Version 3.2: `sasl` Extension](/extensions/sasl-3.2.md)
- * [IRC Version 3.2: `self-message` Extension](/extensions/self-message-3.2.md)
  * [IRC Version 3.2: `server-time` Extension](/extensions/server-time-3.2.md)
  * [IRC Version 3.2: `userhost-in-names` Extension](/extensions/userhost-in-names-3.2.md)
 
