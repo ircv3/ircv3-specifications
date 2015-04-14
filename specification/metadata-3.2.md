@@ -142,8 +142,9 @@ Metadata propagates to clients automatically under certain conditions:
 
 1. Upon authentication and successful negotiation of `metadata-notify`, clients
    MUST have their non-transient metadata propagated to them. If none exists,
-   servers MUST send `ERR_METADATAEND`.
-2. Clients SHOULD have current metadata propagated to them.
+   servers MUST send `RPL_METADATAEND`.
+2. Clients SHOULD have current metadata of targets propagated to them upon
+   subscription.
 3. Clients who enable `metadata-notify` after issuing `MONITOR` commands to
    subscribe to users SHOULD have current metadata propagated to them for those
    users.
