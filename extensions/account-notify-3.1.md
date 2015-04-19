@@ -1,5 +1,4 @@
-account-notify client capability specification
-----------------------------------------------
+# account-notify client capability specification
 
 Copyright (c) 2010 William Pitcock <nenolod@atheme.org>.
 
@@ -44,7 +43,7 @@ you always have the accountname to display is to do the following:
    negotiation time during the login handshake, and then set the accountname
    based on what is sent in the extended JOIN command.
 
-   Otherwise, if extended-join is unavailable:
+    Otherwise, if extended-join is unavailable:
    When new users join a channel that your client does not know the accountname
    for yet, do a WHO query against that client, again including the 'a' format
    token in your WHOX token request field.  When you get a reply, do appropriate

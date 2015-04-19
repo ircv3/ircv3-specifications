@@ -1,9 +1,8 @@
-invite-notify client capability specification
----------------------------------------------
+# invite-notify client capability specification
 
-Copyright (c) 2013 Adam <Adam@anope.org>
+Copyright (c) 2013 Adam <Adam@anope.org>.
 
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>
+Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
 
 Unlimited redistribution and modification of this document is allowed
 provided that the above copyright notice and this permission notice

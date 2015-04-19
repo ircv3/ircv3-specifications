@@ -1,8 +1,10 @@
 # IRC `BATCH` extension
 
 Copyright (c) 2012 William Pitcock <nenolod@dereferenced.org>.
-Copyright (c) 2014 Kythyria Tieran <kythyria@berigora.net>
-Copyright (c) 2014 Alexey Sokolov <alexey-irc@asokolov.org>
+
+Copyright (c) 2014 Kythyria Tieran <kythyria@berigora.net>.
+
+Copyright (c) 2014 Alexey Sokolov <alexey-irc@asokolov.org>.
 
 Unlimited redistribution and modification is allowed provided that the above
 copyright notice and this permission notice remains intact.

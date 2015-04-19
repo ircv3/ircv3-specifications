@@ -1,5 +1,4 @@
-chghost client capability specification
----------------------------------------
+# chghost client capability specification
 
 Copyright (c) 2013 Sam Dodrill <shadow.h511@gmail.com>.
 

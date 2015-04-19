@@ -1,5 +1,4 @@
-away-notify client capability specification
-----------------------------------------------
+# away-notify client capability specification
 
 Copyright (c) 2012 Keith Buck <mr_flea@esper.net>.
 

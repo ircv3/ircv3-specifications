@@ -42,7 +42,7 @@ for instance, it may depend on some permission level or a flag.
 
 This command allows lookup of some keys. The format MUST be as follows:
 
-`METADATA <Target> GET key1 key2 ...`
+    METADATA <Target> GET key1 key2 ...
 
 Multiple keys may be given.
 The response will be either `RPL_KEYVALUE`, `ERR_KEYINVALID`
@@ -57,7 +57,7 @@ requesting user, with `ERR_NOMATCHINGKEYS` or with `ERR_KEYNOPERMISSION`.
 
 The format MUST be as follows:
 
-`METADATA <Target> LIST
+    METADATA <Target> LIST
 
 This subcommand MUST list all currently-set metadata keys along with their
 values. The response will be zero or more `RPL_KEYVALUE` events,
@@ -78,7 +78,7 @@ response MUST be one `RPL_KEYVALUE` event, representing what was actually
 stored by the server, and one `RPL_METADATAEND` event. The format of
  `METADATA SET` MUST be as follows:
 
-`METADATA <Target> SET <Key> [:Value]`
+    METADATA <Target> SET <Key> [:Value]
 
 It is an error for users to set keys on targets for which they lack
 authorization from the server, and the server MUST respond with
@@ -92,7 +92,7 @@ This subcommand MUST remove all metadata, equivalently to using `METADATA SET`
 on all currently-set keys with an empty value. The format of `METADATA CLEAR`
 MUST be as follows:
 
-`METADATA <Target> CLEAR`
+    METADATA <Target> CLEAR
 
 The server MUST respond with one `RPL_KEYVALUE` event per cleared key and one
 `RPL_METADATAEND` event. It is an error for users to use this subcommand on
@@ -113,7 +113,7 @@ their own metadata, excluding changes made by the clients themselves.
 
 Notifications use the `METADATA` event, the format of which is as follows:
 
-`METADATA <Target> <Key> <Visibility> :<Value>`
+    METADATA <Target> <Key> <Visibility> :<Value>
 
 `<Target>` refers to the entity which had its metadata changed. `<Visibility>`
 MUST be `*` for keys visible to everyone, or a token which describes the
