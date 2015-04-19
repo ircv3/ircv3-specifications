@@ -54,7 +54,6 @@ The mapping between characters in tag values and their representation in `<escap
 |-----------------|-------------------------------|
 | `;` (semicolon) | `\:` (backslash and colon)    |
 | `SPACE`         | `\s`                          |
-| `NUL`           | `\0` (backslash and 0 digit)  |
 | `\`             | `\\`                          |
 | `CR`            | `\r`                          |
 | `LF`            | `\n`                          |
