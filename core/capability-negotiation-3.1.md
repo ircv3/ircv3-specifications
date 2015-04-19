@@ -2,7 +2,7 @@
 title: IRCv3.1 Client Capability Negotiation
 layout: spec
 ---
-# IRCv3 Client Capability Negotiation
+# IRCv3.1 Client Capability Negotiation
 
 Copyright (c) 2004-2012 Kevin L. Mitchell <klmitch@mit.edu>.
 

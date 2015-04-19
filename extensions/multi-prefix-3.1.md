@@ -2,7 +2,7 @@
 title: IRCv3.1 `multi-prefix` Extension
 layout: spec
 ---
-# multi-prefix Client Capability Extension
+# IRCv3.1 `multi-prefix` Extension
 
 Copyright (c) 2012 William Pitcock <nenolod@atheme.org>.
 

@@ -2,7 +2,7 @@
 title: IRCv3.1 `tls` Extension
 layout: spec
 ---
-# tls Client Capability Extension
+# IRCv3.1 `tls` Extension
 
 Copyright (c) 2012 William Pitcock <nenolod@atheme.org>.
 

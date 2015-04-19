@@ -2,7 +2,7 @@
 title: IRCv3.2 `batch` Extension
 layout: spec
 ---
-# IRC `BATCH` extension
+# IRCv3.2 `batch` Extension
 
 Copyright (c) 2012 William Pitcock <nenolod@dereferenced.org>.
 

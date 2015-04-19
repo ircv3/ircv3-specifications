@@ -2,7 +2,7 @@
 title: IRCv3.2 Metadata
 layout: spec
 ---
-# Metadata Specification
+# IRCv3.2 Metadata
 
 Copyright (c) 2012 Kiyoshi Aman <kiyoshi.aman@gmail.com>.
 

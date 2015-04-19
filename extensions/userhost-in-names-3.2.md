@@ -2,7 +2,7 @@
 title: IRCv3.2 `userhost-in-names` Extension
 layout: spec
 ---
-# userhost-in-names Client Capability Extension
+# IRCv3.2 `userhost-in-names` Extension
 
 The `userhost-in-names` capability extends the NAMES reply messages
 (`RPL_NAMREPLY`) to contain the full hostmask (nick!user@host) of every user

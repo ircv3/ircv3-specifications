@@ -2,7 +2,7 @@
 title: IRCv3.1 SASL Authentication
 layout: spec
 ---
-# SASL authentication
+# IRCv3.1 SASL Authentication
 
 This document describes the client protocol for SASL authentication, as
 implemented in Charybdis and Atheme.

@@ -2,7 +2,7 @@
 title: IRCv3.2 `account-tag` Extension
 layout: spec
 ---
-# account-tag Client Capability Extension
+# IRCv3.2 `account-tag` Extension
 
 The `account-tag` capability causes the server to add a message-tag containing
 the command sender's services account to commands sent to the client that has

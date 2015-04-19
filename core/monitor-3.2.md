@@ -2,7 +2,9 @@
 title: IRCv3.2 Monitor
 layout: spec
 ---
-# MONITOR - Protocol for notification of when clients become online/offline
+# IRCv3.2 Monitor
+
+Protocol for notification of when clients become online/offline
 
 Copyright (c) Lee Hardy <lee@leeh.co.uk>.
 

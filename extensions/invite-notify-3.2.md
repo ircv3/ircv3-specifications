@@ -2,7 +2,7 @@
 title: IRCv3.2 `invite-notify` Extension
 layout: spec
 ---
-# invite-notify client capability specification
+# IRCv3.2 `invite-notify` Extension
 
 Copyright (c) 2013 Adam <Adam@anope.org>.
 

@@ -2,7 +2,7 @@
 title: IRCv3.2 `server-time` Extension
 layout: spec
 ---
-# server-time client capability specification
+# IRCv3.2 `server-time` Extension
 
 Copyright (c) 2012 Stéphan Kochen <stephan@kochen.nl>.
 
