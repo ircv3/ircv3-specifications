@@ -1,3 +1,7 @@
+---
+title: IRCv3.1 SASL Authentication
+layout: spec
+---
 # SASL authentication
 
 This document describes the client protocol for SASL authentication, as

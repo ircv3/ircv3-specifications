@@ -1,3 +1,7 @@
+---
+title: IRCv3 NETSPLIT and NETJOIN Batch Types
+layout: spec
+---
 # NETSPLIT and NETJOIN Batch Types
 
 Copyright (C) 2014 Alex Iadicicco <http://github.com/aji>.

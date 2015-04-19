@@ -1,3 +1,7 @@
+---
+title: IRCv3.2 Message Tags
+layout: spec
+---
 # IRCv3.2 Message Tags
 
 Copyright (c) 2012 Alexey Sokolov <alexey-irc@asokolov.org>.

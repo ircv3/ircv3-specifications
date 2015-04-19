@@ -1,3 +1,7 @@
+---
+title: IRCv3.1 `extended-join` Extension
+layout: spec
+---
 # extended-join client capability specification
 
 Copyright (c) 2011 Kiyoshi Aman <kiyoshi.aman@gmail.com>.

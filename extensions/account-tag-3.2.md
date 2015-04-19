@@ -1,3 +1,7 @@
+---
+title: IRCv3.2 `account-tag` Extension
+layout: spec
+---
 # account-tag Client Capability Extension
 
 The `account-tag` capability causes the server to add a message-tag containing

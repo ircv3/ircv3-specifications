@@ -1,3 +1,7 @@
+---
+title: IRCv3.3 Message Intents framework
+layout: spec
+---
 # Message Intents framework
 
 Copyright (c) 2012 William Pitcock <nenolod@dereferenced.org>.

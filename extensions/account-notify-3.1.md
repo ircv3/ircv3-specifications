@@ -1,3 +1,7 @@
+---
+title: IRCv3.1 `account-notify` Extension
+layout: spec
+---
 # account-notify client capability specification
 
 Copyright (c) 2010 William Pitcock <nenolod@atheme.org>.

@@ -1,3 +1,7 @@
+---
+title: IRCv3.2 Metadata
+layout: spec
+---
 # Metadata Specification
 
 Copyright (c) 2012 Kiyoshi Aman <kiyoshi.aman@gmail.com>.

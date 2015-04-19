@@ -1,3 +1,7 @@
+---
+title: IRCv3.2 `cap-notify` Extension
+layout: spec
+---
 # cap-notify client capability specification
 
 Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.

@@ -1,3 +1,7 @@
+---
+title: IRCv3 SASL DH-AES Authentication Mechanism
+layout: spec
+---
 # SASL DH-AES Authentication Mechanism
 
 This specification documents the `DH-AES` SASL mechanism currently implemented

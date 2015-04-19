@@ -1,3 +1,7 @@
+---
+title: IRCv3.2 `server-time` Extension
+layout: spec
+---
 # server-time client capability specification
 
 Copyright (c) 2012 Stéphan Kochen <stephan@kochen.nl>.

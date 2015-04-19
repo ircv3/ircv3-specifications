@@ -1,3 +1,7 @@
+---
+title: IRCv3.2 `chghost` Extension
+layout: spec
+---
 # chghost client capability specification
 
 Copyright (c) 2013 Sam Dodrill <shadow.h511@gmail.com>.

@@ -1,3 +1,7 @@
+---
+title: IRCv3.2 SASL Authentication
+layout: spec
+---
 # SASL authentication in IRC v3.2
 
 Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
