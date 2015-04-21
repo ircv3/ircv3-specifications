@@ -46,12 +46,12 @@ This command allows lookup of some keys. The format MUST be as follows:
 
 Multiple keys may be given.
 The response will be either `RPL_KEYVALUE`, `ERR_KEYINVALID`
-or `ERR_NOMATCHINGKEYS` for every key in order.
+or `ERR_NOMATCHINGKEY` for every key in order.
 
 Servers MAY replace certain metadata, which is considered not visible for the
-requesting user, with `ERR_NOMATCHINGKEYS` or with `ERR_KEYNOPERMISSION`.
+requesting user, with `ERR_NOMATCHINGKEY` or with `ERR_KEYNOPERMISSION`.
 
-*Errors*: `ERR_NOMATCHINGKEYS`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`.
+*Errors*: `ERR_NOMATCHINGKEY`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`.
 
 ### METADATA LIST
 
@@ -68,7 +68,7 @@ the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
 
 In case of invalid target `RPL_METADATAEND` MUST be not sent.
 
-*Errors*: `ERR_NOMATCHINGKEYS`, `ERR_KEYNOPERMISSION`.
+*Errors*: `ERR_KEYNOPERMISSION`.
 
 ### METADATA SET
 
@@ -79,6 +79,12 @@ stored by the server, and one `RPL_METADATAEND` event. The format of
  `METADATA SET` MUST be as follows:
 
 `METADATA <Target> SET <Key> [:Value]`
+
+Servers MUST respond to requests to remove a key that is not set with an
+`ERR_KEYNOTSET` event.
+
+Servers MAY respond to certain keys, considered not settable by the requesting
+user, with `ERR_KEYNOPERMISSION`.
 
 It is an error for users to set keys on targets for which they lack
 authorization from the server, and the server MUST respond with
@@ -95,10 +101,16 @@ MUST be as follows:
 `METADATA <Target> CLEAR`
 
 The server MUST respond with one `RPL_KEYVALUE` event per cleared key and one
-`RPL_METADATAEND` event. It is an error for users to use this subcommand on
-targets for which they lack authorization from the server. Servers MAY reject
-this subcommand for channels, using `ERR_KEYNOPERMISSION` with an asterisk
-(`*`) in the `<Key>` field.
+`RPL_METADATAEND` event.
+
+Servers MAY omit certain metadata, which is considered not settable by
+the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
+
+It is an error for users to use this subcommand on targets for which they lack
+authorization from the server. Servers MAY reject this subcommand for channels,
+using `ERR_KEYNOPERMISSION` with an asterisk (`*`) in the `<Key>` field.
+
+*Errors*: `ERR_KEYNOPERMISSION`
 
 ## Metadata Notifications
 
@@ -110,6 +122,9 @@ notifications for channels they join. Clients may discontinue notifications
 for users by issuing a disabling `MONITOR` command, and for channels by
 parting the channel. Clients are automatically subscribed to notifications for
 their own metadata, excluding changes made by the clients themselves.
+
+Client subscriptions to a channel includes notifications for other users in
+the channel, regardless of `MONITOR` state.
 
 Notifications use the `METADATA` event, the format of which is as follows:
 
@@ -127,8 +142,9 @@ Metadata propagates to clients automatically under certain conditions:
 
 1. Upon authentication and successful negotiation of `metadata-notify`, clients
    MUST have their non-transient metadata propagated to them. If none exists,
-   servers MUST send `ERR_METADATAEND`.
-2. Clients SHOULD have current metadata propagated to them.
+   servers MUST send `RPL_METADATAEND`.
+2. Clients SHOULD have current metadata of targets propagated to them upon
+   subscription.
 3. Clients who enable `metadata-notify` after issuing `MONITOR` commands to
    subscribe to users SHOULD have current metadata propagated to them for those
    users.
@@ -173,7 +189,7 @@ following labels and formats:
 | 762 | `RPL_METADATAEND`     | `:end of metadata`                       |
 | 764 | `ERR_METADATALIMIT`   | `<Target> :metadata limit reached`       |
 | 765 | `ERR_TARGETINVALID`   | `<Target> :invalid metadata target`      |
-| 766 | `ERR_NOMATCHINGKEYS`  | `<Key> :no matching keys`                |
+| 766 | `ERR_NOMATCHINGKEY`   | `<Key> :no matching key`                 |
 | 767 | `ERR_KEYINVALID`      | `<Key> :invalid metadata key`            |
 | 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`            |
 | 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied`      |
@@ -226,8 +242,8 @@ Listing metadata, with an implementation-defined visibility field:
 Getting several keys of metadata of the same user:
 
     METADATA user1 GET blargh splot im.xmpp
-    :irc.example.com 766 user1 blargh :no matching keys
-    :irc.example.com 766 user1 splot :no matching keys
+    :irc.example.com 766 user1 blargh :no matching key
+    :irc.example.com 766 user1 splot :no matching key
     :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
 
 User sets metadata on a channel:
