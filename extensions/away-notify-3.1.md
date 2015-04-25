@@ -1,5 +1,8 @@
-away-notify client capability specification
-----------------------------------------------
+---
+title: IRCv3.1 `away-notify` Extension
+layout: spec
+---
+# IRCv3.1 `away-notify` Extension
 
 Copyright (c) 2012 Keith Buck <mr_flea@esper.net>.
 

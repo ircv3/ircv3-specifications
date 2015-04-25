@@ -1,8 +1,12 @@
-echo-message client capability specification
---------------------------------------------
+---
+title: IRCv3.2 `echo-message` Extension
+layout: spec
+---
+# IRCv3.2 `echo-message` Extension
 
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>
-Copyright (c) 2014 J-P Nurmi <jpnurmi@gmail.com>
+Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
+
+Copyright (c) 2014 J-P Nurmi <jpnurmi@gmail.com>.
 
 Unlimited redistribution and modification of this document is allowed
 provided that the above copyright notice and this permission notice

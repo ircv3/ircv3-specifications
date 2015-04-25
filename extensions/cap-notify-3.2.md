@@ -1,7 +1,10 @@
-cap-notify client capability specification
-------------------------------------------
+---
+title: IRCv3.2 `cap-notify` Extension
+layout: spec
+---
+# IRCv3.2 `cap-notify` Extension
 
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>
+Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
 
 Unlimited redistribution and modification of this document is allowed
 provided that the above copyright notice and this permission notice
@@ -65,14 +68,14 @@ The capability list is space separated.
 
 1. Message indicating that a new extension named `batch` is now available:
 
-	    :irc.example.com CAP modernclient NEW :batch
+    :irc.example.com CAP modernclient NEW :batch
 
 2. Message indicating that multiple extensions are no longer available:
 
-	    :irc.example.com CAP modernclient DEL :userhost-in-names multi-prefix away-notify
+    :irc.example.com CAP modernclient DEL :userhost-in-names multi-prefix away-notify
 
 3. Example showing a client requesting capabilities when they become available:
 
-	    Server: :irc.example.com CAP tester NEW :away-notify extended-join
-	    Client: CAP REQ :extended-join away-notify
-	    Server: :irc.example.com CAP tester ACK :extended-join away-notify
+    Server: :irc.example.com CAP tester NEW :away-notify extended-join
+    Client: CAP REQ :extended-join away-notify
+    Server: :irc.example.com CAP tester ACK :extended-join away-notify

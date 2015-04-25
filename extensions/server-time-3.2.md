@@ -1,9 +1,14 @@
-server-time client capability specification
-===========================================
+---
+title: IRCv3.2 `server-time` Extension
+layout: spec
+---
+# IRCv3.2 `server-time` Extension
 
-Copyright (c) 2012 Stéphan Kochen <stephan@kochen.nl>  
-Copyright (c) 2012 Alexey Sokolov <alexey-irc@asokolov.org>  
-Copyright (c) 2012 Kyle Fuller <inbox@kylefuller.co.uk>
+Copyright (c) 2012 Stéphan Kochen <stephan@kochen.nl>.
+
+Copyright (c) 2012 Alexey Sokolov <alexey-irc@asokolov.org>.
+
+Copyright (c) 2012 Kyle Fuller <inbox@kylefuller.co.uk>.
 
 Clients indicate support for the extension by requesting a capability server-time as per the [IRC Client Capabilities Extension][cap].
 
@@ -34,6 +39,7 @@ Example 2:
 John joined #chan during the leap second of June 2012 (notice the :60)
 
 	@time=2012-06-30T23:59:60.419Z :John!~john@1.2.3.4 JOIN #chan
+
 
 [cap]: /specification/capability-negotiation-3.1
 [message tag]: /specification/message-tags-3.2

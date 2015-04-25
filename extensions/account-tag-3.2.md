@@ -1,4 +1,8 @@
-# account-tag Client Capability Extension
+---
+title: IRCv3.2 `account-tag` Extension
+layout: spec
+---
+# IRCv3.2 `account-tag` Extension
 
 The `account-tag` capability causes the server to add a message-tag containing
 the command sender's services account to commands sent to the client that has
@@ -13,7 +17,7 @@ MODE, NOTICE, and all others). The tag also MUST be added by the ircd to all
 numerics directly caused by the sender. For example, if the target user has
 "caller ID" enabled (e.g. user modes +R or +g in Charybdis), the tag MUST be
 added to numerics indicating blocked message attempts (numeric 718 aka
-RPL\_UMODEMSG).
+`RPL_UMODEMSG`).
 
 Example (demonstrated using the `account-notify` capability):
 

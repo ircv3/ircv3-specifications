@@ -1,3 +1,7 @@
+---
+title: IRCv3 SASL DH-BLOWFISH Authentication Mechanism
+layout: spec
+---
 # SASL DH-BLOWFISH Authentication Mechanism
 
 This specification documents the `DH-BLOWFISH` SASL mechanism currently

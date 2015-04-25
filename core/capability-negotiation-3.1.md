@@ -1,4 +1,8 @@
-# IRCv3 Client Capability Negotiation
+---
+title: IRCv3.1 Client Capability Negotiation
+layout: spec
+---
+# IRCv3.1 Client Capability Negotiation
 
 Copyright (c) 2004-2012 Kevin L. Mitchell <klmitch@mit.edu>.
 
@@ -163,14 +167,24 @@ continue as normal.
 
 There are two capability namespaces:
 
-* Vendor-Specific: Names which contain a slash character (`/`) designate a vendor-specific
-  capability namespace. These names are prefixed by a valid DNS domain name.
-  For example: `znc.in/server-time`.  In cases if the domain name contains non-ASCII characters,
-  punycode MUST be used, e.g. `xn--e1afmkfd.org/foo`.
-  Vendor-Specific capabilities should be submitted to the IRCv3 working group for consideration.
+### Vendor-Specific
 
-* Standardized: Names for which a corresponding document sits in the IRCv3 Extension Registry.
-  Names in the IRCv3 Extension Registry are reserved for your capability.
+Names which contain a slash character (`/`) designate a vendor-specific capability namespace.
+
+These names are prefixed by a valid DNS domain name.
+
+For example: `znc.in/server-time`.
+
+In cases if the domain name contains non-ASCII characters, punycode MUST be used,
+e.g. `xn--e1afmkfd.org/foo`.
+
+Vendor-Specific capabilities should be submitted to the IRCv3 working group for consideration.
+
+### Standardized
+
+Names for which a corresponding document sits in the IRCv3 Extension Registry.
+
+Names in the IRCv3 Extension Registry are reserved for your capability.
 
 ## Capability Modifiers
 

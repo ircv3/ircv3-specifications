@@ -1,11 +1,17 @@
-IRCv3.2 Message Tags
-====================
+---
+title: IRCv3.2 Message Tags
+layout: spec
+---
+# IRCv3.2 Message Tags
 
-Copyright (c) 2012 Alexey Sokolov <alexey-irc@asokolov.org>  
-Copyright (c) 2012 Stéphan Kochen <stephan@kochen.nl>  
-Copyright (c) 2012 Kyle Fuller <inbox@kylefuller.co.uk>
+Copyright (c) 2012 Alexey Sokolov <alexey-irc@asokolov.org>.
+
+Copyright (c) 2012 Stéphan Kochen <stephan@kochen.nl>.
+
+Copyright (c) 2012 Kyle Fuller <inbox@kylefuller.co.uk>.
 
 Additional optional tags are added to the start of each message.
+
 The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is extended to look as follows:
 
 	<message>       ::= ['@' <tags> <SPACE>] [':' <prefix> <SPACE> ] <command> <params> <crlf>
@@ -40,39 +46,45 @@ So the total size of a message becomes limited by 1024 bytes: 512 bytes for mess
 If a message has multiple tags, order of the tags MUST NOT matter.
 The same tag MUST NOT appear on the same message two or more times.
 
-Escaping values
----------------
+## Escaping values
 
 The mapping between characters in tag values and their representation in `<escaped value>` MUST be this:
 
-| Character     | Sequence in `<escaped value>` |
-|---------------|-------------------------------|
-| ; (semicolon) | \: (backslash and colon)      |
-| SPACE         | \s                            |
-| \             | \\ (double backslash)         |
-| CR            | \r                            |
-| LF            | \n                            |
-| all others    | the character itself          |
+| Character       | Sequence in `<escaped value>` |
+|-----------------|-------------------------------|
+| `;` (semicolon) | `\:` (backslash and colon)    |
+| `SPACE`         | `\s`                          |
+| `\`             | `\\`                          |
+| `CR`            | `\r`                          |
+| `LF`            | `\n`                          |
+| all others      | the character itself          |
 
 Reason: more common URL-escaping eats more space, while IRC message's length is very limited.
 Also having semicolon as `\:` makes it easy to split the `<tags>` string by `;` first.
 
-Rules for naming message tags
------------------------------
+## Rules for naming message tags
 
 There are two tag namespaces:
 
-* Vendor-Specific: Names which contain a slash character (`/`) designate a vendor-specific
-  tag namespace. These names are prefixed by a valid DNS domain name.
-  For example: `znc.in/server-time`.  In cases if the domain name contains non-ASCII characters,
-  punycode MUST be used, e.g. `xn--e1afmkfd.org/foo`.
-  Vendor-Specific tags should be submitted to the IRCv3 working group for consideration.
+### Vendor-Specific
 
-* Standardized: Names for which a corresponding document sits in the IRCv3 Extension Registry.
-  Names in the IRCv3 Extension Registry are reserved for your tag.
+Names which contain a slash character (`/`) designate a vendor-specific tag namespace.
+These names are prefixed by a valid DNS domain name.
 
-Examples
---------
+For example: `znc.in/server-time`.
+
+In cases if the domain name contains non-ASCII characters,punycode MUST be used,
+e.g. `xn--e1afmkfd.org/foo`.
+
+Vendor-Specific tags should be submitted to the IRCv3 working group for consideration.
+
+### Standardized
+
+Names for which a corresponding document sits in the IRCv3 Extension Registry.
+
+Names in the IRCv3 Extension Registry are reserved for your tag.
+
+## Examples
 
 Message with 0 tags:
 
@@ -86,7 +98,7 @@ Message with 3 tags:
 
 * tag `ddd` specific to software of `example.com` with value `eee`
 
-	@aaa=bbb;ccc;example.com/ddd=eee :nick!ident@host.com PRIVMSG me :Hello
+    @aaa=bbb;ccc;example.com/ddd=eee :nick!ident@host.com PRIVMSG me :Hello
 
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1

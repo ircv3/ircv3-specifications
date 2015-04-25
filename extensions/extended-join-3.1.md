@@ -1,7 +1,10 @@
-extended-join client capability specification
----------------------------------------------
+---
+title: IRCv3.1 `extended-join` Extension
+layout: spec
+---
+# IRCv3.1 `extended-join` Extension
 
-Copyright (c) 2011 Kiyoshi Aman <kiyoshi.aman@gmail.com>
+Copyright (c) 2011 Kiyoshi Aman <kiyoshi.aman@gmail.com>.
 
 Unlimited redistribution and modification of this document is allowed
 provided that the above copyright notice and this permission notice
@@ -33,4 +36,3 @@ not in P10 or TS6 or ESVID).
 
 Please see the documentation in account-notify.txt for how to take
 advantage of this capability.
-

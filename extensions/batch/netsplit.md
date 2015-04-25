@@ -1,13 +1,15 @@
-NETSPLIT and NETJOIN Batch Types
-================================
+---
+title: IRCv3 NETSPLIT and NETJOIN Batch Types
+layout: spec
+---
+# NETSPLIT and NETJOIN Batch Types
 
-Copyright (C) 2014 Alex Iadicicco <http://github.com/aji>
+Copyright (C) 2014 Alex Iadicicco <http://github.com/aji>.
 
 Unlimited redistribution and modification is allowed provided that the
 above copyright notice and this permission notice remains intact.
 
-NETSPLIT and NETJOIN Batch Types
---------------------------------
+## NETSPLIT and NETJOIN Batch Types
 
 This document describes the format of the NETSPLIT and NETJOIN batch
 types.
@@ -22,8 +24,7 @@ Clients that do not understand the NETSPLIT and NETJOIN batch subcommands
 can safely interpret the batched QUITs and JOINs as standard QUITs
 and JOINs.
 
-Example
--------
+## Example
 
 An example netsplit is as follows:
 
