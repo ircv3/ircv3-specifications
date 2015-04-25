@@ -116,7 +116,7 @@ In the first usage, acknowledging a REQ subcommand, the ACK subcommand has a sin
 consisting of a space separated list of capability names, which may optionally be preceded with
 one or more modifiers. 
 
-The third usage is when, in the preceding two cases, some capability names have been preceded
+The second usage is when, in the preceding two cases, some capability names have been preceded
 with the ack modifier. ACK in this case is used to fully enable or disable the capability. Clients
 MUST NOT issue an ACK subcommand for any capability not marked with the ack modifier in a
 server-generated ACK subcommand.
