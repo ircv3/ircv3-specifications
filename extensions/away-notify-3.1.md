@@ -1,15 +1,12 @@
 ---
 title: IRCv3.1 `away-notify` Extension
 layout: spec
+copyrights:
+  -
+    name: "Keith Buck"
+    period: "2012"
+    email: "mr_flea@esper.net"
 ---
-# IRCv3.1 `away-notify` Extension
-
-Copyright (c) 2012 Keith Buck <mr_flea@esper.net>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains in tact.
-
 The away-notify client capability allows a client to specify that it
 would like to be notified when users are marked/unmarked as away. This
 capability is referred to as 'away-notify' at capability negotiation

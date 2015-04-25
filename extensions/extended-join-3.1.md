@@ -1,6 +1,11 @@
 ---
 title: IRCv3.1 `extended-join` Extension
 layout: spec
+copyrights:
+  -
+    name: "Kiyoshi Aman"
+    period: "2011"
+    email: "kiyoshi.aman@gmail.com"
 ---
 # IRCv3.1 `extended-join` Extension
 

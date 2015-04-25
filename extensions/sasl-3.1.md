@@ -1,9 +1,16 @@
 ---
 title: IRCv3.1 SASL Authentication
 layout: spec
+copyrights:
+  -
+    name: "Jilles Tjoelker"
+    period: "2009-2012"
+    email: "jilles@stack.nl"
+  -
+    name: "William Pitcock"
+    period: "2009-2012"
+    email: "nenolod@dereferenced.org"
 ---
-# IRCv3.1 SASL Authentication
-
 This document describes the client protocol for SASL authentication, as
 implemented in Charybdis and Atheme.
 

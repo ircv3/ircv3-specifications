@@ -1,16 +1,16 @@
 ---
 title: IRCv3.1 `tls` Extension
 layout: spec
+copyrights:
+  -
+    name: "William Pitcock"
+    period: "2012"
+    email: "nenolod@dereferenced.org"
+  -
+    name: "Attila Molnar"
+    period: "2014"
+    email: "attilamolnar@hush.com"
 ---
-# IRCv3.1 `tls` Extension
-
-Copyright (c) 2012 William Pitcock <nenolod@atheme.org>.
-
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
-
-Unlimited redistribution and modification of this document is allowed provided
-that the above copyright notice and this permission notice remains in tact.
-
 ## The tls Client Capability
 
 The tls client capability indicates that the server supports the STARTTLS command.
