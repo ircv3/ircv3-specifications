@@ -1,16 +1,21 @@
 ---
 title: IRCv3.2 Monitor
 layout: spec
+copyrights:
+  -
+    name: "Lee Hardy"
+    period: "2004-2015"
+    email: "lee@leeh.co.uk"
+  -
+    name: "Kiyoshi Aman"
+    period: "2013-2015"
+    email: "kiyoshi.aman@gmail.com"
+  -
+    name: "William Pitcock"
+    period: "2015"
+    email: "nenolod@dereferenced.org"
 ---
-# IRCv3.2 Monitor
-
-Protocol for notification of when clients become online/offline
-
-Copyright (c) Lee Hardy <lee@leeh.co.uk>.
-
-Copyright (c) Kiyoshi Aman <kiyoshi.aman@gmail.com>.
-
-Copyright (c) William Pitcock <nenolod@dereferenced.org>.
+A protocol for notification of when clients become online/offline
 
 ## Introduction
 

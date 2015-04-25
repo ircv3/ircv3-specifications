@@ -1,15 +1,20 @@
 ---
 title: IRCv3.2 Message Tags
 layout: spec
+copyrights:
+  -
+    name: "Alexey Sokolov"
+    period: "2012-2014"
+    email: "alexey-irc@asokolov.org"
+  -
+    name: "Stéphan Kochen"
+    period: "2012"
+    email: "stephan@kochen.nl"
+  -
+    name: "Kyle Fuller"
+    period: "2012"
+    email: "inbox@kylefuller.co.uk"
 ---
-# IRCv3.2 Message Tags
-
-Copyright (c) 2012 Alexey Sokolov <alexey-irc@asokolov.org>.
-
-Copyright (c) 2012 Stéphan Kochen <stephan@kochen.nl>.
-
-Copyright (c) 2012 Kyle Fuller <inbox@kylefuller.co.uk>.
-
 Additional optional tags are added to the start of each message.
 
 The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is extended to look as follows:

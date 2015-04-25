@@ -1,14 +1,12 @@
 ---
 title: IRCv3.3 Message Intents framework
 layout: spec
+copyrights:
+  -
+    name: "William Pitcock"
+    period: "2012"
+    email: "nenolod@dereferenced.org"
 ---
-# Message Intents framework
-
-Copyright (c) 2012 William Pitcock <nenolod@dereferenced.org>.
-
-Unlimited redistribution and modification is allowed provided that the above
-copyright notice and this permission notice remains intact.
-
 This specification concerns adding an optional out-of-band message tag to messages
 using the message tagging framework.  Message intent tags should be considered an
 initial step in replacing CTCP.

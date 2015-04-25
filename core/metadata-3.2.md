@@ -1,14 +1,12 @@
 ---
 title: IRCv3.2 Metadata
 layout: spec
+copyrights:
+  -
+    name: "Kiyoshi Aman"
+    period: "2012"
+    email: "kiyoshi.aman@gmail.com"
 ---
-# IRCv3.2 Metadata
-
-Copyright (c) 2012 Kiyoshi Aman <kiyoshi.aman@gmail.com>.
-
-Unlimited redistribution and modification is allowed provided that the above
-copyright notice and this permission notice remains intact.
-
 ## Introduction
 
 It is generally useful to associate metadata with one's IRC presence, e.g. to
