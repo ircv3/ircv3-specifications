@@ -1,15 +1,12 @@
 ---
 title: IRCv3.2 `cap-notify` Extension
 layout: spec
+copyrights:
+  -
+    name: "Attila Molnar"
+    period: "2014"
+    email: "attilamolnar@hush.com"
 ---
-# IRCv3.2 `cap-notify` Extension
-
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains in tact.
-
 ## Description
 
 This client capability MUST be named `cap-notify`.

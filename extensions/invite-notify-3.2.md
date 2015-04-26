@@ -1,17 +1,16 @@
 ---
 title: IRCv3.2 `invite-notify` Extension
 layout: spec
+copyrights:
+  -
+    name: "Adam"
+    period: "2013"
+    email: "adam@anope.org"
+  -
+    name: "Attila Molnar"
+    period: "2014"
+    email: "attilamolnar@hush.com"
 ---
-# IRCv3.2 `invite-notify` Extension
-
-Copyright (c) 2013 Adam <Adam@anope.org>.
-
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains in tact.
-
 ## Description
 
 The `invite-notify` client capability allows a client to specify that it

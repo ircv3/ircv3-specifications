@@ -1,17 +1,16 @@
 ---
 title: IRCv3.2 `echo-message` Extension
 layout: spec
+copyrights:
+  -
+    name: "Attila Molnar"
+    period: "2014"
+    email: "attilamolnar@hush.com"
+  -
+    name: "J-P Nurmi"
+    period: "2014"
+    email: "jpnurmi@gmail.com"
 ---
-# IRCv3.2 `echo-message` Extension
-
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
-
-Copyright (c) 2014 J-P Nurmi <jpnurmi@gmail.com>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains in tact.
-
 ## Description
 
 This client capability MUST be named `echo-message`.

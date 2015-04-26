@@ -1,15 +1,12 @@
 ---
 title: IRCv3.2 `chghost` Extension
 layout: spec
+copyrights:
+  -
+    name: "Christine Dodrill"
+    period: "2013"
+    email: "xena@yolo-swag.com"
 ---
-# IRCv3.2 `chghost` Extension
-
-Copyright (c) 2013 Sam Dodrill <shadow.h511@gmail.com>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains in tact.
-
 The chghost client capability allows a server to directly inform clients about a
 host or user change without having to send a fake quit and join. This capability
 MUST be referred to as 'chghost' at capability negotiation time.
