@@ -63,7 +63,7 @@ Client MAY delay processing messages of inner batches to the end of outermost ba
 
 Batch types are specified by IRCv3 extensions, vendor-specific types MUST be
 prefixed the same way as how vendor-specific capabilities are prefixed.
-See [capability negotiation](/specification/capability-negotiation-3.1) for the
+See [capability negotiation](/specs/core/capability-negotiation-3.1.html) for the
 exact details.
 
 While batch types are similar to capabilities in this aspect, unlike
@@ -76,9 +76,9 @@ Client MAY ignore the type and process messages one by one.
 For example, that happens if the type is unknown to the client.
 
 To submit a new batch type please follow the extension submission procedure
-[found here](/index).
+[found here](/participation.html).
 
- * [IRC Version 3.2: `NETSPLIT` and `NETJOIN`](/extensions/batch/netsplit)
+ * [IRC Version 3.2: `NETSPLIT` and `NETJOIN`](/specs/extensions/batch/netsplit.html)
 
 ## Examples
 
