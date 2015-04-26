@@ -1,23 +1,28 @@
 ---
 title: IRCv3.2 Client Capability Negotiation
 layout: spec
+copyrights:
+  -
+    name: "Kevin L. Mitchell"
+    period: "2004-2012"
+    email: "klmitch@mit.edu"
+  -
+    name: "Perry Lorier"
+    period: "2004-2012"
+    email: "isomer@undernet.org"
+  -
+    name: "Lee Hardy"
+    period: "2004-2012"
+    email: "lee@leeh.co.uk"
+  -
+    name: "William Pitcock"
+    period: "2009-2012"
+    email: "nenolod@dereferenced.org"
+  -
+    name: "Attila Molnar"
+    period: "2014"
+    email: "attilamolnar@hush.com"
 ---
-# IRCv3.2 Client Capability Negotiation
-
-Copyright (c) 2004-2012 Kevin L. Mitchell <klmitch@mit.edu>.
-
-Copyright (c) 2004-2012 Perry Lorier <isomer@undernet.org>.
-
-Copyright (c) 2004-2012 Lee Hardy <lee@leeh.co.uk>.
-
-Copyright (c) 2009-2012 William Pitcock <nenolod@atheme.org>.
-
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains in tact.
-
 ## New in version 3.2
 
 ### Version in `CAP LS`

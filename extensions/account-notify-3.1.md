@@ -1,15 +1,12 @@
 ---
 title: IRCv3.1 `account-notify` Extension
 layout: spec
+copyrights:
+  -
+    name: "William Pitcock"
+    period: "2010"
+    email: "nenolod@dereferenced.org"
 ---
-# IRCv3.1 `account-notify` Extension
-
-Copyright (c) 2010 William Pitcock <nenolod@atheme.org>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains in tact.
-
 The account-notify client capability allows a client to be notified
 when another client's accountname changes.  This capability MUST be
 referred to as 'account-notify' at capability negotiation time.

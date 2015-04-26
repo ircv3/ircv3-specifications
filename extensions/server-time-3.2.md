@@ -1,15 +1,20 @@
 ---
 title: IRCv3.2 `server-time` Extension
 layout: spec
+copyrights:
+  -
+    name: "Stéphan Kochen"
+    period: "2012"
+    email: "stephan@kochen.nl"
+  -
+    name: "Alexey Sokolov"
+    period: "2012"
+    email: "alexey-irc@asokolov.org"
+  -
+    name: "Kyle Fuller"
+    period: "2012"
+    email: "inbox@kylefuller.co.uk"
 ---
-# IRCv3.2 `server-time` Extension
-
-Copyright (c) 2012 Stéphan Kochen <stephan@kochen.nl>.
-
-Copyright (c) 2012 Alexey Sokolov <alexey-irc@asokolov.org>.
-
-Copyright (c) 2012 Kyle Fuller <inbox@kylefuller.co.uk>.
-
 Clients indicate support for the extension by requesting a capability server-time as per the [IRC Client Capabilities Extension][cap].
 
 	CAP REQ :server-time

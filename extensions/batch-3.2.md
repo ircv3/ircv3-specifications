@@ -1,18 +1,20 @@
 ---
 title: IRCv3.2 `batch` Extension
 layout: spec
+copyrights:
+  -
+    name: "William Pitcock"
+    period: "2012"
+    email: "nenolod@dereferenced.org"
+  -
+    name: "Kythyria Tieran"
+    period: "2014"
+    email: "kythyria@berigora.net"
+  -
+    name: "Alexey Sokolov"
+    period: "2014"
+    email: "alexey-irc@asokolov.org"
 ---
-# IRCv3.2 `batch` Extension
-
-Copyright (c) 2012 William Pitcock <nenolod@dereferenced.org>.
-
-Copyright (c) 2014 Kythyria Tieran <kythyria@berigora.net>.
-
-Copyright (c) 2014 Alexey Sokolov <alexey-irc@asokolov.org>.
-
-Unlimited redistribution and modification is allowed provided that the above
-copyright notice and this permission notice remains intact.
-
 ## The `batch` client capability
 
 This extension describes a capability which causes a new verb to be sent to

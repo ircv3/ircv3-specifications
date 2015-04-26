@@ -1,17 +1,16 @@
 ---
 title: IRCv3.2 SASL Authentication
 layout: spec
+copyrights:
+  -
+    name: "Attila Molnar"
+    period: "2014"
+    email: "attilamolnar@hush.com"
+  -
+    name: "William Pitcock"
+    period: "2015"
+    email: "nenolod@dereferenced.org"
 ---
-# IRCv3.2 SASL Authentication
-
-Copyright (c) 2014 Attila Molnar <attilamolnar@hush.com>.
-
-Copyright (c) 2015 William Pitcock <nenolod@dereferenced.org>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains in tact.
-
 ## Description
 
 This document describes how [SASL authentication](/extensions/sasl-3.1)

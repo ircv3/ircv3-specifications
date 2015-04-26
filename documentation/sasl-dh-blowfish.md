@@ -1,11 +1,14 @@
 ---
 title: IRCv3 SASL DH-BLOWFISH Authentication Mechanism
 layout: spec
+copyrights:
+  -
+    name: "Mantas Mikulėnas"
+    period: "2013-2015"
+    email: "grawity@gmail.com"
 ---
-# SASL DH-BLOWFISH Authentication Mechanism
-
 This specification documents the `DH-BLOWFISH` SASL mechanism currently
-implemented by various IRC clients and services.`
+implemented by various IRC clients and services.
 
 The mechanism is non-standard, and specific to IRC software. It uses
 Diffie-Hellman key exchange to choose a shared encryption key, which is then
