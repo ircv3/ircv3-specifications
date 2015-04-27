@@ -9,12 +9,6 @@ copyrights:
 ---
 # IRCv3.1 `extended-join` Extension
 
-Copyright (c) 2011 Kiyoshi Aman <kiyoshi.aman@gmail.com>.
-
-Unlimited redistribution and modification of this document is allowed
-provided that the above copyright notice and this permission notice
-remains intact.
-
 The extended-join capability extends the JOIN message to include the
 account name, or a placeholder if the user hasn't identified with
 services. This capability MUST be referred to as 'extended-join' at
@@ -39,5 +33,5 @@ prior to channel ingress. As the penultimate parameter is an asterisk,
 this means that an asterisk is not a valid account name (which it is
 not in P10 or TS6 or ESVID).
 
-Please see the documentation in account-notify.txt for how to take
-advantage of this capability.
+Please see [`account-notify`](account-notify-3.1.html) for information
+on how to take advantage of this capability.

@@ -60,7 +60,7 @@ or later support in the initial `CAP LS`.
 ### Subcommands
 
 Two new CAP subcommands are introduced: `NEW` and `DEL`.
-Refer to [the specification of `cap-notify`](specs/extensions/cap-notify-3.2.html) for details about them.
+Refer to [the specification of `cap-notify`](../extensions/cap-notify-3.2.html) for details about them.
 
 ### Deprecation of sticky (`=`) and ack-required (`~`) capability modifiers
 
