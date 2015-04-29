@@ -56,5 +56,5 @@ you always have the accountname to display is to do the following:
 
 A previous version of this specification advised making a WHO request following a netsplit.
 This advice was deemed unnecessary and was removed. See
-[issue #134](https://github.com/ircv3/ircv3-specifications/issues/146) for more information, including
+[issue #146](https://github.com/ircv3/ircv3-specifications/issues/146) for more information, including
 rationale for this clarification.
