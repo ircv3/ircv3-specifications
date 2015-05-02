@@ -97,13 +97,14 @@ Message with 0 tags:
 
 Message with 3 tags:
 
+	@aaa=bbb;ccc;example.com/ddd=eee :nick!ident@host.com PRIVMSG me :Hello
+
 * standardized tag `aaa` with value `bbb`
 
 * message is tagged with standardized tag `ccc`
 
 * tag `ddd` specific to software of `example.com` with value `eee`
 
-    @aaa=bbb;ccc;example.com/ddd=eee :nick!ident@host.com PRIVMSG me :Hello
 
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
