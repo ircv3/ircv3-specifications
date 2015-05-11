@@ -49,8 +49,12 @@ you always have the accountname to display is to do the following:
     against that client, again including the `a` format token in your WHOX
     token request field.  When you get a reply, do appropriate caching.
 
- 4. In the event of a netsplit, the client should query the channel again using
-    WHO with the `a` format token in the WHOX request field.
-
- 5. When the client receives an ACCOUNT message, update the accountname for the
+ 4. When the client receives an ACCOUNT message, update the accountname for the
     client in question in your accountname cache.
+
+## Errata
+
+A previous version of this specification advised making a WHO request following a netsplit.
+This advice was deemed unnecessary and was removed. See
+[issue #146](https://github.com/ircv3/ircv3-specifications/issues/146) for more information, including
+rationale for this clarification.
