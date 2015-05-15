@@ -49,7 +49,7 @@ Size limit for the message tags MUST be 512 bytes, including `@` and the trailin
 So the total size of a message becomes limited by 1024 bytes: 512 bytes for message tags, and 512 bytes for the rest as specified by [RFC 1459][rfc1459].
 
 If a message has multiple tags, order of the tags MUST NOT matter.
-The same tag MUST NOT appear on the same message two or more times.
+Two or more tags with the same key MUST NOT appear on the same message.
 
 ## Escaping values
 
