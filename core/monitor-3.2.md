@@ -67,6 +67,7 @@ the IRC daemon.
 ### `MONITOR + target[,target2]*`
 
 Adds the given list of targets to the list of targets being monitored.
+Targets already in the list MUST NOT be added again.
 
 If any of the targets being added are online, the server will generate
 `RPL_MONONLINE` numerics listing those targets that are online.
