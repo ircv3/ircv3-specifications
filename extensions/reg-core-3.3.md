@@ -173,23 +173,23 @@ A sample 005 reply indicating support for credential types is:
     S: 923 kaniini rabbit :Account verification successful
     S: 903 kaniini :Authentication successful
 
-### Registering the account with an unsupported verification method:
+### Registering the account "rabbit" with an unsupported verification method:
 
     C: REG CREATE rabbit 1vBjNBdhjWFFbbbbVBHJEWBHJWcfbbvjkhbea passphrase :testpassphrase123
     S: 929 kaniini rabbit 1vBjNBdhjWFFbbbbVBHJEWBHJWcfbbvjkhbea :Callback token is not valid
 
-### Registering the account but providing an invalid verification token:
+### Registering the account "rabbit", but providing an invalid verification token:
 
     C: REG CREATE rabbit mailto:kaniini@example.com passphrase :testpassphrase123
-    S: 920 kaniini kaniini :Account registered
-    S: 927 kaniini kaniini kaniini@example.com :A verification code was sent
-    C: REG VERIFY kaniini 3qw4tq4te4gf34
-    S: 925 kaniini kaniini :Invalid verification code
+    S: 920 kaniini rabbit :Account registered
+    S: 927 kaniini rabbit kaniini@example.com :A verification code was sent
+    C: REG VERIFY rabbit 3qw4tq4te4gf34
+    S: 925 kaniini rabbit :Invalid verification code
 
-### Registering the account where a verification token is not required:
+### Registering the account "rabbit" where a verification token is not required:
 
     C: REG CREATE rabbit * passphrase :testpassphrase123
-    S: 920 kaniini kaniini :Account registered
+    S: 920 kaniini rabbit :Account registered
     S: 903 kaniini :Authentication successful
 
 ### Registering an account which already exists:
