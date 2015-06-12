@@ -36,7 +36,8 @@ A `REG CREATE` command consists of the following format:
 
 `REG CREATE <accountname> [callback_namespace:]<callback> [cred_type] :<credential>`
 
-A passphrase `credential` MAY have spaces in it.
+The `credential` field specifies a credential of `cred_type`.  If there is no specified credential, then
+the `credential` field MUST be `*`.  A passphrase type `credential` MAY have spaces in it.
 
 The `callback` field designates an opaque value which indicates where a verification code, if any,
 will be sent.  The callback field is implementation-specific, with namespaces being listed using the
