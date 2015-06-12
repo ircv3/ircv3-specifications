@@ -34,7 +34,7 @@ authentication layer.  It is similar to current methods of signalling that inten
 
 A `REG CREATE` command consists of the following format:
 
-`REG CREATE <accountname> <callback> <cred_type> :<credential>`
+`REG CREATE <accountname> [callback_namespace:]<callback> [cred_type] :<credential>`
 
 A passphrase `credential` MAY have spaces in it.
 
@@ -42,12 +42,14 @@ The `callback` field designates an opaque value which indicates where a verifica
 will be sent.  The callback field is implementation-specific, with namespaces being listed using the
 `REGCALLBACKS` ISUPPORT token.  An invalid callback parameter should result in the `ERR_REG_INVALID_CALLBACK`
 error.  In the event that a callback is not provided, the client SHOULD send `*` to indicate that
-they are not providing a callback resource.
+they are not providing a callback resource.  If a callback namespace is not explicitly provided, the IRC
+server MAY choose to use `mailto` as a default.
 
 The `cred_type` field designates a value which indicates the type of supplied credential.  The accepted
 values of the `cred_type` field is implementation-specific, with credential types being listed using the
 `REGCREDTYPES` ISUPPORT token.  An invalid credential type parameter should result in the `ERR_REG_INVALID_CRED_TYPE`
-error.  The client MUST supply a `cred_type` value.
+error.  The client SHOULD supply a `cred_type` value, however if one is not provided the IRC server SHOULD
+use `passphrase` as a default credential type.
 
 The IRC server MAY forward the `REG CREATE` command to a central authority, or process it locally, however
 the authentication layer SHOULD NOT send any legacy messages in reply to a `REG CREATE` command.
@@ -59,7 +61,7 @@ Upon success, the IRC server MUST send the `RPL_REGISTRATION_SUCCESS` numeric, w
 If the server requires a verification token, it MUST also reply with the `RPL_REG_VERIFICATION_REQUIRED`
 numeric, which looks like:
 
-    :<server> 927 <user_nickname> <accountname> <callback> :A verification token was sent
+    :<server> 927 <user_nickname> <accountname> <callback_namespace:><callback> :A verification token was sent
 
 Upon error, the IRC server MUST send an error code that is relevant.  We suggest these numerics:
 
@@ -134,6 +136,9 @@ A sample 005 reply indicating that no verification callback methods are supporte
 
     :irc.example.com 005 kaniini REGCALLBACKS= :are supported by this server
 
+The first callback type SHOULD be the implementation-defined default if default callback types
+are supported.
+
 ## The `REGCREDTYPES` `RPL_ISUPPORT` token
 
 Implementations which provide support for this framework SHOULD specify the allowed credential
@@ -152,6 +157,9 @@ The following credential types are defined:
 A sample 005 reply indicating support for credential types is:
 
     :irc.example.com 005 kaniini REGCREDTYPES=passphrase,certfp :are supported by this server
+
+The first credential type SHOULD be the implementation-defined default if default credential types
+are supported.
 
 ## Examples
 
