@@ -53,8 +53,8 @@ QUIT message is acceptable.
 
 The format of the new messages is as follows:
 
-    CAP NEW :<extension 1> [<extension 2> ... [<extension n>]]
-    CAP DEL :<extension 1> [<extension 2> ... [<extension n>]]
+    CAP <nick> NEW :<extension 1> [<extension 2> ... [<extension n>]]
+    CAP <nick> DEL :<extension 1> [<extension 2> ... [<extension n>]]
 
 The last parameter in both new messages contain a list of new
 extensions that became available on the server (in the case of `CAP NEW`)
@@ -76,3 +76,8 @@ The capability list is space separated.
     Server: :irc.example.com CAP tester NEW :away-notify extended-join
     Client: CAP REQ :extended-join away-notify
     Server: :irc.example.com CAP tester ACK :extended-join away-notify
+
+## Errata
+
+Earier version of this spec mistakenly missed `<nick>` between `CAP` and
+`NEW`/`DEL` subcommands, but had it in the examples anyway.
