@@ -60,6 +60,7 @@ The last parameter in both new messages contain a list of new
 extensions that became available on the server (in the case of `CAP NEW`)
 or a list of extensions that are no longer available (for `CAP DEL`).
 The capability list is space separated.
+If capability negotiation 3.2 was used, extensions listed MAY contain values.
 
 ## Examples
 
@@ -77,7 +78,21 @@ The capability list is space separated.
         Client: CAP REQ :extended-join away-notify
         Server: :irc.example.com CAP tester ACK :extended-join away-notify
 
+4. Server changes list of supported SASL mechanisms. This example requires
+   client to support both `CAP LS 302` and `batch`:
+
+        Client: CAP LS 302
+        Server: :irc.example.com CAP * LS :sasl=PLAIN batch
+        Client: CAP REQ batch
+        ...
+        Server: :irc.example.com BATCH +cap
+        Server: @batch=cap :irc.example.com CAP client DEL :sasl
+        Server: @batch=cap :irc.example.com CAP client NEW :sasl=PLAIN,EXTERNAL
+        Server: :irc.example.com BATCH -cap
+
 ## Errata
 
-Earier version of this spec mistakenly missed `<nick>` between `CAP` and
-`NEW`/`DEL` subcommands, but had it in the examples anyway.
+* Earlier version of this spec mistakenly missed `<nick>` between `CAP` and
+  `NEW`/`DEL` subcommands, but had it in the examples anyway.
+
+* Earlier version of this spec did not mention whether `NEW` and `DEL` can have values or not.
