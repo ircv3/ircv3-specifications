@@ -73,22 +73,11 @@ The capability list is space separated.
 
 3. Example showing a client requesting capabilities when they become available:
 
-<<<<<<< HEAD
         Server: :irc.example.com CAP tester NEW :away-notify extended-join
         Client: CAP REQ :extended-join away-notify
         Server: :irc.example.com CAP tester ACK :extended-join away-notify
-
-||||||| merged common ancestors
-    Server: :irc.example.com CAP tester NEW :away-notify extended-join
-    Client: CAP REQ :extended-join away-notify
-    Server: :irc.example.com CAP tester ACK :extended-join away-notify
-=======
-    Server: :irc.example.com CAP tester NEW :away-notify extended-join
-    Client: CAP REQ :extended-join away-notify
-    Server: :irc.example.com CAP tester ACK :extended-join away-notify
 
 ## Errata
 
 Earier version of this spec mistakenly missed `<nick>` between `CAP` and
 `NEW`/`DEL` subcommands, but had it in the examples anyway.
->>>>>>> pull/159
