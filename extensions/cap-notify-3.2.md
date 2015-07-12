@@ -53,8 +53,8 @@ QUIT message is acceptable.
 
 The format of the new messages is as follows:
 
-    CAP NEW :<extension 1> [<extension 2> ... [<extension n>]]
-    CAP DEL :<extension 1> [<extension 2> ... [<extension n>]]
+    CAP <client_name> NEW :<extension 1> [<extension 2> ... [<extension n>]]
+    CAP <client_name> DEL :<extension 1> [<extension 2> ... [<extension n>]]
 
 The last parameter in both new messages contain a list of new
 extensions that became available on the server (in the case of `CAP NEW`)
@@ -65,14 +65,15 @@ The capability list is space separated.
 
 1. Message indicating that a new extension named `batch` is now available:
 
-    :irc.example.com CAP modernclient NEW :batch
+        :irc.example.com CAP modernclient NEW :batch
 
 2. Message indicating that multiple extensions are no longer available:
 
-    :irc.example.com CAP modernclient DEL :userhost-in-names multi-prefix away-notify
+        :irc.example.com CAP modernclient DEL :userhost-in-names multi-prefix away-notify
 
 3. Example showing a client requesting capabilities when they become available:
 
-    Server: :irc.example.com CAP tester NEW :away-notify extended-join
-    Client: CAP REQ :extended-join away-notify
-    Server: :irc.example.com CAP tester ACK :extended-join away-notify
+        Server: :irc.example.com CAP tester NEW :away-notify extended-join
+        Client: CAP REQ :extended-join away-notify
+        Server: :irc.example.com CAP tester ACK :extended-join away-notify
+
