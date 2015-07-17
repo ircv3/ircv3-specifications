@@ -59,6 +59,11 @@ should be a human-readable description of the error.
 Replies from the server must contain the client identifier name or asterisk if one is not yet
 available.
 
+Example:
+
+    Client: CAP FOO
+    Server: :example.org 410 * FOO :Invalid CAP command
+
 The client MUST be able to use the `CAP` command anytime, even after registration.
 
 ### The CAP LS subcommand
