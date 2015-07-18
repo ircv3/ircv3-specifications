@@ -61,7 +61,7 @@ first setting metadata on connect:
 
 And then send tagged messages to the channel:
     
-    @data-favicon=example.com/icon.png :Bot!~Bot_user@example.com PRIVMSG #channel :Example title
+    @data-favicon=https://example.com/icon.png :Bot!~Bot_user@example.com PRIVMSG #channel :Example title
 
 METADATA GET on `Bot` would return
 
