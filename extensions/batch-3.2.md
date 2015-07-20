@@ -78,13 +78,13 @@ For example, that happens if the type is unknown to the client.
 To submit a new batch type please follow the extension submission procedure
 [found here](/participation.html).
 
- * [IRC Version 3.2: `NETSPLIT` and `NETJOIN`](batch/netsplit.html)
+ * [IRC Version 3.2: `netsplit` and `netjoin`](batch/netsplit-3.2.html)
 
 ## Examples
 
 ### A simple batch
 
-	:irc.host BATCH +yXNAbvnRHTRBv NETSPLIT irc.hub other.host
+	:irc.host BATCH +yXNAbvnRHTRBv netsplit irc.hub other.host
 	@batch=yXNAbvnRHTRBv :aji!a@a QUIT :irc.hub other.host
 	@batch=yXNAbvnRHTRBv :nenolod!a@a QUIT :irc.hub other.host
 	:nick!user@host PRIVMSG #channel :This is not in batch, so processed immediately
