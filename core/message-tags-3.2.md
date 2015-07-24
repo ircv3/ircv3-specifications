@@ -89,6 +89,10 @@ Names for which a corresponding document sits in the IRCv3 Extension Registry.
 
 Names in the IRCv3 Extension Registry are reserved for your tag.
 
+The IRCv3 Working Group reserves the right to reuse names which have not been submitted
+to the registry. If you do not wish to submit your tag then you MUST use a vendor-specific
+name (see above).
+
 ## Examples
 
 Message with 0 tags:
