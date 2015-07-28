@@ -85,7 +85,7 @@ If capability negotiation 3.2 was used, extensions listed MAY contain values.
         Server: :irc.example.com CAP * LS :sasl=PLAIN batch
         Client: CAP REQ batch
         ...
-        Server: :irc.example.com BATCH +cap example.com/cap-value
+        Server: :irc.example.com BATCH +cap cap-value
         Server: @batch=cap :irc.example.com CAP client DEL :sasl
         Server: @batch=cap :irc.example.com CAP client NEW :sasl=PLAIN,EXTERNAL
         Server: :irc.example.com BATCH -cap
