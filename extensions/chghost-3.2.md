@@ -9,7 +9,7 @@ copyrights:
 ---
 The chghost client capability allows a server to directly inform clients about a
 host or user change without having to send a fake quit and join. This capability
-MUST be referred to as 'chghost' at capability negotiation time.
+MUST be referred to as `chghost` at capability negotiation time.
 
 When enabled, clients will get the CHGHOST message to designate the host of a
 user changing for clients on common channels with them.
