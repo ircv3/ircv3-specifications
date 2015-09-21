@@ -101,7 +101,7 @@ online or offline.  All targets that are online will be sent using
 
 ### 730 - `RPL_MONONLINE`
 
-    :<server> 730 <nick> :target[,target2]*
+    :<server> 730 <nick> :target!user@host[,target!user@host]*
 
 This numeric is used to indicate to a client that either a target has just
 become online, or that a target they have added to their monitor list is
