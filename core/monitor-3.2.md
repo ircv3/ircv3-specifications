@@ -147,4 +147,7 @@ full, so the command failed.  The `<limit>` parameter is the maximum number of
 targets a client may have in their list, the `<targets>` parameter is the
 list of targets, as the client sent them, that cannot be added.
 
+## Errata
 
+* Earlier version of this spec had RPL_MONONLINE only sending nicknames,
+  This did not match existing implementations.
