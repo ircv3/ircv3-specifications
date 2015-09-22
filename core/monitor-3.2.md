@@ -107,7 +107,7 @@ This numeric is used to indicate to a client that either a target has just
 become online, or that a target they have added to their monitor list is
 online.
 
-The server SHOULD send a hostmask with the target.
+The server MAY send a hostmask with the target.
 
 The server may send "*" instead of the target nick (`<nick>`). (This makes it
 possible to send the exact same message to all clients monitoring a certain
