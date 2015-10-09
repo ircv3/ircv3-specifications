@@ -32,7 +32,7 @@ it distributes it to clients supporting the `message-data` capability.
 
 Vendor prefixed tags must also be supported, in the form:
     
-    `<vendor>/data-<key>`
+    <vendor>/data-<key>
 
 ## Defining a data schema
 
