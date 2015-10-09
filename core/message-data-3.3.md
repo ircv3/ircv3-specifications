@@ -47,6 +47,8 @@ A client suppoting more than one set of data tags:
 Specifying the tagset in this way allows clients to interpret them according to
 specifications provided out of band.
 
+To avoid having to query metadata for each data-tag received, the `metadata-notify` capability SHOULD be requested to allow data tag definitions to be discovered automatically.
+
 ### Non-normative
 
 The following examples describe how an implementation might use certain
