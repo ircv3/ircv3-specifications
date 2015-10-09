@@ -22,13 +22,17 @@ tags.
 
 ## The `data-` prefixed message tag
 
-To send a data tagged message with the key `foo` and the value `bar`, we do the
+To send a data tagged message with the key `foo` and the value `bar`, we send the
 following:
 
     @data-foo=bar PRIVMSG #ircv3 :hello #channel
 
 The IRC server would then attach all `data-` prefixed tags to the message when
 it distributes it to clients supporting the `message-data` capability.
+
+Vendor prefixed tags must also be supported, in the form:
+    
+    `<vendor>/data-<key>`
 
 ## Defining a data schema
 
