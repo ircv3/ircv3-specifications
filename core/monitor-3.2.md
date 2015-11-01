@@ -101,11 +101,13 @@ online or offline.  All targets that are online will be sent using
 
 ### 730 - `RPL_MONONLINE`
 
-    :<server> 730 <nick> :target[,target2]*
+    :<server> 730 <nick> :target[!user@host][,target[!user@host]]*
 
 This numeric is used to indicate to a client that either a target has just
 become online, or that a target they have added to their monitor list is
 online.
+
+The server MAY send a hostmask with the target.
 
 The server may send "*" instead of the target nick (`<nick>`). (This makes it
 possible to send the exact same message to all clients monitoring a certain
@@ -145,4 +147,7 @@ full, so the command failed.  The `<limit>` parameter is the maximum number of
 targets a client may have in their list, the `<targets>` parameter is the
 list of targets, as the client sent them, that cannot be added.
 
+## Errata
 
+* Earlier version of this spec had RPL_MONONLINE only sending nicknames,
+  This did not match existing implementations.
