@@ -59,7 +59,7 @@ The server will send a 904 numeric.
     authenticate-abort = "AUTHENTICATE" SP "*" CRLF
 
 If authentication fails, a 904 or 905 numeric will be sent and the
-client MAY retry from the AUTHENTICATE <mechanism> command.
+client MAY retry from the `AUTHENTICATE <mechanism>` command.
 If authentication is successful, a 900 and 903 numeric will be sent.
 
 If the client attempts to issue the AUTHENTICATE command after already
