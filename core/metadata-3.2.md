@@ -68,7 +68,7 @@ values. The response will be zero or more `RPL_KEYVALUE` events,
 Servers MAY omit certain metadata, which is considered not visible for
 the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
 
-In case of invalid target `RPL_METADATAEND` MUST be not sent.
+In case of invalid target `RPL_METADATAEND` MUST NOT be sent.
 
 *Errors*: `ERR_KEYNOPERMISSION`.
 
