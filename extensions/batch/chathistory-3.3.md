@@ -9,9 +9,9 @@ copyrights:
 ---
 ## `chathistory` Batch Type
 
-This document describes the format of the CHATHISTORY batch type.
+This document describes the format of the `chathistory` batch type.
 
-The CHATHISTORY batch type takes one parameter. This parameter contains the
+The `chathistory` batch type takes one parameter. This parameter contains the
 target of messages within the batch. The target MUST either be the nick of the
 remote client for private messages or the name of a channel which the
 local client is in for public messages.
@@ -19,9 +19,9 @@ local client is in for public messages.
 When a client which has enabled the [`batch` capability][batch] performs an
 action which requires chat history to be relayed to it (e.g. joining a channel
 with InspIRCd's `chanhistory` mode enabled) the server SHOULD put all PRIVMSGs
-and NOTICEs into a single CHATHISTORY batch. If the client has also enabled the
-[`server-time` capability][server-time] capability then messages inside the
-batch MUST be tagged with the time at which they were originally sent.
+and NOTICEs into a single `chathistory` batch. If the client has also enabled
+the [`server-time` capability][server-time] then messages inside the batch MUST
+be tagged with the time at which they were originally sent.
 
 ## Examples
 
