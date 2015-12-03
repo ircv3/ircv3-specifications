@@ -104,12 +104,33 @@ Servers MUST send this key to non-securely connected clients.
 Servers MAY send this key to securely connected clients, but it will be
 ignored.
 
+### Handling disconnection
+
+IRC connections may be long-lived. Connections lasting for more than a month
+are not uncommon. When a client has successfully learned the STS policy for a
+server but it does not reconnect for a long period of time it may think
+the policy expired, even if in fact the same policy is still advertised by the
+server.
+
+The client MUST reschedule the expiration on disconnection.
+The new expiration is calculated from the current policy as last advertised by
+the server and the current time.
+
 ## Client implementation considerations
 
 This section is non-normative.
 
 For increased user protection and more advanced management of cached STS policies,
 clients should consider implementing features such as the following:
+
+### Rescheduling while connected
+
+The client may choose to periodically reschedule the expiration of the policy
+while connected as well, to protect against sudden power outages, for example.
+
+An appropriate period for rescheduling expiration while connected might
+depend on the length of the policy expiration. For instance, longer expiry
+times might warrant less frequent rescheduling.
 
 ### No immediate user recourse
 
@@ -167,6 +188,9 @@ represent a constant value into the future, or a fixed expiry time.
 
 Constant values into the future can be achieved by a configured number of seconds being
 sent in the `duration` key on each connection attempt.
+
+Servers implementors should be aware that fixed expiry times may not be precisely
+guaranteed in the case where clients reschedule policy expiry on disconnect.
 
 Fixed expiry times will involve a dynamic `duration` value being calculated on each
 connection attempt.
@@ -290,9 +314,26 @@ If the client has any STS policy stored for the server it clears the policy.
 Future connections should use whatever settings (port, secure/non-secure) the
 client used before it received the STS policy.
 
+### Rescheduling on disconnection
+
+A client securely connects to a server, which advertises an STS policy.
+
+    Client: CAP LS 302
+    Server: CAP * LS :multi-prefix sts=duration=2592000
+
+The client saves the policy and notes that it will become expired in 2592000 seconds
+(roughly one month). It completes registration, then proceeds as usual.
+
+After 48 hours, the client disconnects.
+
+    Client: QUIT :Bye
+
+According to the client's last information at the time of disconnection the
+policy is still valid, so it reschedules the expiration to occur in 2592000
+seconds from the time of disconnection.
+
 ## TODO
 
 * SNI integration, `sub` key: [issue #176](https://github.com/ircv3/ircv3-specifications/issues/176)
-* Ensure that clients with long lived connections renew the policy: [issue #178](https://github.com/ircv3/ircv3-specifications/issues/178)
 * Advertise hosts the server has a valid certificate for (?)
 * Mention STARTTLS
