@@ -181,7 +181,7 @@ Server tells a client that is already connected securely to remove the STS
 policy now.
 
     Client: CAP LS 302
-    Server: CAP * LS :duration=0
+    Server: CAP * LS :sts=duration=0
 
 If the client has any STS policy stored for the server it clears the policy.
 Future connections should use whatever settings (port, secure/non-secure) the
