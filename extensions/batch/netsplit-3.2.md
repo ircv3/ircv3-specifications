@@ -45,5 +45,5 @@ An example netjoin is as follows:
 
 ## Errata
 
-For consistency with capabilities and tags these types was renamed to lower case
+For consistency with capabilities and tags these types were renamed to lower case
 (from `NETSPLIT` to `netsplit`).
