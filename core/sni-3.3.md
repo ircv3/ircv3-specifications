@@ -29,4 +29,5 @@ using.
 
 ## Requirements
 
-Clients MUST use TLS SNI when connecting securely to servers.
+Clients MUST use SNI when connecting to servers via TLS. (This implies that a TLS
+version capable of SNI, i.e. at least TLS 1.1, is required.)
