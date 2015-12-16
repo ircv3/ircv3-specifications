@@ -130,7 +130,7 @@ the channel, regardless of `MONITOR` state.
 
 Notifications use the `METADATA` event, the format of which is as follows:
 
-    METADATA <Target> <Key> <Visibility> :<Value>
+    METADATA <Target> <Key> <Visibility>[ :<Value>]
 
 `<Target>` refers to the entity which had its metadata changed. `<Visibility>`
 MUST be `*` for keys visible to everyone, or a token which describes the
@@ -274,3 +274,6 @@ Notification for a user becoming an operator:
 
 * Earlier version of this spec specified ERR_NOMATCHINGKEY with no `<Target>`.
   This did not match examples and being specific with this numeric was desired.
+* Earlier version of this spec specified that the `<Value>` parameter of
+  `METADATA` events was required. It was decided `METADATA` events should also
+  be able to tell clients about metadata keys that have been removed.
