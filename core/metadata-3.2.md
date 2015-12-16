@@ -191,7 +191,7 @@ following labels and formats:
 | 762 | `RPL_METADATAEND`     | `:end of metadata`                       |
 | 764 | `ERR_METADATALIMIT`   | `<Target> :metadata limit reached`       |
 | 765 | `ERR_TARGETINVALID`   | `<Target> :invalid metadata target`      |
-| 766 | `ERR_NOMATCHINGKEY`   | `<Key> :no matching key`                 |
+| 766 | `ERR_NOMATCHINGKEY`   | `<Target> <Key> :no matching key`        |
 | 767 | `ERR_KEYINVALID`      | `<Key> :invalid metadata key`            |
 | 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`            |
 | 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied`      |
@@ -270,3 +270,7 @@ Notification for a user becoming an operator:
 
     :OperServ!OperServ@services.int METADATA user1 services.operclass oper:auspex :services-root
 
+## Errata
+
+* Earlier version of this spec specified ERR_NOMATCHINGKEY with no `<Target>`.
+  This did not match examples and being specific with this numeric was desired.
