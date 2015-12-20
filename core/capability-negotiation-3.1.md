@@ -111,7 +111,7 @@ Example:
 
 ### The CAP ACK subcommand
 
-The ACK subcommand has three uses:
+The ACK subcommand has two uses:
 
 * the server sends it to acknowledge a REQ subcommand;
 * the client sends it to acknowledge capabilities which require client-side acknowledgement.
