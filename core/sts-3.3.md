@@ -46,10 +46,11 @@ connection, it MUST first establish a secure connection and confirm that the
 `sts` capability is still present.
 
 Once the client has confirmed that the `sts` capability is indeed offered over
-a secure connection, it then MUST only attempt secure connections to the
+a secure connection, it then SHOULD only attempt secure connections to the
 server from now on until the policy expires (see the `duration` key).
-It MUST refuse to connect if a secure connection cannot be established with the
-server for any reason during the lifetime of the policy.
+It MUST refuse to connect if establishing a secure connection with the server
+failed for any reason during the lifetime of the policy.
+
 
 However, if the client fails to connect securely for any reason, the connection
 attempt SHOULD be considered a failure, similar to a network error.
