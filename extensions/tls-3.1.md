@@ -43,3 +43,16 @@ available.
 It should be assumed that once a server has advertised TLS support it is not
 going to stop supporting it. This is similar to how SSL-only ports are not
 expected to go away.
+
+## Numerics used by this extension
+
+`670` aka `RPL_STARTTLS` to indicate that the client may begin the TLS handshake.
+
+    :server 670 <nick> :STARTTLS successful, proceed with TLS handshake
+
+`691` aka `ERR_STARTTLS` to indicate that a server-side error has occured.
+
+    :server 691 <nick> :STARTTLS failed (Wrong moon phase)
+
+_(The final "text" parameter is not to be machine-parsed, as it tends to vary
+between implementations and translations.)_
