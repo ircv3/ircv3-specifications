@@ -92,7 +92,7 @@ jilles, authorization identity jilles and password sesame.
     C: AUTHENTICATE PLAIN
     S: AUTHENTICATE +
     C: AUTHENTICATE amlsbGVzAGppbGxlcwBzZXNhbWU=
-    S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles.
+    S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles
     S: :jaguar.test 903 jilles :SASL authentication successful
     C: CAP END
     S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
@@ -115,7 +115,7 @@ an additional capability.
     C: AUTHENTICATE PLAIN
     S: AUTHENTICATE +
     C: AUTHENTICATE amlsbGVzAGppbGxlcwBzZXNhbWU=
-    S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles.
+    S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles
     S: :jaguar.test 903 jilles :SASL authentication successful
     C: CAP END
     S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
@@ -133,7 +133,7 @@ an additional capability.
 
 `902` aka `ERR_NICKLOCKED` is sent when the SASL authentication fails because the account is currently locked out, held, or otherwise administratively made unavailable.
 
-    :server 902 <nick> :You must use a nick assigned to you.
+    :server 902 <nick> :You must use a nick assigned to you
 
 `903` aka `RPL_SASLSUCCESS` is sent when the SASL authentication finishes successfully. It usually goes along with `900`.
 
@@ -158,3 +158,6 @@ an additional capability.
 `908` aka `RPL_SASLMECHS` is sent when the client requests a list of SASL mechanisms supported by the server (or network, services). The numeric contains a comma-separated list of mechanisms.
 
     :server 908 <nick> <mechanisms> :are available SASL mechanisms
+
+_(The final "text" parameter is not to be machine-parsed, as it tends to vary
+between implementations and translations.)_

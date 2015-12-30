@@ -18,9 +18,9 @@ Example:
 
     --> NAMES #tethys
     :hades.arpa 353 guest = #tethys :~&@%+aji &@Attila @+alyx +KindOne Argure
-    :hades.arpa 366 guest #tethys :End of /NAMES list.
+    :hades.arpa 366 guest #tethys :End of /NAMES list
 
     --> WHO #test
     :kenny.chatspike.net 352 guest #test grawity broken.symlink *.chatspike.net grawity H@%+ :0 Mantas M.
-    :kenny.chatspike.net 315 guest #test :End of /WHO list.
+    :kenny.chatspike.net 315 guest #test :End of /WHO list
 

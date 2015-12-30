@@ -15,7 +15,7 @@ Example:
 
     --> NAMES #atheme
     :irc.bnc.im 353 guest = #atheme :Rylee!rylai@localhost somasonic!andrew@somasonic.org
-    :irc.bnc.im 366 guest #atheme :End of /NAMES list.
+    :irc.bnc.im 366 guest #atheme :End of /NAMES list
 
 Historical note: Some older (pre-IRCv3) software implements the same extension
 as `PROTOCTL UHNAMES` and advertises it using the `UHNAMES` token in
