@@ -206,5 +206,5 @@ The capability modifiers are:
 
 Previous versions of this specification referred to a CAP CLEAR command, which has been removed
 because it is not useful.  We do not recommend implementing or supporting CAP CLEAR.  See
-[issue #134](https://github.com/ircv3/ircv3-specifications/issues/134) for more information, including
+[issue ircv3/ircv3-specifications#134](https://github.com/ircv3/ircv3-specifications/issues/134) for more information, including
 rationale for this clarification.
