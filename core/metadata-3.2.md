@@ -74,23 +74,29 @@ In case of invalid target `RPL_METADATAEND` MUST NOT be sent.
 
 ### METADATA SET
 
-This subcommand MUST set a required key to an optional value. If no value is
-given, the key is removed; otherwise, the value is assigned to the key. The
-response MUST be one `RPL_KEYVALUE` event, representing what was actually
-stored by the server, and one `RPL_METADATAEND` event. The format of
+This subcommand is used to set a required key to an optional value. If no value
+is given, the key is removed; otherwise, the value is assigned to the key. The
+format of
  `METADATA SET` MUST be as follows:
 
     METADATA <Target> SET <Key> [:Value]
 
-Servers MUST respond to requests to remove a key that is not set with an
-`ERR_KEYNOTSET` event.
+Servers MUST respond to requests to set or remove a key whose name is invalid
+with only an `ERR_KEYINVALID` event and fail the request.
+
+Servers MUST respond to requests to remove a key that has a valid name but is
+not set with only an `ERR_KEYNOTSET` event and fail the request.
 
 Servers MAY respond to certain keys, considered not settable by the requesting
 user, with `ERR_KEYNOPERMISSION`.
 
 It is an error for users to set keys on targets for which they lack
 authorization from the server, and the server MUST respond with
-`ERR_KEYNOPERMISSION`.
+`ERR_KEYNOPERMISSION` and fail the request.
+
+If the request is successful the server MUST carry out the requested change and
+the response MUST be one `RPL_KEYVALUE` event, representing what was actually
+stored by the server, and one `RPL_METADATAEND` event.
 
 *Errors*: `ERR_METADATALIMIT`, `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`
 
@@ -277,3 +283,5 @@ Notification for a user becoming an operator:
 * Earlier version of this spec specified that the `<Value>` parameter of
   `METADATA` events was required. It was decided `METADATA` events should also
   be able to tell clients about metadata keys that have been removed.
+* Earlier versions of this spec were ambiguous about the behavior of
+  `METADATA SET`.
