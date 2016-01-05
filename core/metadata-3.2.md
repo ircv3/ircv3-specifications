@@ -6,6 +6,10 @@ copyrights:
     name: "Kiyoshi Aman"
     period: "2012"
     email: "kiyoshi.aman@gmail.com"
+  -
+    name: "Attila Molnar"
+    period: "2015-2016"
+    email: "attilamolnar@hush.com"
 ---
 ## Introduction
 
@@ -94,11 +98,19 @@ It is an error for users to set keys on targets for which they lack
 authorization from the server, and the server MUST respond with
 `ERR_KEYNOPERMISSION` and fail the request.
 
+Servers MAY respond with only an `ERR_METADATARATELIMIT` event and fail the
+request. When a client receives an `ERR_METADATARATELIMIT` event, it SHOULD
+retry the `METADATA SET` request at a later time. If the
+`ERR_METADATARATELIMIT` event contains the OPTIONAL `<RetryAfter>` parameter,
+the parameter value MUST be a positive integer indicating the minimum number
+of seconds the client SHOULD wait before retrying to request.
+
 If the request is successful the server MUST carry out the requested change and
 the response MUST be one `RPL_KEYVALUE` event, representing what was actually
 stored by the server, and one `RPL_METADATAEND` event.
 
-*Errors*: `ERR_METADATALIMIT`, `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`
+*Errors*: `ERR_METADATALIMIT`, `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`,
+`ERR_METADATARATELIMIT`
 
 ### METADATA CLEAR
 
@@ -187,7 +199,7 @@ keys per-user; the format in that case MUST be `METADATA=<integer>`, where
 
 ## Numerics
 
-The numerics 760 through 769 MUST be reserved for metadata, carrying the
+The numerics 760 through 770 MUST be reserved for metadata, carrying the
 following labels and formats:
 
 | No. | Label                 | Format                                   |
@@ -201,6 +213,7 @@ following labels and formats:
 | 767 | `ERR_KEYINVALID`      | `<Key> :invalid metadata key`            |
 | 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`            |
 | 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied`      |
+| 770 | `ERR_METADATARATELIMIT` | `<Target> <Key> [<RetryAfter>]`        |
 
 The `<Visibility>` field for numerics follows the same rules and requirements
 as specified for notifications' visibility.
@@ -285,3 +298,4 @@ Notification for a user becoming an operator:
   be able to tell clients about metadata keys that have been removed.
 * Earlier versions of this spec were ambiguous about the behavior of
   `METADATA SET`.
+* Earlier versions of this spec lacked rate limiting protocol mechanics.
