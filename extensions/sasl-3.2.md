@@ -56,8 +56,10 @@ requested the `cap-notify` notification.
 
 ## SASL Reauthentication
 
-Servers MUST allow a client, authenticated or otherwise, to reauthenticate by
-sending a new `AUTHENTICATE` message at any time.
+Servers MAY allow a client, authenticated or otherwise, to reauthenticate by
+sending a new `AUTHENTICATE` message at any time. If reauthentication is not
+possible, an error appropriate to the circumstances MUST be sent (for instance,
+`ERR_SASLALREADY` is appropriate if changing accounts is not supported).
 
 Servers MAY disconnect ANY client at any time as a result of failed authentication,
 including both unregistered and registered clients, but MUST provide the reason
@@ -119,3 +121,13 @@ Example where the server disconnects a client for excessive reauthentications:
     Client: AUTHENTICATE ...
     Server: :irc.server.tld 904 modernclient :SASL authentication failed
     Server: ERROR :Too many SASL authentication failures
+
+## Errata
+
+A previous version of this specification had reauthentication listed as a MUST
+requirement. This was weakened to a MAY, to allow for server implementations to
+be compliant in circumstances where reauthentication is not a desired feature.
+
+See
+[issue #192](https://github.com/ircv3/ircv3-specifications/issues/192) for more
+information.
