@@ -99,6 +99,10 @@ connection.  It's sole parameter must be a list of space-separated capability id
 Each capability identifier may be prefixed with a dash (`-`) to designate that the capability
 should be disabled.
 
+If a client requests a capability which is already enabled, or tries to disable a capability
+which is not enabled, the server MUST continue processing the REQ subcommand as though
+handling this capability was successful.
+
 The capability identifier set must be accepted as a whole, or rejected entirely.
 
 If a client issues a REQ subcommand, registration must be suspended until an END subcommand
@@ -208,3 +212,7 @@ Previous versions of this specification referred to a CAP CLEAR command, which h
 because it is not useful.  We do not recommend implementing or supporting CAP CLEAR.  See
 [issue #134](https://github.com/ircv3/ircv3-specifications/issues/134) for more information, including
 rationale for this clarification.
+
+Previous versions of this spec did not include specific references to re-enabling or re-disabling a
+capability in the CAP REQ subcommand section. This was clarified in later versions of the
+specification.
