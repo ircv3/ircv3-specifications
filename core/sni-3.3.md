@@ -1,6 +1,7 @@
 ---
 title: Server Name Indication
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Attila Molnar"

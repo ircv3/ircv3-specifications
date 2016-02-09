@@ -1,6 +1,7 @@
 ---
 title: IRCv3 SASL DH-AES Authentication Mechanism
 layout: spec
+deprecated: "This mechanism has been deemed unsafe and has been deprecated. Please refer to the [SASL Mechanisms](http://ircv3.net/docs/sasl-mechs.html) page for mechanisms that the IRCv3 WG now recommends."
 copyrights:
   -
     name: "Mantas Mikulėnas"

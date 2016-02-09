@@ -1,6 +1,7 @@
 ---
 title: IRCv3.3 Message Intents framework
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "William Pitcock"

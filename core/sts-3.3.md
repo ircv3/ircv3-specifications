@@ -1,6 +1,7 @@
 ---
 title: IRCv3.3 Strict Transport Security
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Attila Molnar"
