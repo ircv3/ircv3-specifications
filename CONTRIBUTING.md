@@ -38,17 +38,11 @@ Specifications submitted to this repository should be proposed or sponsored by a
 
 Your specification *must* describe all behaviour that comes with your proposal. You cannot simply say *"Yeah, and this part we'll work out later, it should be fine."*.
 
-The protocol syntax specified in your proposal may, of course, be changed after it is submitted. However, it should *not* be submitted with the attitude of *"Well, I didn't think about this too hard and I don't think it's great, what do other people think?"*. Proposals of that type should go through the [IRCv3/ideas](https://github.com/ircv3/ideas) process before being submitted to this repository.
-
-### Vendor Tag
-
-Any capabilities that your proposal introduces *must* be vendor-tagged. The vendor tag will be removed once it is made into a proper specification through the IRCv3 release process.
-
-For instance, if my spec introduces a new capability which will be named `cool-tag`, in the spec and in the reference implementation it should be specified as something like `example.com/cool-tag`.
+The protocol syntax specified in your proposal may, of course, be changed after it is submitted. However, it should *not* be submitted with the attitude of *"Well, I didn't think about this too hard and I don't think it's great, what do other people think?"*. Proposals of that type should continue being workshopped with the [IRCv3/ideas](https://github.com/ircv3/ideas) process before being submitted to this repository.
 
 ### Reference Implementation
 
-Your proposal must be implemented by at least one piece of IRC software. This is an IRC client, server, bouncer, or preferrably one of each. This implementation *must* be either downloadable, or be able to be accessible online (so it can be tested by other interested members).
+Your proposal must be implemented by at least one piece of IRC software. This is an IRC client, server, bouncer, or preferrably one of each. This implementation *must* be either downloadable, or be accessible online (so it can be tested by other interested members).
 
 If your proposal is accepted, in the course of drafting an IRCv3 release it will require wider implementation.
 
