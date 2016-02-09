@@ -42,10 +42,10 @@ The protocol syntax specified in your proposal may, of course, be changed after 
 
 ### Reference Implementation
 
-Your proposal must be implemented by at least one piece of IRC software. This is an IRC client, server, bouncer, or preferrably one of each. This implementation *must* be either downloadable, or be accessible online (so it can be tested by other interested members).
+Before being merged into the repository, your proposal must be implemented by at least one piece of IRC software. This is an IRC client, server, bouncer, or preferrably one of each. This implementation *must* be either downloadable, or be accessible online (so it can be tested by other interested members).
 
 If your proposal is accepted, in the course of drafting an IRCv3 release it will require wider implementation.
 
 ### Existing Implementations
 
-If a feature specifies capabilities that already exist in the IRC ecosystem, such as [`monitor`](http://ircv3.net/specs/core/monitor-3.2.html), they may be specified without a vendor prefix and this implementation may count as the 'Reference Implementation'. It should be ensured that any proposal of this type is backwards-compatible with existing implementations.
+If a feature specifies capabilities that already exist in the IRC ecosystem, such as [`monitor`](http://ircv3.net/specs/core/monitor-3.2.html), it should be ensured that any proposal of this type is backwards-compatible with existing implementations.
