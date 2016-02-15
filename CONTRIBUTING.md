@@ -20,7 +20,7 @@ Fixes and changes which address the actual behaviour or meaning of a specificati
 
 Feature proposals contributed to the IRCv3-Specifications repository require a concrete specification and at least one reference or existing implementation.
 
-If you have an idea or a protocol proposal doesn't have these things or is not yet at this stage, you should make an issue on the [IRCv3/ideas](https://github.com/ircv3/ideas) repository instead. This repository is intended for working group members, as well as developers and users to be able to suggest ideas that are not yet full realised or without a reference implementation.
+If you have an idea or a protocol proposal that doesn't have these things or is not yet at this stage, you should make an issue on the [IRCv3/ideas](https://github.com/ircv3/ideas) repository instead. This repository is intended for working group members, as well as developers and users to be able to suggest ideas that are not yet full realised or without a reference implementation.
 
 Contributing to the [IRCv3/ideas](https://github.com/ircv3/ideas) repository does not have any stakeholder requirements. It was created so that contributors may decide to only review ideas that have already been specified and have support from other stakeholders of the IRCv3 WG, or review those that aren't yet at that stage.
 
@@ -49,3 +49,13 @@ If your proposal is accepted, in the course of drafting an IRCv3 release it will
 ### Existing Implementations
 
 If a feature specifies capabilities that already exist in the IRC ecosystem, such as [`monitor`](http://ircv3.net/specs/core/monitor-3.2.html), it should be ensured that any proposal of this type is backwards-compatible with existing implementations.
+
+## Ratifying Feature Proposals
+
+Before being ratified as a published IRCv3 standard, feature proposals must satisfy further requirements. These requirements are intended to ensure the specifications we publish have been tested to a sufficient degree and that they are implementable by real networks and clients without any major bugs or oversights.
+
+These requirements include:
+
+* At least two server (or one bouncer, in the case of specifications specifically intended for IRC bouncers) implementations.
+* At least one client implementation.
+* Stakeholders of the Working Group to have looked over and approved the proposal.
