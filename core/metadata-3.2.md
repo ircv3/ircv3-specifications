@@ -132,6 +132,23 @@ using `ERR_KEYNOPERMISSION` with an asterisk (`*`) in the `<Key>` field.
 
 *Errors*: `ERR_KEYNOPERMISSION`
 
+### METADATA SYNC
+
+This subcommand requests the full synchronization of metadata associated with
+the given target. It is only to be used when `metadata-notify` is enabled
+by the client.
+
+Syntax:
+
+    METADATA <Target> SYNC
+
+The result of this subcommand is either zero or more METADATA events on
+success, or a `ERR_METADATASYNCLATER` numeric if the synchronization cannot be
+performed at this time.
+
+For details, please see the Postponed synchronization subsection of the
+Metadata notifications section.
+
 ## Metadata Notifications
 
 Metadata notifications are enabled by requesting the `metadata-notify`
@@ -169,6 +186,29 @@ Metadata propagates to clients automatically under certain conditions:
    subscribe to users SHOULD have current metadata propagated to them for those
    users.
 
+### Postponed synchronization
+
+It can happen that a server needs to send a large number of `METADATA` events
+to a client due to the client subscribing to many targets at once.
+For example, this can happen if the client joins a large channel or when the
+client is already on some channels and turns on the `metadata-notify`
+capability. In this case the server MAY choose to not propagate the metadata
+of the newly subscribed targets to the client when the join or when the
+`CAP REQ` happens, but send a `ERR_METADATASYNCLATER` numeric instead.
+
+#### Handling `ERR_METADATASYNCLATER`
+
+`ERR_METADATASYNCLATER` signals that the target specified in the numeric has
+some metadata set that the client SHOULD request synchronization of at a later
+time.
+
+The client can then use the `METADATA SYNC` subcommand to request the
+synchronization of the metadata of the target.
+
+The `[<RetryAfter>]` parameter, if present, indicates the number of seconds
+the client SHOULD wait before sending the `METADATA SYNC` request for the
+`<Target>`.
+
 ## Metadata Restrictions
 
 Keys MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:`, and are
@@ -199,7 +239,7 @@ keys per-user; the format in that case MUST be `METADATA=<integer>`, where
 
 ## Numerics
 
-The numerics 760 through 770 MUST be reserved for metadata, carrying the
+The numerics 760 through 771 MUST be reserved for metadata, carrying the
 following labels and formats:
 
 | No. | Label                 | Format                                   |
@@ -214,6 +254,7 @@ following labels and formats:
 | 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`            |
 | 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied`      |
 | 770 | `ERR_METADATARATELIMIT` | `<Target> <Key> [<RetryAfter>]`        |
+| 771 | `ERR_METADATASYNCLATER` | `<Target> [<RetryAfter>]`               |
 
 The `<Visibility>` field for numerics follows the same rules and requirements
 as specified for notifications' visibility.
@@ -279,6 +320,36 @@ External server sets metadata on a user:
 
     :irc.example.com METADATA user1 account * :user1
 
+
+Client joins a channel, gets `ERR_METADATASYNCLATER` and requests a sync later
+
+    C: JOIN #bigchan
+    S: modernclient!modernclient@example.com JOIN #bigchan
+    S: :irc.example.com 353 modernclient @ #bigchan :user1 user2 user3 user4 user5 ...
+    S: :irc.example.com 353 modernclient @ #bigchan :user51 user52 user53 user54 ...
+    S: :irc.example.com 353 modernclient @ #bigchan :user101 user102 user103 user104 ...
+    S: :irc.example.com 353 modernclient @ #bigchan :user151 user152 user153 user154 ...
+    S: :irc.example.com 366 modernclient #bigchan :End of /NAMES list.
+    S: :irc.example.com 771 modernclient #bigchan 4
+    
+    client waits 4 seconds
+    
+    C: METADATA #bigchan SYNC
+    S: :irc.example.com 771 modernclient #bigchan 6
+    
+    client waits 6 seconds
+    
+    C: METADATA #bigchan SYNC
+    S: :irc.example.com METADATA user52 foo * :example value 1
+    S: :irc.example.com METADATA user2 bar * :second example value 
+    S: :irc.example.com METADATA user1 foo * :third example value
+    S: :irc.example.com METADATA user1 bar * :this is another example value
+    S: :irc.example.com METADATA user152 baz * :Lorem ipsum
+    S: :irc.example.com METADATA user3 website * :www.example.com
+    S: :irc.example.com METADATA user152 bar * :dolor sit amet
+
+    ...and many more metadata messages   
+
 ### Non-normative
 
 The following examples describe how an implementation might use certain
@@ -299,3 +370,5 @@ Notification for a user becoming an operator:
 * Earlier versions of this spec were ambiguous about the behavior of
   `METADATA SET`.
 * Earlier versions of this spec lacked rate limiting protocol mechanics.
+* Earlier versions of this spec lacked support for delayed synchronization
+  and `METADATA SYNC`.
