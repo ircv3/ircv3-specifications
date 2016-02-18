@@ -122,7 +122,7 @@ using `ERR_KEYNOPERMISSION` with an asterisk (`*`) in the `<Key>` field.
 
 ## Metadata Notifications
 
-Metadata notifications are enabled by requesting the `metadata-notify`
+Metadata notifications are enabled by requesting the OPTIONAL `metadata-notify`
 capability during capability negotiation. When negotiated, this capability
 extends `MONITOR` behaviour to include subscribing users to notifications for
 those users they are currently monitoring. Clients are also subscribed to
@@ -285,3 +285,4 @@ Notification for a user becoming an operator:
   be able to tell clients about metadata keys that have been removed.
 * Earlier versions of this spec were ambiguous about the behavior of
   `METADATA SET`.
+* Earlier versions of this spec did not specify `metadata-notify` as OPTIONAL.
