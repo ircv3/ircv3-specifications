@@ -3,10 +3,6 @@ title: IRCv3.3 Message Intents framework
 layout: spec
 copyrights:
   -
-    name: "William Pitcock"
-    period: "2012"
-    email: "nenolod@dereferenced.org"
-  -
     name: "Kiyoshi Aman"
     period: 2016
     email: "kiyoshi.aman@gmail.com"
