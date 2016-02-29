@@ -70,8 +70,8 @@ primarily for automatic reporting of server state. The format is as follows:
 The `name` intent allows a user to represent a given message as being
 associated with a different name. In order to prevent abuse, implementations
 SHOULD provide mechanisms to prevent users from masquerading as server or
-channel operators, and clients MUST visually associate the user's actual
-handle with the masqueraded handle. It has the following format:
+channel operators, and clients MUST indicate a 'masqueraded' name. It has the
+following format:
 
     name=<String>
 
