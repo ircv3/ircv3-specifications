@@ -65,15 +65,6 @@ primarily for automatic reporting of server state. The format is as follows:
 
     log=<String>
 
-#### The `name` Tag
-
-The `name` intent allows a user to represent a given message as being
-associated with a different name. In order to prevent abuse, implementations
-SHOULD provide mechanisms to prevent users from masquerading as server or
-channel operators, and clients MUST indicate a 'masqueraded' name. It has the
-following format:
-
-    name=<String>
 
 ### Examples
 
@@ -98,9 +89,8 @@ The other direction MUST be done for messages from legacy clients.
 
 ## Security Considerations
 
-Server developers may wish to disallow use of the `name` tag for nicks which
-are presently in use, reserved, or not grouped to the active services account
-in order to prevent impersonation of server or channel administration.
+At present, there are no security concerns to discuss regarding this
+specification.
 
 ## Errata
 
