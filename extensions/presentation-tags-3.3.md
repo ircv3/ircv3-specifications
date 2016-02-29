@@ -1,81 +1,76 @@
 ---
 title: IRCv3.3 Presentation Tags
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Kiyoshi Aman"
-    period: 2016
     email: "kiyoshi.aman@gmail.com"
+    period: "2016"
 ---
+
 ## Introduction
 
-This specification concerns adding an optional out-of-band message tag to messages
-using the message tagging framework.  Message intent tags should be considered an
-initial step in replacing CTCP, as well as providing strong replacements for several
-interpretations of `NOTICE's` intent.
+Presentation tags are a set of tags which offer presentational cues for
+clients. These tags (`intent`, `redirect`, `name`, and `log`) allow server
+and bot authors to specify that their messages carry particular meaning in
+a standardized way.
 
-## Rationale
+## Motivation
 
-### CTCP intent encapsulation
+Over the years since RFC 1459, several meanings have been imputed to `NOTICE`
+beyond that specification's requirement that there be no automatic responses
+to messages sent via `NOTICE`. Specialized message formats have also become
+a de-facto standard for actions and for instructing clients to display
+messages in a particular context. 
 
-CTCP provides a way of encapsulating messages with intent information.  This is done
-by encapsulating the message body inside 0x1 bytes, with the first word in the message
-body being a keyword which identifies the intent of the message, such as "ACTION" or
-"DCC".
+## Architecture
 
-One purpose of this specification is to obsolete this encoding method using the message
-tagging framework included in IRCv3.
+### Capabilities
 
-### `NOTICE` meanings
+This specification adds the `intents` capability, which enables all of the
+tags documented in this specification.
 
-A lot of clients, and some servers, assign various meanings to `NOTICE`, in addition to
-the RFC 1459 meaning of "please do not reply to this message". This specification provides
-ways to apply intentions to any message, not just `NOTICE`.
+### Tags
 
-## The `intents` capability
+#### The `intent` Tag
 
-A client MUST request the `intents` capability in order to receive intent tags.  IRCd
-software MAY represent intent tagged messages in the legacy encapsulation format described
-above for clients which did not request the `intents` capability.
+The `intent` tag carries the sender's intentions on how the message should be
+interpreted. The following intentions SHOULD be supported:
 
-## Presentation tags
-
-### The `intent` Tag
-
-The `intent` tag carries the sender's intentions on how the message should be interpreted.
-The following intentions SHOULD be supported:
-
-| Intention   | Meaning                                        |
-|-------------|------------------------------------------------|
-| `action`    | This message is an 'action'.                   |
-| `announce`  | Mark this message as an announcement.          |
-| `error`     | This message is an 'error' notification.       |
-| `noreply`   | Do not generate a reply.                       |
+| Intention   | Meaning                                               |
+|-------------|-------------------------------------------------------|
+| `action`    | This message is an 'action'.                          |
+| `announce`  | Mark this message as an announcement.                 |
+| `info`      | This message is for informational purposes, e.g. news |
+| `error`     | This message is an 'error' notification.              |
+| `noreply`   | Do not generate a reply.                              |
 
 The `action` intent MAY be translated to and from the legacy CTCP encoding.
 
-### The `redirect` tag
+#### The `redirect` tag
 
-The `redirect` tag specifies a target context which is different from the usual context. The
-format for the `redirect` tag is as follows:
+The `redirect` tag specifies a target context which is different from the usual
+context. The format for the `redirect` tag is as follows:
 
     redirect=<Target>
 
 The `<Target>` must be a valid channel name.
 
-### The `log` Tag
+#### The `log` Tag
 
-The `log` tag MAY carry a string indicating a severity. It is intended primarily for automatic
-reporting of server state. The format is as follows:
+The `log` tag MAY carry a string indicating a severity. It is intended
+primarily for automatic reporting of server state. The format is as follows:
 
     log=<String>
 
-### The `name` Tag
+#### The `name` Tag
 
-The `name` intent allows a user to represent a given message as being associated with a
-different name. In order to prevent abuse, implementations SHOULD provide mechanisms to prevent
-users from masquerading as server or channel operators, and clients MUST visually associate the
-user's actual handle with the masqueraded handle. It has the following format:
+The `name` intent allows a user to represent a given message as being
+associated with a different name. In order to prevent abuse, implementations
+SHOULD provide mechanisms to prevent users from masquerading as server or
+channel operators, and clients MUST visually associate the user's actual
+handle with the masqueraded handle. It has the following format:
 
     name=<String>
 
@@ -87,18 +82,22 @@ user's actual handle with the masqueraded handle. It has the following format:
 
 `@intent=noreply,announce;redirect=#example PRIVMSG user :Follow the rules at...`
 
-`@log=info NOTICE user :Foobar opered up.`
+`@log=info NOTICE user :Foobar opered up.
 
-## Legacy translation
+### Legacy translation
 
-The IRC server MAY translate intents to the legacy encoding and MAY translate intents
-from the legacy CTCP encoding as well.
+The `intent=action`, `intent=noreply`, and `redirect` tags SHOULD be
+translated as follows for legacy clients:
 
-During the transition period, the IRC server SHOULD perform this translation until a
-point in time is reached where translation is no longer necessary.
+* `intent=action` → `\x01ACTION ...`
+* `intent=noreply` becomes a `NOTICE`.
+* `redirect=<target>` → `NOTICE user :[<target>] ...`
 
-## Metadata vs. Intents
+## Security Considerations
 
-Some CTCP intents were used for the purpose of querying metadata.  Instead, the IRCv3
-metadata framework should be used instead.  The Intents framework should be used strictly
-for messages which need to be reinterpreted or active messages instead of queries.
+There are no security considerations that implementations should note
+when implementing this specification.
+
+## Errata
+
+There are presently no errata available for this specification.
