@@ -55,7 +55,8 @@ context. The format for the `redirect` tag is as follows:
 
     redirect=<Target>
 
-The `<Target>` must be a valid channel name.
+The `<Target>` must be a valid channel name, and the user must be capable of
+sending messages to the `<Target>`.
 
 #### The `log` Tag
 
@@ -93,10 +94,13 @@ translated as follows for legacy clients:
 * `intent=noreply` becomes a `NOTICE`.
 * `redirect=<target>` → `NOTICE user :[<target>] ...`
 
+The other direction MUST be done for messages from legacy clients.
+
 ## Security Considerations
 
-There are no security considerations that implementations should note
-when implementing this specification.
+Server developers may wish to disallow use of the `name` tag for nicks which
+are presently in use, reserved, or not grouped to the active services account
+in order to prevent impersonation of server or channel administration.
 
 ## Errata
 
