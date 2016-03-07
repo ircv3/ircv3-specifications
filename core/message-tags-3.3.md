@@ -43,11 +43,4 @@ The updated BNF for keys is as follows:
 
 `@+displayname=user2 PRIVMSG #channel :"..."`
 
-## Security Considerations
-
-There are no security considerations that implementations should note when
-implementing this specification.
-
-## Errata
-
 [irctags]: http://ircv3.net/specs/core/message-tags-3.2.html
