@@ -19,14 +19,21 @@ When enabled, the server MUST notify clients about all new capabilities
 and about existing capabilities that are no longer available via the messages
 specified in this document.
 
+## Implicit vs explicit support
+
 The `cap-notify` capability MUST be implicitly enabled if the client requests
 `CAP LS` with a version of 302 or newer (`CAP LS 302`), as described in the
 [capability negotiation 3.2 specification](../core/capability-negotiation-3.2.html).
 Further, the `cap-notify` capability MAY NOT be disabled if the client requests
 `CAP LS` with a version of 302 or newer.
 
-Legacy clients which request the `cap-notify` capability MAY disable the
-capability at any time.  This to ease the adaptation of new features.
+When implicitly enabled via this mechanism, servers MAY list the `cap-notify` capability
+in `CAP LS` and `CAP LIST` responses. Additionally client MAY request the capability with
+`CAP REQ`, and capable servers MUST accept and `CAP ACK` the request without side effects.
+
+Clients that do not support `CAP LS` version 302 MAY request the `cap-notify` capability
+explicitly. Such clients MAY disable the capability at any time.  This to ease the
+adaptation of new features.
 
 ## Subcommands
 
@@ -96,3 +103,6 @@ If capability negotiation 3.2 was used, extensions listed MAY contain values.
   `NEW`/`DEL` subcommands, but had it in the examples anyway.
 
 * Earlier version of this spec did not mention whether `NEW` and `DEL` can have values or not.
+
+* Earlier versions of this spec were missing clarification of client and server behaviour
+  when the capability is implicitly enabled with `CAP LS` version 302 or newer.
