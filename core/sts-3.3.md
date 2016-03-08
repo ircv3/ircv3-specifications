@@ -108,7 +108,19 @@ unable to do anything about except retrying at a later time.
 This is to ensure that it is not possible to fool users into allowing a
 man-in-the-middle attack.
 
-## Security
+## Security considerations
+
+### Acceptance of STS policy
+
+STS policies SHOULD ONLY be accepted for connections where the TLS certificate
+chain can be validated entirely, to either a user-specified root or the system
+root certificate bundle.
+
+### Visual feedback of STS upgraded connections
+
+Clients SHOULD NOT display visual feedback indicating that an STS-upgraded TLS
+connection has any enhanced security over a plaintext connection unless a user
+explicitly trusts the certificate.
 
 ### STS policy injection
 
@@ -116,6 +128,15 @@ It is possible for attackers to inject the STS policy into a plaintext
 connection. This causes the client to reconnect over TLS and either fail,
 or connect successfully over TLS but discover that the `sts` cap is not
 present.
+
+Additionally, it is possible for an attacker to inject an STS policy into
+a proxied TLS connection. This causes the client to continue following the
+STS policy once the proxy is removed, which may cause a denial of service.
+Clients SHOULD provide the ability to flush any relevant STS cache entries
+for the server to allow for re-learning the STS policy for that server, if
+any. Clients MAY additionally provide the ability to reject STS policies
+from servers the user knows to not provide an STS policy as an additional
+mitigation.
 
 ### Policy expiration
 
