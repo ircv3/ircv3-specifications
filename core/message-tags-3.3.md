@@ -37,6 +37,9 @@ The updated BNF for keys is as follows:
 
     <key>           ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
 
+Client-to-client tags MUST be forwarded on `PRIVMSG` and `NOTICE` events, and
+MAY be forwarded on other events.
+
 ### Examples
 
 `@+znc.in/network PRIVMSG user :lol`
