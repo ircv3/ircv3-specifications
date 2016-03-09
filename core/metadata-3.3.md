@@ -9,7 +9,7 @@ copyrights:
 ---
 ## Introduction
 
-This specification incorporates the IRCv3.2 metadata specification and
+This specification extends the [IRCv3.2 metadata specification][metadata] and
 incorporates it by reference.
 
 ## METADATA
@@ -31,13 +31,10 @@ and on-change notifications, `change` permitting only on-change notifications,
 and `request` requiring that the client explicitly request metadata with the
 relevant keys.
 
-`<Keys>` may optionally be an asterisk (`*`), in which case the priority change
-applies to all keys.
-
 If any key is invalid, that key MUST generate an `ERR_KEYINVALID` event. If any
 key is not intended to be visible to the user due to permissions, that key MUST
-generate an `ERR_KEYNOPERMISSION` event. As usual, if the target is invalid,
-the whole command receives `ERR_TARGETINVALID`.
+generate an `ERR_KEYNOPERMISSION` or `ERR_NOMATCHINGKEY` event. As usual, if
+the target is invalid, the whole command receives `ERR_TARGETINVALID`.
 
 ## Numerics
 
@@ -54,3 +51,6 @@ silently filtered, numeric 763 is to be defined as follows:
 ## Examples
 
 ...
+
+[metadata]: http://ircv3.net/specs/core/metadata-3.2.html
+
