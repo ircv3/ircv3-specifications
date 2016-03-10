@@ -23,11 +23,15 @@ MUST only connect to the server securely (using TLS, aka. SSL), and the port
 number to use for it.
 
 Clients MUST use sufficient certificate verification to ensure the connection
-is secure without any errors.
+is secure without any errors. This may involve validation against a system root
+certificate bundle or a user-specified trust root.
+
+In compliant server software, this capability MUST be made available as an optional
+configuration setting. Server administrators may have valid reasons not to enable it.
 
 ## Details
 
-The capability value, which MUST always be present, is a comma (`,`) separated
+When enabled, the capability has a REQUIRED value: a comma (`,`) separated
 list of tokens. Each token is a key which may have a value attached. If there
 is a value attached, the value is separated from the key by a `=`. That is,
 `<key>[=<value>][,<key2>[=<value2>][,<keyN>[=<valueN>]]]`. Keys specified in
@@ -108,7 +112,22 @@ unable to do anything about except retrying at a later time.
 This is to ensure that it is not possible to fool users into allowing a
 man-in-the-middle attack.
 
-## Security
+## Security considerations
+
+### STS policy deletion or rejection
+
+Clients SHOULD allow users to delete cached STS policies on a per-host
+basis, in case a server's policy is accidentally or maliciously injected on
+a secure connection.
+
+Clients MAY additionally provide the ability to reject STS policies on a
+per-host basis as an additional mitigation.
+
+These features should be made available very carefully in both the user interface
+and security senses. Deleting or rejecting a cache entry for a known STS host should
+be a very deliberate and well-considered act -- it shouldn't be something that users
+get used to doing as a matter of course: e.g., just "clicking through" in order
+to get work done.
 
 ### STS policy injection
 
