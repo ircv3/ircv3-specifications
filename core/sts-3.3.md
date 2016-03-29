@@ -203,18 +203,25 @@ the "Server implementation considerations" section to avoid inadvertent expiry i
 STS could be used to inflict Denial of Service (DoS) on IRC servers in a number of ways.
 Some non-exhaustive examples include:
 
-* An attacker can inject an STS policy into an insecure connection. This causes the
-client to reconnect on a secure port, which may fail persistently if the server isn't
-listening for secure connections. This can be mitigated in clients by allowing for
-STS policy rejection as described in the "Client implementation considerations" section.
+* An attacker could inject an STS policy into an insecure connection that causes clients
+to reconnect on a secure port under the attacker's control. If this secure connection
+suceeds, an unwanted policy will be set for the host and persist in clients even after
+an administrator has regained control of their server. This can be mitigated in clients
+by allowing for STS policy rejection as described in the "Client implementation
+considerations" section.
 
-* A server administrator may incorrectly configure an STS policy for a server without
-valid secure connection capabilities. For example either a mistake is made, a certificate
-is allowed to expire without being renewed, or is deemed insecure by new vulnerabilities
-discovered in hash algorithms. Care must be taken when choosing policy expiry times, as
-discussed in "Server implementation considerations", in particular when hosts are included
-in client pre-load policy lists. The ability to set a `duration=0` value at any time to
-revoke an STS policy is also a useful protection against such mistakes.
+* An attacker could trick a user into declaring a manual STS policy in their client.
+
+* A server administrator may configure an STS policy for a server whose secure capabilities
+are later disabled. For example, their host certificate is allowed to expire without being
+renewed, or is deemed insecure by newly exposed weak hash algorithms. Care must be taken when
+choosing policy expiry times, as discussed in "Server implementation considerations", in
+particular when hosts are included in client pre-load policy lists. The ability to set a
+`duration=0` value at any time to revoke an STS policy is also a useful protection against
+such errors.
+
+These issues are not vulnerabilities with STS as such, but rather compound configuration
+errors, or issues involving vulnerable systems exploited by other means.
 
 ## Examples
 
