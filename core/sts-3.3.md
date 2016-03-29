@@ -171,7 +171,7 @@ Which approach to take will depend on a number of considerations. For example, a
 may wish their STS Policy to expire at the same time as their domain certificate.
 Alternatively, a server may wish their STS policy to last for as long as possible.
 
-Server implementations should consider employing a value of `duration=0` in their default
+Server implementations should consider using a value of `duration=0` in their example
 configurations. This will require server administrators to deliberately set an expiry
 according to their specific needs rather than an arbitrary generic value.
 
