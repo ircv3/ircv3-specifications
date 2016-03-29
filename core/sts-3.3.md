@@ -7,6 +7,10 @@ copyrights:
     name: "Attila Molnar"
     period: "2015"
     email: "attilamolnar@hush.com"
+  -
+    name: "James Wheare"
+    period: "2016"
+    email: "james@irccloud.com"
 ---
 
 ## Description
