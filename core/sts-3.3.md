@@ -154,6 +154,8 @@ user recourse" section.
 
 ## Server implementation considerations
 
+This section is non-normative.
+
 ### Policy expiry time
 
 IRCd configurations and network administrators should consider whether expiry times
