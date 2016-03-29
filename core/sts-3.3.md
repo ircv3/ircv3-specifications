@@ -113,8 +113,8 @@ clients should consider implementing features such as the following:
 
 ### No immediate user recourse
 
-If a client fails to establish a secure connection for any reason with a server
-advertising an STS policy, there should be no immediate user recourse. For example
+If a client fails to establish a secure connection for any reason to a server with which
+an STS policy has been stored, there should be no immediate user recourse. For example
 the user should not be presented with a dialog that allows them to proceed with
 the connection. A failure to establish a secure connection should be treated similarly
 to a server error that the user is unable to do anything about except retrying at a
