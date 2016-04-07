@@ -7,6 +7,10 @@ copyrights:
     name: "Attila Molnar"
     period: "2015"
     email: "attilamolnar@hush.com"
+  -
+    name: "James Wheare"
+    period: "2016"
+    email: "james@irccloud.com"
 ---
 
 ## Description
@@ -23,11 +27,15 @@ MUST only connect to the server securely (using TLS, aka. SSL), and the port
 number to use for it.
 
 Clients MUST use sufficient certificate verification to ensure the connection
-is secure without any errors.
+is secure without any errors. This may involve validation against a system root
+certificate bundle or a user-specified trust root.
+
+In compliant server software, this capability MUST be made available as an optional
+configuration setting. Server administrators may have valid reasons not to enable it.
 
 ## Details
 
-The capability value, which MUST always be present, is a comma (`,`) separated
+When enabled, the capability has a REQUIRED value: a comma (`,`) separated
 list of tokens. Each token is a key which may have a value attached. If there
 is a value attached, the value is separated from the key by a `=`. That is,
 `<key>[=<value>][,<key2>[=<value2>][,<keyN>[=<valueN>]]]`. Keys specified in
@@ -96,34 +104,128 @@ Servers MUST send this key to non-securely connected clients.
 Servers MAY send this key to securely connected clients, but it will be
 ignored.
 
-## No user recourse
+## Client implementation considerations
 
-User recourse should not be possible if the client fails to establish a
-secure connection for any reason with a server which the client has a STS
-policy for. For example the user should not be presented with a dialog that
-allows them to proceed with the connection. A failure to establish a secure
-connection should be treated similarly to a server error that the user is
-unable to do anything about except retrying at a later time.
+This section is non-normative.
+
+For increased user protection and more advanced management of cached STS policies,
+clients should consider implementing features such as the following:
+
+### No immediate user recourse
+
+If a client fails to establish a secure connection for any reason to a server with which
+an STS policy has been stored, there should be no immediate user recourse. For example
+the user should not be presented with a dialog that allows them to proceed with
+the connection. A failure to establish a secure connection should be treated similarly
+to a server error that the user is unable to do anything about except retrying at a
+later time.
 
 This is to ensure that it is not possible to fool users into allowing a
 man-in-the-middle attack.
 
-## Security
+### User-declared STS policy
 
-### STS policy injection
+Clients may allow users to explicitly define an STS policy for a given host, before any
+interaction with the host. This could help prevent a "Bootstrap MITM vulnerability" as
+discussed in General security considerations.
 
-It is possible for attackers to inject the STS policy into a plaintext
-connection. This causes the client to reconnect over TLS and either fail,
-or connect successfully over TLS but discover that the `sts` cap is not
-present.
+### Pre-loaded STS policies
 
-### Policy expiration
+As further protection against bootstrap MITM vulnerabilities, clients may choose to
+include a pre-loaded list of known hosts with STS policies. Such lists should be
+compiled on an opt-in basis, by request of IRC network administrators. Hosts should be
+verified to be correctly advertising an STS policy before inclusion.
+
+Clients should consider how their release upgrade cycle compares to server policy expiry
+times when compiling pre-loaded lists. Implementations should be able to provide updates
+to user installed pre-load lists within an appropriate time frame of host policies expiring.
+
+### STS policy deletion or rejection
+
+Clients should allow users to delete cached STS policies on a per-host
+basis, in case a server's policy is accidentally or maliciously injected on
+a secure connection.
+
+Clients may additionally provide the ability to reject STS policies on a
+per-host basis as an additional mitigation.
+
+These features should be made available very carefully in both the user interface
+and security senses. Deleting or rejecting a cache entry for a known STS host should
+be a very deliberate and well-considered act -- it shouldn't be something that users
+get used to doing as a matter of course: e.g., just "clicking through" in order
+to get work done. In other words, these features should not violate the "no immediate
+user recourse" section.
+
+## Server implementation considerations
+
+This section is non-normative.
+
+### Policy expiry time
+
+IRCd configurations and network administrators should consider whether expiry times
+represent a constant value into the future, or a fixed expiry time.
+
+Constant values into the future can be achieved by a configured number of seconds being
+sent in the `duration` key on each connection attempt.
+
+Fixed expiry times will involve a dynamic `duration` value being calculated on each
+connection attempt.
+
+Which approach to take will depend on a number of considerations. For example, a server
+may wish their STS Policy to expire at the same time as their domain certificate.
+Alternatively, a server may wish their STS policy to last for as long as possible.
+
+Server implementations should consider using a value of `duration=0` in their example
+configurations. This will require server administrators to deliberately set an expiry
+according to their specific needs rather than an arbitrary generic value.
+
+## General Security considerations
+
+### STS policy stripping
+
+It's possible for an attacker to strip the STS `port` value from an initial connection
+established via an insecure connection, before the policy has been cached by the client.
+This represents a Bootstrap MITM (man-in-the-middle) vulnerability.
+
+Clients may choose to mitigate this risk by implementing features such as user-declared
+and pre-loaded STS policies, as described in the "Client implementation considerations"
+section.
+
+### Policy expiry
 
 It is possible that a client successfully receives the STS policy from a server
 but later on attackers begin to block all secure connection attempts from the
 client to the server until the policy expires. At that time, the client will
 revert back to a non-secure connection. Servers SHOULD advertise a long enough
 duration which makes this scenario less likely to happen.
+
+Servers should choose an appropriate `duration` value according with reference to
+the "Server implementation considerations" section to avoid inadvertent expiry issues.
+
+### Denial of Service
+
+STS could be used to inflict Denial of Service (DoS) on IRC servers in a number of ways.
+Some non-exhaustive examples include:
+
+* An attacker could inject an STS policy into an insecure connection that causes clients
+to reconnect on a secure port under the attacker's control. If this secure connection
+suceeds, an unwanted policy will be set for the host and persist in clients even after
+an administrator has regained control of their server. This can be mitigated in clients
+by allowing for STS policy rejection as described in the "Client implementation
+considerations" section.
+
+* An attacker could trick a user into declaring a manual STS policy in their client.
+
+* A server administrator may configure an STS policy for a server whose secure capabilities
+are later disabled. For example, their host certificate is allowed to expire without being
+renewed, or is deemed insecure by newly exposed weak hash algorithms. Care must be taken when
+choosing policy expiry times, as discussed in "Server implementation considerations", in
+particular when hosts are included in client pre-load policy lists. The ability to set a
+`duration=0` value at any time to revoke an STS policy is also a useful protection against
+such errors.
+
+These issues are not vulnerabilities with STS as such, but rather compound configuration
+errors, or issues involving vulnerable systems exploited by other means.
 
 ## Examples
 
