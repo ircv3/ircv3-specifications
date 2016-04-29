@@ -42,7 +42,7 @@ If no other arguments are present, version 3.1 is assumed.
 ### Capabilities with values
 
 Servers MAY specify additional data for each capability using the
-`<name>[=<value>]` format.
+`<name>[=<value>]` format for `CAP LS` and `CAP NEW`.
 
 The meaning of the value (if present) depends on the capability in question.
 
@@ -91,3 +91,9 @@ reply:
     Client: CAP LIST
     Server: CAP modernclient LIST * :example.org/example-cap example.org/second-example-cap account-notify
     Server: CAP modernclient LIST :invite-notify batch example.org/third-example-cap
+
+## Errata
+
+A previous version of this specification did not specify when to use
+the `<name>[=<value>]` format.  This was clarified to limit capability
+values to `CAP LS` and `CAP NEW` replies.
