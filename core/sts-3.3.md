@@ -33,6 +33,24 @@ certificate bundle or a user-specified trust root.
 In compliant server software, this capability MUST be made available as an optional
 configuration setting. Server administrators may have valid reasons not to enable it.
 
+## Relationship with other specifications
+
+### Relationship with STARTTLS
+
+STARTTLS is a mechanism for upgrading a connection which has started out as a
+non-secure connection to a secure connection without reconnecting to a
+different port. This means a server can offer both non-secure and secure
+connections on the same port for compatible clients at the cost of more
+complex implementations in both clients and servers.
+
+In practice, switching protocols in the middle of the stream has proven to be
+complicated enough that only a small number of clients bothered implementing
+STARTTLS.
+
+This specification expects that servers offer a port that directly services
+secure connections and it is incompatible with servers that offer secure
+connections only via STARTTLS on a non-secure port.
+
 ## Details
 
 When enabled, the capability has a REQUIRED value: a comma (`,`) separated
@@ -351,4 +369,3 @@ seconds from the time of disconnection.
 
 * SNI integration, `sub` key: [issue #176](https://github.com/ircv3/ircv3-specifications/issues/176)
 * Advertise hosts the server has a valid certificate for (?)
-* Mention STARTTLS
