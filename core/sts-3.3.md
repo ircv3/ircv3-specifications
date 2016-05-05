@@ -51,6 +51,25 @@ This specification expects that servers offer a port that directly services
 secure connections and it is incompatible with servers that offer secure
 connections only via STARTTLS on a non-secure port.
 
+### Relationship with the `tls` cap
+
+The `tls` cap is a hint for clients that secure connection support is
+available via STARTTLS.
+
+This specification is an improved solution to that and should be considered a
+replacement for it for multiple reasons.
+
+* This specification is not merely a hint but requires conforming clients to
+switch to a secure connection. This means that a bookmarked server entry in
+conforming clients is upgraded to use secure connections, even if the
+bookmark was originally set up to use non-secure connections.
+* This specification mandates that clients must only attempt secure connections
+to a server which has a policy, reducing the possibility of users being fooled
+into allowing a man-in-the-middle attack by downgrading their secure
+connections to non-secure ones. The `tls` cap has no such provision.
+* This specification is more flexible, allowing server administrators to
+configure the lifetime of the policy. 
+
 ## Details
 
 When enabled, the capability has a REQUIRED value: a comma (`,`) separated
