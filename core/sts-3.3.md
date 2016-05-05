@@ -203,6 +203,21 @@ Server implementations should consider using a value of `duration=0` in their ex
 configurations. This will require server administrators to deliberately set an expiry
 according to their specific needs rather than an arbitrary generic value.
 
+### Offering multiple IRC servers at alternate ports on the same domain
+
+The STS policy is imposed for an entire domain name. This means that mixing
+STS-utilizing and non-secure IRC servers on the same domain name or running
+multiple STS-utilizing IRC servers on the same domain name may result in some
+clients only being able to connect to a single IRC server on that domain name,
+depending on which IRC server they connected to first.
+
+For example, a single server may run a production IRC server which advertises
+an STS policy and another, unrelated IRC server on a different port for
+testing purposes which does not offer secure connections.
+
+In this case, to allow clients to connect to both IRC servers the non-secure IRC
+server may be offered at a different domain name, for example a subdomain.
+
 ## General Security considerations
 
 ### STS policy stripping
