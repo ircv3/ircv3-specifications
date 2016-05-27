@@ -155,9 +155,14 @@ an additional capability.
 
     :server 907 <nick> :You have already authenticated using SASL
 
-`908` aka `RPL_SASLMECHS` is sent when the client requests a list of SASL mechanisms supported by the server (or network, services). The numeric contains a comma-separated list of mechanisms.
+`908` aka `RPL_SASLMECHS` MAY be sent in reply to an `AUTHENTICATE` command which requests an unsupported mechanism. The numeric contains a comma-separated list of mechanisms supported by the server (or network, services).
 
     :server 908 <nick> <mechanisms> :are available SASL mechanisms
 
 _(The final "text" parameter is not to be machine-parsed, as it tends to vary
 between implementations and translations.)_
+
+# Errata
+
+* Previous versions of this specification did not precisely describe when
+is RPL_SASLMECHS being sent.
