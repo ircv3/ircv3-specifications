@@ -334,7 +334,7 @@ Server tells a client that is connected non-securely that the client must
 use secure connections for roughly 6 months. There is no port advertised.
 
     Client: CAP LS 302
-    Server: CAP * LS :sts=duration=31536000
+    Server: CAP * LS :sts=duration=15552000
 
 The client ignores this because it received the STS policy over a non-secure
 connection and the `sts` cap contains no token with key `port`.
