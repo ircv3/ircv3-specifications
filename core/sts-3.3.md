@@ -5,7 +5,7 @@ work-in-progress: true
 copyrights:
   -
     name: "Attila Molnar"
-    period: "2015"
+    period: "2015-2016"
     email: "attilamolnar@hush.com"
   -
     name: "James Wheare"
