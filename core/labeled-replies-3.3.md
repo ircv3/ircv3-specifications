@@ -23,14 +23,25 @@ If the message doesn't require any response, an empty batch MUST be sent.
 
 1. `echo-message`
 
+    ```
     Client: @label=pQraCjj82e PRIVMSG #channel :\x02Hello!\x02
     Server: @label=pQraCjj82e :nick!user@host PRIVMSG #channel :Hello!
+    ```
 
-2. `WHOIS`
+2. Failed `PRIVMSG` with `ERR_NOSUCHNICK`
 
+    ```
+    Client: @label=dc11f13f11 PRIVMSG nick :Hello
+    Server: @label=dc11f13f11 :irc.example.com 401 * nick :No such nick/channel
+    ```
+    
+3. `WHOIS`
+
+    ```
     Client: @label=mGhe5V7RTV WHOIS nick
     Server: @label=mGhe5V7RTV :irc.example.com BATCH +NMzYSq45x labeled-response
     Server: @batch=NMzYSq45x :irc.example.com 311 client nick ~ident host * :Name
     ...
     Server: @batch=NMzYSq45x :irc.example.com 318 client nick :End of /WHOIS list.
     Server: :irc.example.com BATCH -NMzYSq45x
+    ```
