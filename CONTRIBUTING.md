@@ -22,9 +22,9 @@ Fixes and changes which address the actual behaviour or meaning of a specificati
 
 Feature proposals contributed to the IRCv3-Specifications repository require a concrete specification and at least one reference or existing implementation.
 
-If you have an idea or a protocol proposal that doesn't have these things or is not yet at this stage, you should make an issue on the [IRCv3/ideas](https://github.com/ircv3/ideas) repository instead. This repository is intended for working group members, as well as developers and users to be able to suggest ideas that are not yet full realised or without a reference implementation.
+If you have an idea or a protocol proposal that doesn't have these things or is not yet at this stage, you should make an issue on the [ircv3-ideas](https://github.com/ircv3/ircv3-ideas) repository instead. This repository is intended for working group members, as well as developers and users to be able to suggest ideas that are not yet full realised or without a reference implementation.
 
-Contributing to the [IRCv3/ideas](https://github.com/ircv3/ideas) repository does not have any stakeholder requirements. It was created so that contributors may decide to only review ideas that have already been specified and have support from other stakeholders of the IRCv3 WG, or review those that aren't yet at that stage.
+Contributing to the [ircv3-ideas](https://github.com/ircv3/ircv3-ideas) repository does not have any stakeholder requirements. It was created so that contributors may decide to only review ideas that have already been specified and have support from other stakeholders of the IRCv3 WG, or review those that aren't yet at that stage.
 
 ## Feature Proposals
 
@@ -38,9 +38,9 @@ Specifications submitted to this repository should be proposed or sponsored by a
 
 ### Concrete Specification
 
-Your specification should describe all behaviour that is intended to be implemented by it before being submitted to this repo. If it does not, it may be sent it to the [IRCv3/ideas](https://github.com/ircv3/ideas) repository to be workshopped until it is able to be fully specified.
+Your specification should describe all behaviour that is intended to be implemented by it before being submitted to this repo. If it does not, it may be sent it to the [ircv3-ideas](https://github.com/ircv3/ircv3-ideas) repository to be workshopped until it is able to be fully specified.
 
-The protocol syntax specified in your proposal may, of course, be changed after it is submitted. However, it should *not* be submitted with the attitude of *"Well, I didn't think about this too hard and I don't think it's great, what do other people think?"*. Proposals of that type should continue being workshopped with the [IRCv3/ideas](https://github.com/ircv3/ideas) process before being submitted to this repository.
+The protocol syntax specified in your proposal may, of course, be changed after it is submitted. However, it should *not* be submitted with the attitude of *"Well, I didn't think about this too hard and I don't think it's great, what do other people think?"*. Proposals of that type should continue being workshopped with the [ircv3-ideas](https://github.com/ircv3/ircv3-ideas) process before being submitted to this repository.
 
 ### Reference Implementation
 
