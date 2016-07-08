@@ -38,7 +38,7 @@ Specifications submitted to this repository should be proposed or sponsored by a
 
 ### Concrete Specification
 
-Your specification should describe all behaviour that is intended to be implemented by it before being submitted to this repo. If it is not, it may be sent it to the [IRCv3/ideas](https://github.com/ircv3/ideas) repository to be workshopped until it is able to be fully specified.
+Your specification should describe all behaviour that is intended to be implemented by it before being submitted to this repo. If it does not, it may be sent it to the [IRCv3/ideas](https://github.com/ircv3/ideas) repository to be workshopped until it is able to be fully specified.
 
 The protocol syntax specified in your proposal may, of course, be changed after it is submitted. However, it should *not* be submitted with the attitude of *"Well, I didn't think about this too hard and I don't think it's great, what do other people think?"*. Proposals of that type should continue being workshopped with the [IRCv3/ideas](https://github.com/ircv3/ideas) process before being submitted to this repository.
 
