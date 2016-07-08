@@ -6,6 +6,8 @@ There are a few different ways that you can contribute to the IRCv3 Working Grou
 * **Ideas**: These outline new features that have not yet been worked out in full and do not have a reference implementation.
 * **Feature Proposals**: These outline new features and capabilities for the IRC protocol.
 
+**REMINDER: Those with access to the IRCv3 repository should submit PRs from their *personal* forks rather than this repository.** This is to avoid prematurely implying consensus.
+
 ## Bug Fixes and Changes
 
 A bug fix may be relatively minor, such as [#186](https://github.com/ircv3/ircv3-specifications/pull/186), or may fix issues found with the specification after it has been merged or ratified, such as [#204](https://github.com/ircv3/ircv3-specifications/pull/204).
@@ -36,13 +38,13 @@ Specifications submitted to this repository should be proposed or sponsored by a
 
 ### Concrete Specification
 
-Your specification should describe all behaviour that is intended to be implemented by it before being submitted to this repo. If it is not, it may be sent it back to the [IRCv3/ideas](https://github.com/ircv3/ideas) repository to be workshopped until it is able to be fully specified.
+Your specification should describe all behaviour that is intended to be implemented by it before being submitted to this repo. If it is not, it may be sent it to the [IRCv3/ideas](https://github.com/ircv3/ideas) repository to be workshopped until it is able to be fully specified.
 
 The protocol syntax specified in your proposal may, of course, be changed after it is submitted. However, it should *not* be submitted with the attitude of *"Well, I didn't think about this too hard and I don't think it's great, what do other people think?"*. Proposals of that type should continue being workshopped with the [IRCv3/ideas](https://github.com/ircv3/ideas) process before being submitted to this repository.
 
 ### Reference Implementation
 
-Before being merged into the repository, your proposal must be implemented by at least one piece of IRC software. This is an IRC client, server, bouncer, or preferrably one of each. This implementation *must* be either downloadable, or be accessible online (so it can be tested by other interested members).
+Before being merged into the repository, your proposal must be implemented by at least one piece of IRC software. This is an IRC client, server, bouncer, or preferrably one of each. This implementation *must* be either downloadable or accessible online (so it can be tested by other interested members).
 
 If your proposal is accepted, in the course of drafting an IRCv3 release it will require wider implementation.
 
