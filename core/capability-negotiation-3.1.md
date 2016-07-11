@@ -72,7 +72,7 @@ The LS subcommand is used to list the capabilities supported by the server.  The
 should send an LS subcommand with no other arguments to solicit a list of all capabilities.
 
 If a client issues an LS subcommand, registration must be suspended until an END subcommand
-is received.
+is received.  If no capabilities are available, an empty parameter must be sent.
 
 Example:
 
@@ -216,3 +216,6 @@ rationale for this clarification.
 Previous versions of this spec did not include specific references to re-enabling or re-disabling a
 capability in the CAP REQ subcommand section. This was clarified in later versions of the
 specification.
+
+Previous versions of this spec did not specify how to handle CAP LS when a server did not support
+any capabilities.  This was clarified to match CAP LIST, requiring a reply with an empty parameter.
