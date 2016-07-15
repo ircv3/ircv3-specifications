@@ -290,9 +290,9 @@ an administrator has regained control of their server. This can be mitigated in 
 by allowing for STS policy rejection as described in the "Client implementation
 considerations" section.
 
-* A 3rd party host that points to an STS-enabled host via DNS alias, where the 3rd party
+* A 3rd party host with DNS pointing to an STS-enabled host, where the 3rd party
 isn't listed on the server's certificate. This configuration would fail certificate validation
-even without STS, but users may be relying on it for unsecure access.
+even without STS, but users may be relying on it for non-secure access.
 
 * An attacker could trick a user into declaring a manual STS policy in their client.
 
