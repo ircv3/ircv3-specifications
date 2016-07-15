@@ -280,7 +280,7 @@ the "Server implementation considerations" section to avoid inadvertent expiry i
 
 ### Denial of Service
 
-STS could be used to inflict Denial of Service (DoS) on IRC servers in a number of ways.
+STS could result in a Denial of Service (DoS) on IRC servers in a number of ways.
 Some non-exhaustive examples include:
 
 * An attacker could inject an STS policy into an insecure connection that causes clients
@@ -289,6 +289,10 @@ suceeds, an unwanted policy will be set for the host and persist in clients even
 an administrator has regained control of their server. This can be mitigated in clients
 by allowing for STS policy rejection as described in the "Client implementation
 considerations" section.
+
+* A 3rd party host that points to an STS-enabled host via DNS alias, where the 3rd party
+isn't listed on the server's certificate. This configuration would fail certificate validation
+even without STS, but users may be relying on it for unsecure access.
 
 * An attacker could trick a user into declaring a manual STS policy in their client.
 
@@ -383,8 +387,3 @@ After 48 hours, the client disconnects.
 According to the client's last information at the time of disconnection the
 policy is still valid, so it reschedules the expiration to occur in 2592000
 seconds from the time of disconnection.
-
-## TODO
-
-* SNI integration, `sub` key: [issue #176](https://github.com/ircv3/ircv3-specifications/issues/176)
-* Advertise hosts the server has a valid certificate for (?)
