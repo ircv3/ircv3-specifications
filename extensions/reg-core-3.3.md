@@ -100,7 +100,8 @@ Upon success, the IRC server MUST send the `RPL_VERIFYSUCCESS` numeric, which lo
 | --- | ------------------- | ------------------------------------------------------------------------------ |
 | 923 | `RPL_VERIFYSUCCESS` | `:<server> 923 <user_nickname> <accountname> :Account verification successful` |
 
-The IRC server SHOULD also send an `RPL_AUTHENTICATION_SUCCESS` numeric.
+The IRC server SHOULD also send an `RPL_LOGGEDIN` (900) numeric and consider the client to be logged in to the
+account that has been successfully verified.
 
 Upon error, the IRC server MUST send an error code that is relevant.  We suggest these
 numerics:
