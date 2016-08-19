@@ -52,30 +52,32 @@ values of the `cred_type` field is implementation-specific, with credential type
 error.  The client SHOULD supply a `cred_type` value, however if one is not provided the IRC server SHOULD
 use `passphrase` as a default credential type.
 
-The IRC server MAY forward the `REG CREATE` command to a central authority, or process it locally, however
-the authentication layer SHOULD NOT send any legacy messages in reply to a `REG CREATE` command.
+The IRC server MAY forward the `REG CREATE` command to a central authority, or process it locally. Clients
+SHOULD NOT be sent unnecessary legacy (e.g. from NickServ) private messages or notices in response to `REG`
+commands, where native numerics such as the ones defined in this document can replace them.
 
 Upon success, the IRC server MUST send the `RPL_REGISTRATION_SUCCESS` numeric, which looks like:
 
-    :<server> 920 <user_nickname> <accountname> :Account created
+| No. | Label                      | Format                                                         |
+| --- | -------------------------- | -------------------------------------------------------------- |
+| 920 | `RPL_REGISTRATION_SUCCESS` | `:<server> 920 <user_nickname> <accountname> :Account created` |
 
 If the server requires a verification token, it MUST also reply with the `RPL_REG_VERIFICATION_REQUIRED`
 numeric, which looks like:
 
-    :<server> 927 <user_nickname> <accountname> <callback_namespace:><callback> :A verification token was sent
+| No. | Label                           | Format                                                                                                       |
+| --- | ------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| 927 | `RPL_REG_VERIFICATION_REQUIRED` | `:<server> 927 <user_nickname> <accountname> <callback_namespace:><callback> :A verification token was sent` |
 
 Upon error, the IRC server MUST send an error code that is relevant.  We suggest these numerics:
 
-`ERR_ACCOUNT_ALREADY_EXISTS`:
-    `:<server> 921 <user_nickname> <accountname> :Account already exists`
-`ERR_REG_UNSPECIFIED_ERROR`:
-    `:<server> 922 <user_nickname> <accountname> :<descriptive_text>`
-`ERR_REG_INVALID_CALLBACK`:
-    `:<server> 929 <user_nickname> <accountname> <callback> :Callback token is invalid`
-`ERR_REG_INVALID_CRED_TYPE`:
-    `:<server> 928 <user_nickname> <accountname> <cred_type> :Credential type is invalid`
-`ERR_REG_UNAVAILABLE`:
-    `:<server> 440 <user_nickname> <subcommand> :Authentication services are currently unavailable`
+| No. | Label                        | Format                                                                                          |
+| --- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
+| 921 | `ERR_ACCOUNT_ALREADY_EXISTS` | `:<server> 921 <user_nickname> <accountname> :Account already exists`                           |
+| 922 | `ERR_REG_UNSPECIFIED_ERROR`  | `:<server> 922 <user_nickname> <accountname> :<descriptive_text>`                               |
+| 929 | `ERR_REG_INVALID_CALLBACK`   | `:<server> 929 <user_nickname> <accountname> <callback> :Callback token is invalid`             |
+| 982 | `ERR_REG_INVALID_CRED_TYPE`  | `:<server> 928 <user_nickname> <accountname> <cred_type> :Credential type is invalid`           |
+| 440 | `ERR_REG_UNAVAILABLE`        | `:<server> 440 <user_nickname> <subcommand> :Authentication services are currently unavailable` |
 
 The server MAY send additional informative text upon registration success or failure using `RPL_TEXT` or `NOTICE`.
 
@@ -94,17 +96,19 @@ locally.
 
 Upon success, the IRC server MUST send the `RPL_VERIFYSUCCESS` numeric, which looks like:
 
-    :<server> 923 <user_nickname> <accountname> :Account verification successful
+| No. | Label               | Format                                                                         |
+| --- | ------------------- | ------------------------------------------------------------------------------ |
+| 923 | `RPL_VERIFYSUCCESS` | `:<server> 923 <user_nickname> <accountname> :Account verification successful` |
 
 The IRC server SHOULD also send an `RPL_AUTHENTICATION_SUCCESS` numeric.
 
 Upon error, the IRC server MUST send an error code that is relevant.  We suggest these
 numerics:
 
-`ERR_ACCOUNT_ALREADY_VERIFIED`:
-    `:<server> 924 <user_nickname> <accountname> :Account already verified`
-`ERR_ACCOUNT_INVALID_VERIFY_CODE`:
-    `:<server> 925 <user_nickname> <accountname> :Invalid verification code`
+| No. | Label                             | Format                                                                   |
+| --- | --------------------------------- | ------------------------------------------------------------------------ |
+| 924 | `ERR_ACCOUNT_ALREADY_VERIFIED`    | `:<server> 924 <user_nickname> <accountname> :Account already verified`  |
+| 925 | `ERR_ACCOUNT_INVALID_VERIFY_CODE` | `:<server> 925 <user_nickname> <accountname> :Invalid verification code` |
 
 ## The `REGCOMMANDS` `RPL_ISUPPORT` token
 
