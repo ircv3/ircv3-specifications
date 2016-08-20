@@ -34,7 +34,7 @@ authentication layer.  It is similar to current methods of signalling that inten
 
 A `REG CREATE` command consists of the following format:
 
-`REG CREATE <accountname> [callback_namespace:]<callback> [cred_type] :<credential>`
+    REG CREATE <accountname> [callback_namespace:]<callback> [cred_type] :<credential>
 
 The `credential` field specifies a credential of `cred_type`.  If there is no specified credential, then
 the `credential` field MUST be `*`.  A passphrase type `credential` MAY have spaces in it.
@@ -89,7 +89,7 @@ resource as specified by the client in the `REG CREATE` command.
 
 A `REG VERIFY` command consists of the following format:
 
-`REG VERIFY <accountname> <auth_code>`
+    REG VERIFY <accountname> <auth_code>
 
 The IRC server MAY forward the `REG VERIFY` command to a central authority, or process it
 locally.
