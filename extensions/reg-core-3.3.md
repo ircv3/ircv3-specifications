@@ -77,7 +77,7 @@ Upon error, the IRC server MUST send an error code that is relevant.  We suggest
 | 921 | `ERR_ACCOUNT_ALREADY_EXISTS` | `:<server> 921 <user_nickname> <accountname> :Account already exists`                           |
 | 922 | `ERR_REG_UNSPECIFIED_ERROR`  | `:<server> 922 <user_nickname> <accountname> :<descriptive_text>`                               |
 | 929 | `ERR_REG_INVALID_CALLBACK`   | `:<server> 929 <user_nickname> <accountname> <callback> :Callback token is invalid`             |
-| 982 | `ERR_REG_INVALID_CRED_TYPE`  | `:<server> 928 <user_nickname> <accountname> <cred_type> :Credential type is invalid`           |
+| 928 | `ERR_REG_INVALID_CRED_TYPE`  | `:<server> 928 <user_nickname> <accountname> <cred_type> :Credential type is invalid`           |
 | 440 | `ERR_REG_UNAVAILABLE`        | `:<server> 440 <user_nickname> <subcommand> :Authentication services are currently unavailable` |
 
 The server MAY send additional informative text upon registration success or failure using `RPL_TEXT` or `NOTICE`.
