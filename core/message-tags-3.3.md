@@ -60,9 +60,9 @@ This means client-only tags that aren't specified in the IRCv3 extension registr
 use a vendor prefix and SHOULD be submitted to the IRCv3 working group for consideration
 if they are appropriate for more widespread adoption.
 
-The updated BNF for keys is as follows:
+The updated pseudo-BNF for keys is as follows:
 
-    <key>           ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
+    <key> ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
 
 Individual tag keys MUST only be used a maximum of once per message. Clients
 receiving messages with more than one occurrence of a tag key SHOULD discard all
