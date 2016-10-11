@@ -69,7 +69,7 @@ Also having semicolon as `\:` makes it easy to split the `<tags>` string by `;` 
 
 ## Rules for naming message tags
 
-Clients MUST NOT attempt to parse the full tag name as anything more an an opaque identifier.
+Clients MUST NOT attempt to parse the full tag name as anything more than an opaque identifier.
 
 There are two tag namespaces:
 
