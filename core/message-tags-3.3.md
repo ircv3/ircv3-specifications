@@ -73,6 +73,8 @@ but the final occurrence.
 Client-only tags should be treated as untrusted data. They can contain any value
 and are not validated by servers in any way.
 
+Some specifications may involve servers accepting client-initiated tags without the client-only prefix. Such tag values SHOULD be validated by the server before being sent with any response to a client, unless they are specifically specified to be untrusted data.
+
 ## Client implementation considerations
 
 There is no guarantee that other clients will support or display the client-only
