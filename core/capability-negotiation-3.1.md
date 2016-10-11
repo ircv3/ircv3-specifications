@@ -166,6 +166,9 @@ continue as normal.
 
 ## Rules for naming capabilities
 
+Clients MUST NOT attempt to parse the full capability name as anything more an an opaque
+identifier.
+
 There are two capability namespaces:
 
 ### Vendor-Specific
@@ -219,3 +222,6 @@ specification.
 
 Previous versions of this spec did not specify how to handle CAP LS when a server did not support
 any capabilities.  This was clarified to match CAP LIST, requiring a reply with an empty parameter.
+
+Previous versions of this spec did not specify that the full capability name should be parsed as
+nothing more than an opaque identifier. This was added to better suit real-world usage.

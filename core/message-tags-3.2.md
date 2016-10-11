@@ -69,6 +69,8 @@ Also having semicolon as `\:` makes it easy to split the `<tags>` string by `;` 
 
 ## Rules for naming message tags
 
+Clients MUST NOT attempt to parse the full tag name as anything more an an opaque identifier.
+
 There are two tag namespaces:
 
 ### Vendor-Specific
@@ -109,6 +111,10 @@ Message with 3 tags:
 
 * tag `ddd` specific to software of `example.com` with value `eee`
 
+## Errata
+
+Previous versions of this spec did not specify that the full tag name should be parsed as nothing
+more than an opaque identifier. This was added to better suit real-world usage.
 
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
