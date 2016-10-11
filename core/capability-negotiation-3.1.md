@@ -166,7 +166,7 @@ continue as normal.
 
 ## Rules for naming capabilities
 
-Clients MUST NOT attempt to parse the full capability name as anything more an an opaque
+Clients MUST NOT attempt to parse the full capability name as anything more than an opaque
 identifier.
 
 There are two capability namespaces:
