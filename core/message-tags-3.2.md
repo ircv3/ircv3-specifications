@@ -114,7 +114,8 @@ Message with 3 tags:
 ## Errata
 
 Previous versions of this spec did not specify that the full tag name should be parsed as nothing
-more than an opaque identifier. This was added to better suit real-world usage.
+more than an opaque identifier. This was added to better suit real-world usage and to improve
+client resiliency.
 
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
