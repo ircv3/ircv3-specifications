@@ -50,6 +50,9 @@ with a plus sign (`+`) and otherwise conforms to the format specified in
 Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` events, and
 MAY be relayed on other events.
 
+Any server-initiated tags attached to messages MUST be included before client-only
+tags to prevent them from being pushed outside of the 512 byte tag limit.
+
 The expected client behaviour of individual client-only tags SHOULD be defined
 in separate specifications, in the same way as server-initiated tags.
 
