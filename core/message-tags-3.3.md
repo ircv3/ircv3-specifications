@@ -90,18 +90,53 @@ that act on tag content as well.
 
 ## Examples
 
-This section is non-normative.
+This section is non-normative. The tags used in these examples may or may not have a specified meaning elsewhere.
 
-A bot that provides titles for URLs shared in channel could use a client-only
-tag to provide an icon enhancement for its response:
+---
+
+A message sent by a client with the `example-tag` tag:
+
+```
+@example-tag=example-value PRIVMSG #channel :Message
+```
+
+---
+
+A message sent by a client with the `+example-client-tag` client-only tag:
+
+```
+@+example-client-tag=example-value PRIVMSG #channel :Message
+```
+
+---
+
+Server responses for:
+
+* The user `nick` sharing a URL in a channel (without tags)
+* The bot `url_bot` responding with the URL title in the message body and the favicon URL included as the value of the `+icon` client-only tag:
 
 ```
 :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
 @+icon=https://example.com/favicon.png :url_bot!bot@example.com PRIVMSG #channel :Example.com: A News Story
 ```
 
+---
+
 An example of a vendor-prefixed client-only tag:
 
 ```
 @+example.com/foo=bar :irc.example.com NOTICE #channel :A vendor-prefixed client-only tagged message
+```
+
+---
+
+A client-only tag `+example` with a value containing valid raw and escaped characters:
+
+* Escaped value: `raw-values+:=,escaped-values\:\s\\`
+* Decoded value: `raw-values+:=,escaped-values; \`
+
+Plus signs, colons, equals signs and commas can appear unescaped in tag values, but semicolons, spaces and backslashes must be escaped.
+
+```
+@+example=raw-values+:=,escaped-values\:\s\\ :irc.example.com NOTICE #channel :Message
 ```
