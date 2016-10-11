@@ -66,7 +66,7 @@ prefixed the same way as how vendor-specific capabilities are prefixed.
 See [capability negotiation](../core/capability-negotiation-3.1.html) for the
 exact details.
 
-Clients MUST NOT attempt to parse the full batch type name as anything more an an opaque identifier.
+Clients MUST NOT attempt to parse the full batch type name as anything more than an opaque identifier.
 
 While batch types are similar to capabilities in this aspect, unlike
 capabilities, batch types are not advertised by servers nor explicitly
