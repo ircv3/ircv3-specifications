@@ -66,7 +66,7 @@ prefixed the same way as how vendor-specific capabilities are prefixed.
 See [capability negotiation](../core/capability-negotiation-3.1.html) for the
 exact details.
 
-Clients MUST NOT attempt to parse the full batch type name as anything more than an opaque identifier.
+The full batch type name MUST be treated as an opaque identifier.
 
 While batch types are similar to capabilities in this aspect, unlike
 capabilities, batch types are not advertised by servers nor explicitly
@@ -122,5 +122,5 @@ The order in which these two batches start doesn't matter.
 
 ## Errata
 
-Previous versions of this spec did not specify that the full batch type name should be parsed as
-nothing more than an opaque identifier. This was added to improve client resiliency.
+Previous versions of this spec did not specify that the full batch type name MUST be parsed as
+an opaque identifier. This was added to improve client resiliency.
