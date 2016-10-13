@@ -134,11 +134,11 @@ An example of a vendor-prefixed client-only tag:
 
 A client-only tag `+example` with a value containing valid raw and escaped characters:
 
-* Escaped value: `raw-values+:=,escaped-values\:\s\\`
-* Decoded value: `raw-values+:=,escaped-values; \`
+* Raw value: `raw+:=,escaped; \`
+* Escaped value: `raw+:=,escaped\:\s\\`
 
-Plus signs, colons, equals signs and commas can appear unescaped in tag values, but semicolons, spaces and backslashes must be escaped.
+In this example, plus signs, colons, equals signs and commas are transmitted raw in tag values; while semicolons, spaces and backslashes are escaped. [Escaping rules](./message-tags-3.2.html#escaping-values) are unchanged from IRCv3.2 tags.
 
 ```
-@+example=raw-values+:=,escaped-values\:\s\\ :irc.example.com NOTICE #channel :Message
+@+example=raw+:=,escaped\:\s\\ :irc.example.com NOTICE #channel :Message
 ```
