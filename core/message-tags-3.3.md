@@ -37,7 +37,7 @@ This specification adds the `message-tags` capability. Clients requesting
 this capability indicate that they are capable of parsing all well-formed tags,
 even if they don't handle them specifically.
 
-Servers advertising this capability indicate that they are capable of handling
+Servers advertising this capability indicate that they are capable of parsing
 any tag received from a client, with or without the client-only prefix.
 
 ### Tags
