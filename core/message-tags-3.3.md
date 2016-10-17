@@ -37,8 +37,8 @@ This specification adds the `message-tags` capability. Clients requesting
 this capability indicate that they are capable of parsing all well-formed tags,
 even if they don't handle them specifically.
 
-Servers advertising this capability indicate that they are capable of handling
-client-only tags.
+Servers advertising this capability indicate that they are capable of parsing
+any tag received from a client, with or without the client-only prefix.
 
 ### Tags
 
@@ -50,6 +50,9 @@ with a plus sign (`+`) and otherwise conforms to the format specified in
 Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` events, and
 MAY be relayed on other events.
 
+Any server-initiated tags attached to messages MUST be included before client-only
+tags to prevent them from being pushed outside of the 512 byte tag limit.
+
 The expected client behaviour of individual client-only tags SHOULD be defined
 in separate specifications, in the same way as server-initiated tags.
 
@@ -57,9 +60,9 @@ This means client-only tags that aren't specified in the IRCv3 extension registr
 use a vendor prefix and SHOULD be submitted to the IRCv3 working group for consideration
 if they are appropriate for more widespread adoption.
 
-The updated BNF for keys is as follows:
+The updated pseudo-BNF for keys is as follows:
 
-    <key>           ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
+    <key> ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
 
 Individual tag keys MUST only be used a maximum of once per message. Clients
 receiving messages with more than one occurrence of a tag key SHOULD discard all
@@ -69,6 +72,8 @@ but the final occurrence.
 
 Client-only tags should be treated as untrusted data. They can contain any value
 and are not validated by servers in any way.
+
+Some specifications may involve servers accepting client-initiated tags without the client-only prefix. Such tag values SHOULD be validated by the server before being sent with any response to a client, unless they are specifically specified to be untrusted data.
 
 ## Client implementation considerations
 
@@ -87,18 +92,53 @@ that act on tag content as well.
 
 ## Examples
 
-This section is non-normative.
+This section is non-normative. The tags used in these examples may or may not have a specified meaning elsewhere.
 
-A bot that provides titles for URLs shared in channel could use a client-only
-tag to provide an icon enhancement for its response:
+---
+
+A message sent by a client with the `example-tag` tag:
+
+```
+@example-tag=example-value PRIVMSG #channel :Message
+```
+
+---
+
+A message sent by a client with the `+example-client-tag` client-only tag:
+
+```
+@+example-client-tag=example-value PRIVMSG #channel :Message
+```
+
+---
+
+Server responses for:
+
+* The user `nick` sharing a URL in a channel (without tags)
+* The bot `url_bot` responding with the URL title in the message body and the favicon URL included as the value of the `+icon` client-only tag:
 
 ```
 :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
 @+icon=https://example.com/favicon.png :url_bot!bot@example.com PRIVMSG #channel :Example.com: A News Story
 ```
 
+---
+
 An example of a vendor-prefixed client-only tag:
 
 ```
 @+example.com/foo=bar :irc.example.com NOTICE #channel :A vendor-prefixed client-only tagged message
+```
+
+---
+
+A client-only tag `+example` with a value containing valid raw and escaped characters:
+
+* Raw value: `raw+:=,escaped; \`
+* Escaped value: `raw+:=,escaped\:\s\\`
+
+In this example, plus signs, colons, equals signs and commas are transmitted raw in tag values; while semicolons, spaces and backslashes are escaped. [Escaping rules](./message-tags-3.2.html#escaping-values) are unchanged from IRCv3.2 tags.
+
+```
+@+example=raw+:=,escaped\:\s\\ :irc.example.com NOTICE #channel :Message
 ```
