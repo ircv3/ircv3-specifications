@@ -166,6 +166,8 @@ continue as normal.
 
 ## Rules for naming capabilities
 
+The full capability name MUST be treated as an opaque identifier.
+
 There are two capability namespaces:
 
 ### Vendor-Specific
@@ -176,7 +178,7 @@ These names are prefixed by a valid DNS domain name.
 
 For example: `znc.in/server-time`.
 
-In cases if the domain name contains non-ASCII characters, punycode MUST be used,
+In cases where the prefix contains non-ASCII characters, punycode MUST be used,
 e.g. `xn--e1afmkfd.org/foo`.
 
 Vendor-Specific capabilities should be submitted to the IRCv3 working group for consideration.
@@ -219,3 +221,7 @@ specification.
 
 Previous versions of this spec did not specify how to handle CAP LS when a server did not support
 any capabilities.  This was clarified to match CAP LIST, requiring a reply with an empty parameter.
+
+Previous versions of this spec did not specify that the full capability name MUST be treated as
+an opaque identifier. This was added to better suit real-world usage and to improve client
+resiliency.

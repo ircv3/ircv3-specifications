@@ -69,6 +69,8 @@ Also having semicolon as `\:` makes it easy to split the `<tags>` string by `;` 
 
 ## Rules for naming message tags
 
+The full tag name MUST be treated as an opaque identifier.
+
 There are two tag namespaces:
 
 ### Vendor-Specific
@@ -78,7 +80,7 @@ These names are prefixed by a valid DNS domain name.
 
 For example: `znc.in/server-time`.
 
-In cases if the domain name contains non-ASCII characters, punycode MUST be used,
+In cases where the prefix contains non-ASCII characters, punycode MUST be used,
 e.g. `xn--e1afmkfd.org/foo`.
 
 Vendor-Specific tags should be submitted to the IRCv3 working group for consideration.
@@ -109,6 +111,10 @@ Message with 3 tags:
 
 * tag `ddd` specific to software of `example.com` with value `eee`
 
+## Errata
+
+Previous versions of this spec did not specify that the full tag name MUST be parsed as
+an opaque identifier. This was added to improve client resiliency.
 
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
