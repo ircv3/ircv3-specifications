@@ -12,6 +12,18 @@ copyrights:
     period: 2016
     email: "james@irccloud.com"
 ---
+
+## Notes for implementing work-in-progress version
+
+This is a work-in-progress specification.
+
+Software implementing this work-in-progress specification MUST NOT use the
+unprefixed `message-tags` capability name. Instead, implementations SHOULD use
+the `draft/message-tags` capability name to be interoperable with other software
+implementing a compatible work-in-progress version.
+
+The final version of the specification will use an unprefixed capability name.
+
 ## Introduction
 
 This specification adds a new capability for general message tags support and
@@ -33,7 +45,7 @@ keeping them distinct from server-initiated tags that carry verified meaning.
 
 ### Capabilities
 
-This specification adds the `message-tags` capability. Clients requesting
+This specification adds the `draft/message-tags` capability. Clients requesting
 this capability indicate that they are capable of parsing all well-formed tags,
 even if they don't handle them specifically.
 
