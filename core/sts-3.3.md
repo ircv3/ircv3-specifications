@@ -13,14 +13,27 @@ copyrights:
     email: "james@irccloud.com"
 ---
 
+## Notes for implementing work-in-progress version
+
+This is a work-in-progress specification.
+
+Software implementing this work-in-progress specification MUST NOT use the
+unprefixed `sts` capability name. Instead, implementations SHOULD use the
+`draft/sts` capability name to be interoperable with other software
+implementing a compatible work-in-progress version.
+
+The final version of the specification will use an unprefixed capability name.
+
 ## Description
 
 Strict Transport Security (STS) is a mechanism which allows servers to
 communicate that complying clients should only connect to them over a secure
 connection.
 
-The policy is communicated to the client via the `sts` capability and should
+The policy is communicated to the client via the STS capability and should
 be processed by the client at capability negotiation time.
+
+The name of the STS capability is `draft/sts`.
 
 The value of the capability specifies the duration during which the client
 MUST only connect to the server securely (using TLS, aka. SSL), and the port
@@ -80,18 +93,18 @@ this document MUST only occur at most once.
 
 Clients MUST ignore every token with a key that they don't understand.
 
-An `sts` capability having at least a `duration` key expresses an STS policy.
+An STS capability having at least a `duration` key expresses an STS policy.
 
 See [capability negotiation 3.2](capability-negotiation-3.2.html) for more
 information about capabilities with values.
 
 ### Mechanism
 
-When the client sees the `sts` capability advertised over a non-secure
+When the client sees the STS capability advertised over a non-secure
 connection, it MUST first establish a secure connection and confirm that the
-`sts` capability is still present.
+STS capability is still present.
 
-Once the client has confirmed that the `sts` capability is indeed offered over
+Once the client has confirmed that the STS capability is indeed offered over
 a secure connection, it then MUST only attempt secure connections to the
 server from now on until the policy expires (see the `duration` key).
 It MUST refuse to connect if a secure connection cannot be established with the
@@ -99,7 +112,7 @@ server for any reason during the lifetime of the policy.
 
 However, if the client fails to connect securely for any reason, the connection
 attempt SHOULD be considered a failure, similar to a network error.
-The client SHOULD retry the secure connection next time it receives the `sts`
+The client SHOULD retry the secure connection next time it receives the STS
 cap with the appropriate keys over a non-secure connection.
 
 If the secure connection succeeds but the STS policy is not present, the client
@@ -314,7 +327,7 @@ errors, or issues involving vulnerable systems exploited by other means.
 Server tells a client connecting non-securely to connect securely on port 6697.
 
     Client: CAP LS 302
-    Server: CAP * LS :sts=port=6697
+    Server: CAP * LS :draft/sts=port=6697
 
 After the exchange, the client disconnects and reconnects securely to the same
 server on port 6697 and proceeds as it normally would.
@@ -325,7 +338,7 @@ Server tells a client that is already connected securely that the client must
 only use secure connections for roughly 6 months.
 
     Client: CAP LS 302
-    Server: CAP * LS :sts=duration=15552000
+    Server: CAP * LS :draft/sts=duration=15552000
 
 Until the policy expires:
 * The client will use the port it is currently connected to in the future to
@@ -338,19 +351,19 @@ Server tells a client that is connected non-securely that the client must
 use secure connections for roughly 6 months. There is no port advertised.
 
     Client: CAP LS 302
-    Server: CAP * LS :sts=duration=15552000
+    Server: CAP * LS :draft/sts=duration=15552000
 
 The client ignores this because it received the STS policy over a non-secure
-connection and the `sts` cap contains no token with key `port`.
+connection and the STS cap contains no token with key `port`.
 
 ### Handling tokens with unknown keys
 
 Server tells a client that is already connected securely that the client must
-use secure connections for roughly a year, but the value of the `sts` capability
+use secure connections for roughly a year, but the value of the STS capability
 also contains some tokens whose keys the client does not understand.
 
     Client: CAP LS 302
-    Server: CAP * LS :sts=unknown,duration=31536000,foo=bar
+    Server: CAP * LS :draft/sts=unknown,duration=31536000,foo=bar
 
 The client ignores the keys it does not understand and until the policy
 expires:
@@ -364,7 +377,7 @@ Server tells a client that is already connected securely to remove the STS
 policy now.
 
     Client: CAP LS 302
-    Server: CAP * LS :sts=duration=0
+    Server: CAP * LS :draft/sts=duration=0
 
 If the client has any STS policy stored for the server it clears the policy.
 Future connections should use whatever settings (port, secure/non-secure) the
@@ -375,7 +388,7 @@ client used before it received the STS policy.
 A client securely connects to a server, which advertises an STS policy.
 
     Client: CAP LS 302
-    Server: CAP * LS :multi-prefix sts=duration=2592000
+    Server: CAP * LS :multi-prefix draft/sts=duration=2592000
 
 The client saves the policy and notes that it will become expired in 2592000 seconds
 (roughly one month). It completes registration, then proceeds as usual.
