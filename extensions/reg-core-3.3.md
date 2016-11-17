@@ -85,8 +85,8 @@ The server MAY send additional informative text upon registration success or fai
 ## The `REG VERIFY` sub-command
 
 The `REG VERIFY` command signals the intent of a client to submit a verification token for their
-account to the authentication layer.  The verification token MUST be sent to a valid callback
-resource as specified by the client in the `REG CREATE` command.
+account registration.  If a valid callback is specified by the client during the `REG CREATE`
+command, the server MUST send the token to the specified callback.
 
 A `REG VERIFY` command consists of the following format:
 
@@ -157,16 +157,18 @@ The following credential types are defined:
 
   * `passphrase`: an unencrypted passphrase which is sent to the server.
   * `certfp`: the client certificate fingerprint as determined by the server if available.
-    The client MAY provide an empty credential (`*`) in this case.  The server SHOULD calculate
-    the credential using the client certificate fingerprint, if available.  If no client certificate
-    is presented, the server SHOULD NOT advertise the availability of this credential type.
+    The client SHOULD provide an empty credential (`*`), and the server MUST ignore the
+    credential value provided by the client.  The server MUST calculate the credential using the
+    client certificate fingerprint (using the same method as for SASL certfp support).  If no
+    certificate is presented by the client, the server MUST respond to any registration attempts
+    with `ERR_REG_INVALID_CRED_TYPE` and SHOULD NOT advertise this credential type.
 
 A sample 005 reply indicating support for credential types is:
 
     :irc.example.com 005 kaniini REGCREDTYPES=passphrase,certfp :are supported by this server
 
-The first credential type SHOULD be the implementation-defined default if default credential types
-are supported.
+The first credential type in this token SHOULD be used as the default if the client does not
+specify a credential type in the `REG CREATE` command.
 
 ## Examples
 
