@@ -1,6 +1,7 @@
 ---
 title: IRCv3.2 Metadata
 layout: spec
+deprecated: true
 copyrights:
   -
     name: "Kiyoshi Aman"
@@ -286,3 +287,5 @@ Notification for a user becoming an operator:
 * Earlier versions of this spec were ambiguous about the behavior of
   `METADATA SET`.
 * Earlier versions of this spec did not specify `metadata-notify` as OPTIONAL.
+* Due to discovered issues around rate-limiting and notifications being solved,
+  this specification has been deprecated for the time being.
