@@ -50,19 +50,22 @@ As an example, this tag may be used when a long channel `TOPIC` is set, but cann
 
 In the following examples, the default message length is presumed to be 100 octets (rather than 512) and the extended length is presumed to be 400 octets (rather than 2048). This is done purely to simplify presentation and convey the concept more easily.
 
+* ` ->` conveys lines being sent from this client to the IRC server.
+* `<- ` conveys lines being sent from the server to this client.
+
 ### Sending a long privmsg to someone else
 
 In this example, C1 and C2 have negotiated `maxlen`.
 
     C1  -> PRIVMSG coolfriend :Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    C2 <- :c1!test@localhost PRIVMSG coolfriend :Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    C2 <-  :c1!test@localhost PRIVMSG coolfriend :Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 In this example, C1 has negotiated `maxlen` but C2 has not.
 
     C1  -> PRIVMSG coolfriend :Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    C2 <- :c1!test@localhost PRIVMSG coolfriend :Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-    C2 <- :c1!test@localhost PRIVMSG coolfriend :sed do eiusmod tempor incididunt ut labore et dolore
-    C2 <- :c1!test@localhost PRIVMSG coolfriend :magna aliqua.
+    C2 <-  :c1!test@localhost PRIVMSG coolfriend :Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+    C2 <-  :c1!test@localhost PRIVMSG coolfriend :sed do eiusmod tempor incididunt ut labore et dolore
+    C2 <-  :c1!test@localhost PRIVMSG coolfriend :magna aliqua.
 
 ### Setting a long topic and having another user run into it
 
