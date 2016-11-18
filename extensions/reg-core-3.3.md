@@ -6,6 +6,10 @@ copyrights:
     name: "William Pitcock"
     period: "2014-2015"
     email: "nenolod@dereferenced.org"
+  -
+    name: "Daniel Oaks"
+    period: "2016"
+    email: "daniel@danieloaks.net"
 ---
 
 The `REG` command framework provides a unified, standardized interface for account creation and
@@ -35,6 +39,9 @@ authentication layer.  It is similar to current methods of signalling that inten
 A `REG CREATE` command consists of the following format:
 
     REG CREATE <accountname> [callback_namespace:]<callback> [cred_type] :<credential>
+
+The `accountname` field specifies the account name the client wishes to register.  If the account name
+is `*`, it indicates that the client wishes to register with their current nickname as this field.
 
 The `credential` field specifies a credential of `cred_type`.  If there is no specified credential, then
 the `credential` field MUST be `*`.  A passphrase type `credential` MAY have spaces in it. New credential
@@ -170,6 +177,22 @@ A sample 005 reply indicating support for credential types is:
 The first credential type in this token SHOULD be used as the default if the client does not
 specify a credential type in the `REG CREATE` command.
 
+## The `REGNICK` `RPL_ISUPPORT` token
+
+Some implementations restrict the account name that can be registered to the current nickname of
+the client (that is, they tie account name registration to nicknames). Implementations which
+restrict registration in this way MUST advertise the `REGNICK` RPL_ISUPPORT (005) token.
+
+This token has no value, and a sample 005 reply indicating this behaviour is:
+
+    :irc.example.com 005 dan REGNICK :are supported by this server
+
+When registering on a network that enforces this policy, clients MUST send `*` as `<accountname>`
+in the `REG CREATE` command (which indicates that the server use the client's current nickname
+as the account name). If a client sends an incorrect accountname on a network enforcing this
+policy, the server MUST return the `ERR_REG_UNSPECIFIED_ERROR` (922) numeric with an appropriate
+description.
+
 ## Examples
 
 ### Registering the account "kaniini" with e-mail address kaniini@example.com:
@@ -180,6 +203,13 @@ specify a credential type in the `REG CREATE` command.
     C: REG VERIFY kaniini 3qw4tq4te4gf34
     S: 923 kaniini kaniini :Account verification successful
     S: 903 kaniini :Authentication successful
+
+### Registering with the client's current nickname "dan-":
+
+    C: REG CREATE * mailto:dan@example.com passphrase :testpassphrase123
+    S: 920 dan- dan- :Account registered
+    S: 927 dan- dan- dan@example.com :A verification code was sent
+    ...
 
 ### Registering the account "rabbit" with SMS number +11234567890:
 
@@ -208,6 +238,11 @@ specify a credential type in the `REG CREATE` command.
     C: REG CREATE rabbit * passphrase :testpassphrase123
     S: 920 kaniini rabbit :Account registered
     S: 903 kaniini :Authentication successful
+
+### Registering the account "harold" where REGNICK is present in RPL_ISUPPORT:
+
+    C: REG CREATE harold * passphrase :testpassphrase123
+    S: 922 dan- harold :You can only register with your current nickname
 
 ### Registering an account which already exists:
 
