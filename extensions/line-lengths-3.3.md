@@ -36,9 +36,9 @@ Servers MUST truncate incoming messages to their `maxline` values before process
 
 If a client has negotiated the `maxline` capability and sends a `PRIVMSG` or a `NOTICE` message that is longer than 512 bytes, the receiving server MUST split this into multiple regular (512-byte) length messages when sending it to clients that have not negotiated the `maxline` capability.
 
-Servers SHOULD split on whitespace, but may use whatever method is easiest for them to implement. Splitting does not need to occur at the exact max length of the message, and servers can instead opt to split a number of characters earlier to simplify processing.
+Servers SHOULD split on whitespace, but may use whatever method is easiest for them to implement. Splitting does not need to occur at the exact max length of the message, and servers can instead opt to split a number of characters earlier to simplify processing. Lines SHOULD NOT be split in the middle of a UTF-8 character.
 
-Servers MAY split other commands/numerics into multiple lines in a way similar to `PRIVMSG` and `NOTICE` above, if it is purely for display purposes.
+Servers MAY split other commands/numerics into multiple lines in a way similar to `PRIVMSG` and `NOTICE` above.
 
 ### The `truncated` Tag
 
