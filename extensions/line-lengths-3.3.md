@@ -11,7 +11,7 @@ A method for negotiating longer protocol lines.
 
 ## Introduction
 
-Currently, IRC lines are limited to 512 octets. There has been much desire to allow longer lines while sending or receiving IRC traffic, allowing longer lines with `PRIVMSG`/`NOTICE`, and solving related issues that come into play while working with the IRC protocol. These issues in particular come into play as the protocol is extended to provide greater functionality.
+Currently, IRC lines are limited to 512 bytes. There has been much desire to allow longer lines while sending or receiving IRC traffic, allowing longer lines with `PRIVMSG`/`NOTICE`, and solving related issues that come into play while working with the IRC protocol. These issues in particular come into play as the protocol is extended to provide greater functionality.
 
 The `maxline` capability specifies the maximum length of the tags, and of the rest of the message, that the server allows. As appropriate, lines will be truncated or split to account for clients which are still restricted to the standard (pre-maxline) limit.
 
@@ -24,7 +24,7 @@ The `maxline` capability, when advertised, MUST have a value which is a positive
     C: CAP LS
     S: CAP * LS :maxline=2048 
 
-Similarly to standard message handling, tags and the rest of the message have separate length values. The value of the `maxline` capability represents the maximum number of octets that the tags section, and that the rest of the message, can take up. Line length calculation is done this way in order to better integrate with methods currently used by IRC software to limit line lengths.
+Similarly to standard message handling, tags and the rest of the message have separate length values. The value of the `maxline` capability represents the maximum number of bytes that the tags section, and that the rest of the message, can take up. Line length calculation is done this way in order to better integrate with methods currently used by IRC software to limit line lengths.
 
 As an example, if `maxline` is 1024 then the maximum size of a full IRC message would be 2048 bytes (1024 for the tags, 1024 for the rest of the message).
 
@@ -34,7 +34,7 @@ Servers MUST truncate incoming messages to their `maxline` values before process
 
 ### Interaction with PRIVMSG and NOTICE
 
-If a client has negotiated the `maxline` capability and sends a `PRIVMSG` or a `NOTICE` message that is longer than 512 octets, the receiving server MUST split this into multiple regular (512-octet) length messages when sending it to clients that have not negotiated the `maxline` capability.
+If a client has negotiated the `maxline` capability and sends a `PRIVMSG` or a `NOTICE` message that is longer than 512 bytes, the receiving server MUST split this into multiple regular (512-byte) length messages when sending it to clients that have not negotiated the `maxline` capability.
 
 Servers SHOULD split on whitespace, but may use whatever method is easiest for them to implement. Splitting does not need to occur at the exact max length of the message, and servers can instead opt to split a number of characters earlier to simplify processing.
 
@@ -48,7 +48,7 @@ As an example, this tag may be used when a long channel `TOPIC` is set, but cann
 
 ### Examples
 
-In the following examples, the default message length is presumed to be 100 octets (rather than 512) and the extended length is presumed to be 400 octets (rather than 2048). This is done purely to simplify presentation and convey the concept more easily.
+In the following examples, the default message length is presumed to be 100 bytes (rather than 512) and the extended length is presumed to be 400 bytes (rather than 2048). This is done purely to simplify presentation and convey the concept more easily.
 
 * ` ->` conveys lines being sent from this client to the IRC server.
 * `<- ` conveys lines being sent from the server to this client.
