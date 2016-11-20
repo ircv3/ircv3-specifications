@@ -6,41 +6,30 @@ copyrights:
     name: "Christine Dodrill"
     period: "2013"
     email: "xena@yolo-swag.com"
+  -
+    name: "Ryan"
+    period: "2016"
+    email: "ryan@hashbang.sh"
 ---
-The chghost client capability allows a server to directly inform clients about a
-host or user change without having to send a fake quit and join. This capability
+
+The chghost client capability allows servers to directly inform clients about a
+host or user change without having to send fake quits or joins. This capability
 MUST be referred to as `chghost` at capability negotiation time.
 
-When enabled, clients will get the CHGHOST message to designate the host of a
+When enabled, clients will get the `CHGHOST` message to designate the host of a
 user changing for clients on common channels with them.
 
-The CHGHOST message is one of the following:
+The `CHGHOST` message is as follows:
 
-    :nick!user@host CHGHOST user new.host.goes.here
+    :nick!user@host CHGHOST new-user new.host.goes.here
 
-This message represents that the user identified by nick!user@host has changed
-host to another value. The first parameter is the user of the client. The
-second parameter is the new host the client is using.
+The field represented by `new-user` represents the user's "username" or "ident"
+which may or may not have changed in the CHGHOST process.
 
-On irc daemons with support for changing the user portion of a client, the
-second form may appear:
+The field represented by `new.host.goes.here` represents the new hostname for
+the user which may or may not have changed in the CHGHOST process.
 
-    :nick!user@host CHGHOST newuser host
+# Errata
 
-If specified, a client may also have their user and host changed at the same
-time:
-
-    :nick!user@host CHGHOST newuser new.host.goes.here
-
-This second and third form should only be seen on IRC daemons that support
-changing the user field of a user.
-
-In order to take full advantage of the CHGHOST message, clients must be modified
-to support it. The proper way to do so is this:
-
-1) Enable the chghost capability at capability negotiation time during the
-   login handshake.
-
-2) Update the user and host portions of data structures and process channel
-   users as appropriate.
-
+* Previous versions of this specification used confusing descriptions and have
+since been rewritten to include a simpler description and example.
