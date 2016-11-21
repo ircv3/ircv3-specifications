@@ -53,7 +53,7 @@ In the following examples, the default message length is presumed to be 100 byte
 * ` ->` conveys lines being sent from this client to the IRC server.
 * `<- ` conveys lines being sent from the server to this client.
 
-### Sending a long privmsg to someone else
+#### Sending a long privmsg to someone else
 
 In this example, C1 and C2 have negotiated `maxlen`.
 
@@ -67,7 +67,7 @@ In this example, C1 has negotiated `maxlen` but C2 has not.
     C2 <-  :c1!test@localhost PRIVMSG coolfriend :sed do eiusmod tempor incididunt ut labore et dolore
     C2 <-  :c1!test@localhost PRIVMSG coolfriend :magna aliqua.
 
-### Setting a long topic and having another user run into it
+#### Setting a long topic and having another user run into it
 
 In this example, C1 and C2 have negotiated `maxlen`.
 
@@ -84,3 +84,23 @@ In this example, C1 has negotiated `maxlen` but C2 has not.
 
     C2  -> TOPIC #coolchan
     C2 <-  @truncated 332 c1 #coolchan :Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+
+## Implementation Considerations
+
+The new feature implemented in this specification changes some of the fundamental properties of IRC messages. As such, there are areas which implementers will need to take extra considerations with. This section lists some issues which software authors will want to consider while implementing this spec.
+
+### Rate Limiting
+
+Servers should carefully consider their rate-limiting policies when implementing this extension. For example, with a rate-limiter based on penalties applied to each client, where the server currently applies one rate-limiting penalty for messages 512-bytes and under, they may apply multiple rate-limiting penalties for larger messages to compensate.
+
+This is particularly useful on the `PRIVMSG` and `NOTICE` commands, where the required message splitting may increase the workload on servers by a significant amount for larger messages.
+
+### Denial-of-Service
+
+Most current algorithms and parsers are tuned and intended specifically to be used with 512-length messages. This extension allows servers to vastly increase these limits. As such, server, client, and services authors should all take a very close look at the algorithms and message-parsing code while investigating this extension. In particular, certain algorithms may overflow or or present degraded performance when dealing with these longer lines.
+
+Clients may find it useful to have a maximum limit on the message size they will negotiate.
+
+### Registration and Authentication
+
+For server and services authors, one area to consider is the length of credentials accepted during registration. For example, if a client registers an account on a client that has negotiated `maxline`, but later tries to authenticate on a client without `maxline`, they may not be able to due to message length restrictions. Servers and/or services should work to prevent situations like this.
