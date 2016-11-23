@@ -18,7 +18,8 @@ This client capability MUST be named `echo-message`.
 If enabled, servers MUST send `PRIVMSG` and `NOTICE` messages back to
 the client that sent them. If servers apply any modifications to these
 messages, they MUST send the final version of the message back to the
-originating client.
+originating client. Servers MUST NOT send `PRIVMSG` and `NOTICE`
+messages back to the client when they send a message to themself.
 
 For clients, receiving a message with themselves as the sender acts as
 an acknowledgement that the message has been delivered to the server.
@@ -57,3 +58,9 @@ formatting and sends the final version back:
 
     --> PRIVMSG #ircv3 :back from \02lunch\0F
     :example!ex@example.com PRIVMSG #ircv3 :back from lunch
+
+
+# Errata
+
+* Previous versions of this specification did not describe what should
+happen when a client sends a message to themself.
