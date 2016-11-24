@@ -1,27 +1,107 @@
 ---
-title: IRCv3.3 Labeled replies
+title: Labeled responses
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Alexey Sokolov"
     period: "2015"
     email: "alexey-irc@asokolov.org"
+  -
+    name: "James Wheare"
+    period: "2016"
+    email: "james@irccloud.com"
 ---
-Name of this capability is `labeled-replies`.
-If client requests `labeled-replies`, it MUST also request `batch` capability.
 
-If the capability is enabled, client MAY tag its messages with `label` tag.
+## Notes for implementing work-in-progress version
 
-For messages from client which are tagged with `label`, server MUST send exactly
-one message tagged with the same `label` value in response to such message.
-If response contains more than one message, `batch` can be used to group them.
-In that case start of the batch MUST be tagged with the label, and the batch type MUST be `labeled-response`.
+This is a work-in-progress specification.
 
-If the message doesn't require any response, an empty batch MUST be sent.
+Software implementing this work-in-progress specification MUST NOT use the
+unprefixed `label` tag name. Instead, implementations SHOULD use
+the `draft/label` tag name to be interoperable with other software
+implementing a compatible work-in-progress version.
+
+The final version of the specification will use an unprefixed tag name.
+
+## Introduction
+
+This specification adds a new message tag sent by clients and repeated by servers to correlate responses with a specific request.
+
+## Motivation
+
+Certain commands sent by a client can result in ambiguous responses from the server that could vary in interpretion depending on how they were triggered. Clients have historically needed to keep track of additional local state and then apply comparison heuristics to a server response to correlate these appropriately.
+
+Labeled responses allow a much simpler way to correlate using a single id attached to a client request and repeated by the server in its response.
+
+## Architecture
+
+### Dependencies
+
+This specification uses the [message tags framework](/specs/core/message-tags-3.2.html) and relies on support for the [`batch`](/specs/extensions/batch-3.2.html) capability.
+
+### Capabilities
+
+This speciciation adds the `draft/labeled-response` capability.
+
+Clients requesting this capability indicate that they are capable of handling the message tag described below from servers.
+
+Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, and will use with the same tag and value in their response.
+
+### Batch types
+
+This specification adds the `draft/labeled-response` batch type, described below.
+
+### Tags
+
+This specification adds the `draft/label` message tag.
+
+This tag MAY be sent by a client for any messages that need to be correlated with a response from the server.
+
+For any message received from a client that includes this tag, the server MUST send exactly one message with the same tag and value in response.
+
+If a response conists of more than one message, a `batch` of type `draft/labeled-response`, starting with the `draft/label` tag MUST be used to group them into a single logical response.
+
+If no response is required, an empty batch MUST be sent.
+
+## Server implementation considerations
+
+This section is non-normative.
+
+TODO
+
+## Client implementation considerations
+
+This section is non-normative.
+
+In the case of `echo-message` (see example below), a client can use labeled responses to correlate a server's acknowledgment of their own messages with a temporary message displayed locally. The temporary message can be displayed to the user immediately in a pending state to reduce perceived lag, and then removed once a labeled response from the server is received.
+
+When sending messages directed at a client's own nick, `echo-message` will result in duplicate messages being sent by the server, as both sent and received messages. Labeled responses allow clients to deduplicate these messages in one of two ways:
+
+For private messages that match the clients nickname:
+1. Ignore labeled messages, and use any unlabeled message as acknowledgment for all sent messages to clear temporary local messages.
+2. Ignore unlabeled messages.
+
+Both methods assume that the server will acknowledge all successful messages, or return a labeled error response, but differ in their attitude to to the semantics of sending and receiving.
+
+## Bouncer implementation considerations
+
+This section is non-normative.
+
+TODOs
+
+* should labeled response be routed to all connected clients or only the originating client?
+* how to handle clashing labels from multiple clients?
+* interaction with `znc.in/self-message` or equivalent
 
 ## Examples
 
+This section is non-normative.
+
 1. `echo-message`
+
+TODO rationale
+
 
     ```
     Client: @label=pQraCjj82e PRIVMSG #channel :\x02Hello!\x02
@@ -29,6 +109,8 @@ If the message doesn't require any response, an empty batch MUST be sent.
     ```
 
 2. Failed `PRIVMSG` with `ERR_NOSUCHNICK`
+
+TODO rationale
 
     ```
     Client: @label=dc11f13f11 PRIVMSG nick :Hello
