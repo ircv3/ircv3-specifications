@@ -41,6 +41,12 @@ messages from one client, the messages get automatically relayed to
 other attached clients. This allows all attached clients to display
 full conversation.
 
+## Limitations
+
+Clients may choose not to wait for an acknowledgment from the server before displaying sent messages to users. Otherwise users may perceive increased input lag. Clients may instead choose to display a temporary local message that is replaced once the `echo-message` acknowledgment is received. However, correlating these is not straightforward, as the server may modify them before acknowledgment. There are also additional complications for self-targeted private messages.
+
+A specification for [labeled replies](https://github.com/ircv3/ircv3-specifications/pull/162) is being drafted to address this limitation. Clients may choose to postpone adoption of `echo-message` until that draft it complete.
+
 ## Examples
 
 In the following examples, `example!ex@example.com` presents a client
@@ -57,3 +63,7 @@ formatting and sends the final version back:
 
     --> PRIVMSG #ircv3 :back from \02lunch\0F
     :example!ex@example.com PRIVMSG #ircv3 :back from lunch
+
+## Errata
+
+Previous versions of this specification didn't include the Limitations section.
