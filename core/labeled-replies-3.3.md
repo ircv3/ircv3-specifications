@@ -99,11 +99,9 @@ Both methods assume that the server will acknowledge all successful messages, or
 
 This section is non-normative.
 
-TODOs
+Bouncers might choose to restrict routing labeled responses to some or all of their clients. For example, the response to a labeled WHOIS request might only be routed back to the originating client. However, an `echo-message` response might be routed to all clients. The bouncer might also choose to make labeled requests to the server on its own behalf, without routing any response to clients.
 
-* should labeled response be routed to all connected clients or only the originating client?
-* how to handle clashing labels from multiple clients?
-* interaction with `znc.in/self-message` or equivalent
+To avoid label value clashes from multiple connected clients, a bouncer might choose to modify the client supplied label, for instance, by adding a client id prefix. In this case, the modified label would be returned to its original form before routing the response back to the client.
 
 ## Examples
 
