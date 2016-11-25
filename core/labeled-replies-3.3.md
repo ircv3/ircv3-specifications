@@ -50,6 +50,8 @@ Clients requesting this capability indicate that they are capable of handling th
 
 Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, and will use with the same tag and value in their response.
 
+Servers MUST reject the capability at negotiation time if the `batch` capability is not also negotiated. Additionally, servers supporting `cap-notify` MUST cancel the capability if `batch` is removed at any time.
+
 ### Batch types
 
 This specification adds the `draft/labeled-response` batch type, described below.
