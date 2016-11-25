@@ -62,9 +62,12 @@ This specification adds the `draft/label` message tag, which has one required va
 
 This tag MAY be sent by a client for any messages that need to be correlated with a response from the server.
 
-For any message received from a client that includes this tag, the server MUST send exactly one message with the same tag and value in response.
+For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message. Servers MUST include the tag in exactly one message.
 
-If a response conists of more than one message, a `batch` of type `draft/labeled-response`, starting with the `draft/label` tag MUST be used to group them into a single logical response.
+If a response conists of more than one message, a `batch` MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
+
+* An existing type applicable to the entire response
+* `draft/labeled-response`
 
 If no response is required, an empty batch MUST be sent.
 
