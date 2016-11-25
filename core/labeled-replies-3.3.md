@@ -38,7 +38,7 @@ Labeled responses allow a much simpler way to correlate using a single id attach
 
 ### Dependencies
 
-This specification uses the [message tags framework](/specs/core/message-tags-3.2.html) and relies on support for the [`batch`](/specs/extensions/batch-3.2.html) capability.
+This specification uses the [message tags framework](/specs/core/message-tags-3.2.html) and relies on support for the [`batch`](/specs/extensions/batch-3.2.html) capability which MUST be negotiated at the same time.
 
 ### Capabilities
 
