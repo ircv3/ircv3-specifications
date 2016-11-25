@@ -34,6 +34,8 @@ Certain commands sent by a client can result in ambiguous responses from the ser
 
 Labeled responses allow a much simpler way to correlate using a single id attached to a client request and repeated by the server in its response.
 
+Additionally, labeled responses allow bouncers with multiple connected clients to direct query responses (such as WHOIS) to the correct recipient.
+
 ## Architecture
 
 ### Dependencies
@@ -127,3 +129,7 @@ TODO rationale
     Server: @batch=NMzYSq45x :irc.example.com 318 client nick :End of /WHOIS list.
     Server: :irc.example.com BATCH -NMzYSq45x
     ```
+
+## Alternatives
+
+For the use case of bouncers directing query responses to the appropriate client, there exists prior art in the form of the znc module [route_replies](http://wiki.znc.in/Route_replies). The complexities and limitations of that module were a primary motivation for the standardised approach described in this specification.
