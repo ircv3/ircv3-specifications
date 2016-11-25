@@ -30,11 +30,11 @@ This specification adds a new message tag sent by clients and repeated by server
 
 ## Motivation
 
-Certain commands sent by a client can result in ambiguous responses from the server that could vary in interpretion depending on how they were triggered. Clients have historically needed to keep track of additional local state and then apply comparison heuristics to a server response to correlate these appropriately.
+Certain client actions can result in responses from the server that vary in interpretion depending on how they were triggered, or otherwise lack a robust way to correlate with local state. Clients have historically needed to keep track of additional local state and/or apply comparison heuristics to server responses to correlate these appropriately.
 
-Labeled responses allow a much simpler way to correlate using a single id attached to a client request and repeated by the server in its response.
+Labeled responses enable a much simpler form of correlation by using a single id attached to a client request and repeated by the server in its response.
 
-Additionally, labeled responses allow bouncers with multiple connected clients to direct query responses (such as WHOIS) to the correct recipient.
+Additionally, labeled responses allow bouncers with multiple connected clients to direct responses (such as WHOIS queries or error messages, see examples) to the correct recipient.
 
 ## Architecture
 
@@ -109,8 +109,6 @@ This section is non-normative.
 
 1. `echo-message`
 
-TODO rationale
-
 
     ```
     Client: @label=pQraCjj82e PRIVMSG #channel :\x02Hello!\x02
@@ -118,8 +116,6 @@ TODO rationale
     ```
 
 2. Failed `PRIVMSG` with `ERR_NOSUCHNICK`
-
-TODO rationale
 
     ```
     Client: @label=dc11f13f11 PRIVMSG nick :Hello
