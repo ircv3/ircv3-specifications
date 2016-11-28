@@ -71,7 +71,7 @@ Message IDs have no guarantee of being universally unique across different IRC n
 
 ## Examples
 
-This section is non-normative, message IDs are not required to be UUIDs. Additional tags used in these examples may or may not have a specified meaning elsewhere.
+This section is non-normative, message IDs are not required to be UUIDs or have any specific format. Additional tags used in these examples may or may not have a specified meaning elsewhere.
 
 A channel `PRIVMSG` sent by the server:
 
@@ -79,15 +79,15 @@ A channel `PRIVMSG` sent by the server:
 
 A private `PRIVMSG` sent by the server:
 
-    S: @draft/msgid=205CFD01-54B5-4D75-86B2-3E9AEBECB6B4 :nick!user@host PRIVMSG me :Hello!
+    S: @draft/msgid=server1-1480339715754191-21 :nick!user@host PRIVMSG me :Hello!
 
 A channel `NOTICE` sent by the server:
 
-    S: @draft/msgid=63E1033A-051D-4B41-B1AB-1FA3CF4B243E :nick!user@host NOTICE #channel :Hello!
+    S: @draft/msgid=server2-3 :nick!user@host NOTICE #channel :Hello!
 
 A private `NOTICE` sent by the server:
 
-    S: @draft/msgid=D444852B-77EF-4829-AB6B-4D01C5036C01 :nick!user@host NOTICE me :Hello!
+    S: @draft/msgid=ticketid-5 :nick!user@host NOTICE me :Hello!
 
 A channel `PRIVMSG` sent by the server, and a possible client response. The `+example/reply` tag is a non-standard example:
 
