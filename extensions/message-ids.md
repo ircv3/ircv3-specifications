@@ -98,3 +98,15 @@ Two channel `PRIVMSG` messages sent by the server, with possible non-standard ex
 
     S: @draft/msgid=8FD37885-C4B0-4977-A698-76786BFDDEB2;example/split :nick!user@host PRIVMSG #channel :Hello
     S: @draft/msgid=DACE5EEB-9BCC-4597-85F4-AB13562992E8;example/concat=8FD37885-C4B0-4977-A698-76786BFDDEB2 :nick!user@host PRIVMSG #channel : World
+
+A client negotiating the `draft/message-tags` capability to enable and disable messages tagged with IDs.
+
+    S: :nick!user@host PRIVMSG #channel :Hello
+    C: CAP REQ draft/message-tags
+    S: :irc.example.com CAP me ACK :draft/message-tags
+    C: CAP END
+    S: @draft/msgid=2CECFD2B-FD8C-42B7-A398-A9EBC1DD99BD :nick!user@host PRIVMSG #channel :Hello again
+    C: CAP REQ -draft/message-tags
+    S: :irc.example.com CAP me ACK :-draft/message-tags
+    C: CAP END
+    S: :nick!user@host PRIVMSG #channel :Another hello
