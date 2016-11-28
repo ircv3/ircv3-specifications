@@ -89,12 +89,12 @@ A private `NOTICE` sent by the server:
 
     S: @draft/msgid=D444852B-77EF-4829-AB6B-4D01C5036C01 :nick!user@host NOTICE me :Hello!
 
-A channel `PRIVMSG` sent by the server, and a possible client response. The `reply` tag is a non-standard example:
+A channel `PRIVMSG` sent by the server, and a possible client response. The `+example/reply` tag is a non-standard example:
 
     S: @draft/msgid=062F321D-425E-4951-A3E8-D644513E2ECD :nick!user@host PRIVMSG #channel :Hello!
-    C: @reply=062F321D-425E-4951-A3E8-D644513E2ECD :nick2!user2@host2 PRIVMSG #channel :Hello to you!
+    C: @+example/reply=062F321D-425E-4951-A3E8-D644513E2ECD :nick2!user2@host2 PRIVMSG #channel :Hello to you!
 
 Two channel `PRIVMSG` messages sent by the server, with possible non-standard example annotations to indicate split message concatenation:
 
-    S: @draft/msgid=8FD37885-C4B0-4977-A698-76786BFDDEB2;split :nick!user@host PRIVMSG #channel :Hello
-    S: @draft/msgid=DACE5EEB-9BCC-4597-85F4-AB13562992E8;concat=8FD37885-C4B0-4977-A698-76786BFDDEB2 :nick!user@host PRIVMSG #channel : World
+    S: @draft/msgid=8FD37885-C4B0-4977-A698-76786BFDDEB2;example/split :nick!user@host PRIVMSG #channel :Hello
+    S: @draft/msgid=DACE5EEB-9BCC-4597-85F4-AB13562992E8;example/concat=8FD37885-C4B0-4977-A698-76786BFDDEB2 :nick!user@host PRIVMSG #channel : World
