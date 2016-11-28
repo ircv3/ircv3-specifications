@@ -108,9 +108,7 @@ A client negotiating the `draft/message-tags` capability to enable and disable m
     S: :nick!user@host PRIVMSG #channel :Hello
     C: CAP REQ draft/message-tags
     S: :irc.example.com CAP me ACK :draft/message-tags
-    C: CAP END
     S: @draft/msgid=2CECFD2B-FD8C-42B7-A398-A9EBC1DD99BD :nick!user@host PRIVMSG #channel :Hello again
     C: CAP REQ -draft/message-tags
     S: :irc.example.com CAP me ACK :-draft/message-tags
-    C: CAP END
     S: :nick!user@host PRIVMSG #channel :Another hello
