@@ -48,7 +48,7 @@ The tag value is chosen by the originating server and MUST be unique, meaning an
 
 However, if a message is re-transmitted as-is, for example with the [`chathistory`](./batch/chathistory-3.3.html) batch type, the ID SHOULD be reused. As a result, clients MUST be able to handle shared IDs.
 
-The tag value MUST be treated as an opaque identifier.
+The tag value MUST be treated as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
 
 ## Server implementation considerations
 
@@ -64,6 +64,8 @@ Some examples of appropriate IDs are:
 * A numeric counter, prefixed with a server ID as well as the server startup timestamp at a suitable precision.
 
 When using timestamps, make sure they're correctly synchronised using NTP or similar.
+
+Although clients are required to treat IDs as case sensitive opaque values, servers might still choose a case insensitive ID format internally.
 
 ### Choosing an ID format
 
