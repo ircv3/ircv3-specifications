@@ -79,7 +79,7 @@ This section is non-normative, message IDs are not required to be UUIDs or have 
 
 A channel `PRIVMSG` sent by the server:
 
-    S: @draft/msgid=63E1033A-051D-4B41-B1AB-1FA3CF4B243E :nick!user@host PRIVMSG #channel :Hello!
+    S: @draft/msgid=63E1033A051D4B41B1AB1FA3CF4B243E :nick!user@host PRIVMSG #channel :Hello!
 
 A private `PRIVMSG` sent by the server:
 
@@ -95,20 +95,20 @@ A private `NOTICE` sent by the server:
 
 A channel `PRIVMSG` sent by the server, and a possible client response. The `+example/reply` tag is a non-standard example:
 
-    S: @draft/msgid=062F321D-425E-4951-A3E8-D644513E2ECD :nick!user@host PRIVMSG #channel :Hello!
-    C: @+example/reply=062F321D-425E-4951-A3E8-D644513E2ECD :nick2!user2@host2 PRIVMSG #channel :Hello to you!
+    S: @draft/msgid=msgid1 :nick!user@host PRIVMSG #channel :Hello!
+    C: @+example/reply=msgid1 :nick2!user2@host2 PRIVMSG #channel :Hello to you!
 
 Two channel `PRIVMSG` messages sent by the server, with possible non-standard example annotations to indicate split message concatenation:
 
-    S: @draft/msgid=8FD37885-C4B0-4977-A698-76786BFDDEB2;example/split :nick!user@host PRIVMSG #channel :Hello
-    S: @draft/msgid=DACE5EEB-9BCC-4597-85F4-AB13562992E8;example/concat=8FD37885-C4B0-4977-A698-76786BFDDEB2 :nick!user@host PRIVMSG #channel : World
+    S: @draft/msgid=msgid1;example/split :nick!user@host PRIVMSG #channel :Hello
+    S: @draft/msgid=msgid2;example/concat=msgid1 :nick!user@host PRIVMSG #channel : World
 
 A client negotiating the `draft/message-tags` capability to enable and disable messages tagged with IDs.
 
     S: :nick!user@host PRIVMSG #channel :Hello
     C: CAP REQ draft/message-tags
     S: :irc.example.com CAP me ACK :draft/message-tags
-    S: @draft/msgid=2CECFD2B-FD8C-42B7-A398-A9EBC1DD99BD :nick!user@host PRIVMSG #channel :Hello again
+    S: @draft/msgid=msgid-a :nick!user@host PRIVMSG #channel :Hello again
     C: CAP REQ -draft/message-tags
     S: :irc.example.com CAP me ACK :-draft/message-tags
     S: :nick!user@host PRIVMSG #channel :Another hello
