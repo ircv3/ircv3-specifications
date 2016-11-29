@@ -46,7 +46,7 @@ This tag MAY be sent by a server on `PRIVMSG` and `NOTICE` messages.
 
 The tag value is chosen by the originating server and MUST be unique, meaning any other message transmitted on the entire network at any time MUST NOT share the same value.
 
-However, if a message is re-transmitted as-is, for example with the [`chathistory`](./batch/chathistory-3.3.html) batch type, the ID SHOULD be reused. As a result, clients MUST be able to handle shared IDs.
+However, if a message is re-transmitted as-is, for example with the [`chathistory`](./batch/chathistory-3.3.html) batch type, the ID SHOULD be reused. As a result, clients MUST accept shared IDs.
 
 The tag value MUST be treated as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
 
@@ -54,7 +54,7 @@ The tag value MUST be treated as a case sensitive opaque identifier. Clients MUS
 
 This section is non-normative.
 
-In order to guarantee uniqueness, message IDs can't be implemented as simple numeric counters that risk clashing with other servers on the network, or being reset if the server restarts.
+In order to guarantee sufficient uniqueness, message IDs can't be implemented as simple numeric counters that risk clashing with other servers on the network, or being reset if the server restarts.
 
 Some examples of appropriate IDs are:
 
@@ -75,6 +75,8 @@ For instance, a UUID in hex form takes up 32 bytes (or 22 bytes in unpadded base
 
 If the 512-byte tag limit is only being sparsely used overall, the simpler and longer format might be chosen. But if the server's capabilities put messages at a greater risk of reaching the limit, a shorter custom format might be more suitable.
 
+Another consideration is the chance of collisions. For example, some versions and implementations of the UUID specification rely on conditions that may not always produce collision-free outputs. However, if the probability is sufficiently low, a "practical" (if not guaranteed) uniqueness might be acceptable, given the requirement on clients to accept shared IDs.
+
 ## Client implementation considerations
 
 This section is non-normative.
@@ -82,6 +84,8 @@ This section is non-normative.
 Message IDs have no guarantee of being universally unique across different IRC networks, nor will they necessarily share the same format. There is also no requirement that numeric IDs increase monotonically. Don't attempt to correlate them beyond their scope and don't use them for message ordering.
 
 In the case of re-transmitted messages that share an ID, clients might choose to mark a message as repeated, or just use the most recent occurence as the target for followup actions. Using server IDs alone as internal primary keys isn't recommended, otherwise re-transmitted messages may not individually addressable in client-side message stores.
+
+Handling duplicates gracefully is also useful in the case of IDs that have a chance of collision.
 
 ## Examples
 
