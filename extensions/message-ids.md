@@ -69,7 +69,7 @@ When using timestamps, make sure they're correctly synchronised using NTP or sim
 
 Certain message ID formats could present a length issue if other tags are being used. The trade-offs between length and complexity of implementation should be carefully considered when choosing an ID format.
 
-For instance, a UUID takes up 32 bytes, but has widely available standardised implementations in many languages and no external dependencies. Conversely, a custom format can be much shorter, but might depend on an external service, disk I/O, additional state being tracked by the server, or untested proprietary code. 
+For instance, a UUID in hex form takes up 32 bytes (or 22 bytes in unpadded base64), and has widely available standardised implementations in many languages and no external dependencies. Conversely, a custom format can be much shorter, and might depend on an external service, disk I/O, additional state being tracked by the server, or untested proprietary code. 
 
 If the 512-byte tag limit is only being sparsely used overall, the simpler and longer format might be chosen. But if the server's capabilities put messages at a greater risk of reaching the limit, a shorter custom format might be more suitable.
 
@@ -95,7 +95,7 @@ A private `PRIVMSG` sent by the server:
 
 A channel `NOTICE` sent by the server:
 
-    S: @draft/msgid=server2-3 :nick!user@host NOTICE #channel :Hello!
+    S: @draft/msgid=G6PuDDBWQYmu3HmXXOAPzA :nick!user@host NOTICE #channel :Hello!
 
 A private `NOTICE` sent by the server:
 
