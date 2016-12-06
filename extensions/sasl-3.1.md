@@ -47,11 +47,16 @@ a set of regular AUTHENTICATE messages with the initial server response.
 
 A set of regular AUTHENTICATE messages transmits a response from client to
 server or vice versa. The server MAY intersperse other IRC protocol messages
-between the AUTHENTICATE messages of a set. The "+" form is used for an empty
-response. The server MAY place a limit on the total length of a response.
+between the AUTHENTICATE messages of a set.
+The response is encoded in Base64
+([RFC 4648](https://tools.ietf.org/html/rfc4648)), then split to 400-byte
+chunks, and each chunk is sent as a separate `AUTHENTICATE` command. Empty
+(zero-length) responses are sent as `AUTHENTICATE +`. If the last chunk was
+exactly 400 bytes long, it must also be followed by `AUTHENTICATE +` to signal
+end of response.
+The server MAY place a limit on the total length of a response.
 
-    regular-authenticate-set = *("AUTHENTICATE" SP 400BASE64 CRLF)
-	"AUTHENTICATE" SP (1*399BASE64 / "+") CRLF
+    regular-authenticate-set = *("AUTHENTICATE" SP 400BASE64 CRLF) "AUTHENTICATE" SP (1*399BASE64 / "+") CRLF
 
 The client can abort an authentication by sending an asterisk as the data.
 The server will send a 904 numeric.
@@ -166,3 +171,4 @@ between implementations and translations.)_
 
 * Previous versions of this specification did not precisely describe when
 is RPL_SASLMECHS being sent.
+* Clarified the language how responses are transmitted.
