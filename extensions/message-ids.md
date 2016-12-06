@@ -50,6 +50,10 @@ However, if a message is re-transmitted as-is, for example with the [`chathistor
 
 The tag value MUST be treated as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
 
+### Relationships with other specifications
+
+In order to treat messages that refer to IDs consistently, clients need to know the IDs for their own messages as well. Servers that provide message IDs SHOULD also provide the `echo-message`(./echo-message-3.2.html) capability.
+
 ## Server implementation considerations
 
 This section is non-normative.
