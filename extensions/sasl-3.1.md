@@ -42,6 +42,8 @@ is received, the IRCD will attempt to establish an association with a SASL
 agent.) If this fails, a 904 numeric will be sent and the session state remains
 unchanged; the client MAY try another mechanism. Otherwise, the server sends
 a set of regular AUTHENTICATE messages with the initial server response.
+If the chosen mechanism is client-first, the server sends an empty response
+(`AUTHENTICATE +`, as described below).
 
     initial-authenticate = "AUTHENTICATE" SP mechanism CRLF
 
@@ -172,3 +174,4 @@ between implementations and translations.)_
 * Previous versions of this specification did not precisely describe when
 is RPL_SASLMECHS being sent.
 * Clarified the language how responses are transmitted.
+* Added empty initial server response for client-first mechanisms. This had happened de-facto already.
