@@ -48,3 +48,9 @@ John joined #chan during the leap second of June 2012 (notice the :60)
 
 [cap]: ../core/capability-negotiation-3.1.html
 [message tag]: ../core/message-tags-3.2.html
+
+* * * * *
+
+In case local client is in wrong time, timestamps looking weird can be
+avoided by also supporting the `echo-message` capability. Running NTP
+client is recommended.
