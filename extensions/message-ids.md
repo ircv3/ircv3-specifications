@@ -79,8 +79,6 @@ For instance, a UUID in hex form takes up 32 bytes (or 22 bytes in unpadded base
 
 If the 512-byte tag limit is only being sparsely used overall, the simpler and longer format might be chosen. But if the server's capabilities put messages at a greater risk of reaching the limit, a shorter custom format might be more suitable.
 
-Another consideration is the chance of collisions. For example, some versions and implementations of the UUID specification rely on conditions that may not always produce collision-free outputs. However, if the probability is sufficiently low, a "practical" (if not guaranteed) uniqueness might be acceptable, given the requirement on clients to accept shared IDs.
-
 ## Client implementation considerations
 
 This section is non-normative.
@@ -89,7 +87,7 @@ Message IDs have no guarantee of being universally unique across different IRC n
 
 In the case of re-transmitted messages that share an ID, clients might choose to mark a message as repeated, or just use the most recent occurence as the target for followup actions. Using server IDs alone as internal primary keys isn't recommended, otherwise re-transmitted messages may not individually addressable in client-side message stores.
 
-Handling duplicates gracefully is also useful in the case of IDs that have a chance of collision.
+Handling duplicates gracefully is also useful in the case of servers accidentally reusing an ID.
 
 ## Examples
 
