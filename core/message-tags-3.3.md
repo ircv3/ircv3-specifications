@@ -179,3 +179,19 @@ In this example, plus signs, colons, equals signs and commas are transmitted raw
 ```
 @+example=raw+:=,escaped\:\s\\ :irc.example.com NOTICE #channel :Message
 ```
+
+---
+
+An empty message sent by a client with the `+example-client-tag` client-only tag:
+
+```
+@+example-client-tag=example-value PRIVMSG #channel :
+```
+
+---
+
+An alternate form of an empty message sent by a client with the `+example-client-tag` client-only tag, where the last parameter is omitted
+
+```
+@+example-client-tag=example-value PRIVMSG #channel
+```
