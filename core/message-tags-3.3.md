@@ -27,7 +27,8 @@ The final version of the specification will use an unprefixed capability name.
 ## Introduction
 
 This specification adds a new capability for general message tags support and
-a prefix for expressing client-only tags.
+a prefix for expressing client-only tags. It also defines behaviour for empty
+tag-only messages, and increases the byte limit for tags.
 
 ## Motivation
 
@@ -40,6 +41,14 @@ response.
 
 The client-only tag prefix allows servers to safely relay untrusted client tags,
 keeping them distinct from server-initiated tags that carry verified meaning.
+
+To allow for tagged data to be sent to channels and users without any accompanying
+message text, a format for tag-only messages is needed. Since servers do not normally
+accept messages with a missing body, new behaviour is defined for tagged messages.
+
+With the scope of tags expanded for use as general purpose message metadata, the
+number and size of tags attached to a message will potentially increase. As a
+result, an increased limit is defined when advertising the new capability.
 
 ## Architecture
 
@@ -79,6 +88,19 @@ The updated pseudo-BNF for keys is as follows:
 Individual tag keys MUST only be used a maximum of once per message. Clients
 receiving messages with more than one occurrence of a tag key SHOULD discard all
 but the final occurrence.
+
+### Empty tagged messages
+
+Servers MUST accept `PRIVMSG` and `NOTICE` events sent with client-only tags even if
+no message body is provided. These events MUST NOT be delivered to clients who haven't
+negotiated the message tags capability. If neither client-only tags nor a message body
+are provided, servers MAY respond with a standard `ERR_NOTEXTTOSEND` error.
+
+### Size limit
+
+The size limit for message tags is increased to 512 to 4096 bytes, including the leading
+`@` and trailing space characters, leaving 3094 bytes for tags themselves. The size limit
+for the rest of the message is unchanged.
 
 ## Security considerations
 
