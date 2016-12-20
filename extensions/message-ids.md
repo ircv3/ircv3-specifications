@@ -52,7 +52,7 @@ The tag value MUST be treated as a case sensitive opaque identifier. Clients MUS
 
 ### Relationships with other specifications
 
-In order to treat messages that refer to IDs consistently, clients need to know the IDs for their own messages as well. Servers that provide message IDs SHOULD also provide the `echo-message`(./echo-message-3.2.html) capability.
+In order to treat messages that refer to IDs consistently, clients need to know the IDs for their own messages as well. Servers that provide message IDs SHOULD also provide the [`echo-message`](./echo-message-3.2.html) capability.
 
 ## Server implementation considerations
 
