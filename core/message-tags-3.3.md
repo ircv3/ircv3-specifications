@@ -96,6 +96,9 @@ no message body is provided. These events MUST NOT be delivered to clients who h
 negotiated the message tags capability. If neither client-only tags nor a message body
 are provided, servers MAY respond with a standard `ERR_NOTEXTTOSEND` error.
 
+Clients that receive empty events MUST not display empty messages as-is in the message history
+unless they are using the attached tags according to their own specifications.
+
 ### Size limit
 
 The size limit for message tags is increased to 512 to 4096 bytes, including the leading
