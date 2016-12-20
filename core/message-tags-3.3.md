@@ -99,7 +99,7 @@ are provided, servers MAY respond with a standard `ERR_NOTEXTTOSEND` error.
 ### Size limit
 
 The size limit for message tags is increased to 512 to 4096 bytes, including the leading
-`@` and trailing space characters, leaving 3094 bytes for tags themselves. The size limit
+`@` and trailing space characters, leaving 4094 bytes for tags themselves. The size limit
 for the rest of the message is unchanged.
 
 ## Security considerations
