@@ -49,5 +49,5 @@ In this situation, it might make more sense to leave the reply in place chronolo
 In this example, a `PRIVMSG` is sent to a channel with an ID provided by the server. A client sends a reply to this message and the server sends an echo-message back to the client.
 
     S: @draft/msgid=123 :nick!user@host PRIVMSG #channel :Hello!
-    C: @+draft/reply=123 :nick2!user2@host2 PRIVMSG #channel :Hello to you!
-    S: @draft/msgid=456;+draft/reply=abc :nick2!user2@host2 PRIVMSG #channel :Hello to you!
+    C: @+draft/reply=123 PRIVMSG #channel :Hello to you!
+    S: @draft/msgid=456;+draft/reply=123 :nick2!user2@host2 PRIVMSG #channel :Hello to you!
