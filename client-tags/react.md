@@ -15,7 +15,7 @@ This is a work-in-progress specification.
 
 Software implementing this work-in-progress specification MUST NOT use the
 unprefixed `+react` tag name. Instead, implementations SHOULD use the
-`+draft/react` capability name to be interoperable with other software
+`+draft/react` tag name to be interoperable with other software
 implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed tag name.
