@@ -15,7 +15,7 @@ This is a work-in-progress specification.
 
 Software implementing this work-in-progress specification MUST NOT use the
 unprefixed `+reply` tag name. Instead, implementations SHOULD use the
-`+draft/reply` capability name to be interoperable with other software
+`+draft/reply` tag name to be interoperable with other software
 implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed tag name.
