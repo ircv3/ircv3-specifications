@@ -75,12 +75,6 @@ If no response is required, an empty batch MUST be sent.
 
 The tag value is chosen by the client and MUST be treated as an opaque identifier. The client SHOULD NOT reuse a tag value until it has received a complete response for that value from the server.
 
-## Server implementation considerations
-
-This section is non-normative.
-
-TODO
-
 ## Client implementation considerations
 
 This section is non-normative.
