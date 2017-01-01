@@ -22,7 +22,7 @@ The final version of the specification will use an unprefixed tag name.
 
 ## Introduction
 
-This specification describes a mesage tag indicating a server supplied unique ID for `PRIVMSG` and `NOTICE` messages.
+This specification describes a mesage tag indicating a server supplied unique ID for events.
 
 ## Motivation
 
@@ -40,7 +40,7 @@ The `draft/message-tags` capability MUST be negotiated for servers wishing to us
 
 This specification adds the `draft/msgid` tag, which has one required value.
 
-This tag MAY be sent by a server on `PRIVMSG` and `NOTICE` messages.
+This tag MAY be sent by a server on any event.
 
 #### Tag value
 
@@ -108,6 +108,10 @@ A channel `NOTICE` sent by the server:
 A private `NOTICE` sent by the server:
 
     S: @draft/msgid=ticketid-5 :nick!user@host NOTICE me :Hello!
+
+A channel `JOIN` sent by the server:
+
+    S: @draft/msgid=msgid123 :nick!user@host JOIN #channel account :Real Name
 
 A channel `PRIVMSG` sent by the server, and a possible client response. The `+example/reply` tag is a non-standard example:
 
