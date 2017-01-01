@@ -71,7 +71,7 @@ If a response consists of more than one message, a `batch` MUST be used to group
 
 If no response is required, an empty batch MUST be sent.
 
-When a client sends a message to itself, the label tag MUST NOT be included, except for any `echo-message` acknowledgment.
+When a client sends a message to itself, the label tag MUST NOT be included, except for any `echo-message` acknowledgment. This is because the delivered message is not a response, but a side effect.
 
 #### Tag value
 
