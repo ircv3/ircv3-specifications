@@ -62,7 +62,7 @@ This specification adds the `draft/label` message tag, which has a required valu
 
 This tag MAY be sent by a client for any messages that need to be correlated with a response from the server.
 
-For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message. Servers MUST include the tag in exactly one message.
+For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message. Servers MUST include the tag in exactly one logical message.
 
 If a response consists of more than one message, a `batch` MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
 
@@ -70,6 +70,8 @@ If a response consists of more than one message, a `batch` MUST be used to group
 * `draft/labeled-response`
 
 If no response is required, an empty batch MUST be sent.
+
+When a client sends a message to itself, the label tag MUST NOT be included, except for any `echo-message` acknowledgment.
 
 #### Tag value
 
@@ -81,11 +83,10 @@ This section is non-normative.
 
 In the case of `echo-message` (see example below), a client can use labeled responses to correlate a server's acknowledgment of their own messages with a temporary message displayed locally. The temporary message can be displayed to the user immediately in a pending state to reduce perceived lag, and then removed once a labeled response from the server is received.
 
-When sending messages directed at a client's own nick, `echo-message` will result in duplicate messages being sent by the server, as both sent and received messages. Labeled responses allow clients to deduplicate these messages in one of two ways:
+When a client sends a private message to its own nick, `echo-message` will result in duplicate messages being sent by the server, as both sent and received messages. Labeled responses allow clients to deduplicate these messages in one of two ways:
 
-For private messages that match the clients nickname:
-1. Ignore labeled messages, and use any unlabeled message as acknowledgment for all sent messages to clear temporary local messages.
-2. Ignore unlabeled messages.
+1. Ignore the labeled message, and use any unlabeled message as acknowledgment for all sent messages to clear temporary local messages.
+2. Ignore the unlabeled message.
 
 Both methods assume that the server will acknowledge all successful messages, or return a labeled error response, but differ in their attitude to to the semantics of sending and receiving.
 
