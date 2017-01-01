@@ -40,7 +40,7 @@ Additionally, labeled responses allow bouncers with multiple connected clients t
 
 ### Dependencies
 
-This specification uses the [message tags framework](/specs/core/message-tags-3.2.html) and relies on support for the [`batch`](/specs/extensions/batch-3.2.html) capability which MUST be negotiated at the same time.
+This specification uses the [message tags framework](/specs/core/message-tags-3.2.html) and uses the [`batch`](/specs/extensions/batch-3.2.html) capability which SHOULD be negotiated at the same time.
 
 ### Capabilities
 
@@ -49,8 +49,6 @@ This speciciation adds the `draft/labeled-response` capability.
 Clients requesting this capability indicate that they are capable of handling the message tag described below from servers.
 
 Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, and will use with the same tag and value in their response.
-
-If the capability is negotiated, the `batch` capability MUST also be treated as being implicitly negotiated. Servers supporting `cap-notify` MUST cancel the capability if `batch` support is explicitly removed at any time.
 
 ### Batch types
 
@@ -64,12 +62,14 @@ This tag MAY be sent by a client for any messages that need to be correlated wit
 
 For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message. Servers MUST include the tag in exactly one logical message.
 
-If a response consists of more than one message, a `batch` MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
+If a response consists of more than one message, and the `batch` capability is enabled, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
 
 * An existing type applicable to the entire response
 * `draft/labeled-response`
 
 If no response is required, an empty batch MUST be sent.
+
+If `batch` has not been enabled, the tag MAY be included on only one of the messages in the response.
 
 When a client sends a message to itself, the label tag MUST NOT be included, except for any `echo-message` acknowledgment. This is because the delivered message is not a response, but a side effect.
 
