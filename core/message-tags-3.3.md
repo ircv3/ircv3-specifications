@@ -44,7 +44,7 @@ keeping them distinct from server-initiated tags that carry verified meaning.
 
 To allow for tagged data to be sent to channels and users without any accompanying
 message text, a format for tag-only messages is needed. Since servers do not normally
-accept messages with a missing body, new behaviour is defined for tagged messages.
+accept messages without any content, new behaviour is defined for tagged messages.
 
 With the scope of tags expanded for use as general purpose message metadata, the
 number and size of tags attached to a message will potentially increase. As a
@@ -92,12 +92,14 @@ but the final occurrence.
 ### Empty tagged messages
 
 Servers MUST accept `PRIVMSG` and `NOTICE` events sent with client-only tags even if
-no message body is provided. These events MUST NOT be delivered to clients who haven't
-negotiated the message tags capability. If neither client-only tags nor a message body
-are provided, servers MAY respond with a standard `ERR_NOTEXTTOSEND` error.
+the message content parameter is omitted. These events MUST NOT be delivered to clients
+that haven't negotiated the message tags capability. If neither client-only tags nor a
+message parameter are included, servers MAY respond with a standard `ERR_NEEDMOREPARAMS`
+error.
 
-Clients that receive empty events MUST NOT display empty messages as-is in the message history
-unless they are using the attached tags according to their own specifications.
+Clients that receive events without a message text MUST NOT display empty messages as-is
+in the message history unless they are using the attached tags according to their own
+specifications.
 
 ### Size limit
 
@@ -182,15 +184,7 @@ In this example, plus signs, colons, equals signs and commas are transmitted raw
 
 ---
 
-An empty message sent by a client with the `+example-client-tag` client-only tag:
-
-```
-@+example-client-tag=example-value PRIVMSG #channel :
-```
-
----
-
-An alternate form of an empty message sent by a client with the `+example-client-tag` client-only tag, where the last parameter is omitted
+An empty message sent by a client with the `+example-client-tag` client-only tag, where the last parameter is omitted:
 
 ```
 @+example-client-tag=example-value PRIVMSG #channel
