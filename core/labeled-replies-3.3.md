@@ -71,7 +71,7 @@ If no response is required, an empty batch MUST be sent.
 
 If `batch` has not been enabled, the tag MAY be included on only one of the messages in the response.
 
-When a client sends a message to itself, the label tag MUST NOT be included, except for any `echo-message` acknowledgment. This is because the delivered message is not a response, but a side effect.
+When a client sends a message to itself, the server MUST NOT include the label tag, except for any `echo-message` acknowledgment. This is because the delivered message is not a response, but a side effect.
 
 #### Tag value
 
