@@ -31,7 +31,7 @@ The value of the tag MUST have the following syntax:
 It represents a calendar date and time of day in UTC using extended format, as specified by ISO 8601:2004(E) 4.3.2.
 Precision of the time is one millisecond.
 
-If the `time` is presented in a message received from a server, a client SHOULD treat the message as having occured at the given time instead of its current time.
+If the `time` is presented in a message received from a server, a client SHOULD treat the message as having occurred at the given time instead of its current time.
 
 Servers MAY include the timestamp in messages when they see fit but MUST NOT do so before acknowledging the client capability using `CAP ACK`.
 Clients MAY choose to simplify parsing by accepting timestamps at any point in the connection (e.g. even before `CAP REQ`).
