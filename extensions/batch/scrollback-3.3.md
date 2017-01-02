@@ -5,7 +5,7 @@ work-in-progress: true
 copyrights:
   -
     name: "Evan Magaliff"
-    period: "2016"
+    period: "2017"
     email: "evan@muffinmedic.net"
 ---
 ## Description
