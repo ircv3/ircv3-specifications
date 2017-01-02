@@ -19,7 +19,7 @@ This is a work-in-progress specification.
 
 Software implementing this work-in-progress specification MUST NOT use the
 unprefixed `message-tags` capability name. Instead, implementations SHOULD use
-the `draft/message-tags` capability name to be interoperable with other software
+the `draft/message-tags-0.2` capability name to be interoperable with other software
 implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed capability name.
@@ -54,7 +54,7 @@ result, an increased limit is implied by negotiating the new capability.
 
 ### Capabilities
 
-This specification adds the `draft/message-tags` capability. Clients requesting
+This specification adds the `draft/message-tags-0.2` capability. Clients requesting
 this capability indicate that they are capable of parsing all well-formed tags,
 even if they don't handle them specifically.
 
