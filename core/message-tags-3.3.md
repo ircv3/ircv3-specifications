@@ -48,7 +48,7 @@ accept messages without any content, new behaviour is defined for tagged message
 
 With the scope of tags expanded for use as general purpose message metadata, the
 number and size of tags attached to a message will potentially increase. As a
-result, an increased limit is defined when advertising the new capability.
+result, an increased limit is implied by negotiating the new capability.
 
 ## Architecture
 
@@ -103,7 +103,7 @@ specifications.
 
 ### Size limit
 
-The size limit for message tags is increased to 512 to 4096 bytes, including the leading
+The size limit for message tags is increased from 512 to 4096 bytes, including the leading
 `@` and trailing space characters, leaving 4094 bytes for tags themselves. The size limit
 for the rest of the message is unchanged.
 
