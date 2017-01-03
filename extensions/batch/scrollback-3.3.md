@@ -14,11 +14,11 @@ This document describes the format of the `scrollback` batch type. The `scrollba
 
 The `scrollback` batch type takes a single target parameter, which must be either a channel or query name.
 
-Client side support for the [`batch`][batch], [`server-time`][server-time], and [`draft/msgid`](https://github.com/ircv3/ircv3-specifications/pull/285) capabilities is required.
+Client side support for the [`batch`][batch] and [`server-time`][server-time] capabilities is required. Support for the [`draft/msgid`](https://github.com/ircv3/ircv3-specifications/pull/285) capability is optional but recommended.
 
 When a client with the above mentioned capabilities requests scrollback content from the server (using the `scrollback` command outlined below), the server should return to the client a single batch containing a number of desired raw IRC lines equal to the `message_count` parameter specified, ending directly before the given timestamp or with the message directly proceeding the one with the specified `draft/msgid`. The raw IRC lines are to be formatted and returned to the client as they would be originally, with the addition of the above capability tags.
 
-The `server-time` should be the time at which the message was originally sent, the `batch id` a randomly generated string unique to the entire batch, and the `draft/msgid` a unique identifier for each message.
+The `server-time` should be the time at which the message was originally sent, the `batch id` a randomly generated string unique to the entire batch, and the optional `draft/msgid`, if included, the `draft/msgid` originally sent with the message.
 
 ### `scrollback` Command
 Scrollback content can be requested by the client to the server by sending the `SCROLLBACK` command to the server. A `batch` must be returned by the server. If no content exists to return, an empty batch should be set to avoid the client waiting for a reply. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick SCROLLBACK :are supported by this server`
@@ -33,6 +33,7 @@ Scrollback content can be requested by the client to the server by sending the `
 If no message_count is known, `*` can be used as default
 
 ## Examples
+The examples below are written with `draft/msgid` tags included. This tag is optional and can be excluded if desired.
 
 ### Begin
     :irc.host BATCH +ID muffinmedic.net/scrollback target
