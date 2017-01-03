@@ -34,13 +34,13 @@ The message ID tag is a way for servers to enable these enhancements.
 
 ### Dependencies
 
-The `draft/message-tags` capability MUST be negotiated for servers wishing to use this tag.
+This specification doesn't define any capabilities of its own, but the `draft/message-tags` capability MUST be negotiated for servers wishing to use this tag.
 
 ### Tags
 
-This specification adds the `draft/msgid` tag, which has one required value.
+This specification adds the `draft/msgid` tag, which has a required value.
 
-This tag MAY be sent by a server on any event.
+Servers MAY attach this tag on any event. If this tag is being used, it SHOULD be attached to all `PRIVMSG` and `NOTICE` events.
 
 #### Tag value
 
@@ -58,6 +58,10 @@ In order to treat messages that refer to IDs consistently, clients need to know 
 
 This section is non-normative.
 
+
+
+### Choosing an ID format
+
 In order to guarantee sufficient uniqueness, message IDs can't be implemented as simple numeric counters that risk clashing with other servers on the network, or being reset if the server restarts.
 
 Some examples of appropriate IDs are:
@@ -70,8 +74,6 @@ Some examples of appropriate IDs are:
 When using timestamps, make sure they're correctly synchronised using NTP or similar.
 
 Although clients are required to treat IDs as case sensitive opaque values, servers might still choose a case insensitive ID format internally.
-
-### Choosing an ID format
 
 Certain message ID formats could present a length issue if other tags are being used. The trade-offs between length and complexity of implementation should be carefully considered when choosing an ID format.
 
