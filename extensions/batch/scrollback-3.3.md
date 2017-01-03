@@ -16,16 +16,19 @@ The `scrollback` batch type takes a single target parameter, which must be eithe
 
 Client side support for the [`batch`][batch], [`server-time`][server-time], and [`draft/msgid`](https://github.com/ircv3/ircv3-specifications/pull/285) capabilities is required.
 
-When a client with the above mentioned capabilities requests scrollback content from the server (using the `scrollback` command outlined below), the server should return to the client a single batch containing a number of desired raw IRC lines equal to the `message_count` parameter specified, beginning with the first message previous to the last-known timestamp. The raw IRC lines are to be formatted and returned to the client as they would be originally, with the addition of the above capability tags.
+When a client with the above mentioned capabilities requests scrollback content from the server (using the `scrollback` command outlined below), the server should return to the client a single batch containing a number of desired raw IRC lines equal to the `message_count` parameter specified, ending directly before the given timestamp or with the message directly proceeding the one with the specified `draft/msgid`. The raw IRC lines are to be formatted and returned to the client as they would be originally, with the addition of the above capability tags.
 
 The `server-time` should be the time at which the message was originally sent, the `batch id` a randomly generated string unique to the entire batch, and the `draft/msgid` a unique identifier for each message.
 
 ### `scrollback` Command
-Scrollback content can be requested by the client to the server by sending the `SCROLLBACK` command to the server. No acknowledgement by the server of the command is required other then returning the requested content. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick SCROLLBACK :are supported by this server` 
+Scrollback content can be requested by the client to the server by sending the `SCROLLBACK` command to the server. No acknowledgement by the server of the command is required other then returning the requested content. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick SCROLLBACK :are supported by this server`
 
 #### Format
-    SCROLLBACK target YYYY-MM-DDThh:mm:ss.sssZ message_count
-    SCROLLBACK #channel 2016-11-19T18:02:01.000Z 50
+    SCROLLBACK target timestamp=YYYY-MM-DDThh:mm:ss.sssZ message_count
+    SCROLLBACK #channel timestamp=2016-11-19T18:02:01.000Z 50
+
+    SCROLLBACK target draft/msgid=ID message_count
+    SCROLLBACK #channel draft/msgid=774ba1b6-202b-448c-b23a-6150ce5681fd 50
 
 If no message_count is known, `*` can be used as default
 
@@ -36,31 +39,31 @@ If no message_count is known, `*` can be used as default
     :irc.host BATCH +XNyDSitp9MvcX scrollback #channel
 ### PRIVMSG
     @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :message
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:01.001Z :foo!bar@example.com PRIVMSG #channel :The ZNC SCROLLBACK command is going to be fantastic!
+    @batch=XNyDSitp9MvcX;draft/msgid=eb703092-0782-4c28-bf7c-f9e5c45963ca;time=2016-11-19T18:02:01.001Z :foo!bar@example.com PRIVMSG #channel :The ZNC SCROLLBACK command is going to be fantastic!
 ### NOTICE
     @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host NTOICE target :message
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:02.002Z :foo!bar@example.com NOTICE #channel :Announcing the new ZNC SCROLLBACK command!
+    @batch=XNyDSitp9MvcX;draft/msgid=cb302078-ce4e-4866-82b8-480ec58094b3;time=2016-11-19T18:02:02.002Z :foo!bar@example.com NOTICE #channel :Announcing the new ZNC SCROLLBACK command!
 ### JOIN
-    @batch=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host JOIN :#channel
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:03.003Z :foo!bar@example.com JOIN :#channel
+    @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host JOIN :#channel
+    @batch=XNyDSitp9MvcX;draft/msgid=8c878e54-465c-41ec-b9d7-764efdce21cb;time=2016-11-19T18:02:03.003Z :foo!bar@example.com JOIN :#channel
 ### PART
-    @batch=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PART #channel :reason
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:04.004Z :foo!bar@example.com PART #channel :This place is too addicting
+    @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PART #channel :reason
+    @batch=XNyDSitp9MvcX;draft/msgid=03b89bc0-ad61-464e-9ab7-9b09fc2c20c3;time=2016-11-19T18:02:04.004Z :foo!bar@example.com PART #channel :This place is too addicting
 ### QUIT
-    @batch=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host QUIT #channel :reason
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:05.005Z :foo!bar@example.com QUIT #channel :Restarting in debug mode
+    @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host QUIT #channel :reason
+    @batch=XNyDSitp9MvcX;draft/msgid=fd705235-2de7-4b5b-9346-dbedfcd317ee;time=2016-11-19T18:02:05.005Z :foo!bar@example.com QUIT #channel :Restarting in debug mode
 ### KICK
-    @batch=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :op_nick!ident@host KICK #channel kicked_nick :message
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:06.006Z :foo!bar@example.com KICK #channel CupcakeMedic :Muffins > cupcakes
+    @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :op_nick!ident@host KICK #channel kicked_nick :message
+    @batch=XNyDSitp9MvcX;draft/msgid=4fb49dea-1138-4522-b17a-19b084a2efb9;time=2016-11-19T18:02:06.006Z :foo!bar@example.com KICK #channel CupcakeMedic :Muffins > cupcakes
 ### NICK
-    @batch=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :old_nick!ident@host NICK :new_nick
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:07.007Z :foo!bar@example.com NICK :Evan
+    @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :old_nick!ident@host NICK :new_nick
+    @batch=XNyDSitp9MvcX;draft/msgid=d7315ace-fcac-4f79-bcfe-476b63bf8b4d;time=2016-11-19T18:02:07.007Z :foo!bar@example.com NICK :Evan
 ### TOPIC
-    @batch=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host TOPIC #channel :topic
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:08.008Z :foo!bar@example.com TOPIC #channel :Check out the new ZNC SCROLLBACK command
+    @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host TOPIC #channel :topic
+    @batch=XNyDSitp9MvcX;draft/msgid=f9187528-c7ec-4233-b8ce-4d02f4ba9c12;time=2016-11-19T18:02:08.008Z :foo!bar@example.com TOPIC #channel :Check out the new ZNC SCROLLBACK command
 ### MODE
-    @batch=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :op_nick!ident@host MODE #channel mode(s) parameter(s)
-    @batch=XNyDSitp9MvcX;draft/msgid=;time=2016-11-19T18:02:09.009Z :foo!bar@example.com MODE #channel +b *!*@example.com
+    @batch=ID;draft/msgid=UUID;time=YYYY-MM-DDThh:mm:ss.sssZ :op_nick!ident@host MODE #channel mode(s) parameter(s)
+    @batch=XNyDSitp9MvcX;draft/msgid=8460bc16-bfab-452a-8343-274222a09a0c;time=2016-11-19T18:02:09.009Z :foo!bar@example.com MODE #channel +b *!*@example.com
 ### End
     :irc.host BATCH -ID
     :irc.host BATCH -XNyDSitp9MvcX
