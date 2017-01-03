@@ -65,6 +65,6 @@ Secure identification of users and clients must exist in order to ensure that us
 ## Current Implementations
 A ZNC-module implementation exists as [znc-scrollback](https://github.com/MuffinMedic/znc-scrollback). Client-side support for the ZNC module is in progress. Interest in supporting the batch type and command without ZNC has also been obtained, although specifics are not available at this time.
 
-[batch]: batch-3.2.html
-[chathistory]: batch/chathistory-3.3.html
-[server-time]: server-time-3.2.html
+[batch]: batch-3.2.md
+[chathistory]: batch/chathistory-3.3.md
+[server-time]: server-time-3.2.md
