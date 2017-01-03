@@ -21,7 +21,7 @@ When a client with the above mentioned capabilities requests scrollback content 
 The `server-time` should be the time at which the message was originally sent, the `batch id` a randomly generated string unique to the entire batch, and the `draft/msgid` a unique identifier for each message.
 
 ### `scrollback` Command
-Scrollback content can be requested by the client to the server by sending the `SCROLLBACK` command to the server. No acknowledgement by the server of the command is required other then returning the requested content. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick SCROLLBACK :are supported by this server`
+Scrollback content can be requested by the client to the server by sending the `SCROLLBACK` command to the server. A `batch` must be returned by the server. If no content exists to return, an empty batch should be set to avoid the client waiting for a reply. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick SCROLLBACK :are supported by this server`
 
 #### Format
     SCROLLBACK target timestamp=YYYY-MM-DDThh:mm:ss.sssZ message_count
