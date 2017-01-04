@@ -58,8 +58,6 @@ In order to treat messages that refer to IDs consistently, clients need to know 
 
 This section is non-normative.
 
-
-
 ### Choosing an ID format
 
 In order to guarantee sufficient uniqueness, message IDs can't be implemented as simple numeric counters that risk clashing with other servers on the network, or being reset if the server restarts.
@@ -74,12 +72,6 @@ Some examples of appropriate IDs are:
 When using timestamps, make sure they're correctly synchronised using NTP or similar.
 
 Although clients are required to treat IDs as case sensitive opaque values, servers might still choose a case insensitive ID format internally.
-
-Certain message ID formats could present a length issue if other tags are being used. The trade-offs between length and complexity of implementation should be carefully considered when choosing an ID format.
-
-For instance, a UUID in hex form takes up 32 bytes (or 22 bytes in unpadded base64), and has widely available standardised implementations in many languages and no external dependencies. Conversely, a custom format can be much shorter, and might depend on an external service, disk I/O, additional state being tracked by the server, or untested proprietary code. 
-
-If the 512-byte tag limit is only being sparsely used overall, the simpler and longer format might be chosen. But if the server's capabilities put messages at a greater risk of reaching the limit, a shorter custom format might be more suitable.
 
 ## Client implementation considerations
 
