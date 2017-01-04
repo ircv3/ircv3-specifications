@@ -29,11 +29,11 @@ Chathistory content can be requested by the client to the server by sending the 
 #### Format
 The `chathistory` content can requested using timestamps:
 
-    @label=ID CHATHISTORY target timestamp=YYYY-MM-DDThh:mm:ss.sssZ message_count
+    @draft/label=ID CHATHISTORY target timestamp=YYYY-MM-DDThh:mm:ss.sssZ message_count
 
 Alternatively, content can be requested using a `draft/msgid`:
 
-    @label=ID CHATHISTORY target draft/msgid=ID message_count
+    @draft/label=ID CHATHISTORY target draft/msgid=ID message_count
 
 If no message_count is known, `*` should be used to specify the default value.
 
@@ -46,7 +46,7 @@ If no `chathistory` exists to return, the server should return the appropriate e
 The examples below are written with `draft/msgid` tags included. This tag is optional but recommended.
 
 #### Begin
-    @label=ID :irc.host BATCH +ID chathistory target
+    @draft/label=ID :irc.host BATCH +ID chathistory target
 #### PRIVMSG
     @batch=ID;draft/msgid=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :message
 #### NOTICE
@@ -54,7 +54,7 @@ The examples below are written with `draft/msgid` tags included. This tag is opt
 #### End
     :irc.host BATCH -ID
 #### Error
-    @label=ID :nick!ident@host CHATHISTORY ERR :ERROR_CODE
+    @draft/label=ID :nick!ident@host CHATHISTORY ERR :ERROR_CODE
 
 ## Use Cases
 The batch type and supporting command are useful for allowing an "infinite scroll" type capability within the client. A client will, upon scrolling to the top of the active window or a manual trigger, may request `chathistory` from the server and, after receiving returned content, append it to the top of the window. Users can repeat this historic scrolling to retrieve prior history until limitations are met (see below).
