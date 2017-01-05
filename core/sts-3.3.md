@@ -154,6 +154,22 @@ Servers MUST send this key to non-securely connected clients.
 Servers MAY send this key to securely connected clients, but it will be
 ignored.
 
+### The `preload` key
+
+This OPTIONAL key, if present, indicates that the server requests to be
+included in STS preload lists. If it has a value, the value MUST be ignored.
+
+Clients not looking to confirm whether the server requests to be included
+in STS preload lists SHOULD ignore the presence of this key.
+
+Servers SHOULD verify whether the hostname provided to them via SNI is a
+hostname that is whitelisted for preloading by administrators to determine
+whether or not to advertise this key.
+If no hostname is available via SNI, this key SHOULD NOT be sent.
+
+See the [Pre-loaded STS policies section](#pre-loaded-sts-policies) for more
+information on preload lists.
+
 ### Handling disconnection
 
 IRC connections may be long-lived. Connections lasting for more than a month
@@ -205,7 +221,8 @@ discussed in General security considerations.
 As further protection against bootstrap MITM vulnerabilities, clients may choose to
 include a pre-loaded list of known hosts with STS policies. Such lists should be
 compiled on an opt-in basis, by request of IRC network administrators. Hosts should be
-verified to be correctly advertising an STS policy before inclusion.
+verified to be correctly advertising an STS policy and advertising the
+[`preload` key](#the-preload-key) as well before inclusion.
 
 Clients should consider how their release upgrade cycle compares to server policy expiry
 times when compiling pre-loaded lists. Implementations should be able to provide updates
@@ -400,3 +417,11 @@ After 48 hours, the client disconnects.
 According to the client's last information at the time of disconnection the
 policy is still valid, so it reschedules the expiration to occur in 2592000
 seconds from the time of disconnection.
+
+### Server opting-in to preload lists
+
+A client securely connects to a server, which advertises an STS policy and
+opts in to preload lists.
+
+    Client: CAP LS 302
+    Server: CAP * LS :draft/sts=duration=2592000,preload
