@@ -40,15 +40,15 @@ Additionally, labeled responses allow bouncers with multiple connected clients t
 
 ### Dependencies
 
-This specification uses the [message tags framework](/specs/core/message-tags-3.2.html) and uses the [`batch`](/specs/extensions/batch-3.2.html) capability which SHOULD be negotiated at the same time.
+This specification uses the [message tags framework](/specs/core/message-tags-3.2.html) and the [`batch`](/specs/extensions/batch-3.2.html) capability which SHOULD be negotiated at the same time.
 
 ### Capabilities
 
-This speciciation adds the `draft/labeled-response` capability.
+This specifiation adds the `draft/labeled-response` capability.
 
 Clients requesting this capability indicate that they are capable of handling the message tag described below from servers.
 
-Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, and will use with the same tag and value in their response.
+Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, and will use the same tag and value in their response.
 
 ### Batch types
 
@@ -71,7 +71,7 @@ If no response is required, an empty batch MUST be sent.
 
 If `batch` has not been enabled, the tag MAY be included on only one of the messages in the response.
 
-When a client sends a message to itself, the server MUST NOT include the label tag, except for any `echo-message` acknowledgment. This is because the delivered message is not a response, but a side effect.
+When a client sends a message to itself, the server MUST NOT include the label tag, except for any acknowledgment sent with the [`echo-message`](/specs/extensions/echo-message-3.2.html) mechanism. This is because the delivered message is not a response, but a side effect.
 
 #### Tag value
 
@@ -88,7 +88,7 @@ When a client sends a private message to its own nick, `echo-message` will resul
 1. Ignore the labeled message, and use any unlabeled message as acknowledgment for all sent messages to clear temporary local messages.
 2. Ignore the unlabeled message.
 
-Both methods assume that the server will acknowledge all successful messages, or return a labeled error response, but differ in their attitude to to the semantics of sending and receiving.
+Both methods assume that the server will acknowledge all successful messages, or return a labeled error response, but differ in their attitude towards the semantics of sending and receiving.
 
 ## Bouncer implementation considerations
 
@@ -96,13 +96,13 @@ This section is non-normative.
 
 Bouncers might choose to restrict routing labeled responses to some or all of their clients. For example, the response to a labeled WHOIS request might only be routed back to the originating client. However, an `echo-message` response might be routed to all clients. The bouncer might also choose to make labeled requests to the server on its own behalf, without routing any response to clients.
 
-To avoid label value clashes from multiple connected clients, a bouncer might choose to modify the client supplied label, for instance, by adding a client id prefix. In this case, the modified label would be returned to its original form before routing the response back to the client.
+To avoid label value clashes from multiple connected clients, a bouncer could choose to modify the client supplied label, for instance, by adding a client id prefix. In this case, the modified label would be converted back to its original form before routing the response back to the client.
 
 ## Examples
 
 This section is non-normative.
 
-1. `echo-message`
+1. `echo-message` showing a message that has been modified by the server to remove formatting
 
 
     ```
@@ -117,7 +117,7 @@ This section is non-normative.
     Server: @label=dc11f13f11 :irc.example.com 401 * nick :No such nick/channel
     ```
     
-3. `WHOIS`
+3. `WHOIS` response using a batch
 
     ```
     Client: @label=mGhe5V7RTV WHOIS nick
