@@ -139,8 +139,9 @@ invalid and MUST be ignored.
 Clients MUST reset the duration "time to live" every time they receive a valid
 policy advertisement having a `duration` key from the server.
 
-A duration of 0 means the policy expires immediately. This method can be used
-by servers to remove a previously set policy.
+A duration of 0 means the policy expires immediately. This method MAY be used
+by servers to remove a previously set policy. Clients MUST NOT remove a policy
+if the server disables the capability with `CAP DEL`.
 
 ### The `port` key
 
