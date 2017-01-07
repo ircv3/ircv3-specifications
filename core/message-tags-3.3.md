@@ -98,8 +98,7 @@ message parameter are included, servers MAY respond with a standard `ERR_NEEDMOR
 error.
 
 Clients that receive events without a message text MUST NOT display empty messages as-is
-in the message history unless they are using the attached tags according to their own
-specifications.
+in the message history unless one of the attached tags is specified to require such a display.
 
 ### Size limit
 
