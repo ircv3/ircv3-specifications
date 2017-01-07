@@ -22,7 +22,7 @@ The final version of the specification will use an unprefixed tag name.
 
 ## Introduction
 
-This specification describes a mesage tag indicating a server supplied unique ID for events.
+This specification describes a message tag indicating a server supplied unique ID for events.
 
 ## Motivation
 
