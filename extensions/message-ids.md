@@ -71,6 +71,8 @@ Some examples of appropriate IDs are:
 
 When using timestamps, make sure they're correctly synchronised using NTP or similar.
 
+Networks might also consider the risk of collisions when there's a chance of merging with another network in future, and choose an appropriately resistant ID format.
+
 Although clients are required to treat IDs as case sensitive opaque values, servers might still choose a case insensitive ID format internally.
 
 ## Client implementation considerations
