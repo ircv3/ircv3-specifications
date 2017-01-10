@@ -34,8 +34,6 @@ Alternatively, content can be requested using a `draft/msgid`:
     @draft/label=ID CHATHISTORY target draft/msgid=ID message_count
 
 #### Errors and Warnings
-Errors indicate that there was nothing possible to return for the specified reason. Warnings are used when the command was successful but the client should be aware of specific handling requirements for the returned content or adjustments to sending the command.
-
 If the server receives an improperly formatted `CHATHISTORY` command, the `CMD_INVALID` error code should be returned.
 
 If the `message_count` exceeds the `max_message_count`, warn code `MAX_MSG_COUNT_EXCEEDED` should be returned. The command should continue to be processed as described above.
@@ -43,7 +41,7 @@ If the `message_count` exceeds the `max_message_count`, warn code `MAX_MSG_COUNT
 If no `chathistory` exists to return, the server should return the appropriate error code. `ACCESS_DENIED` should be sent if the user requests content they do not have permission to view.
 
 ### Examples
-The examples below are written with `draft/msgid` tags included. This tag is recommended.
+The examples below are written with `draft/msgid` and `draft/label` tags included. These tags are recommended.
 
 #### Begin
     @draft/label=ID :irc.host BATCH +ID chathistory target
