@@ -17,10 +17,10 @@ Client side support for the [`batch`][batch], [`server-time`][server-time], and 
 
 When a client with the above mentioned capabilities requests `chathistory` content from the server (using the `CHATHISTORY` command outlined below), the server should return to the client a single batch containing a number of desired raw IRC lines equal to the `message_count` parameter specified, ending directly before the given timestamp or with the message directly proceeding the one with the specified `draft/msgid`. The raw IRC lines should be formatted and returned to the client as they were originally, with the addition of the above capability tags.
 
-The `server-time` should be the time at which the message was originally sent and the `batch id` a unique ID to the entire batch. The `draft/label` should be a unique ID used to identify the `chathistory` request and any replies. The optional `draft/msgid`, if included, should be the `draft/msgid` originally sent with the message.
+The `server-time` should be the time at which the message was originally sent and the `batch id` a unique ID to the entire batch. `draft/label` is recommended and should be a unique ID used to identify the `chathistory` request and any replies. Also recommended, `draft/msgid` should be the `draft/msgid` originally sent with the message.
 
 ### `CHATHISTORY` Command
-Chathistory content can be requested by the client to the server by sending the `CHATHISTORY` command to the server. The returned `batch` must not be blank. If no content exists to return, the appopriate error message should be sent instead. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick CHATHISTORY=max_message_count :are supported by this server`
+Chathistory content can be requested by the client to the server by sending the `CHATHISTORY` command to the server. A `batch` must be returned by the server. If no content exists to return, an empty batch should be returned to avoid the client waiting for a reply. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick CHATHISTORY=max_message_count :are supported by this server`
 
 Both the `message_count` and `max_message_count` must be integers greater than 0. The client should not request a `message_count` greater than the `max_message_count` parameter sent in the command. If the `message_count` exceeds the `max_message_count`, server should return a number of lines equal to the `max_message_count` and the appropriate warning as described below.
 
@@ -34,14 +34,16 @@ Alternatively, content can be requested using a `draft/msgid`:
     @draft/label=ID CHATHISTORY target draft/msgid=ID message_count
 
 #### Errors and Warnings
+Errors indicate that there was nothing possible to return for the specified reason. Warnings are used when the command was successful but the client should be aware of specific handling requirements for the returned content or adjustments to sending the command.
+
 If the server receives an improperly formatted `CHATHISTORY` command, the `CMD_INVALID` error code should be returned.
 
 If the `message_count` exceeds the `max_message_count`, warn code `MAX_MSG_COUNT_EXCEEDED` should be returned. The command should continue to be processed as described above.
 
-If no `chathistory` exists to return, the server should return the appropriate error code. `ACCESS_DENIED` should be sent if the user requests content they do not have permission to view. `NOT_FOUND` should be sent if no content matching the request is found and no `ACCESS_DENIED` error exists.
+If no `chathistory` exists to return, the server should return the appropriate error code. `ACCESS_DENIED` should be sent if the user requests content they do not have permission to view.
 
 ### Examples
-The examples below are written with `draft/msgid` tags included. This tag is optional but recommended.
+The examples below are written with `draft/msgid` tags included. This tag is recommended.
 
 #### Begin
     @draft/label=ID :irc.host BATCH +ID chathistory target
