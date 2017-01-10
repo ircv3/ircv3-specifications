@@ -92,13 +92,18 @@ but the final occurrence.
 ### Empty tagged messages
 
 Servers MUST accept `PRIVMSG` and `NOTICE` events sent with client-only tags even if
-the message content parameter is omitted. These events MUST NOT be delivered to clients
+the message content parameter is empty. These events MUST NOT be delivered to clients
 that haven't negotiated the message tags capability. If neither client-only tags nor a
-message parameter are included, servers MAY respond with a standard `ERR_NEEDMOREPARAMS`
+message body are included, servers MAY respond with a standard `ERR_NOTEXTTOSEND`
 error.
 
-Clients that receive events without a message text MUST NOT display empty messages as-is
-in the message history unless one of the attached tags is specified to require such a display.
+Clients that receive events without any message text MUST NOT display content-less
+messages as-is in the message history unless one of the attached tags is specified
+to require such a display.
+
+The pseudo-BNF for empty tagged messages is as follows:
+
+    <message> ::= '@' <tags> <SPACE> [':' <prefix> <SPACE> ] ('PRIVMSG' | 'NOTICE') <SPACE> <target> <SPACE> ':' <crlf>
 
 ### Size limit
 
@@ -183,8 +188,8 @@ In this example, plus signs, colons, equals signs and commas are transmitted raw
 
 ---
 
-An empty message sent by a client with the `+example-client-tag` client-only tag, where the last parameter is omitted:
+An empty message sent by a client with the `+example-client-tag` client-only tag, where the last parameter is empty:
 
 ```
-@+example-client-tag=example-value PRIVMSG #channel
+@+example-client-tag=example-value PRIVMSG #channel :
 ```
