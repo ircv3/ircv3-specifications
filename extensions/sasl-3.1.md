@@ -61,7 +61,7 @@ The server MAY place a limit on the total length of a response.
     regular-authenticate-set = *("AUTHENTICATE" SP 400BASE64 CRLF) "AUTHENTICATE" SP (1*399BASE64 / "+") CRLF
 
 The client can abort an authentication by sending an asterisk as the data.
-The server will send a 904 numeric.
+The server will send a 906 numeric.
 
     authenticate-abort = "AUTHENTICATE" SP "*" CRLF
 
@@ -171,6 +171,9 @@ between implementations and translations.)_
 
 # Errata
 
+* Previous versions of this specification mentioned that 904 numeric would be
+  used when SASL was aborted. 906 ERR_SASLABORTED should be used when SASL is
+  aborted.
 * Previous versions of this specification did not precisely describe when
 is RPL_SASLMECHS being sent.
 * Clarified the language how responses are transmitted.
