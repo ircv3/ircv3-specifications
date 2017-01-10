@@ -162,6 +162,9 @@ included in STS preload lists. If it has a value, the value MUST be ignored.
 Clients not looking to confirm whether the server requests to be included
 in STS preload lists SHOULD ignore the presence of this key.
 
+If the client receives the `preload` key on a non-secure connection, it is
+invalid and MUST be ignored.
+
 Servers SHOULD verify whether the hostname provided to them via SNI is a
 hostname that is whitelisted for preloading by administrators to determine
 whether or not to advertise this key.
