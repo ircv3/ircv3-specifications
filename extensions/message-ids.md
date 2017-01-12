@@ -81,7 +81,7 @@ This section is non-normative.
 
 Message IDs have no guarantee of being universally unique across different IRC networks, nor will they necessarily share the same format. There is also no requirement that numeric IDs increase monotonically. Don't attempt to correlate them beyond their scope and don't use them for message ordering.
 
-In the case of re-transmitted messages that share an ID, clients might choose to mark a message as repeated, or just use the most recent occurence as the target for followup actions. Using server IDs alone as internal primary keys isn't recommended, otherwise re-transmitted messages may not individually addressable in client-side message stores.
+In the case of re-transmitted messages that share an ID, clients might choose to mark a message as repeated, or just use the most recent occurence as the target for followup actions. Using server IDs alone as internal primary keys isn't recommended, otherwise re-transmitted messages may not be individually addressable in client-side message stores.
 
 Handling duplicates gracefully is also useful in the case of servers accidentally reusing an ID.
 
