@@ -27,7 +27,7 @@ The final version of the specification will use an unprefixed capability name.
 ## Introduction
 
 This specification adds a new capability for general message tags support and
-a prefix for expressing client-only tags. It also defines behaviour for empty
+a prefix for expressing client-only tags. It also defines a new event for
 tag-only messages, and increases the byte limit for tags.
 
 ## Motivation
@@ -36,15 +36,14 @@ Previously, clients were required to negotiate a capability with servers for eac
 supported tag. This made tags inappropriate for client-only features. By adding a
 new base capability, this specification allows clients to indicate support for
 receiving any well-formed tag, whether or not it is recognised or used. This also
-frees servers from having to filter messages tags for each individual client
+frees servers from having to filter message tags for each individual client
 response.
 
 The client-only tag prefix allows servers to safely relay untrusted client tags,
 keeping them distinct from server-initiated tags that carry verified meaning.
 
 To allow for tagged data to be sent to channels and users without any accompanying
-message text, a format for tag-only messages is needed. Since servers do not normally
-accept messages without any content, new behaviour is defined for tagged messages.
+message text, a new event for tag-only messages is needed.
 
 With the scope of tags expanded for use as general purpose message metadata, the
 number and size of tags attached to a message will potentially increase. As a
@@ -89,21 +88,29 @@ Individual tag keys MUST only be used a maximum of once per message. Clients
 receiving messages with more than one occurrence of a tag key SHOULD discard all
 but the final occurrence.
 
-### Empty tagged messages
+### The `TAGMSG` tag-only event
 
-Servers MUST accept `PRIVMSG` and `NOTICE` events sent with client-only tags even if
-the message content parameter is empty. These events MUST NOT be delivered to clients
-that haven't negotiated the message tags capability. If neither client-only tags nor a
-message body are included, servers MAY respond with a standard `ERR_NOTEXTTOSEND`
-error.
+A new event `TAGMSG` is defined for sending messages with tags but no text content.
+This event MUST be delivered to targets in the same way as `PRIVMSG` and `NOTICE`
+events, taking into account channel membership and modes.
 
-Clients that receive events without any message text MUST NOT display content-less
-messages as-is in the message history unless one of the attached tags is specified
-to require such a display.
+Servers MAY apply moderation to this event using existing or newly specified modes or
+configuration.
 
-The pseudo-BNF for empty tagged messages is as follows:
+These events MUST NOT be delivered to clients that haven't negotiated the message tags
+capability and MAY be rejected if no tags are included.
 
-    <message> ::= '@' <tags> <SPACE> [':' <prefix> <SPACE> ] ('PRIVMSG' | 'NOTICE') <SPACE> <target> <SPACE> ':' <crlf>
+If this event is sent without any tags, servers SHOULD reject it with a standard
+`ERR_NEEDMOREPARAMS` error numeric.
+
+See `PRIVMSG` for more details on replies and examples.
+
+Clients that receive the `TAGMSG` event MUST NOT display them in the message history
+except according to the specifications of the attached tags.
+
+The pseudo-BNF for this event is as follows:
+
+    <message> ::= '@' <tags> <SPACE> [':' <prefix> <SPACE> ] 'TAGMSG' <SPACE> <target> <crlf>
 
 ### Size limit
 
@@ -188,8 +195,8 @@ In this example, plus signs, colons, equals signs and commas are transmitted raw
 
 ---
 
-An empty message sent by a client with the `+example-client-tag` client-only tag, where the last parameter is empty:
+An tag-only message sent by a client with the `+example-client-tag` client-only tag:
 
 ```
-@+example-client-tag=example-value PRIVMSG #channel :
+@+example-client-tag=example-value TAGMSG #channel
 ```
