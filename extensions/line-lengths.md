@@ -23,7 +23,7 @@ The `maxline` capability, when advertised, MUST have a value which is two positi
 
 For example:
 
-    C: CAP LS
+    C: CAP LS 302
     S: CAP * LS :maxline=2048,2048
 
 Similarly to standard message handling, tags and the rest of the message have separate length values. The value of the `maxline` capability represents the maximum number of bytes that the tags section, and that the rest of the message can take up, respectively. Line length calculation is done this way in order to better integrate with methods currently used by IRC software to limit line lengths.
