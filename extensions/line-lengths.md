@@ -4,7 +4,7 @@ layout: spec
 copyrights:
   -
     name: "Daniel Oaks"
-    period: "2016"
+    period: "2016-2017"
     email: "daniel@danieloaks.net"
 ---
 A method for negotiating longer protocol lines.
