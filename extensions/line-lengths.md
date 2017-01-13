@@ -19,18 +19,20 @@ The `maxline` capability specifies the maximum length of the tags, and of the re
 
 ### The `maxline` Capability
 
-The `maxline` capability, when advertised, MUST have a value which is a positive integer. For example:
+The `maxline` capability, when advertised, MUST have a value which is two positive integers, separated by a comma character.
+
+For example:
 
     C: CAP LS
-    S: CAP * LS :maxline=2048 
+    S: CAP * LS :maxline=2048,2048
 
-Similarly to standard message handling, tags and the rest of the message have separate length values. The value of the `maxline` capability represents the maximum number of bytes that the tags section, and that the rest of the message, can take up. Line length calculation is done this way in order to better integrate with methods currently used by IRC software to limit line lengths.
+Similarly to standard message handling, tags and the rest of the message have separate length values. The value of the `maxline` capability represents the maximum number of bytes that the tags section, and that the rest of the message can take up, respectively. Line length calculation is done this way in order to better integrate with methods currently used by IRC software to limit line lengths.
 
-As an example, if `maxline` is 1024 then the maximum size of a full IRC message would be 2048 bytes (1024 for the tags, 1024 for the rest of the message).
+As an example, if `maxline` is `1024,1024` then the maximum size of a full IRC message would be 2048 bytes (1024 for the tags, 1024 for the rest of the message).
 
 Servers MUST truncate incoming messages to their `maxline` values before processing them.
 
-`maxline` MUST be at least 512 and SHOULD default to at least 2048.
+Both `maxline` values MUST be at least `512` and SHOULD default to at least `2048`.
 
 ### Interaction with PRIVMSG and NOTICE
 
@@ -48,7 +50,7 @@ As an example, this tag may be used when a long channel `TOPIC` is set, but cann
 
 ### Examples
 
-In the following examples, the default message length is presumed to be 100 bytes (rather than 512) and the extended length is presumed to be 400 bytes (rather than 2048). This is done purely to simplify presentation and convey the concept more easily.
+In the following examples, the default message length is presumed to be `100,100` (rather than `512,512`) and the extended length is presumed to be `400,400`. This is done purely to simplify presentation and convey the concept more easily.
 
 * ` ->` conveys lines being sent from this client to the IRC server.
 * `<- ` conveys lines being sent from the server to this client.
