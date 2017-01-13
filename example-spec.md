@@ -23,6 +23,7 @@ Some notes:
 
 ---
 
+
 ## Notes for implementing work-in-progress version
 
 This is a work-in-progress specification.
@@ -45,6 +46,7 @@ In other words, this section contains a rough overview of why the spec exists, t
 provide and/or the issues you're trying to solve. In other words, why other people should be
 motivated to implement it, and why you have been motivated to write it.
 
+
 ## Architecture
 
 This specification introduces various capabilities, messages, numerics and tokens as
@@ -55,15 +57,15 @@ The following sections may be useful to present, as necessary:
 
 ### Capabilities
 
-New capabilities that this spec defines are listed here.
+New capabilities that this spec defines are listed here. If there are none, this section can be omitted.
 
 ### Tags
 
-New tags that this spec defines are listed here.
+New tags that this spec defines are listed here. If there are none, this section can be omitted.
 
 ### Messages
 
-New IRC messages (i.e. `PRIVMSG`/`PING`/`CHGHOST`) that this spec defines are listed here.
+New IRC messages (i.e. `PRIVMSG`/`PING`/`CHGHOST`) that this spec defines are listed here. If there are none, this section can be omitted.
 
 ### Numerics
 
@@ -74,9 +76,11 @@ New numerics that this spec defines are listed here. For example:
 | 001 | `RPL_WELCOME`  | `<client> :Welcome to the Internet Relay Network <nick>!<user>@<host> ` |
 | 002 | `RPL_YOURHOST` | `<client> :Your host is <servername>, running version <version> `       |
 
+If there are no new numerics, this section can be omitted.
+
 ### RPL_ISUPPORT Tokens
 
-`RPL_ISUPPORT` tokens that this spec defines are listed here.
+`RPL_ISUPPORT` tokens that this spec defines are listed here. If there are none, this section can be omitted.
 
 ### Examples
 
@@ -98,6 +102,7 @@ example represents and use the following format instead:
 Where `C1 -` refers to the client/server-sent messages on C1's connection, and `C2 -` refers
 to the same thing on C2's connection.
 
+
 ## Implementation Considerations
 
 This section notes specific things software authors will need to look out for and/or check
@@ -113,16 +118,16 @@ your specification is considered normative.
 
 Where there aren't any implementation considerations, this section can be omitted.
 
+
 ## Security Considerations
 
 New features may have security-specific considerations that authors should take note of
 while implementing your specification. This section lists those considerations in one place,
 so implementors can look over them.
 
-If no security considerations exist, you should include this text instead:
+You must think about whether there are any security considerations for your spec. If no
+security considerations exist, this section can be omitted.
 
-There are no security considerations that implementations should note when implementing this
-specification.
 
 ## Alternatives
 
