@@ -2,6 +2,8 @@
 title: IRCv3 Strict Transport Security
 layout: spec
 work-in-progress: true
+redirect_from:
+  - /specs/core/sts-3.3.html
 copyrights:
   -
     name: "Attila Molnar"
