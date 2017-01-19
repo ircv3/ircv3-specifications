@@ -58,76 +58,50 @@ this document MUST only occur at most once.
 
 Clients MUST ignore every token with a key that they don't understand.
 
-An STS capability having at least a `duration` key expresses an STS policy when advertised on a secure connection.
+An STS capability advertised on a secure connection with at least a `duration` key present expresses an **STS persistence policy** for the server at the requested hostname.
+
+An STS capability advertised on an insecure connection with at least a `port` key present expresses an **STS upgrade policy** for the server at the requested hostname.
 
 See [capability negotiation 3.2](capability-negotiation-3.2.html) for more
 information about capabilities with values.
 
 ### Mechanism
 
-When the client sees an STS capability advertised over a non-secure
-connection, it MUST first establish a secure connection and confirm that the
-STS capability is still present.
+When a client sees an STS upgrade policy over a non-secure connection, it MUST first establish a secure connection (see the `port` key) and confirm that the STS persistence policy is present.
 
-Once the client has confirmed that the STS capability is indeed offered over
-a secure connection with a valid policy, it then MUST only use a secure transport to
-connect to the server in future, until the policy expires (see the `duration` key).
-It MUST refuse to connect if a secure connection cannot be established with the
-server for any reason during the lifetime of the policy.
+Once a client has connected securely, and it has verified that an STS persistence policy is in place, it then MUST only use a secure transport to connect to the server at the requested hostname in future, until the policy expires (see the `duration` key). Once an STS persistence policy has been verified, clients MUST refuse to connect if a secure connection cannot be established to the server for any reason during the lifetime of the policy.
 
-However, if the client fails to connect securely for any reason, the connection
-attempt SHOULD be considered a failure, similar to a network error.
-The client SHOULD retry the secure connection next time it receives the STS
-cap with the appropriate keys over a non-secure connection.
+If the secure connection succeeds but the STS persistence policy is not present, the client SHOULD continue using the secure connection for that session. This allows servers to upgrade client connections without committing to a more permanent STS policy.
 
-If the secure connection succeeds but the STS policy is not present, the client
-SHOULD continue using the secure connection for that session.
+Clients MUST NOT request this capability (`CAP REQ`). Servers MUST reply with an appropriate `CAP NAK` message if a client requests this capability.
 
-Clients MUST NOT request this capability (`CAP REQ`).
-Servers MUST reply with an appropriate `CAP NAK` message if a client requests
-this capability.
+Servers MUST NOT send `CAP DEL` to disable this capability, and clients MUST ignore any attempts to do so. The mechanism for disabling an STS persistence policy is described in the `duration` key section.
 
 ### The `duration` key
 
-This key indicates how long from receiving the advertisement clients MUST use a
-secure connection when connecting to this server. This MUST be specified in
-seconds as the value of this key and as a single integer without a prefix or
-suffix.
+This key is used on secure connections to indicate how long clients MUST continue to use secure connections when connecting to the server at the requested hostname. The value of this key MUST be given as a single integer which represents the number of seconds until the persistence policy expires.
 
-Servers MUST send this key to securely connected clients.
-Servers MAY send this key to non-securely connected clients, but it will be
-ignored.
+To enforce an STS persistence policy, servers MUST send this key to securely connected clients. Servers MAY send this key to all clients, but non-securely connected clients MUST ignore it.
 
-If the client receives the `duration` key on a non-secure connection, it is
-invalid and MUST be ignored.
+Clients MUST reset the STS policy expiry time for a requested hostname every time a valid persistence policy with a `duration` key is received from a server.
 
-Clients MUST reset the duration "time to live" every time they receive a valid
-policy advertisement having a `duration` key from the server.
+A duration value of 0 indicates an immediate expiry of the STS persistence policy. This value MAY be used by servers to remove a previously set policy.
 
-A duration of 0 means the policy expires immediately. This method MAY be used
-by servers to remove a previously set policy. Clients MUST NOT remove a policy
-if the server disables the capability with `CAP DEL`.
+When an STS persistence policy expires, clients MAY continue to connect securely to the server at the requested hostname, but they are no longer required to upgrade non-secure connections.
 
 ### The `port` key
 
-This key indicates the port number for connecting over TLS. This key's value MUST be a single port number.
+This key indicates the port number for making a secure connection. This key's value MUST be a single port number.
 
-If the client is not already connected securely, it MUST close the insecure
-connection and reconnect securely on the stated port.
+If the client is not already connected securely to the server at the requested hostname, it MUST close the insecure connection and reconnect securely on the stated port.
 
-Servers MUST send this key to non-securely connected clients.
-Servers MAY send this key to securely connected clients, but it will be
-ignored.
+To enforce an STS upgrade policy, servers MUST send this key to non-securely connected clients. Servers MAY send this key to securely connected clients, but it will be ignored.
 
-### Handling disconnection
+### Rescheduling expiry on disconnect
 
-IRC connections can be long-lived. Connections lasting for more than a month
-are not uncommon. When a client has successfully learned the STS policy for a
-server but it does not reconnect for a long period of time, it might think
-the policy has expired, even if in fact the same policy is still advertised by the
-server.
+IRC connections can be long-lived. Connections that last for more than a month are not uncommon. When a client activates an STS persistence policy for a hostname on a long-lived connection, the expiry time might be reached by the time the connection closes. However, the server might still have an STS policy in place.
 
-Clients MUST reschedule expiry on disconnection. The new expiry time is calculated by adding the policy duration as last advertised by the server to the time of disconnection.
+To avoid an early STS policy expiry, clients MUST reschedule the expiry time when closing connections. The new expiry time is calculated by adding the policy duration as last advertised by the server to the time the connection is closed.
 
 ## Client implementation considerations
 
@@ -202,7 +176,7 @@ sent in the `duration` key on each connection attempt.
 Fixed expiry times will involve a dynamic `duration` value being calculated on each
 connection attempt.
 
-Server implementors should be aware that fixed expiry times may not be precisely
+Server implementers should be aware that fixed expiry times may not be precisely
 guaranteed in the case where clients reschedule policy expiry on disconnect.
 
 Which approach to take will depend on a number of considerations. For example, a server
@@ -229,6 +203,8 @@ In this case, to allow clients to connect to both IRC servers the non-secure IRC
 server can be offered at a different domain name, for example a subdomain.
 
 ## General Security considerations
+
+This section is non-normative.
 
 ### STS policy stripping
 
@@ -257,7 +233,7 @@ Some non-exhaustive examples include:
 
 * An attacker could inject an STS policy into an insecure connection that causes clients
 to reconnect on a secure port under the attacker's control. If this secure connection
-suceeds, an unwanted policy could be set for the host and persist in clients even after
+succeeds, an unwanted policy could be set for the host and persist in clients even after
 an administrator has regained control of their server. This can be mitigated in clients
 by allowing for STS policy rejection as described in the "Client implementation
 considerations" section.
@@ -279,6 +255,8 @@ such errors.
 These issues are not vulnerabilities with STS itself, but rather are compounding issues for configuration errors, or issues involving vulnerable systems exploited by other means.
 
 ## Relationship with other specifications
+
+This section is non-normative.
 
 ### Relationship with STARTTLS
 
@@ -376,10 +354,9 @@ policy immediately.
     Server: CAP * LS :draft/sts=duration=0
 
 If the client has an STS policy stored for the server it clears the policy.
-Future connections should use whatever settings (port, secure/non-secure) the
-client used before it received the STS policy.
+Future attempts to connect non-securely will be allowed
 
-### Rescheduling on disconnect
+### Rescheduling expiry on disconnect
 
 A client securely connects to a server, which advertises an STS policy.
 
