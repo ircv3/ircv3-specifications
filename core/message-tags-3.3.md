@@ -92,7 +92,10 @@ but the final occurrence.
 
 A new event `TAGMSG` is defined for sending messages with tags but no text content.
 This event MUST be delivered to targets in the same way as `PRIVMSG` and `NOTICE`
-events, taking into account channel membership and modes.
+events. This means for example, honouring channel membership, modes,
+[`echo-message`](../extensions/echo-message-3.2.html),
+[`STATUSMSG`](https://tools.ietf.org/html/draft-hardy-irc-isupport-00#section-4.18)
+prefixes, etc.
 
 Servers MAY apply moderation to this event using existing or newly specified modes or
 configuration.
@@ -149,7 +152,7 @@ This section is non-normative. The tags used in these examples may or may not ha
 A message sent by a client with the `example-tag` tag:
 
 ```
-@example-tag=example-value PRIVMSG #channel :Message
+C: @example-tag=example-value PRIVMSG #channel :Message
 ```
 
 ---
@@ -157,7 +160,7 @@ A message sent by a client with the `example-tag` tag:
 A message sent by a client with the `+example-client-tag` client-only tag:
 
 ```
-@+example-client-tag=example-value PRIVMSG #channel :Message
+C: @+example-client-tag=example-value PRIVMSG #channel :Message
 ```
 
 ---
@@ -168,8 +171,8 @@ Server responses for:
 * The bot `url_bot` responding with the URL title in the message body and the favicon URL included as the value of the `+icon` client-only tag:
 
 ```
-:nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
-@+icon=https://example.com/favicon.png :url_bot!bot@example.com PRIVMSG #channel :Example.com: A News Story
+S: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
+S: @+icon=https://example.com/favicon.png :url_bot!bot@example.com PRIVMSG #channel :Example.com: A News Story
 ```
 
 ---
@@ -177,7 +180,7 @@ Server responses for:
 An example of a vendor-prefixed client-only tag:
 
 ```
-@+example.com/foo=bar :irc.example.com NOTICE #channel :A vendor-prefixed client-only tagged message
+C: @+example.com/foo=bar :irc.example.com NOTICE #channel :A vendor-prefixed client-only tagged message
 ```
 
 ---
@@ -190,13 +193,30 @@ A client-only tag `+example` with a value containing valid raw and escaped chara
 In this example, plus signs, colons, equals signs and commas are transmitted raw in tag values; while semicolons, spaces and backslashes are escaped. [Escaping rules](./message-tags-3.2.html#escaping-values) are unchanged from IRCv3.2 tags.
 
 ```
-@+example=raw+:=,escaped\:\s\\ :irc.example.com NOTICE #channel :Message
+C: @+example=raw+:=,escaped\:\s\\ :irc.example.com NOTICE #channel :Message
 ```
 
 ---
 
-An tag-only message sent by a client with the `+example-client-tag` client-only tag:
+A tag-only message sent by a client with the `+example-client-tag` client-only tag:
 
 ```
-@+example-client-tag=example-value TAGMSG #channel
+C: @+example-client-tag=example-value TAGMSG #channel
+```
+
+---
+
+A tag-only message sent by a client to channel ops with a client-only tag and `STATUSMSG` prefix:
+
+```
+C: @+example-client-tag=example-value TAGMSG @#channel
+```
+
+---
+
+A tag-only message sent with a client-only tag and returned by the server as an `echo-message` with `msgid` tag:
+
+```
+C: @+example-client-tag=example-value TAGMSG @#channel
+S: @msgid=123abc;+example-client-tag=example-value :nick!user@example.com TAGMSG @#channel
 ```
