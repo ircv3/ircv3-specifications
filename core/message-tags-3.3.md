@@ -103,7 +103,7 @@ capability and MAY be rejected if no tags are included.
 If this event is sent without any tags, servers SHOULD reject it with a standard
 `ERR_NEEDMOREPARAMS` error numeric.
 
-See `PRIVMSG` for more details on replies and examples.
+See [`PRIVMSG` in RFC1459](https://tools.ietf.org/html/rfc1459#section-4.4.1) for more details on replies and examples.
 
 Clients that receive the `TAGMSG` event MUST NOT display them in the message history
 except according to the specifications of the attached tags.
