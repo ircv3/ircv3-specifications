@@ -73,7 +73,7 @@ Once a client has connected securely, and it has verified that an STS persistenc
 
 If the secure connection succeeds but the STS persistence policy is not present, the client SHOULD continue using the secure connection for that session. This allows servers to upgrade client connections without committing to a more permanent STS policy.
 
-Clients MUST NOT request this capability (`CAP REQ`). Servers MUST reply with an appropriate `CAP NAK` message if a client requests this capability.
+Clients MUST NOT request this capability (`CAP REQ`). Servers MAY reply with a `CAP NAK` message if a client requests this capability.
 
 Servers MUST NOT send `CAP DEL` to disable this capability, and clients MUST ignore any attempts to do so. The mechanism for disabling an STS persistence policy is described in the `duration` key section.
 
