@@ -24,6 +24,14 @@ The final version of the specification will use an unprefixed tag name.
 
 This specification defines a client-only message tag to indicate message icons
 
+## Motivation
+
+To allow for richer display of messages with added visual context, a method for client and bot users to attach custom icons to messages is needed. This method is intended for message specific icons. For persistent avatars, a metadata key would be more appropriate.
+
+Visual clients are given a way to choose an appropriate icon resource for the display context, with a method for providing multiple icon sources, with different dimensions.
+
+A content type hint is also provided, to allow clients to filter unsupported image formats without downloading the resource.
+
 ## Architecture
 
 ### Dependencies
