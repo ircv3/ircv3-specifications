@@ -75,7 +75,7 @@ In this example, a bot `C` responds to a link sent to the channel by the server 
 
 ```
 S :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
-C @+draft/icons=[{"src":"https://example.com/favicon16.png","sizes":"16x16","type":"image/png"},{"src":"https://example.com/favicon32.png","sizes":"32x32","type":"image/png"}],{"src":"https://example.com/favicon64.png","sizes":"64x64","type":"image/png"}] PRIVMSG #channel :Example.com: A News Story
+C @+draft/icons=[{"src":"https://example.com/favicon16.png","sizes":"16x16","type":"image/png"},{"src":"https://example.com/favicon32.png","sizes":"32x32","type":"image/png"},{"src":"https://example.com/favicon64.png","sizes":"64x64","type":"image/png"}] PRIVMSG #channel :Example.com: A News Story
 ```
 
 An example of an icons tag describing a single resource with unknown size or type
