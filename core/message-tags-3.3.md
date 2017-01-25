@@ -100,11 +100,11 @@ prefixes, etc.
 Servers MAY apply moderation to this event using existing or newly specified modes or
 configuration.
 
-These events MUST NOT be delivered to clients that haven't negotiated the message tags
-capability and MAY be rejected if no tags are included.
+This event MUST NOT be delivered to clients that haven't negotiated the message tags
+capability.
 
-If this event is sent without any tags, servers SHOULD reject it with a standard
-`ERR_NEEDMOREPARAMS` error numeric.
+If this event is sent without any tags, servers SHOULD reject it. In this case, they
+MUST use the standard `ERR_NEEDMOREPARAMS` error numeric.
 
 See [`PRIVMSG` in RFC1459](https://tools.ietf.org/html/rfc1459#section-4.4.1) for more details on replies and examples.
 
