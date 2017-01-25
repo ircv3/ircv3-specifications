@@ -49,7 +49,7 @@ Image objects MAY contain any of the following members:
 | Member           | Description |
 | :--------------- | :---------- |
 | `src` (string)   | The Uniform Resource Indicator (URI) of an icon resource |
-| `sizes` (string) | A space separate list of pixel image dimensions in `wxh` format supported by the resource. Clients MAY use this to select an appropriate icon resource for the context and pixel density of the display |
+| `sizes` (string) | A space separate list of pixel image dimensions in `wxh` format supported by the resource, or a value of `all` for scalable icons. Clients MAY use this to select an appropriate icon resource for the context and pixel density of the display |
 | `type` (string)  | A media type hint for the icon resource. Clients MAY use this to filter out unsupported icon types without downloading the resource |
 
 When an icon `src` is an HTTP resource, it SHOULD be referenced with an HTTPS protocol where available.
