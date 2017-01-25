@@ -104,7 +104,7 @@ This event MUST NOT be delivered to clients that haven't negotiated the message 
 capability.
 
 If this event is sent without any tags, servers SHOULD reject it. In this case, they
-MUST use the standard `ERR_NEEDMOREPARAMS` error numeric.
+MUST use the standard `ERR_NEEDMOREPARAMS` (`461`) error numeric.
 
 See [`PRIVMSG` in RFC1459](https://tools.ietf.org/html/rfc1459#section-4.4.1) for more details on replies and examples.
 
@@ -220,4 +220,13 @@ A TAGMSG event sent to a channel with [`labeled-response`](../extensions/labeled
 C1-S: @label=123;+example-client-tag=example-value TAGMSG #channel
 S-C1: @label=123;msgid=abc;+example-client-tag=example-value :nick!user@example.com TAGMSG #channel
 S-C2: @msgid=abc;+example-client-tag=example-value :nick!user@example.com TAGMSG #channel
+```
+
+---
+
+A TAGMSG event sent by a client without any tags and rejected by the server with an `ERR_NEEDMOREPARAMS` (`461`) error numeric.
+
+```
+C: TAGMSG #channel
+S: :server.example.com 461 nick TAGMSG :Not enough parameters
 ```
