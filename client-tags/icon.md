@@ -72,15 +72,53 @@ Client tags are untrusted data and icon URIs might point to any arbitrary resour
 
 ## Examples
 
-In this example, a bot `C` responds to a link sent to the channel by the server `S` by fetching the title and favicon of the link. It then sends a message back to the channel with the link title in the message body and favicon included as a message tag:
-
-```
-S :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
-C @+draft/icons=[{"src":"https://example.com/favicon16.png","sizes":"16x16","type":"image/png"},{"src":"https://example.com/favicon32.png","sizes":"32x32","type":"image/png"},{"src":"https://example.com/favicon64.png","sizes":"64x64","type":"image/png"}] PRIVMSG #channel :Example.com: A News Story
-```
+This section is non-normative. Indented line breaks are added for readability.
 
 An example of an icons tag describing a single resource with unknown size or type
 
 ```
-C @+draft/icons=[{"src":"https://example.com/favicon16.png"}] PRIVMSG #channel :Example text
+@+draft/icons=[{"src":"https://example.com/icon.png"}] PRIVMSG #channel :Example text
+```
+
+An example of an icons tag with multiple PNG icon resources of different sizes
+
+```
+@+draft/icons=[
+    {"src":"https://example.com/icon16.png","sizes":"16x16","type":"image/png"},
+    {"src":"https://example.com/icon32.png","sizes":"32x32","type":"image/png"},
+    {"src":"https://example.com/icon64.png","sizes":"64x64","type":"image/png"}
+    ] PRIVMSG #channel :Example text
+```
+
+An example of an icons tag with alternate GIF and PNG icon resources
+
+```
+@+draft/icons=[
+    {"src":"https://example.com/icon16.gif","sizes":"16x16","type":"image/gif"},
+    {"src":"https://example.com/icon16.png","sizes":"16x16","type":"image/png"}
+    ] PRIVMSG #channel :Example text
+```
+
+An example of an icons tag with an SVG icon resources suitable for all sizes
+
+```
+@+draft/icons=[
+    {"src":"https://example.com/icon.svg","sizes":"all","type":"image/svg+xml"}
+    ] PRIVMSG #channel :Example text
+```
+
+An example of a build notifier bot using separate icons for failures and successes
+
+```
+@+draft/icons=[{"src":"https://example.com/failure.png"}] PRIVMSG #channel :Build 140 failed
+@+draft/icons=[{"src":"https://example.com/success.png"}] PRIVMSG #channel :Build 141 succeeded
+```
+
+In this example, a bot client responds to a link sent to the channel by the server by fetching the title and favicon of the link. It then sends a message back to the channel with the link title in the message body and favicon included as a message tag:
+
+```
+Server: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
+Client: @+draft/icons=[
+    {"src":"https://example.com/favicon16.png","sizes":"16x16","type":"image/png"}
+    ] PRIVMSG #channel :Example.com: A News Story
 ```
