@@ -1,5 +1,5 @@
 ---
-title: `+icons` client tag
+title: `+icon` client tag
 layout: spec
 work-in-progress: true
 copyrights:
@@ -14,15 +14,15 @@ copyrights:
 This is a work-in-progress specification.
 
 Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `+icons` tag name. Instead, implementations SHOULD use the
-`+draft/icons` tag name to be interoperable with other software
+unprefixed `+icon` tag name. Instead, implementations SHOULD use the
+`+draft/icon` tag name to be interoperable with other software
 implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed tag name.
 
 ## Introduction
 
-This specification defines a client-only message tag to indicate message icons
+This specification defines a client-only message tag to indicate message icons.
 
 ## Motivation
 
@@ -40,9 +40,9 @@ Clients wishing to use this tag MUST negotiate the [`draft/message-tags`](../cor
 
 ### Format
 
-The icons tag is sent by a client with the client-only prefix `+` and its value is a JSON encoded array of image objects that reference icon resources for the message.
+The icon tag is sent by a client with the client-only prefix `+` and its value is a JSON encoded array of image objects that reference icon resources for the message.
 
-    +draft/icons=<json>
+    +draft/icon=<json>
 
 Image objects MAY contain any of the following members:
 
@@ -74,51 +74,51 @@ Client tags are untrusted data and icon URIs might point to any arbitrary resour
 
 This section is non-normative. Indented line breaks are added for readability.
 
-An example of an icons tag describing a single resource with unknown size or type
+An example of an icon tag describing a single resource with unknown size or type
 
 ```
-@+draft/icons=[{"src":"https://example.com/icon.png"}] PRIVMSG #channel :Example text
+@+draft/icon=[{"src":"https://example.com/icon.png"}] PRIVMSG #channel :Example text
 ```
 
-An example of an icons tag with multiple PNG icon resources of different sizes
+An example of an icon tag with multiple PNG icon resources of different sizes
 
 ```
-@+draft/icons=[
+@+draft/icon=[
     {"src":"https://example.com/icon16.png","sizes":"16x16","type":"image/png"},
     {"src":"https://example.com/icon32.png","sizes":"32x32","type":"image/png"},
     {"src":"https://example.com/icon64.png","sizes":"64x64","type":"image/png"}
     ] PRIVMSG #channel :Example text
 ```
 
-An example of an icons tag with alternate GIF and PNG icon resources
+An example of an icon tag with alternate GIF and PNG icon resources
 
 ```
-@+draft/icons=[
+@+draft/icon=[
     {"src":"https://example.com/icon16.gif","sizes":"16x16","type":"image/gif"},
     {"src":"https://example.com/icon16.png","sizes":"16x16","type":"image/png"}
     ] PRIVMSG #channel :Example text
 ```
 
-An example of an icons tag with an SVG icon resource usable at any size
+An example of an icon tag with an SVG icon resource usable at any size
 
 ```
-@+draft/icons=[
+@+draft/icon=[
     {"src":"https://example.com/icon.svg","sizes":"any","type":"image/svg+xml"}
     ] PRIVMSG #channel :Example text
 ```
 
-An example of a build notifier bot using separate icons for failures and successes
+An example of a build notifier bot using separate icon for failures and successes
 
 ```
-@+draft/icons=[{"src":"https://example.com/failure.png"}] PRIVMSG #channel :Build 140 failed
-@+draft/icons=[{"src":"https://example.com/success.png"}] PRIVMSG #channel :Build 141 succeeded
+@+draft/icon=[{"src":"https://example.com/failure.png"}] PRIVMSG #channel :Build 140 failed
+@+draft/icon=[{"src":"https://example.com/success.png"}] PRIVMSG #channel :Build 141 succeeded
 ```
 
 In this example, a bot client responds to a link sent to the channel by the server by fetching the title and favicon of the link. It then sends a message back to the channel with the link title in the message body and favicon included as a message tag:
 
 ```
 Server: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
-Client: @+draft/icons=[
+Client: @+draft/icon=[
     {"src":"https://example.com/favicon16.png","sizes":"16x16","type":"image/png"}
     ] PRIVMSG #channel :Example.com: A News Story
 ```
