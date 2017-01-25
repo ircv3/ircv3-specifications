@@ -198,7 +198,7 @@ C: @+example=raw+:=,escaped\:\s\\ :irc.example.com NOTICE #channel :Message
 
 ---
 
-A tag-only message sent by a client with the `+example-client-tag` client-only tag:
+A TAGMSG event sent by a client with the `+example-client-tag` client-only tag:
 
 ```
 C: @+example-client-tag=example-value TAGMSG #channel
@@ -206,7 +206,7 @@ C: @+example-client-tag=example-value TAGMSG #channel
 
 ---
 
-A tag-only message sent by a client to channel ops with a client-only tag and `STATUSMSG` prefix:
+A TAGMSG event sent by a client to channel ops with a client-only tag and `STATUSMSG` prefix:
 
 ```
 C: @+example-client-tag=example-value TAGMSG @#channel
@@ -214,9 +214,10 @@ C: @+example-client-tag=example-value TAGMSG @#channel
 
 ---
 
-A tag-only message sent with a client-only tag and returned by the server as an `echo-message` with `msgid` tag:
+A TAGMSG event sent to a channel with [`labeled-response`](../extensions/labeled-response.html) and client-only tags. The event is returned by the server with a [`msgid`](../extensions/message-ids.html) tag via labeled `echo-message` to the originating client and as normal to other clients in the channel.
 
 ```
-C: @+example-client-tag=example-value TAGMSG @#channel
-S: @msgid=123abc;+example-client-tag=example-value :nick!user@example.com TAGMSG @#channel
+C1-S: @label=123;+example-client-tag=example-value TAGMSG #channel
+S-C1: @label=123;msgid=abc;+example-client-tag=example-value :nick!user@example.com TAGMSG #channel
+S-C2: @msgid=abc;+example-client-tag=example-value :nick!user@example.com TAGMSG #channel
 ```
