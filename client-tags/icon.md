@@ -68,6 +68,7 @@ Client tags are untrusted data and icon URIs might point to any arbitrary resour
 * Unexpected dimensions: Scale or crop images to fit within allocated user interface space.
 * Unknown formats: Validate content types and reject unaccepted image formats.
 * Malicious content: Allow users to block specific icon URIs or icons from specific users.
+* Revealing IP addresses to 3rd parties: Add an option to only download icons from trusted sources.
 
 ## Examples
 
