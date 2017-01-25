@@ -54,7 +54,7 @@ Image objects MAY contain any of the following members:
 
 When an icon `src` is an HTTP resource, it SHOULD be referenced with an HTTPS protocol where available.
 
-When the icon is encoded as an [RFC2397 Data URI](https://tools.ietf.org/html/rfc2397) the length of the URI SHOULD be no more than 1024.
+When the icon is encoded as an [RFC2397 Data URI](https://tools.ietf.org/html/rfc2397) the length of the URI SHOULD NOT exceed 1024 characters.
 
 Icon dimensions SHOULD be square.
 
