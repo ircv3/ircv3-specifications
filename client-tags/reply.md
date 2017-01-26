@@ -1,5 +1,5 @@
 ---
-title: `+reply` client tag
+title: Reply client tag
 layout: spec
 work-in-progress: true
 copyrights:
