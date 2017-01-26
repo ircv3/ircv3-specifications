@@ -161,11 +161,12 @@ A message sent by a client with the `+example-client-tag` client-only tag:
 
 ---
 
-Server responses for:
+In this example
 
-* The user `nick` sharing a URL in a channel (without tags)
-* The bot `url_bot` responding with the URL title in the message body and the favicon URL included as the value of the `+icon` client-only tag:
+* The user `nick!user@example.com` shares a URL in a channel (without tags)
+* The bot `url_bot!bot@example.com` responds with the URL title in the message body and the favicon URL included as the value of the `+icon` client-only tag:
 
+The server sends these events:
 
     S: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
     S: @+icon=https://example.com/favicon.png :url_bot!bot@example.com PRIVMSG #channel :Example.com: A News Story
