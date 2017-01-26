@@ -1,5 +1,5 @@
 ---
-title: `+icon` client tag
+title: Icon client tag
 layout: spec
 work-in-progress: true
 copyrights:
