@@ -166,6 +166,7 @@ Server responses for:
 * The user `nick` sharing a URL in a channel (without tags)
 * The bot `url_bot` responding with the URL title in the message body and the favicon URL included as the value of the `+icon` client-only tag:
 
+
     S: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
     S: @+icon=https://example.com/favicon.png :url_bot!bot@example.com PRIVMSG #channel :Example.com: A News Story
 
