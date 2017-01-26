@@ -102,31 +102,28 @@ To avoid label value clashes from multiple connected clients, a bouncer could ch
 
 This section is non-normative.
 
-1. `echo-message` showing a message that has been modified by the server to remove formatting
+`echo-message` showing a message that has been modified by the server to remove formatting
 
-
-    ```
     Client: @label=pQraCjj82e PRIVMSG #channel :\x02Hello!\x02
     Server: @label=pQraCjj82e :nick!user@host PRIVMSG #channel :Hello!
-    ```
 
-2. Failed `PRIVMSG` with `ERR_NOSUCHNICK`
+---
 
-    ```
+Failed `PRIVMSG` with `ERR_NOSUCHNICK`
+
     Client: @label=dc11f13f11 PRIVMSG nick :Hello
     Server: @label=dc11f13f11 :irc.example.com 401 * nick :No such nick/channel
-    ```
-    
-3. `WHOIS` response using a batch
 
-    ```
+---
+    
+`WHOIS` response using a batch
+
     Client: @label=mGhe5V7RTV WHOIS nick
     Server: @label=mGhe5V7RTV :irc.example.com BATCH +NMzYSq45x labeled-response
     Server: @batch=NMzYSq45x :irc.example.com 311 client nick ~ident host * :Name
     ...
     Server: @batch=NMzYSq45x :irc.example.com 318 client nick :End of /WHOIS list.
     Server: :irc.example.com BATCH -NMzYSq45x
-    ```
 
 ## Alternatives
 
