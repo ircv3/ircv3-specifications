@@ -74,51 +74,49 @@ Client tags are untrusted data and icon URIs might point to any arbitrary resour
 
 This section is non-normative. Indented line breaks are added for readability.
 
-An example of an icon tag describing a single resource with unknown size or type
+An icon tag describing a single resource with unknown size or type
 
-```
-@+draft/icon=[{"src":"https://example.com/icon.png"}] PRIVMSG #channel :Example text
-```
+    @+draft/icon=[{"src":"https://example.com/icon.png"}] PRIVMSG #channel :Example text
 
-An example of an icon tag with multiple PNG icon resources of different sizes
+---
 
-```
-@+draft/icon=[
-    {"src":"https://example.com/icon16.png","sizes":"16x16","type":"image/png"},
-    {"src":"https://example.com/icon32.png","sizes":"32x32","type":"image/png"},
-    {"src":"https://example.com/icon64.png","sizes":"64x64","type":"image/png"}
-    ] PRIVMSG #channel :Example text
-```
+An icon tag with multiple PNG icon resources of different sizes
 
-An example of an icon tag with alternate GIF and PNG icon resources
+    @+draft/icon=[
+        {"src":"https://example.com/icon16.png","sizes":"16x16","type":"image/png"},
+        {"src":"https://example.com/icon32.png","sizes":"32x32","type":"image/png"},
+        {"src":"https://example.com/icon64.png","sizes":"64x64","type":"image/png"}
+        ] PRIVMSG #channel :Example text
 
-```
-@+draft/icon=[
-    {"src":"https://example.com/icon16.gif","sizes":"16x16","type":"image/gif"},
-    {"src":"https://example.com/icon16.png","sizes":"16x16","type":"image/png"}
-    ] PRIVMSG #channel :Example text
-```
+---
 
-An example of an icon tag with an SVG icon resource usable at any size
+An icon tag with alternate GIF and PNG icon resources
 
-```
-@+draft/icon=[
-    {"src":"https://example.com/icon.svg","sizes":"any","type":"image/svg+xml"}
-    ] PRIVMSG #channel :Example text
-```
+    @+draft/icon=[
+        {"src":"https://example.com/icon16.gif","sizes":"16x16","type":"image/gif"},
+        {"src":"https://example.com/icon16.png","sizes":"16x16","type":"image/png"}
+        ] PRIVMSG #channel :Example text
 
-An example of a build notifier bot using separate icon for failures and successes
+---
 
-```
-@+draft/icon=[{"src":"https://example.com/failure.png"}] PRIVMSG #channel :Build 140 failed
-@+draft/icon=[{"src":"https://example.com/success.png"}] PRIVMSG #channel :Build 141 succeeded
-```
+An icon tag with an SVG icon resource usable at any size
+
+    @+draft/icon=[
+        {"src":"https://example.com/icon.svg","sizes":"any","type":"image/svg+xml"}
+        ] PRIVMSG #channel :Example text
+
+---
+
+A build notifier bot using separate icons for failures and successes
+
+    @+draft/icon=[{"src":"https://example.com/failure.png"}] PRIVMSG #channel :Build 140 failed
+    @+draft/icon=[{"src":"https://example.com/success.png"}] PRIVMSG #channel :Build 141 succeeded
+
+---
 
 In this example, a bot client responds to a link sent to the channel by the server by fetching the title and favicon of the link. It then sends a message back to the channel with the link title in the message body and favicon included as a message tag:
 
-```
-Server: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
-Client: @+draft/icon=[
-    {"src":"https://example.com/favicon16.png","sizes":"16x16","type":"image/png"}
-    ] PRIVMSG #channel :Example.com: A News Story
-```
+    Server: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
+    Client: @+draft/icon=[
+        {"src":"https://example.com/favicon16.png","sizes":"16x16","type":"image/png"}
+        ] PRIVMSG #channel :Example.com: A News Story
