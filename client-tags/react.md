@@ -1,5 +1,5 @@
 ---
-title: `+react` client tag
+title: React client tag
 layout: spec
 work-in-progress: true
 copyrights:
