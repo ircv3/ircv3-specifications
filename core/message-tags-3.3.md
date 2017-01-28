@@ -105,7 +105,7 @@ Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message
 
 Servers SHOULD reject any `TAGMSG` command sent without tags. In this case, they MUST use the `ERR_NEEDMOREPARAMS` (`461`) error numeric.
 
-See [`PRIVMSG` in RFC1459](https://tools.ietf.org/html/rfc1459#section-4.4.1) for more details on replies and examples.
+See [`PRIVMSG` in RFC2812](https://tools.ietf.org/html/rfc2812#section-3.3.1) for more details on replies and examples.
 
 Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the command.
 
