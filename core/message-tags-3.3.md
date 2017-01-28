@@ -107,7 +107,7 @@ Servers SHOULD reject any `TAGMSG` command sent without tags. In this case, they
 
 See [`PRIVMSG` in RFC2812](https://tools.ietf.org/html/rfc2812#section-3.3.1) for more details on replies and examples.
 
-Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the command.
+Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the message.
 
 ### Size limit
 
@@ -165,7 +165,7 @@ In this example
 * The user `nick!user@example.com` shares a URL in a channel (without tags)
 * The bot `url_bot!bot@example.com` responds with the URL title in the message body and the favicon URL included as the value of the `+icon` client-only tag:
 
-The server sends these commands:
+The server sends these messages:
 
     S: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
     S: @+icon=https://example.com/favicon.png :url_bot!bot@example.com PRIVMSG #channel :Example.com: A News Story
