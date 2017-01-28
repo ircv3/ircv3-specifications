@@ -115,6 +115,11 @@ The size limit for message tags is increased from 512 to 4096 bytes, including t
 `@` and trailing space characters, leaving 4094 bytes for tags themselves. The size limit
 for the rest of the message is unchanged.
 
+Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more than the allowed limit. Servers MUST NOT truncate tags to allow lines that exceed this limit.
+
+    417    ERR_INPUTTOOLONG
+          ":Input line was too long"
+
 ## Security considerations
 
 Client-only tags should be treated as untrusted data. They can contain any value
@@ -208,3 +213,10 @@ A `TAGMSG` sent by a client without any tags and rejected by the server with an 
 
     C: TAGMSG #channel
     S: :server.example.com 461 nick TAGMSG :Not enough parameters
+
+---
+
+A `TAGMSG` sent by a client with tags that exceed the size limit and rejected by the server with an `ERR_INPUTTOOLONG` (`417`) error numeric. `[...]` is used to represent tags omitted for readability.
+
+    C: @+tag1;+tag2;+tag[...];+tag5000 TAGMSG #channel
+    S: :server.example.com 417 nick :Input line was too long
