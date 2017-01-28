@@ -27,7 +27,7 @@ The final version of the specification will use an unprefixed capability name.
 ## Introduction
 
 This specification adds a new capability for general message tags support and
-a prefix for expressing client-only tags. It also defines a new event for
+a prefix for expressing client-only tags. It also defines a new command for
 tag-only messages, and increases the byte limit for tags.
 
 ## Motivation
@@ -43,7 +43,7 @@ The client-only tag prefix allows servers to safely relay untrusted client tags,
 keeping them distinct from server-initiated tags that carry verified meaning.
 
 To allow for tagged data to be sent to channels and users without any accompanying
-message text, a new event for tag-only messages is needed.
+message text, a new command for tag-only messages is needed.
 
 With the scope of tags expanded for use as general purpose message metadata, the
 number and size of tags attached to a message will potentially increase. As a
@@ -63,12 +63,11 @@ any tag received from a client, with or without the client-only prefix.
 ### Tags
 
 Client-only tags are client-initiated tags that servers MUST attach as-is
-to any relevant event relayed to other clients. A client-only tag is prefixed
+to any relevant message relayed to other clients. A client-only tag is prefixed
 with a plus sign (`+`) and otherwise conforms to the format specified in
 [IRCv3.2 tags](./message-tags-3.2.html).
 
-Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` events, and
-MAY be relayed on other events.
+Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` messages, and MAY be relayed on other messages.
 
 Any server-initiated tags attached to messages MUST be included before client-only
 tags to prevent them from being pushed outside of the 512 byte tag limit.
@@ -88,32 +87,27 @@ Individual tag keys MUST only be used a maximum of once per message. Clients
 receiving messages with more than one occurrence of a tag key SHOULD discard all
 but the final occurrence.
 
-### The `TAGMSG` tag-only event
+### The `TAGMSG` tag-only message
 
-A new event `TAGMSG` is defined for sending messages with tags but no text content.
-This event MUST be delivered to targets in the same way as `PRIVMSG` and `NOTICE`
-events. This means for example, honouring channel membership, modes,
+       Command: TAGMSG
+    Parameters: <msgtarget>
+
+A new message command `TAGMSG` is defined for sending messages with tags but no text content.
+This message MUST be delivered to targets in the same way as `PRIVMSG` and `NOTICE`
+messages. This means for example, honouring channel membership, modes,
 [`echo-message`](../extensions/echo-message-3.2.html),
 [`STATUSMSG`](https://tools.ietf.org/html/draft-hardy-irc-isupport-00#section-4.18)
 prefixes, etc.
 
-Servers MAY apply moderation to this event using existing or newly specified modes or
-configuration.
+Servers MAY apply moderation to this command using existing or newly specified modes or configuration.
 
-This event MUST NOT be delivered to clients that haven't negotiated the message tags
-capability.
+Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message tags capability.
 
-If this event is sent without any tags, servers SHOULD reject it. In this case, they
-MUST use the standard `ERR_NEEDMOREPARAMS` (`461`) error numeric.
+Servers SHOULD reject any `TAGMSG` command sent without tags. In this case, they MUST use the `ERR_NEEDMOREPARAMS` (`461`) error numeric.
 
 See [`PRIVMSG` in RFC1459](https://tools.ietf.org/html/rfc1459#section-4.4.1) for more details on replies and examples.
 
-Clients that receive the `TAGMSG` event MUST NOT display them in the message history
-except according to the specifications of the attached tags.
-
-The pseudo-BNF for this event is as follows:
-
-    <message> ::= '@' <tags> <SPACE> [':' <prefix> <SPACE> ] 'TAGMSG' <SPACE> <target> <crlf>
+Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the command.
 
 ### Size limit
 
@@ -166,7 +160,7 @@ In this example
 * The user `nick!user@example.com` shares a URL in a channel (without tags)
 * The bot `url_bot!bot@example.com` responds with the URL title in the message body and the favicon URL included as the value of the `+icon` client-only tag:
 
-The server sends these events:
+The server sends these commands:
 
     S: :nick!user@example.com PRIVMSG #channel :https://example.com/a-news-story
     S: @+icon=https://example.com/favicon.png :url_bot!bot@example.com PRIVMSG #channel :Example.com: A News Story
@@ -190,19 +184,19 @@ In this example, plus signs, colons, equals signs and commas are transmitted raw
 
 ---
 
-A TAGMSG event sent by a client with the `+example-client-tag` client-only tag:
+A `TAGMSG` sent by a client with the `+example-client-tag` client-only tag:
 
     C: @+example-client-tag=example-value TAGMSG #channel
 
 ---
 
-A TAGMSG event sent by a client to channel ops with a client-only tag and `STATUSMSG` prefix:
+A `TAGMSG` sent by a client to channel ops with a client-only tag and `STATUSMSG` prefix:
 
     C: @+example-client-tag=example-value TAGMSG @#channel
 
 ---
 
-A TAGMSG event sent to a channel with [`labeled-response`](../extensions/labeled-response.html) and client-only tags. The event is returned by the server with a [`msgid`](../extensions/message-ids.html) tag via labeled `echo-message` to the originating client and as normal to other clients in the channel.
+A `TAGMSG` sent to a channel with [`labeled-response`](../extensions/labeled-response.html) and client-only tags. The message is returned by the server with a [`msgid`](../extensions/message-ids.html) tag via labeled `echo-message` to the originating client and as normal to other clients in the channel.
 
     C1-S: @label=123;+example-client-tag=example-value TAGMSG #channel
     S-C1: @label=123;msgid=abc;+example-client-tag=example-value :nick!user@example.com TAGMSG #channel
@@ -210,7 +204,7 @@ A TAGMSG event sent to a channel with [`labeled-response`](../extensions/labeled
 
 ---
 
-A TAGMSG event sent by a client without any tags and rejected by the server with an `ERR_NEEDMOREPARAMS` (`461`) error numeric.
+A `TAGMSG` sent by a client without any tags and rejected by the server with an `ERR_NEEDMOREPARAMS` (`461`) error numeric.
 
     C: TAGMSG #channel
     S: :server.example.com 461 nick TAGMSG :Not enough parameters
