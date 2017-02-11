@@ -70,7 +70,7 @@ with a plus sign (`+`) and otherwise conforms to the format specified in
 Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` messages, and MAY be relayed on other messages.
 
 Any server-initiated tags attached to messages MUST be included before client-only
-tags to prevent them from being pushed outside of the 512 byte tag limit.
+tags to prevent them from being pushed outside of the byte limit.
 
 The expected client behaviour of individual client-only tags SHOULD be defined
 in separate specifications, in the same way as server-initiated tags.
@@ -111,11 +111,13 @@ Clients that receive a `TAGMSG` command MUST NOT display them in the message his
 
 ### Size limit
 
-The size limit for message tags is increased from 512 to 4096 bytes, including the leading
-`@` and trailing space characters, leaving 4094 bytes for tags themselves. The size limit
+The size limit for message tags is increased from 512 to 4608 bytes, including the leading
+`@` and trailing space characters, leaving 4606 bytes for tags themselves. The size limit
 for the rest of the message is unchanged.
 
-Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more than the allowed limit. Servers MUST NOT truncate tags to allow lines that exceed this limit.
+This limit is separated between server-initiated and client-initiated tags. Server tags MUST NOT exceed 510 bytes and client tags MUST NOT exceed 4096 bytes. Client-initiated tags include any tags sent by a client without the client-only prefix. This prevents servers from overflowing the overall limit by adding tags to a valid client message that comes within the limit. 
+
+Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tags than the respective allowed limit. Servers MUST NOT truncate tags to allow lines that exceed this limit.
 
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
