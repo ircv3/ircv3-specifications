@@ -81,7 +81,7 @@ if they are appropriate for more widespread adoption.
 
 The updated pseudo-BNF for keys is as follows:
 
-    <key> ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens (`-`)>
+    <key> ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens ('-')>
 
 Individual tag keys MUST only be used a maximum of once per message. Clients
 receiving messages with more than one occurrence of a tag key SHOULD discard all
@@ -111,13 +111,21 @@ Clients that receive a `TAGMSG` command MUST NOT display them in the message his
 
 ### Size limit
 
-The size limit for message tags is increased from 512 to 4608 bytes, including the leading
-`@` and trailing space characters, leaving 4606 bytes for tags themselves. The size limit
-for the rest of the message is unchanged.
+The size limit for message tags is increased from 512 to 4607 bytes, including the leading `'@'` (0x40) and trailing space `' '` (0x20) characters. The size limit for the rest of the message is unchanged.
 
-This limit is separated between server-initiated and client-initiated tags. Server tags MUST NOT exceed 510 bytes and client tags MUST NOT exceed 4096 bytes. Client-initiated tags include any tags sent by a client without the client-only prefix. This prevents servers from overflowing the overall limit by adding tags to a valid client message that comes within the limit. 
+This limit is separated between server-initiated and client-initiated tags. This prevents servers from overflowing the overall limit by adding tags to a client message sent within the allowed limit.
 
-Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tags than the respective allowed limit. Servers MUST NOT truncate tags to allow lines that exceed this limit.
+In the following description, **tag data** describes the bytes between the leading and trailing tag separators mentioned above.
+
+Clients MUST NOT send messages with tag data exceeding 4094 bytes, this includes tags with or without the client-only prefix.
+
+Servers MUST NOT add tag data to messages that exceeds 510 bytes.
+
+    <server_max>    (512)  :: '@' <tag_data  510> ' '
+    <client_max>   (4096)  :: '@' <tag_data 4094> ' '
+    <combined_max> (4607)  :: '@' <tag_data  510> ';' <tag_data 4094> ' '
+
+Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tag data than the allowed limit. Servers MUST NOT truncate tags to allow lines that exceed this limit.
 
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
