@@ -23,7 +23,7 @@ The final version of the specification will use an unprefixed command.
 When a user connects through an indirect connection to the IRC server, the user's actual IP address and hostname are not visible. The `WEBIRC` command allows the intermediate server to pass on the user's actual IP address and hostname to the IRC server. This information can be utilized by the network as if the user was using a direct connection.
 
 ## Format
-The `WEBIRC` command takes three parameters: `pass `, `user`, and `ip`. An optional fourth paramater, `hostname`, MAY be included. `pass` is the password authenticating the WebIRC connection to the IRC server, `user` is the user being spoofed, and `ip` is the IP address if the connecting user. If included, `hostame` is the resolved hostname of the user. If the IP cannot be resolved and no hostname is provided, the IP MUST NOT be sent in place of the `host`.
+The `WEBIRC` command takes three parameters: `pass `, `user`, and `ip`. An optional fourth paramater, `hostname`, MAY be included. `pass` is the password authenticating the WebIRC connection to the IRC server, `user` is the user being spoofed, and `ip` is the IP address of the connecting user. If included, `hostame` is the resolved hostname of the user. If the IP cannot be resolved and no hostname is provided, the IP MUST NOT be sent in place of the `host`.
 
 If the hostname and IP do not resolve to each other, the provided hostname SHOULD be sent and SHOULD NOT be altered (see [Security Considerations](#security-considerations)). If connection fails, the WebIRC server MUST return an `ERROR` with an appropriate message and terminate the connection.
 
