@@ -12,29 +12,29 @@ copyrights:
     period: "2017"
     email: "prawnsalad@kiwiirc.com"
 ---
-## Notes for implementing work-in-progress version
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the unprefixed `WEBIRC` command. Instead, implementations SHOULD use the `draft/WEBIRC` command to be interoperable with other software implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed command.
+## Purpose
+This specification is intended to document the existing `WEBIRC` command that is already in use by multiple IRCDs and WebIRC gateway to provide a standard specification for implementation. This specification does not add any new features or changes, although new features, such as use of public-key cryptography over password authentication, can be submitted as extensions.
 
 ## Description
-When a user connects through an indirect connection to the IRC server, the user's actual IP address and hostname are not visible. The `WEBIRC` command allows the intermediate server to pass on the user's actual IP address and hostname to the IRC server. This information can be utilized by the network as if the user was using a direct connection.
+When a user connects through an indirect connection to the IRC server, the user's actual IP address and hostname are not visible. The `WEBIRC` command allows the WebIRC gateway to pass on the user's actual IP address and hostname to the IRC server. This information can be utilized by the network as if the user was connecting directly.
 
 ## Format
-The `WEBIRC` command takes three parameters: `pass `, `user`, and `ip`. An optional fourth paramater, `hostname`, MAY be included. `pass` is the password authenticating the WebIRC connection to the IRC server, `user` is the user being spoofed, and `ip` is the IP address of the connecting user. If included, `hostame` is the resolved hostname of the user. If the IP cannot be resolved and no hostname is provided, the IP MUST NOT be sent in place of the `host`.
+The `WEBIRC` command takes four parameters: `pass `, `user`, `hostname`, and `ip`. `pass` is the password authenticating the WebIRC connection to the IRC server which must be agreed upon ahead of time, `user` is the user being spoofed or WebIRC gateway service name, `hostname` is the resolved hostname of the user's IP address, and `ip` is the IPv4 or IPv6 address of the connecting user (IPv4-in-IPv6 MUST NOT be sent). If the IP address cannot be resolved, the IP address MUST be sent as both the `hostname` and `ip`.
 
-If the hostname and IP do not resolve to each other, the provided hostname SHOULD be sent and SHOULD NOT be altered (see [Security Considerations](#security-considerations)). If connection fails, the WebIRC server MUST return an `ERROR` with an appropriate message and terminate the connection.
+If forward and reverse DNS do not match, the IP addesss SHOULD be sent as the `hostname` and the unverified `hostname` SHOULD NOT be sent (see [Security Considerations](#security-considerations)). If connection fails, the WebIRC gateway MUST return an `ERROR` with an appropriate message and terminate the connection.
 
 ### Examples
-Hostname not included.
+Generic format.
 
-    WEBIRC hunter2 AzureDiamond 104.25.32.27
+    WEBIRC password user hostname ip
 
-Hostname included.
+IP address resolves to hostname.
 
     WEBIRC hunter2 AzureDiamond 104.25.32.27 kiwiirc.com
+
+IP address does not resolve to hostname.
+
+    WEBIRC hunter2 AzureDiamond 104.25.32.27 104.25.32.27
 
 Error from invalid password.
 
@@ -46,10 +46,10 @@ Webchat applications that proxy the connection through their servers are the pri
 Other use cases can include bouncer services that wish to pass user information to the IRC server.
 
 ## Limitations
-WebIRC requires that the both WebIRC server and IRC server be configured to accept the connection, included a set password and, ideally, specified, hostnames as specified in the below security section.
+WebIRC requires that the both WebIRC gateway and IRC server be configured to accept the connection in advance. Specific reccomendations are outlined below in the [Security Considerations](#security-considerations) section.
 
 ## Security Considerations
-WebIRC allows anyone with a valid password to successfully connect to the IRC server and spoof any desired hostname. IRC servers SHOULD use secure passwords, SHOULD limit the IP addresses of accepted WebIRC servers, and SHOULD reject any connections that do come from a valid IP using a correct password. Because the possibility for hostname spoofing exists, IRC servers SHOULD attempt to validate hostnames and match them to the IP addess. It is the responsibility of the IRC server to verify the authenticity of connecting users. To assist network operators and prevent abuse, IRC servers SHOULD show when a WebIRC connection is in use and SHOULD provide the original host when possible.
+WebIRC allows anyone with a valid password to successfully connect to the IRC server and spoof any desired hostname. IRC servers SHOULD use secure passwords, SHOULD whitelist the IP addresses for the allowed WebIRC gateway servers, and SHOULD reject any connections that attempt to use the WEBIRC command that do not come from a whitelisted IP address or using an incorrect password. Because the possibility for hostname spoofing exists, IRC servers MAY attempt to further validate or resolve hostnames or and match them to the IP addess. It is the responsibility of the IRC server to verify the authenticity of connecting users and perform additional security checks as they see fit. To assist network operators and prevent abuse, IRC servers SHOULD show when a WebIRC connection is in use and SHOULD provide the original host when possible.
 
 ## Current Implementations
 Although many IRCDs and webchat applications having current WEBIRC implementations, none currently follow this specification.
