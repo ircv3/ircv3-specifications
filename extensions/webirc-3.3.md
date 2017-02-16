@@ -30,7 +30,7 @@ Generic format.
 
 IP address resolves to hostname.
 
-    WEBIRC hunter2 AzureDiamond 104.25.32.27 kiwiirc.com
+    WEBIRC hunter2 AzureDiamond kiwiirc.com 104.25.32.27
 
 IP address does not resolve to hostname.
 
