@@ -46,6 +46,10 @@ In other words, this section contains a rough overview of why the spec exists, t
 provide and/or the issues you're trying to solve. In other words, why other people should be
 motivated to implement it, and why you have been motivated to write it.
 
+If this spec is intended for a certain audience (say, mostly bouncers or private servers,
+rather than normal public networks), feel free to mention it here. This gives spec readers
+an opportunity to think about whether this feature is right for their software and networks.
+
 
 ## Architecture
 
