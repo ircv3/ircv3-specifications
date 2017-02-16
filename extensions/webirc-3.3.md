@@ -52,7 +52,7 @@ WebIRC requires that the both WebIRC gateway and IRC server be configured to acc
 WebIRC allows anyone with a valid password to successfully connect to the IRC server and spoof any desired hostname. IRC servers SHOULD use secure passwords, SHOULD whitelist the IP addresses for the allowed WebIRC gateway servers, and SHOULD reject any connections that attempt to use the WEBIRC command that do not come from a whitelisted IP address or using an incorrect password. Because the possibility for hostname spoofing exists, IRC servers MAY attempt to further validate or resolve hostnames or and match them to the IP addess. It is the responsibility of the IRC server to verify the authenticity of connecting users and perform additional security checks as they see fit. To assist network operators and prevent abuse, IRC servers SHOULD show when a WebIRC connection is in use and SHOULD provide the original host when possible.
 
 ## Current Implementations
-Widespread adoption of WebIRC already exists for both clients and IRCDs. Below is a non-exhaustive list of current implementions to demonstrate in-use instances.
+Widespread adoption of WebIRC already exists for both clients and servers. Below is a non-exhaustive list of current implementions to demonstrate in-use instances.
  - Clients
   - [KiwiIRC](https://kiwiirc.com/docs/webirc)
   - [Mibbit](https://wiki.mibbit.com/index.php/Webirc)
