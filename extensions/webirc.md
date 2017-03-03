@@ -43,7 +43,7 @@ Error from invalid password.
     ERROR :Invalid WebIRC password
 
 ## Use Cases
-Webchat applications that make the connection to the IRCD via their servers are the primary intended use case. WebIRC allows network and channel operators to utilize the full extent of moderation and security tools available by exposing the user IP addresses and hosts.
+Webchat applications that proxy the connection to the IRC server are the primary intended use case. WebIRC allows network and channel operators to utilize the full extent of moderation and security tools available by exposing the user IP addresses and hosts.
 
 Other use cases can include bouncer services that wish to pass user information to the IRC server.
 
