@@ -169,6 +169,17 @@ Servers SHOULD verify whether the hostname provided to them via SNI is a
 hostname that is whitelisted for preloading by administrators to determine
 whether or not to advertise this key.
 If no hostname is available via SNI, this key SHOULD NOT be sent.
+This is to ensure that server administrators have control on which hostname
+may be preloaded in case the server has multiple. It is possible that a server
+has a wildcard certificate or a certificate with Subject Alternative Names but
+its administrators only wish to get a subset of those preloaded.
+
+For example a server presents a wildcard certificate for `*.example.net`.
+`irc.example.net`, `example.net`, `www.example.net` and `test.example.net` all
+point to the IP address of the server. The administrators may not wish to get
+`test.example.net` or `www.example.net` preloaded. Verifying the hostname sent
+via SNI before advertising the `preload` key ensures that only
+administrator-approved hostnames will get preloaded.
 
 See the [Pre-loaded STS policies section](#pre-loaded-sts-policies) for more
 information on preload lists.
