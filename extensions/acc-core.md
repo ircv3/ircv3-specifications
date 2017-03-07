@@ -49,7 +49,7 @@ types may or may not allow spaces inside `credential`.
 
 The `callback` field designates an opaque value which indicates where a verification code, if any,
 will be sent.  The callback field SHOULD contain either a standard URI, the namespace being contained in
-the IANA URI schemes registry (as per [RFC 4395][rfc4395]) and listed in the `REGCALLBACKS` ISUPPORT
+the IANA URI Schemes registry (as per [RFC 7595][rfc7595]) and listed in the `REGCALLBACKS` ISUPPORT
 token, or a `*` as decribed below. An invalid callback parameter should result in the
 `ERR_REG_INVALID_CALLBACK` error.
 
@@ -133,9 +133,9 @@ A sample 005 reply indicating support for these commands is:
 Implementations which require a verification token should list the types of verification callbacks
 they support, using the `REGCALLBACKS` RPL_ISUPPORT (005) token.  The `REGCALLBACKS` token takes
 a comma-separated list of supported commands.  In general, the `REGCALLBACKS` token is limited to
-URI schemes defined in the IANA URI schemes registry, per [RFC 4395][rfc4395].
+URI schemes defined in the IANA URI Schemes registry, per [RFC 7595][rfc7595].
 
-  [rfc3495]: https://tools.ietf.org/html/rfc4395
+  [rfc7595]: https://tools.ietf.org/html/rfc7595
 
 In the event that verification is not required by the implementation, the `REGCALLBACKS` token should
 be an empty value.
