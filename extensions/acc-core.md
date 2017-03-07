@@ -48,11 +48,14 @@ the `credential` field MUST be `*`.  A passphrase type `credential` MAY have spa
 types may or may not allow spaces inside `credential`.
 
 The `callback` field designates an opaque value which indicates where a verification code, if any,
-will be sent.  The callback field is implementation-specific, with namespaces being listed using the
-`REGCALLBACKS` ISUPPORT token.  An invalid callback parameter should result in the `ERR_REG_INVALID_CALLBACK`
-error.  In the event that a callback is not provided, the client SHOULD send `*` to indicate that
-they are not providing a callback resource.  If a callback namespace is not explicitly provided, the IRC
-server MAY choose to use `mailto` as a default.
+will be sent.  The callback field SHOULD contain either a standard URI, the namespace being contained in
+the IANA URI schemes registry (as per [RFC 4395][rfc4395]) and listed in the `REGCALLBACKS` ISUPPORT
+token, or a `*` as decribed below. An invalid callback parameter should result in the
+`ERR_REG_INVALID_CALLBACK` error.
+
+In the event that a callback is not provided, the client SHOULD send `*` to indicate that they are not
+providing a callback resource.  If a callback namespace is not explicitly provided, the IRC server MAY
+choose to use `mailto` as a default.
 
 The `cred_type` field designates a value which indicates the type of supplied credential.  The accepted
 values of the `cred_type` field is implementation-specific, with credential types being listed using the
@@ -64,17 +67,12 @@ The IRC server MAY forward the `ACC REGISTER` command to a central authority, or
 SHOULD NOT be sent unnecessary legacy (e.g. from NickServ) private messages or notices in response to `ACC`
 commands, where native numerics such as the ones defined in this document can replace them.
 
-Upon success, the IRC server MUST send the `RPL_REGISTRATION_SUCCESS` numeric, which looks like:
-
-| No. | Label                      | Format                                                         |
-| --- | -------------------------- | -------------------------------------------------------------- |
-| 920 | `RPL_REGISTRATION_SUCCESS` | `:<server> 920 <user_nickname> <accountname> :Account created` |
-
-If the server requires a verification token, it MUST also reply with the `RPL_REG_VERIFICATION_REQUIRED`
-numeric, which looks like:
+After this, if verification is required, the IRC server MUST send the `RPL_REG_VERIFICATION_REQUIRED`
+numeric. If verification is not required, the IRC server MUST instead send the `RPL_REG_SUCCESS` numeric.
 
 | No. | Label                           | Format                                                                                                       |
 | --- | ------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| 920 | `RPL_REG_SUCCESS`               | `:<server> 920 <user_nickname> <accountname> :Account created`                                               |
 | 927 | `RPL_REG_VERIFICATION_REQUIRED` | `:<server> 927 <user_nickname> <accountname> <callback_namespace:><callback> :A verification token was sent` |
 
 Upon error, the IRC server MUST send an error code that is relevant.  We suggest these numerics:
@@ -83,8 +81,8 @@ Upon error, the IRC server MUST send an error code that is relevant.  We suggest
 | --- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
 | 921 | `ERR_ACCOUNT_ALREADY_EXISTS` | `:<server> 921 <user_nickname> <accountname> :Account already exists`                           |
 | 922 | `ERR_REG_UNSPECIFIED_ERROR`  | `:<server> 922 <user_nickname> <accountname> :<descriptive_text>`                               |
-| 929 | `ERR_REG_INVALID_CALLBACK`   | `:<server> 929 <user_nickname> <accountname> <callback> :Callback token is invalid`             |
 | 928 | `ERR_REG_INVALID_CRED_TYPE`  | `:<server> 928 <user_nickname> <accountname> <cred_type> :Credential type is invalid`           |
+| 929 | `ERR_REG_INVALID_CALLBACK`   | `:<server> 929 <user_nickname> <accountname> <callback> :Callback token is invalid`             |
 | 440 | `ERR_REG_UNAVAILABLE`        | `:<server> 440 <user_nickname> <subcommand> :Authentication services are currently unavailable` |
 
 The server MAY send additional informative text upon registration success or failure using `RPL_TEXT` or `NOTICE`.
@@ -108,7 +106,7 @@ Upon success, the IRC server MUST send the `RPL_VERIFYSUCCESS` numeric, which lo
 | --- | ------------------- | ------------------------------------------------------------------------------ |
 | 923 | `RPL_VERIFYSUCCESS` | `:<server> 923 <user_nickname> <accountname> :Account verification successful` |
 
-The IRC server SHOULD also send an `RPL_LOGGEDIN` (900) numeric and consider the client to be logged in to the
+The IRC server MUST also send an `RPL_LOGGEDIN` (900) numeric and consider the client to be logged in to the
 account that has been successfully verified.
 
 Upon error, the IRC server MUST send an error code that is relevant.  We suggest these
@@ -177,15 +175,15 @@ A sample 005 reply indicating support for credential types is:
 The first credential type in this token SHOULD be used as the default if the client does not
 specify a credential type in the `ACC REGISTER` command.
 
-## The `ACCNICK` `RPL_ISUPPORT` token
+## The `REGNICK` `RPL_ISUPPORT` token
 
 Some implementations restrict the account name that can be registered to the current nickname of
 the client (that is, they tie account name registration to nicknames). Implementations which
-restrict registration in this way MUST advertise the `ACCNICK` RPL_ISUPPORT (005) token.
+restrict registration in this way MUST advertise the `REGNICK` RPL_ISUPPORT (005) token.
 
 This token has no value, and a sample 005 reply indicating this behaviour is:
 
-    :irc.example.com 005 dan ACCNICK :are supported by this server
+    :irc.example.com 005 dan REGNICK :are supported by this server
 
 When registering on a network that enforces this policy, clients MUST send `*` as `<accountname>`
 in the `ACC REGISTER` command (which indicates that the server use the client's current nickname
