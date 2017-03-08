@@ -24,7 +24,7 @@ Clients MUST support the [`batch`][batch] and [`server-time`][server-time] capab
 
 When a client with the above mentioned capabilities requests `chathistory` content from the server (using the `CHATHISTORY` command outlined below), the server should return to the client a single batch containing a number of desired raw IRC lines equal to the `message_count` parameter specified, ending directly before the given timestamp for a negative `message_count`, after the number of messages specified for a positive `message_count`, or with the message directly proceeding the one with the specified `draft/msgid`. The raw IRC lines should be formatted and returned to the client as they were originally, with the addition of the above capability tags.
 
-The `server-time` should be the time at which the message was originally sent and the `batch id` a unique ID to the entire batch. `draft/label` SHOULD be included and MUST be a unique ID used to identify the `chathistory` request and any replies. `draft/msgid` MUST be the `draft/msgid` originally sent with the message.
+The `server-time` should be the time at which the message was received from the IRC server and the `batch id` a unique ID for the entire batch. `draft/label` SHOULD be included and MUST be a unique ID used to identify the `chathistory` request and any replies. A `draft/msgid` to identify each individual message MUST be the `draft/msgid` included when each message was first received from the IRC server.
 
 ### `CHATHISTORY` Command
 Chathistory content can be requested by the client to the server by sending the `CHATHISTORY` command to the server. A `batch` must be returned by the server. If no content exists to return, an empty batch should be returned to avoid the client waiting for a reply. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick CHATHISTORY=max_message_count :are supported by this server`
@@ -40,7 +40,7 @@ Alternatively, content can be requested using a `draft/msgid`:
 
     @draft/label=ID CHATHISTORY target draft/msgid=ID message_count
 
-If `message_count` is positive, content MUST be retrieved from after the specifie timestamp or `draft/msgid`. If the `message_count` is negative, content MUST be retrieved from before the specified timestamp or `draft/msgid`.
+If `message_count` is positive, content MUST be retrieved from after and not including the specified timestamp or `draft/msgid`. If the `message_count` is negative, content MUST be retrieved from before the specified timestamp or `draft/msgid`.
 
 #### Errors and Warnings
 If the server receives an improperly formatted `CHATHISTORY` command, the `CMD_INVALID` error code should be returned.
