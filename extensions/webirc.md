@@ -38,11 +38,11 @@ Generic format.
 
 IP address resolves to hostname.
 
-    WEBIRC hunter2 ExampleIRC 3-100-51-198.location.example-isp.com 198.51.100.3
+    WEBIRC hunter2 ExampleGateway 3-100-51-198.location.example-isp.com 198.51.100.3
 
 IP address does not resolve to hostname.
 
-    WEBIRC hunter2 ExampleIRC 198.51.100.3 198.51.100.3
+    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3
 
 Error from invalid password.
 
