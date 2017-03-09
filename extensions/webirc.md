@@ -21,13 +21,15 @@ When a user connects through an indirect connection to the IRC server, the user'
 ## Format
 The `WEBIRC` command MUST be the first command sent from the WebIRC gateway to the IRC server and MUST be sent before capability negotiation.
 
-The `WEBIRC` command takes four parameters: `password `, `user`, `hostname`, and `ip`.
+The `WEBIRC` command takes four parameters: `password `, `gateway`, `hostname`, and `ip`.
 - `password` Password authenticating the WebIRC gateway to the IRC server which must be agreed upon ahead of time
-- `user` WebIRC gateway service name
-- `hostname` Resolved hostname of the user's IP address
+- `gateway` WebIRC gateway service name
+- `hostname` User's resolved hostname
 - `ip` IPv4 or IPv6 address of the connecting user. If the IP address cannot be resolved to a DNS name, the IP address MUST be sent as both the `hostname` and `ip`.
 
 If forward and reverse DNS do not match, the IP address SHOULD be sent as the `hostname` and the unverified `hostname` SHOULD NOT be sent (see [Security Considerations](#security-considerations)). If the connection fails to the IRC server, the WebIRC gateway MUST return an `ERROR` with an appropriate message and terminate the connection.
+
+Note: Previous implementations referred to the `gateway` field as `user`. This change is for documentation clarity only and maintains compatibility with all existing implementations.
 
 ### Examples
 Generic format.
@@ -36,11 +38,11 @@ Generic format.
 
 IP address resolves to hostname.
 
-    WEBIRC hunter2 gatewayname 3-100-51-198.location.example-isp.com 198.51.100.3
+    WEBIRC hunter2 ExampleIRC 3-100-51-198.location.example-isp.com 198.51.100.3
 
 IP address does not resolve to hostname.
 
-    WEBIRC hunter2 gatewayname 198.51.100.3 198.51.100.3
+    WEBIRC hunter2 ExampleIRC 198.51.100.3 198.51.100.3
 
 Error from invalid password.
 
