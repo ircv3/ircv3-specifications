@@ -34,7 +34,7 @@ Note: Previous implementations referred to the `gateway` field as `user`. This c
 ### Examples
 Generic format.
 
-    WEBIRC password user hostname ip
+    WEBIRC password gateway hostname ip
 
 IP address resolves to hostname.
 
