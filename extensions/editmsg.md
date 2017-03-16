@@ -72,8 +72,8 @@ Although clients SHOULD restrict editing to messages the user has sent, it is th
 
 This specification provides standard message tags to improve the usability of IRC from a front-end user perspective. Users MUST NOT rely on this specification to provide privacy or security. Once a message has been sent to an IRC server, users SHOULD assume it has been logged and recorded in it's original state and SHOULD NOT assume that message changes have been applied to all logs, recordings, and clients. To provide transparency to users, clients SHOULD mark appropriate messages as having been edited and SHOULD indicate the user making the edit.
 
-## Implementations
-No implementations exist at this time.
+## Alternate Specifications
+Alternative specifications are in progress and will be listed here for comparison and discussion.
 
 [echo-message]: http://ircv3.net/specs/extensions/echo-message-3.2.html
 [message-tags]: http://ircv3.net/specs/core/message-tags-3.3.html
