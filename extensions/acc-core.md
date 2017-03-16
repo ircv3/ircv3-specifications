@@ -12,31 +12,33 @@ copyrights:
     email: "daniel@danieloaks.net"
 ---
 
-The `ACC` command framework provides a unified, standardized interface for account creation and
-validation to the network's authentication layer.  This allows for a network to provide a common
-interface regardless of what authentication layer they have chosen for their network to operate,
-i.e. traditional services, a different central authority, or a decentralized model similar to [IRCX][ircx].
+The `ACC` command framework provides a unified, standardized interface for account management.
+
+This specification defines the `ACC REGISTER` and `VERIFY` subcommands, which standardise account
+creation and validation to the network's authentication layer.  This allows for a network to
+provide a common interface regardless of what authentication layer they have chosen for their
+network to operate, i.e. traditional services, a different central authority, or a decentralized
+model similar to [IRCX][ircx].
 
    [ircx]: http://en.wikipedia.org/wiki/IRCX
    
-We believe that the benefit of adding a common interface for account creation and validation,
-is helpful to the end user in discovering the capabilities offered by the authentication and
-authority layer of the network.  Further, we believe it is helpful to client authors, so that
-they may provide guided account creation and validation for their users, regardless of network
-configuration.
+We believe that the benefit of adding a common interface for account management will result in
+more user-focused interfaces for common account tasks including registration. Further,
+standardised account registration allows client authors to provide guided account creation and
+validation to their users, regardless of how the network performs these tasks.
 
 ## The `ACC` command
 
 The `ACC` command is the main command used by the account registration subsystem.  It provides
-several subcommands listed in the `ACCCOMMANDS` ISUPPORT type.  The core sub-commands are listed
+several subcommands listed in the `ACCCOMMANDS` ISUPPORT type.  The core subcommands are listed
 below:
 
 ## The `ACC REGISTER` sub-command
 
-The `ACC REGISTER` command signals the intent of a client to register an account in the network's
+The `ACC REGISTER` command signals the intent of a client to register an account with the network's
 authentication layer.  It is similar to current methods of signalling that intent.
 
-A `ACC REGISTER` command consists of the following format:
+An `ACC REGISTER` command has the following format:
 
     ACC REGISTER <accountname> [callback_namespace:]<callback> [cred_type] :<credential>
 
