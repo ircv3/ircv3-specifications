@@ -66,17 +66,17 @@ This specification doesn't define any restrictions on what can be sent as the re
 In this example, a `PRIVMSG` is sent to a channel with an ID provided by the server. A client sends a reaction reply to this message and the server sends an echo-message back to the client.
 
     S: @draft/msgid=123 :nick!user@host PRIVMSG #channel :Hello!
-    C: @+draft/reply=123;+draft/react=lol :nick2!user2@host2 PRIVMSG #channel
+    C: @+draft/reply=123;+draft/react=lol PRIVMSG #channel
     S: @draft/msgid=456;+draft/reply=123;+draft/react=lol :nick2!user2@host2 PRIVMSG #channel
 
 An example of an emoticon reaction
 
-    C: @+draft/reply=123;+draft/react=:) :nick2!user2@host2 PRIVMSG #channel
+    C: @+draft/reply=123;+draft/react=:) PRIVMSG #channel
 
 An example of an emoji reaction
 
-    C: @+draft/reply=123;+draft/react=👋 :nick2!user2@host2 PRIVMSG #channel
+    C: @+draft/reply=123;+draft/react=👋 PRIVMSG #channel
 
 An example of a reaction with an additional message body
 
-    C: @+draft/reply=123;+draft/react=lol :nick2!user2@host2 PRIVMSG #channel :lol
+    C: @+draft/reply=123;+draft/react=lol PRIVMSG #channel :lol
