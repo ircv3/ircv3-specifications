@@ -193,6 +193,16 @@ as the account name). If a client sends an incorrect accountname on a network en
 policy, the server MUST return the `ERR_REG_UNSPECIFIED_ERROR` (922) numeric with an appropriate
 description.
 
+## Account Required
+
+Certain actions on a network may require a client account to be completed. These may include connection registration, channel registration, or other actions. The `ACC_REQUIRED` numeric indicates that the client must be logged into an account in order to complete an action or continue using the network.
+
+Upon receiving the `ACC_REQUIRED` numeric, clients SHOULD alert users that they need to register/login and/or provide an interface to do so. The `ACC_REQUIRED` numeric MAY be received before connection registration has completed, in which case clients SHOULD alert that SASL must be used to connect to the current network.
+
+| No. | Label          | Format                                                                              |
+| --- | -------------- | ----------------------------------------------------------------------------------- |
+| ??? | `ACC_REQUIRED` | `:<server> ??? <user_nickname> [<command>] :You must login to complete this action` |
+
 ## Examples
 
 ### Registering the account "kaniini" with e-mail address kaniini@example.com:
