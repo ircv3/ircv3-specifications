@@ -155,6 +155,12 @@ Servers MUST send this key to non-securely connected clients.
 Servers MAY send this key to securely connected clients, but it will be
 ignored.
 
+### The `certificate-transparency` key
+
+This key indicates that the server supports certificate transparency and
+clients SHOULD require connections to the server to validate the certificate
+logs as per [RFC6962](https://tools.ietf.org/html/rfc6962).
+
 ### Handling disconnection
 
 IRC connections may be long-lived. Connections lasting for more than a month
