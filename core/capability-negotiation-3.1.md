@@ -1,6 +1,9 @@
 ---
 title: IRCv3.1 Client Capability Negotiation
 layout: spec
+updated-by:
+  "CAP Negotiation 3.2": core/capability-negotiation-3.2.html
+  "cap-notify Extension": extensions/cap-notify-3.2.html
 copyrights:
   -
     name: "Kevin L. Mitchell"
