@@ -1,6 +1,8 @@
 ---
 title: IRCv3.2 Message Tags
 layout: spec
+updated-by:
+  "Message Tags 3.3": core/message-tags-3.3.html
 copyrights:
   -
     name: "Alexey Sokolov"

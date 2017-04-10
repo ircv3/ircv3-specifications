@@ -2,6 +2,8 @@
 title: IRCv3.3 Message Tags
 layout: spec
 work-in-progress: true
+updates:
+  "Message Tags 3.2": core/message-tags-3.2.html
 copyrights:
   -
     name: "Kiyoshi Aman"
