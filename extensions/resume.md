@@ -152,3 +152,12 @@ In addition, users sometimes manually reconnect when they see that their is lag 
 When clients see a `RESUMED` message for another client which contains a timestamp, they may calculate how much time has passed since the timestamp and the current time and then display this next to the reconnect notice. Displaying this may assist clients in knowing how much message history has been lost in private queries and channels.
 
 Servers may wish to check the new hostmask of resuming clients, to ensure that it does not fall under their list of banned hosts or hostmasks.
+
+
+## Security Considerations
+
+This section notes security-specific considerations software authors will need to take into account while implementing this specification. This section is non-normative.
+
+Without this specification, if you know a client's account details you can typically close their connection (using something like `/NS GHOST` or `/NS REGAIN`), and find out which non-hidden channels they're joined to with a regular `WHOIS`.
+
+With this specification, you're able to see which hidden channels they've joined and essentially take-over their connection. This is a security concern that's not addressed by this specification (and is very difficult to address for explicitly unprepared reconnections such as the ones this specification focuses on). Clients should display incoming `RESUMED` messages in such a way that users are explicitly aware that the given client has reconnected.
