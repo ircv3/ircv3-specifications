@@ -44,9 +44,11 @@ After sending this command, the client continues connection registration as usua
 
 If the client's able to successfully resume their connection, the server sends them a `RESUMED` message before sending the usual registration burst (and their nickname is set to `<oldnick>`). Otherwise, the server sends the `ERR_CANNOT_RESUME` numeric.
 
+If successful, the `RESUMED` message is sent to the connecting user just after connection registration (including ident lookups and similar) completes. When this message is sent out, the connecting client's nickname is updated to be the old client's nick. From this point forward, the combination of old nickname and new connecting client's username+hostname is used to identify the client from that point forward.
+
 #### `RESUMED` Message
 
-This message is sent when a client successfully resumes a connection. For clients that have not completed connection registration, this indicates that their `RESUME` attempt was successful. For registered clients, this indicates that the given client disconnected and reconnected to the server.
+This message is sent when a client successfully resumes a connection. For clients that have not received numerics indicating that their connection registration is completed, this numeric means that their `RESUME` attempt was successful. For registered clients, this indicates that the given client disconnected and reconnected to the server.
 
 This message has the following format:
 
@@ -56,14 +58,14 @@ This message has the following format:
 
 ### Numerics
 
-Here are the numerics that this extension defines:
+Here are the new numerics that this extension defines:
 
 | No. | Label                   | Format                                                          |
 | --- | ----------------------- | --------------------------------------------------------------- |
 | ??? | `ERR_CANNOT_RESUME`     | `:<server> ??? <oldnick> :Cannot resume connection, <details>`  |
 | ??? | `ERR_HISTORY_TRUNCATED` | `:<server> ??? <client/channel> :Chat history may be truncated` |
 
-`ERR_CANNOT_RESUME` is used to indicate a general failure to resume a connection for a specific reason. The purpose of this numeric is to pass along human-readable information informing the user why their connection wasn't automatically resumed such as a lack of SASL authentication and login. If a more appropriate numeric exists for conveying the issue already exists (such as `ERR_NOSUCHNICK` to represent the old nickname no longer being present on the network), then it should be used instead.
+`ERR_CANNOT_RESUME` is used to indicate a general failure to resume a connection for a specific reason. The purpose of this numeric is to pass along human-readable information informing the user why their connection wasn't automatically resumed such as a lack of SASL authentication and login. If a more appropriate numeric exists for conveying the issue already exists (for example, `ERR_NOSUCHNICK` may indicate that the old nickname is no longer being present on the network), then it should be used instead.
 
 Implementations should keep in mind that the only concrete indication that a `RESUME` attempt failed is that it does not receive a `RESUMED` message during registration. Clients MUST NOT rely on `ERR_CANNOT_RESUME` or any other numeric being received to trigger their 'resume has failed' state and process.
 
@@ -127,11 +129,12 @@ A client with the nick `dan` reconnecting:
 
 ## Implementation Considerations
 
-This section notes considerations software authors will need to take into account while
-implementing this specification. This section is non-normative.
+This section notes considerations software authors will need to take into account while implementing this specification. This section is non-normative.
 
 Right now, when clients detect that their connection to the server may have dropped they tend to send a `QUIT` command, close their current connection and then create a new connection to the server.
 
 In cases where the server supports resuming connections and SASL is configured for this server, clients may find it more useful to attempt to establish a new link to the server and resume the connection before closing their old one. If this is done, clients should be able to better take advantage of connection resumption.
 
 In addition, users sometimes manually reconnect when they see that their is lag on their connection. In these cases, clients may also wish to do the above rather than closing the connection and then reconnecting.
+
+Servers may wish to check the new hostmask of resuming clients, to ensure that it does not fall under their list of banned hosts or hostmasks.
