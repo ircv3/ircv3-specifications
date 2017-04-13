@@ -56,6 +56,8 @@ This message has the following format:
 
 `nick` is the nickname of the client whose connection has been resumed. `user` and `host` are the username and hostname that the new connecting client has. The client receiving this message MUST update the username and hostname they have stored for the given client, in the same way that the `CHGHOST` message is parsed.
 
+When sent to other clients, the `RESUMED` message MUST have the source of the old client's nickmask. This is illustrated in the examples below.
+
 ### Numerics
 
 Here are the new numerics that this extension defines:
@@ -95,7 +97,7 @@ This is intended to ensure that TLS-only channel modes are not bypassed, and tha
 
 ## Examples
 
-A client with the nick `dan` reconnecting:
+A client with the nick `dan` reconnecting. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection uses the username `~d` and the host `127.0.0.1`:
 
     C1 - C: PING 12345678
     C1 - S: :irc.example.com PONG 12345678
@@ -125,6 +127,16 @@ A client with the nick `dan` reconnecting:
     C2 - S: :irc.example.com 333 dan #test george 1442060874
     C2 - S: :irc.example.com 353 dan @ #test :@dan @george +violet roger
     C2 - S: :irc.example.com MODE #test +o dan
+
+Here is this reconnection seen by `george`, a client that does not have the `draft/resume` capability enabled:
+
+    C: :dan!~old@192.168.0.5 QUIT :Client reconnected
+    S: :dan!~d@127.0.0.1 JOIN #test
+    S: :irc.example.com MODE #test +o dan
+
+And here is this reconnection seen by `violet`, a client that has the `draft/resume` capability:
+
+    C: :dan!~old@192.168.0.5 RESUMED dan ~d 127.0.0.1 2017-04-13T15:12:51.620Z
 
 
 ## Implementation Considerations
