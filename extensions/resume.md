@@ -123,3 +123,15 @@ A client with the nick `dan` reconnecting:
     C2 - S: :irc.example.com 333 dan #test george 1442060874
     C2 - S: :irc.example.com 353 dan @ #test :@dan @george +violet roger
     C2 - S: :irc.example.com MODE #test +o dan
+
+
+## Implementation Considerations
+
+This section notes considerations software authors will need to take into account while
+implementing this specification. This section is non-normative.
+
+Right now, when clients detect that their connection to the server may have dropped they tend to send a `QUIT` command, close their current connection and then create a new connection to the server.
+
+In cases where the server supports resuming connections and SASL is configured for this server, clients may find it more useful to attempt to establish a new link to the server and resume the connection before closing their old one. If this is done, clients should be able to better take advantage of connection resumption.
+
+In addition, users sometimes manually reconnect when they see that their is lag on their connection. In these cases, clients may also wish to do the above rather than closing the connection and then reconnecting.
