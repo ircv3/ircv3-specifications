@@ -17,9 +17,25 @@ keep in mind that the sections here are not set in stone.
 Also take a look at other specifications and the CONTRIBUTING.md file for further
 suggestions and information to keep in mind while writing a proposal.
 
-Some notes:
+New capability and tag names should be listed in the _"Notes for implementing work-in-progress version"_ section, with the appropriate disclaimer and `draft/` prefix, until it's ratified.
 
-- New capability and tag names should be listed in the _"Notes for implementing work-in-progress version"_ section, with the appropriate disclaimer and `draft/` prefix, until it's ratified.
+These keys can be used in the header to specify this spec's relationship to other IRCv3 specifications:
+
+- `updates`: To follow this specification, read the linked spec(s) and then this one.
+- `updated-by`: After reading this specification, read the linked spec(s) to get the latest version.
+- `extends`: This specification is an optional extension of the linked spec(s).
+- `extended-by`: The linked spec(s) are optional extensions to this specification.
+- `obsoletes`: Ignore the linked specification(s), as this one replaces them entirely.
+- `obsoleted-by`: Ignore this specification, as the linked one(s) replace it entirely.
+
+Each of these links to other specifications, written as such:
+
+    updates:
+        "Message Tags 3.2": core/message-tags-3.2.html
+        "Message Tags 3.3": core/message-tags-3.3.html
+    obsoletes:
+        "Metadata 3.2": core/metadata-3.2.html
+
 
 ---
 
