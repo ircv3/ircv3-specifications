@@ -1,0 +1,61 @@
+# Redefined IRC `USER` command
+
+Copyright (c) 2013 Elizabeth Myers. All rights reserved.
+
+## Discussion
+
+This extension describes a backwards-compatible interpretation of the USER
+command used for user registration to the server (not meant in a services-
+related context). It repurposes the <mode> and <unused> parts of the USER
+command as described in [RFC 2812, section 3.1.3][rfc2812] (or alternatively,
+servername and hostname as described in [RFC 1459, section 4.1.3][rfc1459]).
+
+Few servers implement the RFC2812 specification for mode numbers and for all
+intents and purposes can be considered a dead letter. RFC2812-compliant servers
+will ignore all non-numeric input in this field; RFC1459-compliant servers
+will disregard it entirely, for security reasons. Both servers will treat
+the third param the same.
+
+## Reinterpretation of the USER command
+
+This proposal redefines the USER command described in [RFC 1459, section 4.1.3][rfc1459]
+to the following syntax, described in pseudo-BNF:
+
+	Command: USER
+	Parameters: <user> <mode> <hostname> <realname>
+
+mode is intended to be a string which allows users to set or unset modes upon
+themselves when registering in a race-free way (e.g., unprivileged client
+performs a whois upon them before a cloak mode takes effect). This enables
+them to disable or enable modes. The input, if a valid modestring, should be
+interpreted as a mode set upon onself as described in [RFC 1459, section 4.2.3.2][rfc1459].
+The mode is to be interpreted as a normal parameter passed to MODE, but only if
+it begins with + or -. Modes which require parameters should be ignored with a
+warning. Any mode which an unprivileged user may set upon themselves may be
+requested. A server may deny any modes which the user does not have privilege
+to set (such as +o). 
+
+hostname, if set to a valid fully-qualified domain name, is to be construed as
+the server the user used as the DNS name to connect with. The server shall not
+use this information for anything more than identification and redirection
+purposes and shall not rely the value being set to anything valid. The server
+should, until such a time as the vast majority of clients have been updated,
+not issue anything other than advisory notices (e.g. a NOTICE about a redirect
+or such).
+
+## Examples
+
+Set +iwx on a connecting user, with GECOS Elizabeth Myers and username
+Elizacat, server irc.staticbox.net:
+	USER Elizacat +iwx irc.staticbox.net :Elizabeth Myers
+
+Set +i but unset -x (e.g. request the mode not be set if automatically done
+so), username AWilfox, GECOS Wolf Thing, used server iris.alphachat.org:
+	USER AWilfox +i-x iris.alphachat.org :Wolf Thing
+
+## Backwards compatibility
+
+It is expected this change should not present any major backwards compatibility
+problems except with very old servers which likely have many security problems
+anyway.
+
