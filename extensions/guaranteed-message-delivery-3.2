@@ -1,0 +1,36 @@
+What IRCv3 Client Guaranteed Message Delivery attempts to solve
+------------------------------------------------------------------------------------
+Up to this day, IRC still doesn't offer guaranteed message delivery for PRIVMSG,
+NOTICE, and what more?.  It will only give a notification when a message hasn't
+actually reached its intented destination.
+
+i.e. a user trying to send a message to a channel he isn't in, with a 'no
+external messages' mode set on the channel, or a user trying to send a message
+to an invalid destination
+
+In both cases the server will respond with a numeric error message identifying
+the original request. But in case the IRC message has actually reached its
+desired destination, the client doesn't have any means to assert this condition,
+and to take further actions from there.  More specifically, no programmatic
+efforts can be made up from this point to account for the aforementioned
+scenario.  In order to address this issue, a new standardized tag is suggested.
+
+Standard Message Delivered Tag Specification
+---------------------------------------------------------------------------------
+The new tag will be a standardized one, and named "message-delivered", in short
+"md", and will follow the rules as provided by the 'Message Tags' framework.
+
+The tag will need to have a client generated ID as a value when added to the
+message that will serve as an identification of the transmitted message, so that
+the client can later on identify which messages the server acknowledges in the
+subsequent server replies.
+
+The server will only then acknowledge the client messages that have successfully
+reached their desired target with no issues.  Otherwise, the server will
+maintain its normal behavior for reporting error messages.  
+
+Usage:
+
+Client: @md=1 :nick!ident@host.com PRIVMSG recipient :Hello.  I now have the
+capability to test if my IRC message will ever reach you.
+Server: ACK 1
