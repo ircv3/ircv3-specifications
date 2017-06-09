@@ -67,6 +67,9 @@ The mapping between characters in tag values and their representation in `<escap
 Reason: more common URL-escaping eats more space, while IRC message's length is very limited.
 Also having semicolon as `\:` makes it easy to split the `<tags>` string by `;` first.
 
+If a lone `\` exists at the end of an escaped value (with no escape character following it), then there
+SHOULD be no output character. For example, the escaped value `"test\"` should unescape to `"test"`.
+
 ## Rules for naming message tags
 
 The full tag name MUST be treated as an opaque identifier.
@@ -115,6 +118,9 @@ Message with 3 tags:
 
 Previous versions of this spec did not specify that the full tag name MUST be parsed as
 an opaque identifier. This was added to improve client resiliency.
+
+Previous versions of this spec did not specify how to handle trailing backslashes with
+no escape character. This was added to help consistency across specifications.
 
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
