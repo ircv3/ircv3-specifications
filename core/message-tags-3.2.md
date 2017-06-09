@@ -68,7 +68,7 @@ Reason: more common URL-escaping eats more space, while IRC message's length is 
 Also having semicolon as `\:` makes it easy to split the `<tags>` string by `;` first.
 
 If a lone `\` exists at the end of an escaped value (with no escape character following it), then there
-SHOULD be no output character. For example, the escaped value `"test\"` should unescape to `"test"`.
+SHOULD be no output character. For example, the escaped value `test\` should unescape to `test`.
 
 ## Rules for naming message tags
 
