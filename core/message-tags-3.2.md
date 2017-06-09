@@ -120,7 +120,7 @@ Previous versions of this spec did not specify that the full tag name MUST be pa
 an opaque identifier. This was added to improve client resiliency.
 
 Previous versions of this spec did not specify how to handle trailing backslashes with
-no escape character. This was added to help consistency across specifications.
+no escape character. This was added to help consistency across implementations.
 
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
