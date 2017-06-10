@@ -2,8 +2,8 @@
 title: IRCv3.2 `cap-notify` Extension
 layout: spec
 extends:
+  - cap-3.1
   - cap-3.2
-  - cap-3.3
 copyrights:
   -
     name: "Attila Molnar"
