@@ -31,11 +31,12 @@ These keys can be used in the header to specify this spec's relationship to othe
 Each of these links to other specifications, written as such:
 
     updates:
-        "Message Tags 3.2": core/message-tags-3.2.html
-        "Message Tags 3.3": core/message-tags-3.3.html
+        - message-tags-3.2
+        - message-tags-3.3
     obsoletes:
-        "Metadata 3.2": core/metadata-3.2.html
+        - metadata-3.2
 
+The spec names to use here are those specified in the site [speification registry file](https://github.com/ircv3/ircv3.github.io/blob/master/_data/specs.yml).
 
 ---
 

@@ -2,7 +2,8 @@
 title: IRCv3.2 `cap-notify` Extension
 layout: spec
 extends:
-  "IRCv3.2 Client Capability Negotiation": core/capability-negotiation-3.2.html
+  - cap-3.2
+  - cap-3.3
 copyrights:
   -
     name: "Attila Molnar"
