@@ -2,7 +2,7 @@
 title: IRCv3.1 SASL Authentication
 layout: spec
 updated-by:
-  "SASL Authentication 3.2": extensions/sasl-3.2.html
+  - sasl-3.2
 copyrights:
   -
     name: "Jilles Tjoelker"
