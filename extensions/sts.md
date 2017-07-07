@@ -85,9 +85,9 @@ To enforce an STS persistence policy, servers MUST send this key to securely con
 
 Clients MUST reset the STS policy expiry time for a requested hostname every time a valid persistence policy with a `duration` key is received from a server.
 
-A duration value of 0 indicates an immediate expiry of the STS persistence policy. This value MAY be used by servers to remove a previously set policy.
+A duration value of 0 indicates a disabled STS persistence policy with an immediate expiry. This value MAY be used by servers to remove a previously set policy.
 
-When an STS persistence policy expires, clients MAY continue to connect securely to the server at the requested hostname, but they are no longer required to upgrade non-secure connections.
+When an STS persistence policy expires, clients MAY continue to connect securely to the server at the requested hostname, but they are no longer required to pre-emptively upgrade non-secure connections. Clients MUST still respect any STS upgrade policies encountered when a persistence policy is expired or disabled.
 
 ### The `port` key
 
