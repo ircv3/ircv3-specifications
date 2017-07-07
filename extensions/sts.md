@@ -119,8 +119,7 @@ An appropriate period for rescheduling expiry while connected might depend on th
 
 ### No immediate user recourse
 
-If a client fails to establish a secure connection for any reason to a server with which
-an STS policy has been stored, there should be no immediate user recourse. For example
+If a client fails to establish a secure connection for any reason to a hostname with an active STS policy, there should be no immediate user recourse to bypass the failure. For example
 the user should not be presented with a dialog that allows them to proceed with
 the connection. A failure to establish a secure connection should be treated similarly
 to a server error that the user is unable to do anything about except retrying at a
@@ -296,39 +295,38 @@ configure the lifetime of a policy.
 
 ## Examples
 
-### Redirecting to a secure port
+### Redirecting to a secure port with an upgrade policy
 
 A server tells a client connecting non-securely to connect securely on port 6697.
 
-    Client: CAP LS 302
-    Server: CAP * LS :draft/sts=port=6697
+    Non-secure Client: CAP LS 302
+               Server: CAP * LS :draft/sts=port=6697
 
 After the exchange, the client disconnects and reconnects securely to the same
-server on port 6697.
+hostname on port 6697.
 
-### Setting an STS policy
+### Setting an STS persistence policy with a duration
 
 A server tells a client that is already connected securely that the client must
 only use secure connections for roughly 6 months.
 
-    Client: CAP LS 302
-    Server: CAP * LS :draft/sts=duration=15552000
+    Secure Client: CAP LS 302
+           Server: CAP * LS :draft/sts=duration=15552000
 
 Until the policy expires:
-* The client will use the port it is currently connected to in the future to
-connect securely.
-* It will not make any non-secure connection attempts to the same server.
+* The client will continue use the port it is currently connected on connect securely in future.
+* It will not make any non-secure connection attempts to the same hostname.
 
 ### Ignoring an invalid request
 
 A server tells a client that is connected non-securely that the client must
 use secure connections for roughly 6 months. There is no port advertised.
 
-    Client: CAP LS 302
-    Server: CAP * LS :draft/sts=duration=15552000
+    Non-secure Client: CAP LS 302
+               Server: CAP * LS :draft/sts=duration=15552000
 
-The client ignores this because it received the STS policy over a non-secure
-connection and the STS cap contains no token with key `port`.
+The client ignores this because it has received an STS persistence policy over a non-secure
+connection and the STS cap doesn't contain an upgrade policy.
 
 ### Handling tokens with unknown keys
 
@@ -336,39 +334,39 @@ A server tells a client that is already connected securely that the client must
 use secure connections for roughly a year, but the value of the STS capability
 also contains some tokens whose keys the client does not understand.
 
-    Client: CAP LS 302
-    Server: CAP * LS :draft/sts=unknown,duration=31536000,foo=bar
+    Secure Client: CAP LS 302
+           Server: CAP * LS :draft/sts=unknown,duration=31536000,foo=bar
 
 The client ignores the keys it does not understand and until the policy
 expires:
 * The client will use the port it is currently connected to in the future to
 connect securely.
-* It will not make any non-secure connection attempts to the same server.
+* It will not make any non-secure connection attempts to the same host.
 
 ### Handling 0 `duration`
 
 A server tells a client that is already connected securely to remove the STS
 policy immediately.
 
-    Client: CAP LS 302
-    Server: CAP * LS :draft/sts=duration=0
+    Secure Client: CAP LS 302
+           Server: CAP * LS :draft/sts=duration=0
 
-If the client has an STS policy stored for the server it clears the policy.
-Future attempts to connect non-securely will be allowed
+If the client has an STS policy stored for the host it clears the policy.
+Future attempts to connect non-securely will be allowed.
 
 ### Rescheduling expiry on disconnect
 
 A client securely connects to a server, which advertises an STS policy.
 
-    Client: CAP LS 302
-    Server: CAP * LS :multi-prefix draft/sts=duration=2592000
+    Secure Client: CAP LS 302
+           Server: CAP * LS :multi-prefix draft/sts=duration=2592000
 
 The client saves the policy and notes that it will expire in 2592000 seconds
 (roughly one month). It completes registration, then proceeds as usual.
 
 After 48 hours, the client disconnects.
 
-    Client: QUIT :Bye
+    Secure Client: QUIT :Bye
 
 The policy is still valid, so the client reschedules expiry for 2592000 seconds from the time of disconnection.
 
