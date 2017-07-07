@@ -179,27 +179,27 @@ Server implementers should be aware that fixed expiry times may not be precisely
 guaranteed in the case where clients reschedule policy expiry on disconnect.
 
 Which approach to take will depend on a number of considerations. For example, a server
-may wish their STS Policy to expire at the same time as their domain certificate.
+may wish their STS Policy to expire at the same time as their hostname certificate.
 Alternatively, a server may wish their STS policy to last for as long as possible.
 
 Server implementations should consider using a value of `duration=0` in their example
 configurations. This will require server administrators to deliberately set an expiry
 according to their specific needs rather than an arbitrary generic value.
 
-### Offering multiple IRC servers at alternate ports on the same domain
+### Offering multiple IRC servers at alternate ports on the same hostname
 
-The STS policy is imposed for an entire domain name. This means that mixing
-STS-enabled and non-secure IRC servers on the same domain name or running
-multiple STS-enabled IRC servers on the same domain name may result in some
-clients only being able to connect to a single IRC server on that domain name,
-depending on which IRC server they connected to first.
+The STS policy is imposed for all connections to a hostname. This means that mixing
+STS-enabled and non-secure IRC servers, or running multiple STS-enabled IRC servers
+on the same hostname may on different ports will result in some clients only being
+able to connect to a single IRC server on that host, depending on which IRC
+server they connected to first.
 
-For example, a single server might run a production IRC server which advertises
+For example, a single host might run a production IRC server which advertises
 an STS policy and another, unrelated IRC server on a different port for
 testing purposes which does not offer secure connections.
 
 In this case, to allow clients to connect to both IRC servers the non-secure IRC
-server can be offered at a different domain name, for example a subdomain.
+server can be offered at a different hostname, for example a subdomain.
 
 ## General Security considerations
 
