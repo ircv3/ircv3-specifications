@@ -42,17 +42,17 @@ MUST only connect to the server securely (using TLS, aka. SSL), and the port
 number to use for secure connections.
 
 Clients MUST use sufficient certificate verification to ensure the connection
-is secure without any errors. This may involve validation against a system root
+is secure without any errors. This might involve validation against a system root
 certificate bundle or a user-specified trust root.
 
 In compliant server software, this capability MUST be made available as an optional
-configuration setting. Server administrators may have valid reasons not to enable it.
+configuration setting. Server administrators might have valid reasons not to enable it.
 
 ## Details
 
 When enabled, the capability has a REQUIRED value: a comma (`,`) separated
-list of tokens. Each token is a key which may have a value attached. If there
-is a value attached, the value is separated from the key by a `=`. That is,
+list of tokens. Each token consists of a key which might have a value attached.
+If there is a value attached, the value is separated from the key by a `=`. That is,
 `<key>[=<value>][,<key2>[=<value2>][,<keyN>[=<valueN>]]]`. Keys specified in
 this document MUST only occur at most once.
 
@@ -130,9 +130,7 @@ man-in-the-middle attack.
 
 ### User-declared STS policy
 
-Clients may allow users to explicitly define an STS policy for a given host, before any
-interaction with the host. This could help prevent a "Bootstrap MITM vulnerability" as
-discussed in General security considerations.
+Clients might consider allowing users to explicitly define an STS policy for a given host, before any interaction with the host. This could help prevent a "Bootstrap MITM vulnerability" as discussed in General security considerations.
 
 ### Pre-loaded STS policies
 
@@ -147,12 +145,9 @@ to user installed pre-load lists within an appropriate time frame of host polici
 
 ### STS policy deletion or rejection
 
-Clients should allow users or administrators to delete cached STS policies on a per-host
-basis, in case a server's policy is accidentally or maliciously injected on
-a secure connection.
+Clients should consider allowing users or administrators to delete cached STS policies on a per-host basis, in case a server's policy is accidentally or maliciously injected on a secure connection.
 
-Clients may additionally provide the ability to reject STS policies on a
-per-host basis as an additional mitigation.
+Clients might additionally provide the ability to reject STS policies on a per-host basis as an additional mitigation.
 
 These features should be made available very carefully in both the user interface
 and security senses. Deleting or rejecting a cache entry for a known STS host should
@@ -175,12 +170,12 @@ sent in the `duration` key on each connection attempt.
 Fixed expiry times will involve a dynamic `duration` value being calculated on each
 connection attempt.
 
-Server implementers should be aware that fixed expiry times may not be precisely
+Server implementers should be aware that fixed expiry times might not be precisely
 guaranteed in the case where clients reschedule policy expiry on disconnect.
 
 Which approach to take will depend on a number of considerations. For example, a server
-may wish their STS Policy to expire at the same time as their hostname certificate.
-Alternatively, a server may wish their STS policy to last for as long as possible.
+might wish their STS Policy to expire at the same time as their hostname certificate.
+Alternatively, a server might wish their STS policy to last for as long as possible.
 
 Server implementations should consider using a value of `duration=0` in their example
 configurations. This will require server administrators to deliberately set an expiry
@@ -190,7 +185,7 @@ according to their specific needs rather than an arbitrary generic value.
 
 The STS policy is imposed for all connections to a hostname. This means that mixing
 STS-enabled and non-secure IRC servers, or running multiple STS-enabled IRC servers
-on the same hostname may on different ports will result in some clients only being
+on the same hostname on different ports will result in some clients only being
 able to connect to a single IRC server on that host, depending on which IRC
 server they connected to first.
 
@@ -211,7 +206,7 @@ It's possible for an attacker to remove the STS `port` value from an initial con
 established via an insecure connection, before the policy has been cached by the client.
 This represents a Bootstrap MITM (man-in-the-middle) vulnerability.
 
-Clients may choose to mitigate this risk by implementing features such as user-declared
+Clients might choose to mitigate this risk by implementing features such as user-declared
 and pre-loaded STS policies, as described in the "Client implementation considerations"
 section.
 
@@ -220,7 +215,7 @@ section.
 It is possible that a client successfully receives an STS policy from a server
 but later on attackers begin to block all secure connection attempts from the
 client to the server until the policy expires. At that time, the client might
-revert back to a non-secure connection. Servers SHOULD advertise a long enough
+revert back to a non-secure connection. Servers should advertise a long enough
 duration which makes this scenario less likely to happen.
 
 Servers should choose an appropriate `duration` value with reference to the "Server implementation considerations" section to avoid inadvertent expiry issues.
@@ -239,11 +234,11 @@ considerations" section.
 
 * A 3rd party host with DNS pointing to an STS-enabled host, where the 3rd party
 isn't listed on the server's certificate. This configuration would fail certificate validation
-even without STS, but users may be relying on it for non-secure access.
+even without STS, but users might be relying on it for non-secure access.
 
 * An attacker could trick a user into declaring a manual STS policy in their client.
 
-* A server administrator may configure an STS policy for a server whose secure capabilities
+* A server administrator might configure an STS policy for a server whose secure capabilities
 are later disabled. For example, their host certificate is allowed to expire without being
 renewed, or is deemed insecure by newly exposed weak cipher suites. Care must be taken when
 choosing policy expiry times, as discussed in "Server implementation considerations", in
@@ -307,8 +302,7 @@ hostname on port 6697.
 
 ### Setting an STS persistence policy with a duration
 
-A server tells a client that is already connected securely that the client must
-only use secure connections for roughly 6 months.
+A server tells a secure client to only use secure connections for roughly 6 months.
 
     Secure Client: CAP LS 302
            Server: CAP * LS :draft/sts=duration=15552000
@@ -319,8 +313,7 @@ Until the policy expires:
 
 ### Ignoring an invalid request
 
-A server tells a client that is connected non-securely that the client must
-use secure connections for roughly 6 months. There is no port advertised.
+A server tells a non-secure client to use secure connections for roughly 6 months. There is no port advertised.
 
     Non-secure Client: CAP LS 302
                Server: CAP * LS :draft/sts=duration=15552000
@@ -330,9 +323,7 @@ connection and the STS cap doesn't contain an upgrade policy.
 
 ### Handling tokens with unknown keys
 
-A server tells a client that is already connected securely that the client must
-use secure connections for roughly a year, but the value of the STS capability
-also contains some tokens whose keys the client does not understand.
+A server tells a secure client to use secure connections for roughly a year, but the value of the STS capability also contains tokens the client doesn't recognise.
 
     Secure Client: CAP LS 302
            Server: CAP * LS :draft/sts=unknown,duration=31536000,foo=bar
