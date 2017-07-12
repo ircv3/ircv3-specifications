@@ -233,16 +233,16 @@ man-in-the-middle attack.
 ### User-declared STS policy
 
 Clients may allow users to explicitly define an STS policy for a given host, before any
-interaction with the host. This could help prevent a "Bootstrap MITM vulnerability" as
+interaction with the host. This could help prevent a bootstrap MITM vulnerability as
 discussed in General security considerations.
 
 ### Pre-loaded STS policies
 
 As further protection against bootstrap MITM vulnerabilities, clients may choose to
-include a pre-loaded list of known hosts with STS policies. Such lists should be
-compiled on an opt-in basis, by request of IRC network administrators. Hosts should be
-verified to be correctly advertising an STS policy, as well as a 
-[preload policy](#the-preload-key) before inclusion.
+include a pre-loaded list of known hosts with STS policies. Such lists should only include
+hosts with valid certificates and STS policies, and their [preload policy](#the-preload-key)
+should be in place. This allows IRC network administrators to opt-in to inclusion in preload
+lists.
 
 Clients should consider how their release upgrade cycle compares to server policy expiry
 times when compiling pre-loaded lists. Implementations should be able to provide updates
@@ -311,7 +311,7 @@ server may be offered at a different domain name, for example a subdomain.
 
 It's possible for an attacker to strip the STS `port` value from an initial connection
 established via an insecure connection, before the policy has been cached by the client.
-This represents a Bootstrap MITM (man-in-the-middle) vulnerability.
+This represents a bootstrap MITM (man-in-the-middle) vulnerability.
 
 Clients may choose to mitigate this risk by implementing features such as user-declared
 and pre-loaded STS policies, as described in the "Client implementation considerations"
