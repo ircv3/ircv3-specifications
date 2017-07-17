@@ -155,6 +155,42 @@ Servers MUST send this key to non-securely connected clients.
 Servers MAY send this key to securely connected clients, but it will be
 ignored.
 
+### The `preload` key
+
+This OPTIONAL key, if present, indicates that the server agrees to be
+included in STS preload lists. If it has a value, the value MUST be ignored.
+
+Clients not looking to confirm whether the server agrees to be included
+in STS preload lists MAY ignore the presence of this key.
+
+If a client receives a `preload` key on a non-secure connection, it is
+invalid and MUST be ignored.
+
+See the [Pre-loaded STS policies section](#pre-loaded-sts-policies) for more
+information on preload lists.
+
+### Server Name Indication
+
+Before advertising an STS policy, servers SHOULD verify whether the hostname
+provided by clients, for example, via TLS Server Name Indication (SNI), has been
+whitelisted by administrators in the server configuration.
+
+If no hostname has been provided for the connection, an STS policy SHOULD NOT be advertised.
+
+This allows server administrators to retain control over which hostnames are STS-enabled
+in case the server is accessible on multiple hostnames. It is possible that a server
+uses a wildcard certificate or a certificate with Subject Alternative Names but
+its administrators only wish to advertise STS on a subset of its hostnames.
+
+For example a server presents a wildcard certificate for `*.example.net`.
+`irc.example.net`, `example.net`, `www.example.net` and `test.example.net` all
+point to the IP address of the server. The administrators may not wish to have
+STS enabled for `test.example.net` or `www.example.net`.
+
+IRCd software SHOULD allow for each part of the STS policy to be configured per hostname.
+This allows server administrators to, for example enable STS persistence on all hostnames,
+but only enable a preload policy for a subset.
+
 ### Handling disconnection
 
 IRC connections may be long-lived. Connections lasting for more than a month
@@ -198,15 +234,16 @@ man-in-the-middle attack.
 ### User-declared STS policy
 
 Clients may allow users to explicitly define an STS policy for a given host, before any
-interaction with the host. This could help prevent a "Bootstrap MITM vulnerability" as
+interaction with the host. This could help prevent a bootstrap MITM vulnerability as
 discussed in General security considerations.
 
 ### Pre-loaded STS policies
 
 As further protection against bootstrap MITM vulnerabilities, clients may choose to
-include a pre-loaded list of known hosts with STS policies. Such lists should be
-compiled on an opt-in basis, by request of IRC network administrators. Hosts should be
-verified to be correctly advertising an STS policy before inclusion.
+include a pre-loaded list of known hosts with STS policies. Such lists should only include
+hosts with valid certificates and STS policies, and their [preload policy](#the-preload-key)
+should be in place. This allows IRC network administrators to opt-in to inclusion in preload
+lists.
 
 Clients should consider how their release upgrade cycle compares to server policy expiry
 times when compiling pre-loaded lists. Implementations should be able to provide updates
@@ -275,7 +312,7 @@ server may be offered at a different domain name, for example a subdomain.
 
 It's possible for an attacker to strip the STS `port` value from an initial connection
 established via an insecure connection, before the policy has been cached by the client.
-This represents a Bootstrap MITM (man-in-the-middle) vulnerability.
+This represents a bootstrap MITM (man-in-the-middle) vulnerability.
 
 Clients may choose to mitigate this risk by implementing features such as user-declared
 and pre-loaded STS policies, as described in the "Client implementation considerations"
@@ -401,3 +438,11 @@ After 48 hours, the client disconnects.
 According to the client's last information at the time of disconnection the
 policy is still valid, so it reschedules the expiration to occur in 2592000
 seconds from the time of disconnection.
+
+### Enabling an STS preload policy
+
+A client securely connects to a server, which advertises an STS policy and
+opts in to preload lists.
+
+    Secure Client: CAP LS 302
+           Server: CAP * LS :draft/sts=duration=2592000,preload
