@@ -139,6 +139,58 @@ IRC connections can be long-lived. Connections that last for more than a month a
 
 To avoid an early STS policy expiry, clients MUST reschedule the expiry time when closing connections. The new expiry time is calculated by adding the policy duration as last advertised by the server to the time the connection is closed.
 
+## General Security considerations
+
+This section is non-normative.
+
+### STS policy stripping
+
+It's possible for an attacker to remove the STS `port` value from an initial connection
+established via an insecure connection, before the policy has been cached by the client.
+This represents a bootstrap MITM (man-in-the-middle) vulnerability.
+
+Clients might choose to mitigate this risk by implementing features such as user-declared
+and pre-loaded STS policies, as described in the "Client implementation considerations"
+section.
+
+### Policy expiry
+
+It is possible that a client successfully receives an STS policy from a server
+but later on attackers begin to block all secure connection attempts from the
+client to the server until the policy expires. At that time, the client might
+revert back to a non-secure connection. Servers should advertise a long enough
+duration which makes this scenario less likely to happen.
+
+Servers should choose an appropriate `duration` value with reference to the "Server implementation considerations" section to avoid inadvertent expiry issues.
+
+### Denial of Service
+
+STS could result in a Denial of Service (DoS) on IRC servers in a number of ways.
+Some non-exhaustive examples include:
+
+* An attacker could inject an STS policy into an insecure connection that causes clients
+to reconnect on a secure port under the attacker's control. If this secure connection
+succeeds, an unwanted policy could be set for the host and persist in clients even after
+an administrator has regained control of their server. This can be mitigated in clients
+by allowing for STS policy rejection as described in the "Client implementation
+considerations" section.
+
+* A 3rd party host with DNS pointing to an STS-enabled host, where the 3rd party
+isn't listed on the server's certificate. This configuration would fail certificate validation
+even without STS, but users might be relying on it for non-secure access.
+
+* An attacker could trick a user into declaring a manual STS policy in their client.
+
+* A server administrator might configure an STS policy for a server whose secure capabilities
+are later disabled. For example, their host certificate is allowed to expire without being
+renewed, or is deemed insecure by newly exposed weak cipher suites. Care must be taken when
+choosing policy expiry times, as discussed in "Server implementation considerations", in
+particular when hosts are included in client pre-load policy lists. The ability to set a
+`duration=0` value at any time to revoke an STS policy is also a useful protection against
+such errors.
+
+These issues are not vulnerabilities with STS itself, but rather are compounding issues for configuration errors, or issues involving vulnerable systems exploited by other means.
+
 ## Client implementation considerations
 
 This section is non-normative.
@@ -232,58 +284,6 @@ testing purposes which does not offer secure connections.
 
 In this case, to allow clients to connect to both IRC servers the non-secure IRC
 server can be offered at a different hostname, for example a subdomain.
-
-## General Security considerations
-
-This section is non-normative.
-
-### STS policy stripping
-
-It's possible for an attacker to remove the STS `port` value from an initial connection
-established via an insecure connection, before the policy has been cached by the client.
-This represents a bootstrap MITM (man-in-the-middle) vulnerability.
-
-Clients might choose to mitigate this risk by implementing features such as user-declared
-and pre-loaded STS policies, as described in the "Client implementation considerations"
-section.
-
-### Policy expiry
-
-It is possible that a client successfully receives an STS policy from a server
-but later on attackers begin to block all secure connection attempts from the
-client to the server until the policy expires. At that time, the client might
-revert back to a non-secure connection. Servers should advertise a long enough
-duration which makes this scenario less likely to happen.
-
-Servers should choose an appropriate `duration` value with reference to the "Server implementation considerations" section to avoid inadvertent expiry issues.
-
-### Denial of Service
-
-STS could result in a Denial of Service (DoS) on IRC servers in a number of ways.
-Some non-exhaustive examples include:
-
-* An attacker could inject an STS policy into an insecure connection that causes clients
-to reconnect on a secure port under the attacker's control. If this secure connection
-succeeds, an unwanted policy could be set for the host and persist in clients even after
-an administrator has regained control of their server. This can be mitigated in clients
-by allowing for STS policy rejection as described in the "Client implementation
-considerations" section.
-
-* A 3rd party host with DNS pointing to an STS-enabled host, where the 3rd party
-isn't listed on the server's certificate. This configuration would fail certificate validation
-even without STS, but users might be relying on it for non-secure access.
-
-* An attacker could trick a user into declaring a manual STS policy in their client.
-
-* A server administrator might configure an STS policy for a server whose secure capabilities
-are later disabled. For example, their host certificate is allowed to expire without being
-renewed, or is deemed insecure by newly exposed weak cipher suites. Care must be taken when
-choosing policy expiry times, as discussed in "Server implementation considerations", in
-particular when hosts are included in client pre-load policy lists. The ability to set a
-`duration=0` value at any time to revoke an STS policy is also a useful protection against
-such errors.
-
-These issues are not vulnerabilities with STS itself, but rather are compounding issues for configuration errors, or issues involving vulnerable systems exploited by other means.
 
 ## Relationship with other specifications
 
