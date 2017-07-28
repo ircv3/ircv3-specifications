@@ -105,7 +105,8 @@ Servers MAY apply moderation to this command using existing or newly specified m
 
 Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message tags capability.
 
-Servers SHOULD reject any `TAGMSG` command sent without tags. In this case, they MUST use the `ERR_NEEDMOREPARAMS` (`461`) error numeric.
+Servers MUST use the `ERR_NEEDMOREPARAMS` (`461`) error numeric to reject any `TAGMSG`
+command received without any client-only tags.
 
 See [`PRIVMSG` in RFC2812](https://tools.ietf.org/html/rfc2812#section-3.3.1) for more details on replies and examples.
 
@@ -138,13 +139,8 @@ Client-only tags should be treated as untrusted data. They can contain any value
 and are not validated by servers in any way. The server MAY unescape tag values
 after receiving data and escape those values before sending them out.
 
-Some specifications may involve servers accepting client-initiated tags without
-the client-only prefix, they SHOULD define a validation process to be performed
-by the server.
-
-Tags without the client-only prefix that are not specified to be relayed by the
-server or that fail validation MUST be removed by the server before being sent
-with any response to another client.
+Tags without the client-only prefix MUST be removed by the server before being relayed
+with any message to another client.
 
 ## Client implementation considerations
 
