@@ -135,9 +135,16 @@ Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client
 ## Security considerations
 
 Client-only tags should be treated as untrusted data. They can contain any value
-and are not validated by servers in any way.
+and are not validated by servers in any way. The server MAY unescape tag values
+after receiving data and escape those values before sending them out.
 
-Some specifications may involve servers accepting client-initiated tags without the client-only prefix. Such tag values SHOULD be validated by the server before being sent with any response to a client, unless they are specifically specified to be untrusted data.
+Some specifications may involve servers accepting client-initiated tags without
+the client-only prefix, they SHOULD define a validation process to be performed
+by the server.
+
+Tags without the client-only prefix that are not specified to be relayed by the
+server or that fail validation MUST be removed by the server before being sent
+with any response to another client.
 
 ## Client implementation considerations
 
