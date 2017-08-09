@@ -121,7 +121,7 @@ In the following description, **tag data** describes the bytes between the leadi
 
 Clients MUST NOT send messages with tag data exceeding 4094 bytes, this includes tags with or without the client-only prefix.
 
-Servers MUST NOT add tag data to messages that exceeds 510 bytes.
+Servers MUST NOT add tag data exceeding 510 bytes to messages.
 
     <server_max>    (512)  :: '@' <tag_data  510> ' '
     <client_max>   (4096)  :: '@' <tag_data 4094> ' '
