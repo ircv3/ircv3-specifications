@@ -45,7 +45,7 @@ full conversation.
 
 To prevent perceived input lag, clients may choose not to wait for an acknowledgment from the server before displaying sent messages to users. Clients may instead choose to display a temporary local message that is replaced once the `echo-message` acknowledgment is received. However, correlating these is not straightforward, as the server may modify them before acknowledgment. There are also additional complications for self-targeted private messages.
 
-A specification for [labeled replies](https://github.com/ircv3/ircv3-specifications/pull/162) is being drafted that addresses this limitation. Clients may choose to postpone adoption of `echo-message` until that draft is complete.
+The [`labeled-response`](./labeled-response.html) specification addresses this limitation.
 
 ## Examples
 
