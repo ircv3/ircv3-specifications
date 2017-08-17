@@ -105,9 +105,6 @@ Servers MAY apply moderation to this command using existing or newly specified m
 
 Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message tags capability.
 
-Servers MUST use the `ERR_NEEDMOREPARAMS` (`461`) error numeric to reject any `TAGMSG`
-command received without any client-only tags.
-
 See [`PRIVMSG` in RFC2812](https://tools.ietf.org/html/rfc2812#section-3.3.1) for more details on replies and examples.
 
 Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the message.
@@ -221,13 +218,6 @@ A `TAGMSG` sent to a channel with [`labeled-response`](../extensions/labeled-res
     C1-S: @label=123;+example-client-tag=example-value TAGMSG #channel
     S-C1: @label=123;msgid=abc;+example-client-tag=example-value :nick!user@example.com TAGMSG #channel
     S-C2: @msgid=abc;+example-client-tag=example-value :nick!user@example.com TAGMSG #channel
-
----
-
-A `TAGMSG` sent by a client without any tags and rejected by the server with an `ERR_NEEDMOREPARAMS` (`461`) error numeric.
-
-    C: TAGMSG #channel
-    S: :server.example.com 461 nick TAGMSG :Not enough parameters
 
 ---
 
