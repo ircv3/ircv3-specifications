@@ -8,13 +8,6 @@ copyrights:
     period: "2017"
     email: "evan@muffinmedic.net"
 ---
-## Notes for implementing work-in-progress version
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the unprefixed `CHATHISTORY` command. Instead, implementations SHOULD use the `CHATHISTORY` command to be interoperable with other software implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed command.
-
 ## Description
 This document describes the format of the `chathistory` extension. The `chathistory` extension uses the [chathistory][batch/chathistory] batch type, adding a client-side command for requesting `chathistory` content from the server.
 
