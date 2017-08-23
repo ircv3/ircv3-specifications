@@ -20,34 +20,46 @@ This document describes the format of the `chathistory` extension. The `chathist
 
 The `chathistory` extension adds an optional `draft/msgid` to the `chathistory` batch reply.
 
-Clients MUST support the [`batch`][batch] and [`server-time`][server-time] capabilities. Clients SHOULD support the [`draft/labeled-response`][draft/labeled-response] and [`draft/msgid`][draft/msgid] capabilities.
+Clients MUST support the [`batch`][batch] and [`server-time`][server-time] capabilities. Clients SHOULD support the [`draft/labeled-response`][draft/labeled-response] and [`draft/message-tags`][draft/message-tags] capabilities.
 
-When a client with the above mentioned capabilities requests `chathistory` content from the server (using the `CHATHISTORY` command outlined below), the server should return to the client a single batch containing a number of desired raw IRC lines equal to the `message_count` parameter specified, ending directly before the given timestamp for a negative `message_count`, after the number of messages specified for a positive `message_count`, or with the message directly proceeding the one with the specified `draft/msgid`. The raw IRC lines should be formatted and returned to the client as they were originally, with the addition of the above capability tags.
+When a client with the above mentioned capabilities requests `chathistory` content from the server (using the `draft/CHATHISTORY` command outlined below), the server SHOULD return to the client a single batch containing raw IRC lines starting with and exluduing the `start` parameter and up to and including the message at the `end` parameter. The raw IRC lines SHOULD be formatted and returned to the client as they were originally, with the addition of the above capability tags.
 
-The `server-time` should be the time at which the message was received from the IRC server and the `batch id` a unique ID for the entire batch. `draft/label` SHOULD be included and MUST be a unique ID used to identify the `chathistory` request and any replies. A `draft/msgid` to identify each individual message MUST be the `draft/msgid` included when each message was first received from the IRC server.
+The `server-time` SHOULD be the time at which the message was received from the IRC server and the `batch id` a unique ID for the entire batch. `draft/label` SHOULD be included and MUST be a unique ID used to identify the `chathistory` request and any replies. A `draft/msgid` to identify each individual message MUST be the `draft/msgid` included when each message was first received from the IRC server.
 
 ### `CHATHISTORY` Command
-Chathistory content can be requested by the client to the server by sending the `CHATHISTORY` command to the server. A `batch` must be returned by the server. If no content exists to return, an empty batch should be returned to avoid the client waiting for a reply. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick CHATHISTORY=max_message_count :are supported by this server`
+`CHATHISTORY` content can be requested by the client to the server by sending the `draft/CHATHISTORY` command to the server. A `batch` MUST be returned by the server. If no content exists to return, an empty batch SHOULD be returned to avoid the client waiting for a reply. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick draft/CHATHISTORY=max_message_count :are supported by this server`
 
-Both the `message_count` and `max_message_count` MUST be non-zero integers and `max_message_count` MUST be positive. The client should not request a `message_count` with an absolute value greater than the `max_message_count` parameter sent in the command. If the `message_count` absolute value exceeds the `max_message_count`, server should return a number of lines equal to the `max_message_count` and the appropriate warning as described below.
+Both the `message_count` and `max_message_count` MUST be integers. `message_count` MUST be a non-zero and `max_message_count` MUST be greater than or equal to zero. The client SHOULD not request a `message_count` with an absolute value greater than the `max_message_count` parameter sent in the command.
+
+Both the `start` and `end` parameters support `draft/msgid` and `timestamp`. The `end` parameter also accepts a `message_count`. If the number of lines between the `start` and `end` parameters exceeds the `max_message_count`, the server SHOULD return a number of lines equal to the `max_message_count` and the appropriate warning as described below. A `max_message_count` of 0 indicates that no maximum exists.
+
+A positive `message_count` or tag `draft/msgid` prepended with a `+` indicates the client is requesting content after the `start`. A negative  `message_count` or `draft/msgid` tag prepended with a `-` indicates the client is requested content before the specified `start`.
+
+The `target` parameter specifies a single channel or query from which history SHOULD be retrieved. Wildcards or multiple targets are not supported.
 
 #### Format
+`chathistory` uses the following generic format:
+
+    @draft/label=ID draft/CHATHISTORY <target> <start> <end>
+
 The `chathistory` content can requested using timestamps:
 
-    @draft/label=ID CHATHISTORY target timestamp=YYYY-MM-DDThh:mm:ss.sssZ message_count
+    @draft/label=ID draft/CHATHISTORY <target> timestamp=YYYY-MM-DDThh:mm:ss.sssZ message_count=<message_count>
 
 Alternatively, content can be requested using a `draft/msgid`:
 
-    @draft/label=ID CHATHISTORY target draft/msgid=ID message_count
+    @draft/label=ID draftCHATHISTORY <target> draft/msgid=<message_id> timestamp=<timestamp>
 
-If `message_count` is positive, content MUST be retrieved from after and not including the specified timestamp or `draft/msgid`. If the `message_count` is negative, content MUST be retrieved from before the specified timestamp or `draft/msgid`.
+Content can also be requested up to a specified timestamp or `draft/msgid` in place of the `message_count`. The start and end parameter types do not have to match:
+
+    @draft/label=ID draftCHATHISTORY <target> timestamp=<timestamp> +draft/msgid=<message_id>   
 
 #### Errors and Warnings
-If the server receives an improperly formatted `CHATHISTORY` command, the `CMD_INVALID` error code should be returned.
+If the server receives a`draft/CHATHISTORY` command with missing parameters, the `ERR_NEEDMOREPARAMS` error code SHOULD be returned.
 
-If the absolute value of `message_count` exceeds the `max_message_count`, warn code `MAX_MSG_COUNT_EXCEEDED` should be returned. The command should continue to be processed as described above.
+If the number of lines between the `start` and `end` parameters exceeds the `max_message_count`, warn code `MAX_MSG_COUNT_EXCEEDED` SHOULD be returned. The command SHOULD continue to be processed as described above.
 
-If no `chathistory` exists to return, the server should return the appropriate error code. `ACCESS_DENIED` should be sent if the user requests content they do not have permission to view.
+If the target has no `chathistory` content to return or the user does not have permission to view the requested content, `ERR_NOSUCHNICK` or `ERR_NOSUCHCHANNEL` SHOULD be returned accordingly.
 
 ### Examples
 The examples below are written with `draft/msgid` and `draft/label` tags included. These tags are recommended.
@@ -58,23 +70,27 @@ The examples below are written with `draft/msgid` and `draft/label` tags include
     @batch=ID;draft/msgid=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :message
 #### NOTICE
     @batch=ID;draft/msgid=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host NOTICE target :message
+#### ACTION
+    @batch=ID;draft/msgid=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :ACTION message
 #### End
     :irc.host BATCH -ID
 #### Error
-    @draft/label=ID :nick!ident@host CHATHISTORY ERR ERROR_CODE
+    @draft/label=ID :nick!ident@host draft/CHATHISTORY ERR ERROR_CODE
 #### Warning
-    @draft/label=ID :nick!ident@host CHATHISTORY WARN WARN_CODE
+    @draft/label=ID :nick!ident@host draft/CHATHISTORY WARN WARN_CODE
 
 ## Use Cases
 The batch type and supporting command are useful for allowing an "infinite scroll" type capability within the client. A client will, upon scrolling to the top of the active window or a manual trigger, may request `chathistory` from the server and, after receiving returned content, append it to the top of the window. Users can repeat this historic scrolling to retrieve prior history until limitations are met (see below).
 
 ## Limitations
-Logging of messages and other actions must be enabled server-side and can be stored in any format desired, given appropriate software exists to retrieve and format such stored contnet. Scrollback can only be retrieved as far back as logs exist for the requesting user in the specified channel or query.
+Logging of messages and other actions MUST be enabled server-side and can be stored in any format desired, given appropriate software exists to retrieve and format such stored contnet. Scrollback can only be retrieved as far back as logs exist for the requesting user in the specified channel or query.
 
-A method for securely identifying the requesting user must exist to ensure content is sent only to the appropriate users and clients. See below for more information.
+A method for securely identifying the requesting user MUST exist to ensure content is sent only to the appropriate users and clients. See below for more information.
 
 ## Security Considerations
-Secure identification of users and clients must exist in order to ensure that users cannot obtain history that does not belong to them. Use of account names, internal account identifiers, or certificate fingerprints should be strongly considered when matching content to users. The server must verify the current user's identity matches that of the desired content. This information is not sent as part of the `CHATHISTORY` command and must be validated via other means, such as those stated above. Access must be checked first and return an `ACCESS_DENIED` error as appropriate. If no `ACCESS_DENIED` error exists, the server can check for returnable content.
+Secure identification of users and clients MUST exist in order to ensure that users cannot obtain history they are not authorized to view. Use of account names, internal account identifiers, or certificate fingerprints SHOULD be strongly considered when matching content to users. The server MUST verify the current user's identity matches that of the desired content. This information is not sent as part of the `draft/CHATHISTORY` command and MUST be validated via other means, such as those stated above. Access MUST be checked first and return an `ERR_NOSUCHNICK` or `ERR_NOSUCHCHANNEL` error as appropriate. If no authorization error exists, the server can check for returnable content. If no returntable content is found, the server MUST send an `ERR_NOTEXTTOSEND` error. The server MUST NOT expose the existence of valid targets to unauthorized users.
+
+While a `max_message_count` of 0 MAY be used to indicate no limit exists, servers SHOULD set and enforce a reasonable `max_message_count` and properly throttle `draft/CHATHISTORY` commands to prevent abuse.
 
 ## Current Implementations
 A ZNC-module implementation exists as [znc-chathistory](https://github.com/MuffinMedic/znc-chathistory). Client-side support for the ZNC module is in progress. Interest in supporting the batch type and command without ZNC has also been obtained, although specifics are not available at this time.
@@ -84,5 +100,5 @@ Note: This module may be out of date while the specification is reviewed and mod
 [batch]: http://ircv3.net/specs/extensions/batch-3.2.html
 [batch/chathistory]: http://ircv3.net/specs/extensions/batch/chathistory-3.3.html
 [server-time]: http://ircv3.net/specs/extensions/server-time-3.2.html
-[draft/msgid]: https://github.com/ircv3/ircv3-specifications/pull/285
-[draft/labeled-response]: https://github.com/ircv3/ircv3-specifications/pull/162
+[draft/message-tags]: http://ircv3.net/specs/extensions/message-ids.html
+[draft/labeled-response]: http://ircv3.net/specs/extensions/labeled-response.html
