@@ -21,16 +21,20 @@ This is a work-in-progress specification.
 
 Software implementing this work-in-progress specification MUST NOT use the
 unprefixed `message-tags` capability name. Instead, implementations SHOULD use
-the `draft/message-tags-0.2` capability name to be interoperable with other software
+the `draft/message-tags-0.3` capability name to be interoperable with other software
 implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed capability name.
 
 ## Introduction
 
-This specification adds a new capability for general message tags support and
-a prefix for expressing client-only tags. It also defines a new command for
-tag-only messages, and increases the byte limit for tags.
+This specification extends the [IRCv3.2 Message Tags](./message-tags-3.2.html) specification in a number of ways:
+
+* Adds a new capability to indicate base support for message tags
+* Defines a prefix for expressing client-only tags
+* Defines a new command for tag-only messages
+* Defines a new encoding for sending message tags as JSON
+* Increases the size limit for tags
 
 ## Motivation
 
@@ -38,7 +42,7 @@ Previously, clients were required to negotiate a capability with servers for eac
 supported tag. This made tags inappropriate for client-only features. By adding a
 new base capability, this specification allows clients to indicate support for
 receiving any well-formed tag, whether or not it is recognised or used. This also
-frees servers from having to filter message tags for each individual client
+frees servers from having to filter individual message tags for each client
 response.
 
 The client-only tag prefix allows servers to safely relay untrusted client tags,
@@ -46,6 +50,8 @@ keeping them distinct from server-initiated tags that carry verified meaning.
 
 To allow for tagged data to be sent to channels and users without any accompanying
 message text, a new command for tag-only messages is needed.
+
+To allow for tag values containing complex typed data such as lists and associative arrays, new encoding rules are required. JSON was chosen as an existing, widely-adopted format with established encoding rules.
 
 With the scope of tags expanded for use as general purpose message metadata, the
 number and size of tags attached to a message will potentially increase. As a
@@ -55,7 +61,7 @@ result, an increased limit is implied by negotiating the new capability.
 
 ### Capabilities
 
-This specification adds the `draft/message-tags-0.2` capability. Clients requesting
+This specification adds the `draft/message-tags-0.3` capability. Clients requesting
 this capability indicate that they are capable of parsing all well-formed tags,
 even if they don't handle them specifically.
 
@@ -111,6 +117,22 @@ See [`PRIVMSG` in RFC2812](https://tools.ietf.org/html/rfc2812#section-3.3.1) fo
 
 Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the message.
 
+### JSON encoding format
+
+To send tags as JSON, clients and servers MUST encode tag data as an *object* whos top-level keys are the tag keys, encoded as *strings*
+
+Tag keys without a value MUST be represented in JSON as keys with a `null` value.
+
+Tag values MUST be encoded as JSON *string* types, except where defined in specific tag specifications.
+
+All extraneous whitespace MUST be removed from encoded JSON, and the entire encoded JSON data MUST be escaped according to existing tag value escaping rules.
+
+Fully encoded and escaped JSON tag data is transmitted instead of `<tags>` in the originally defined pseudo-BNF.
+
+To detect JSON-encoded tag data, clients and servers MUST check for `'{'` (0x7B) as the first character of tag data, after the leading `'@'` (0x40) character. The JSON data ends on the first space `' '` (0x20) character.
+
+If JSON tag data fails to decode correctly, clients MUST abort message parsing and discard the entire message, as this may be a symptom of incorrectly applied escaping rules, making the remainder of the message vulnerable to command injection. Servers MUST ignore incorrectly encoded JSON data entirely and MAY terminate the client connection as a result.
+
 ### Size limit
 
 The size limit for message tags is increased from 512 to 4607 bytes, including the leading `'@'` (0x40) and trailing space `' '` (0x20) characters. The size limit for the rest of the message is unchanged.
@@ -127,7 +149,7 @@ Servers MUST NOT add tag data exceeding 510 bytes to messages.
     <client_max>   (4096)  :: '@' <tag_data 4094> ' '
     <combined_max> (4607)  :: '@' <tag_data  510> ';' <tag_data 4094> ' '
 
-Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tag data than the allowed limit. Servers MUST NOT truncate tags to allow lines that exceed this limit.
+Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tag data than the allowed limit. Servers MUST NOT truncate tags but MUST always reject lines that exceed this limit.
 
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
@@ -176,6 +198,19 @@ A message sent by a client with the `example-tag` tag:
 A message sent by a client with the `+example-client-tag` client-only tag:
 
     C: @+example-client-tag=example-value PRIVMSG #channel :Message
+
+---
+
+A message with the same tags sent with both the normal and JSON encodings for comparison:
+
+    @tag=value;+client-tag=value\swith\sspaces PRIVMSG #channel :Message
+    @{"tag":"value","+client-tag":"value\swith\spaces"} PRIVMSG #channel :Message
+
+---
+
+A message with complex typed data that can ONLY be sent with the JSON encoding:
+
+    @{"+complex-tag":[{"key1":[1,2,3]},{"key\s2":["a","b","c"]}]} PRIVMSG #channel :Message
 
 ---
 
