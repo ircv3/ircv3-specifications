@@ -8,6 +8,17 @@ copyrights:
     period: "2017"
     email: "evan@muffinmedic.net"
 ---
+## Notes for implementing work-in-progress version
+
+This is a work-in-progress specification.
+
+Software implementing this work-in-progress specification MUST NOT use the
+unprefixed `+typing` tag name. Instead, implementations SHOULD use the
+`+draft/typing` tag name to be interoperable with other software
+implementing a compatible work-in-progress version.
+
+The final version of the specification will use an unprefixed tag name.
+
 ## Description
 This specification defines the `typing` client tag, which allows clients to send and receive the current status of when a user is typing a new message prior to sending.
 
@@ -23,7 +34,7 @@ After receiving a `typing` tag, the client SHOULD assume the state is unchanged 
 ## Examples
 C1 begins typing
 
-    [C1] @typing :nick!ident@host TAGMSG target
+    [C1] @draft/typing :nick!ident@host TAGMSG target
 
 ## Use Cases
 This specification is intended for use on servers and/or channels where knowing if another user is typing a message would be useful. Current implementations on similar platforms have proven useful, especially in collaborative team environments.
