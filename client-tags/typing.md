@@ -28,7 +28,7 @@ The typing-active notification SHOULD be sent by clients whenever any update is 
 
 Input event handlers SHOULD be throttled so that typing notifications are not sent within 3 seconds of each other for a given target.
 
-After receiving a typing notification, clients SHOULD assume the sender is still typing until either a message is received, the sender leaves the channel or quits the server, a done-notification is received, at least 30 seconds have elapsed since their last typing-paused notification was received, or at least 6 seconds have passed since the last typing-active notification was received and no typing-paused notification was received for the given target.
+After receiving a typing notification, clients SHOULD assume the sender is still typing until either a message is received, the sender leaves the channel or quits the server, or a done-notification is received. If at least 30 seconds have elapsed since the last typing-paused notification was received or at least 6 seconds have passed since the last typing-active notification was received and no typing-paused notification was received, clients SHOULD assume the user is no longer typing.
 
 ## Examples
 C1 begins typing
