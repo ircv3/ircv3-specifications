@@ -12,10 +12,7 @@ copyrights:
 
 This is a work-in-progress specification.
 
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `+typing` tag name. Instead, implementations SHOULD use the
-`+draft/typing` tag name to be interoperable with other software
-implementing a compatible work-in-progress version.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `+typing` tag name. Instead, implementations SHOULD use the `+draft/typing` tag name to be interoperable with other software implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed tag name.
 
@@ -25,16 +22,26 @@ This specification defines the `typing` client tag, which allows clients to send
 For the purpose of this specification, a message is defined as a user-generated `PRIVMSG`, `NOTICE`, `TAGMSG`, or [`batch`][batch] end.
 
 ## Format
-A typing notification is represented by a [`TAGMSG`][tags] command sent with a `typing` tag using the client-only prefix `+` and no value.
+A typing notification is represented by a [`TAGMSG`][tags] command sent with a `typing` tag using the client-only prefix `+` and possible values of `active`, `paused`, and `done`.
 
-The typing notification SHOULD be sent by clients whenever any update is made to the text-input field and the text is not a "/slash command". Input event handlers SHOULD be throttled so that typing notifications are not sent within 3 seconds of each other for a given target.
+The typing-active notification SHOULD be sent by clients whenever any update is made to the text-input field and the text is not a "/slash command". If the user begins typing in the text-input field and pauses typing without clearing the text-input field, the client SHOULD send a typing-paused notification until typing is resumed or the text-input field is cleared. If the user clears the text-input field without sending a message, the client SHOULD send a typing-done notification.
 
-After receiving a typing notification, clients SHOULD assume the sender is still typing until either a message is received, the sender leaves the channel or quits the server, or at least 6 seconds have elapsed since their last typing notification was received for the given target.
+Input event handlers SHOULD be throttled so that typing notifications are not sent within 3 seconds of each other for a given target.
+
+After receiving a typing notification, clients SHOULD assume the sender is still typing until either a message is received, the sender leaves the channel or quits the server, a done-notification is received, at least 30 seconds have elapsed since their last typing-paused notification was received, or at least 6 seconds have passed since the last typing-active notification was received and no typing-paused notification was received for the given target.
 
 ## Examples
 C1 begins typing
 
-    [C1] @+draft/typing :nick!ident@host TAGMSG target
+    [C1] @+draft/typing=active :nick!ident@host TAGMSG target
+
+C1 begins typing and then stops entering new text without clearing the text-input field
+
+    [C1] @+draft/typing=paused :nick!ident@host TAGMSG target
+
+C1 begins typing then clears the text-input field without sending the message
+
+    [C1] @+draft/typing=done :nick!ident@host TAGMSG target
 
 ## Use Cases
 This specification is intended for use on servers and/or channels where knowing if another user is typing a message would be useful. Current implementations on similar platforms have proven useful, especially in collaborative team environments.
