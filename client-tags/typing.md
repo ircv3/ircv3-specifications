@@ -27,14 +27,14 @@ For the purpose of this specification, a message is defined as a user-generated 
 ## Format
 The `typing` tag is sent as a [`TAGMSG`][tags]. The client tag takes no parameters.
 
-The `typing` client tag SHOULD be sent by the client when the first character is typed in the text-input field. If new text is entered into the text-input field following sending of the text-input field content, the client MUST send a new `typing` tag after sending the preceding content.
+The `typing` client tag SHOULD be sent by the client when the first character is typed in the text-input field and after every 3 seconds of a non-empty text-input field to avoid a state change. If new text is entered into the text-input field following sending of the text-input field content, the client MUST send a new `typing` tag after sending the preceding content.
 
-After receiving a `typing` tag, the client SHOULD assume the state is unchanged until either a message end is received, or a period of 10 seconds has elapsed from when the last `typing` client tag was received and none of the previously defined message types were received in the appropriate target.
+After receiving a `typing` tag, the client SHOULD assume the state is unchanged until either a message end is received, or a period of 3 seconds has elapsed from when the last `typing` client tag was received and none of the previously defined message types were received in the appropriate target.
 
 ## Examples
 C1 begins typing
 
-    [C1] @draft/typing :nick!ident@host TAGMSG target
+    [C1] @+draft/typing :nick!ident@host TAGMSG target
 
 ## Use Cases
 This specification is intended for use on servers and/or channels where knowing if another user is typing a message would be useful. Current implementations on similar platforms have proven useful, especially in collaborative team environments.

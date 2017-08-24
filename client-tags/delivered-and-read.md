@@ -39,22 +39,22 @@ Although several [`concat`][concat] ideas have been proposed, no such spec curre
 C1 sends a single, non-batch message to C2
     
     [C1] @draft/msgid=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :message
-    [C2] @draft/delivered=ID :nick!ident@host TAGMSG target
-    [C2] @draft/read=ID :nick!ident@host TAGMSG target
+    [C2] @+draft/delivered=ID :nick!ident@host TAGMSG target
+    [C2] @+draft/read=ID :nick!ident@host TAGMSG target
 
 C1 sends a `batch` to C2 (initially out of focus, brought into focus after batch is complete)
 
     [C1] :irc.host BATCH +ID target
     [C1] @batch=ID;draft/msgid=ID1;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :message
-    [C2] @draft/delivered=ID1 :nick!ident@host TAGMSG target
+    [C2] @+draft/delivered=ID1 :nick!ident@host TAGMSG target
     [C1] @batch=ID;draft/msgid=ID2;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :message
-    [C2] @draft/delivered=ID2 :nick!ident@host TAGMSG target
+    [C2] @+draft/delivered=ID2 :nick!ident@host TAGMSG target
     [C1] @batch=ID;draft/msgid=ID3;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :message
-    [C2] @draft/delivered=ID3 :nick!ident@host TAGMSG target
+    [C2] @+draft/delivered=ID3 :nick!ident@host TAGMSG target
     [C1] :irc.host BATCH -ID
-    [C2] @draft/read=ID1 :nick!ident@host TAGMSG target
-    [C2] @draft/read=ID2 :nick!ident@host TAGMSG target
-    [C2] @draft/read=ID3 :nick!ident@host TAGMSG target
+    [C2] @+draft/read=ID1 :nick!ident@host TAGMSG target
+    [C2] @+draft/read=ID2 :nick!ident@host TAGMSG target
+    [C2] @+draft/read=ID3 :nick!ident@host TAGMSG target
 
 ## Use Cases
 This specification is intended for use on servers and/or channels where tracking message status would be beneficial. Current implementations on similar platforms has proven useful, especially in collaborative team environments. The ability to send delivery receipts can also prove useful when connections are unstable and some messages may be dropped prior to reaching their intended target.
