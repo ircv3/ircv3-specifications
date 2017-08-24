@@ -16,7 +16,7 @@ For the purpose of this specification, the terms "delivery receipt" and "read re
 For the purpose of this specification, a message is defined as a user-generated `PRIVMSG`, `NOTICE`, `TAGMSG`, or [`batch`][batch] end.
 
 ## Format
-`delivered` and `read` are sent as a [`TAGMSG`][tags] and must include the [`draft/msgid`][labels] of the original message as the client tag parameter.
+`delivered` and `read` are sent as a [`TAGMSG`][tags] and must include the [`draft/msgid`][id] of the original message as the client tag parameter.
 
 Both client tags follow the same format. Clients MUST send a `delivered` tag immediately upon receipt of the message, including the [`draft/msgid`][id] as the client tag parameter. Clients MUST send a `read` tag when the message is first brought into view (e.g. the correct target with the corresponding message is in focus). If the message is delivered and read at the same time, clients MAY send both tags in the same `TAGMSG` or send `delivered` followed by `read` as separate `TAGMSG`s. Clients SHOULD NOT elect to send only a `read` tag and MUST NOT send `read` before `delivered`.
 
@@ -51,10 +51,10 @@ This specification is intended for use on servers and/or channels where tracking
 ## Limitations
 Clients must support the [`message-tags`][tags] capability. Specific [Privacy Considerations](#privacy-considerations) are addressed below.
 
-This specification is primarily intended for instances where all users are familiar with each other. In large channels of unknown users, the additional client tags add extra data that must be transmitted over the network with little potentential benefit to the users.
+This specification is primarily intended for instances where all users are familiar with each other. In large channels of unknown users, the additional client tags add extra data that must be transmitted over the network with little potentential benefit to the users. This specification may also be beneficial in private messages regardless of network size.
 
 ## Privacy Considerations
-Read receipts introduce additional privacy concerns for users who may not wish to inform others of when they have read their messages. Servers SHOULD implement mechanisms at all levels to allow full control over the ability to send and receive `read` client tags in accordance with the [message-tags moderation considerations][tags].
+Read receipts introduce additional privacy concerns for users who may not wish to inform others of when they have read their messages. Clients are encouraged to provide appropriate privacy controls when enabling this feature. Standard implementation guidelines on [message tag moderation considerations][tags] also apply to servers.
 
 [batch]: http://ircv3.net/specs/extensions/batch-3.2.html
 [concat]: https://github.com/ircv3/ircv3-specifications/issues/208#issuecomment-285516349

@@ -26,15 +26,15 @@ C1 begins typing
     [C1] @typing :nick!ident@host TAGMSG target
 
 ## Use Cases
-This specification is intended for use on servers and/or channels where knowing if another user is typing a message would be useful. Current implementations on similar platforms has proven useful, especially in collaborative team environments.
+This specification is intended for use on servers and/or channels where knowing if another user is typing a message would be useful. Current implementations on similar platforms have proven useful, especially in collaborative team environments.
 
 ## Limitations
 Clients must support the [`message-tags`][tags] capability. Specific [Privacy Considerations](#privacy-considerations) are addressed below.
 
-This specification is primarily intended for instances where all users are familiar with each other. In large channels of unknown users, the additional client tags add extra data that must be transmitted over the network with little potentential benefit to the users.
+This specification is primarily intended for instances where all users are familiar with each other. In large channels of unknown users, the additional client tags add extra data that must be transmitted over the network with little potentential benefit to the users. This specification may also be beneficial in private messages regardless of network size.
 
 ## Privacy Considerations
-Typing status indicators introduce additional privacy concerns for users who may not wish to inform others of when they are creating or replying to a message. Servers SHOULD implement mechanisms at all levels to allow full control over the ability to send and receive `typing` client tags in accordance with the [message-tags moderation considerations][tags].
+Typing status indicators introduce additional privacy concerns for users who may not wish to inform others of when they are creating or replying to a message. Clients are encouraged to provide appropriate privacy controls when enabling this feature. Standard implementation guidelines on [message tag moderation considerations][tags] also apply to servers.
 
 [batch]: http://ircv3.net/specs/extensions/batch-3.2.html
 [tags]: http://ircv3.net/specs/core/message-tags-3.3.html
