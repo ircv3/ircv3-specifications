@@ -25,11 +25,11 @@ This specification defines the `typing` client tag, which allows clients to send
 For the purpose of this specification, a message is defined as a user-generated `PRIVMSG`, `NOTICE`, `TAGMSG`, or [`batch`][batch] end.
 
 ## Format
-The `typing` tag is sent as a [`TAGMSG`][tags]. The client tag takes no parameters.
+A typing notification is represented by a [`TAGMSG`][tags] command sent with a `typing` tag using the client-only prefix `+` and no value.
 
-The `typing` client tag SHOULD be sent by the client when the first character is typed in the text-input field and after every 3 seconds of a non-empty text-input field to avoid a state change. If new text is entered into the text-input field following sending of the text-input field content, the client MUST send a new `typing` tag after sending the preceding content.
+The typing notification SHOULD be sent by clients whenever any update is made to the text-input field and the text is not a "/slash command". Input event handlers SHOULD be throttled so that typing notifications are not sent within 3 seconds of each other for a given target.
 
-After receiving a `typing` tag, the client SHOULD assume the state is unchanged until either a message end is received, or a period of 3 seconds has elapsed from when the last `typing` client tag was received and none of the previously defined message types were received in the appropriate target.
+After receiving a typing notification, clients SHOULD assume the sender is still typing until either a message is received, the sender leaves the channel or quits the server, or at least 6 seconds have elapsed since their last typing notification was received for the given target.
 
 ## Examples
 C1 begins typing
