@@ -41,35 +41,34 @@ The `chathistory` content can requested using timestamps:
 
 Alternatively, content can be requested using a `draft/msgid`:
 
-    @draft/label=ID draftCHATHISTORY <target> draft/msgid=<message_id> timestamp=<timestamp>
+    @draft/label=ID CHATHISTORY <target> draft/msgid=<message_id> timestamp=<timestamp>
 
 Content can also be requested up to a specified timestamp or `draft/msgid` in place of the `message_count`. The start and end parameter types do not have to match:
 
-    @draft/label=ID draftCHATHISTORY <target> timestamp=<timestamp> +draft/msgid=<message_id>   
+    @draft/label=ID CHATHISTORY <target> timestamp=<timestamp> +draft/msgid=<message_id>   
 
 #### Errors and Warnings
-If the server receives a`CHATHISTORY` command with missing parameters, the `ERR_NEEDMOREPARAMS` error code SHOULD be returned.
+If the server receives a `CHATHISTORY` command with missing parameters, the `NEED_MORE_PARAMS` error code SHOULD be returned.
 
 If the number of lines between the `start` and `end` parameters exceeds the `max_message_count`, warn code `MAX_MSG_COUNT_EXCEEDED` SHOULD be returned. The command SHOULD continue to be processed as described above.
 
-If the target has no `chathistory` content to return or the user does not have permission to view the requested content, `ERR_NOSUCHNICK` or `ERR_NOSUCHCHANNEL` SHOULD be returned accordingly.
+If the target has no `chathistory` content to return or the user does not have permission to view the requested content, `ENO_SUCH_NICK` or `NO_SUCH_CHANNEL` SHOULD be returned accordingly.
 
 ### Examples
 The examples below are written with `draft/msgid` and `draft/label` tags included. These tags are recommended.
 
-#### Begin
     @draft/label=ID :irc.host BATCH +ID chathistory target
-#### PRIVMSG
+
     @batch=ID;draft/msgid=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :message
-#### NOTICE
+
     @batch=ID;draft/msgid=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host NOTICE target :message
-#### ACTION
+
     @batch=ID;draft/msgid=ID;time=YYYY-MM-DDThh:mm:ss.sssZ :nick!ident@host PRIVMSG target :ACTION message
-#### End
+
     :irc.host BATCH -ID
-#### Error
-    @draft/label=ID :nick!ident@host CHATHISTORY ERR ERROR_CODE
-#### Warning
+
+    z
+
     @draft/label=ID :nick!ident@host CHATHISTORY WARN WARN_CODE
 
 ## Use Cases
@@ -81,7 +80,7 @@ Logging of messages and other actions MUST be enabled server-side and can be sto
 A method for securely identifying the requesting user MUST exist to ensure content is sent only to the appropriate users and clients. See below for more information.
 
 ## Security Considerations
-Secure identification of users and clients MUST exist in order to ensure that users cannot obtain history they are not authorized to view. Use of account names, internal account identifiers, or certificate fingerprints SHOULD be strongly considered when matching content to users. The server MUST verify the current user's identity matches that of the desired content. This information is not sent as part of the `CHATHISTORY` command and MUST be validated via other means, such as those stated above. Access MUST be checked first and return an `ERR_NOSUCHNICK` or `ERR_NOSUCHCHANNEL` error as appropriate. If no authorization error exists, the server can check for returnable content. If no returntable content is found, the server MUST send an `ERR_NOTEXTTOSEND` error. The server MUST NOT expose the existence of valid targets to unauthorized users.
+Secure identification of users and clients MUST exist in order to ensure that users cannot obtain history they are not authorized to view. Use of account names, internal account identifiers, or certificate fingerprints SHOULD be strongly considered when matching content to users. The server MUST verify the current user's identity matches that of the desired content. This information is not sent as part of the `CHATHISTORY` command and MUST be validated via other means, such as those stated above. Access MUST be checked first and return an `NO_SUCH_NICK` or `NO_SUCH_CHANNEL` error as appropriate. If no authorization error exists, the server can check for returnable content. If no returntable content is found, the server MUST send an `NO_TEXT_TO_SEND` error. The server MUST NOT expose the existence of valid targets to unauthorized users.
 
 While a `max_message_count` of 0 MAY be used to indicate no limit exists, servers SHOULD set and enforce a reasonable `max_message_count` and properly throttle `CHATHISTORY` commands to prevent abuse.
 
