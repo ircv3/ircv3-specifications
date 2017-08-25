@@ -52,7 +52,7 @@ If the server receives a `CHATHISTORY` command with missing parameters, the `NEE
 
 If the number of lines between the `start` and `end` parameters exceeds the `max_message_count`, warn code `MAX_MSG_COUNT_EXCEEDED` SHOULD be returned. The command SHOULD continue to be processed as described above.
 
-If the target has no `chathistory` content to return or the user does not have permission to view the requested content, `ENO_SUCH_NICK` or `NO_SUCH_CHANNEL` SHOULD be returned accordingly.
+If the target has no `chathistory` content to return or the user does not have permission to view the requested content, `NO_SUCH_NICK` or `NO_SUCH_CHANNEL` SHOULD be returned accordingly.
 
 ### Examples
 The examples below are written with `draft/msgid` and `draft/label` tags included. These tags are recommended.
@@ -67,7 +67,7 @@ The examples below are written with `draft/msgid` and `draft/label` tags include
 
     :irc.host BATCH -ID
 
-    z
+    @draft/label=ID :nick!ident@host CHATHISTORY ERR ERR_CODE
 
     @draft/label=ID :nick!ident@host CHATHISTORY WARN WARN_CODE
 
