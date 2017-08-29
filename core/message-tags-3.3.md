@@ -204,7 +204,7 @@ A message sent by a client with the `+example-client-tag` client-only tag:
 A message with the same tags sent with both the normal and JSON encodings for comparison:
 
     @tag=value;+client-tag=value\swith\sspaces PRIVMSG #channel :Message
-    @{"tag":"value","+client-tag":"value\swith\spaces"} PRIVMSG #channel :Message
+    @{"tag":"value","+client-tag":"value\swith\sspaces"} PRIVMSG #channel :Message
 
 ---
 
