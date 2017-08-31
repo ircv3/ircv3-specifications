@@ -49,7 +49,6 @@ An STS policy has several parts:
 * A **persistence policy**, expressed via the [`duration` key](#the-duration-key) over a secure connection. *REQUIRED*
 * A **preload policy**, expressed via the [`preload` key](#the-preload-key) over a secure connection. *OPTIONAL*
 
-
 See [capability negotiation 3.2](../core/capability-negotiation-3.2.html) for more information about capabilities with values.
 
 ### Mechanism
@@ -61,6 +60,8 @@ Once a client has connected securely, and it has verified that an STS persistenc
 If the secure connection succeeds but an STS persistence policy is not present, the client SHOULD continue using the secure connection for that session. This allows servers to upgrade client connections without committing to a more permanent STS policy.
 
 Clients MUST NOT request this capability with `CAP REQ`. Servers MAY reply with a `CAP NAK` message if a client requests this capability.
+
+Servers MAY communicate changes to their STS persistence policy using the `CAP NEW` command provided by `cap-notify` or [capability negotiation 3.2](../core/capability-negotiation-3.2.html). Clients MUST store or update an STS policy for the hostname of a securely connected server if they receive a new STS capability notification.
 
 Servers MUST NOT send `CAP DEL` to disable this capability, and clients MUST ignore any attempts to do so. The mechanism for disabling an STS persistence policy is described in the `duration` key section.
 
@@ -287,6 +288,22 @@ After 48 hours, the client disconnects.
     Secure Client: QUIT :Bye
 
 The policy is still valid, so the client reschedules expiry for 2592000 seconds from the time of disconnection.
+
+### Updating an STS policy with CAP NEW
+
+A server updates an sts policy by sending a CAP NEW notification.
+
+    Server: CAP * NEW :draft/sts=duration=31536000
+
+If the client has an STS policy stored for the host it updates the policy to expire after 31536000 seconds. Otherwise a new policy is saved for the server.
+
+### Removing an STS policy with CAP NEW
+
+A server removes an sts policy by sending a CAP NEW notification.
+
+    Server: CAP * NEW :draft/sts=duration=0
+
+If the client has an STS policy stored for the host it clears the policy. Future attempts to connect insecurely will be allowed.
 
 ### Receiving CAP DEL
 
