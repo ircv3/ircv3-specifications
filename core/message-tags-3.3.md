@@ -105,8 +105,6 @@ Servers MAY apply moderation to this command using existing or newly specified m
 
 Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message tags capability.
 
-Servers SHOULD reject any `TAGMSG` command sent without tags. In this case, they MUST use the `ERR_NEEDMOREPARAMS` (`461`) error numeric.
-
 See [`PRIVMSG` in RFC2812](https://tools.ietf.org/html/rfc2812#section-3.3.1) for more details on replies and examples.
 
 Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the message.
@@ -138,13 +136,12 @@ Client-only tags should be treated as untrusted data. They can contain any value
 and are not validated by servers in any way. The server MAY unescape tag values
 after receiving data and escape those values before sending them out.
 
-Some specifications may involve servers accepting client-initiated tags without
-the client-only prefix, they SHOULD define a validation process to be performed
-by the server.
+Tags without the client-only prefix MUST be removed by the server before being relayed
+with any message to another client.
 
-Tags without the client-only prefix that are not specified to be relayed by the
-server or that fail validation MUST be removed by the server before being sent
-with any response to another client.
+Some specifications may involve servers accepting client-initiated tags without
+the client-only prefix, they MUST define a process to be performed by the server
+on these tags prior to their removal.
 
 ## Client implementation considerations
 
@@ -228,14 +225,15 @@ A `TAGMSG` sent to a channel with [`labeled-response`](../extensions/labeled-res
 
 ---
 
-A `TAGMSG` sent by a client without any tags and rejected by the server with an `ERR_NEEDMOREPARAMS` (`461`) error numeric.
-
-    C: TAGMSG #channel
-    S: :server.example.com 461 nick TAGMSG :Not enough parameters
-
----
-
 A `TAGMSG` sent by a client with tags that exceed the size limit and rejected by the server with an `ERR_INPUTTOOLONG` (`417`) error numeric. `[...]` is used to represent tags omitted for readability.
 
     C: @+tag1;+tag2;+tag[...];+tag5000 TAGMSG #channel
     S: :server.example.com 417 nick :Input line was too long
+
+---
+
+A `TAGMSG` sent by a client with an un-prefixed tag that has no specified behaviour. The server removes the tag before relaying the message
+
+    C: @unknown-tag TAGMSG #channel
+    S: :nick!user@example.com TAGMSG #channel
+
