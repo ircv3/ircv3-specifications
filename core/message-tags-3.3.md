@@ -229,3 +229,11 @@ A `TAGMSG` sent by a client with tags that exceed the size limit and rejected by
 
     C: @+tag1;+tag2;+tag[...];+tag5000 TAGMSG #channel
     S: :server.example.com 417 nick :Input line was too long
+
+---
+
+A `TAGMSG` sent by a client with an un-prefixed tag that has no specified behaviour. The server removes the tag before relaying the message
+
+    C: @unknown-tag TAGMSG #channel
+    S: :nick!user@example.com TAGMSG #channel
+
