@@ -97,15 +97,17 @@ Servers SHOULD consider the duration of their persistence policies when enabling
 
 ### Server Name Indication
 
-Before advertising an STS policy, servers SHOULD verify whether the hostname provided by clients, for example, via TLS Server Name Indication (SNI), has been whitelisted by administrators in the server configuration.
+Before advertising an STS persistence policy over a secure connection, servers SHOULD verify whether the hostname provided by clients, for example, via TLS Server Name Indication (SNI), has been whitelisted by administrators in the server configuration.
 
-If no hostname has been provided for the connection, an STS policy SHOULD NOT be advertised.
+If no hostname has been provided for the connection, an STS persistence policy SHOULD NOT be advertised.
 
 This allows server administrators to retain control over which hostnames are STS-enabled in case the server is accessible on multiple hostnames. It is possible that a server uses a wildcard certificate or a certificate with Subject Alternative Names but its administrators only wish to advertise STS on a subset of its hostnames.
 
 Take for example a server presenting a wildcard certificate for `*.example.net`. The hostnames `irc.example.net`, `example.net`, `www.example.net` and `test.example.net` all point to the same IP address. The server administrators may only wish to have STS enabled for `irc.example.net`, but no other hostname.
 
 IRCd software SHOULD allow for each part of the STS policy to be configured per hostname. This allows server administrators to, for example, enable STS persistence on all hostnames, but only enable a preload policy for a subset of them.
+
+SNI hostname verification is not available on insecure connections, so it might not be possible to configure a variable upgrade policy for multiple hostnames that share an IP address.
 
 ### Rescheduling expiry on disconnect
 
