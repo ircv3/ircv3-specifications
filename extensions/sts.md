@@ -165,11 +165,9 @@ Clients might consider allowing users to explicitly define an STS policy for a g
 
 ### STS policy deletion or rejection
 
-Clients should consider allowing users or administrators to delete cached STS policies on a per-host basis, in case a server's policy is accidentally or maliciously injected on a secure connection.
+Clients might consider allowing users or administrators to reject or delete cached STS policies on a per-host basis, in case a server's policy is accidentally or maliciously injected on a secure connection.
 
-Clients might additionally provide the ability to reject STS policies on a per-host basis as an additional mitigation.
-
-These features should be made available very carefully in both user interface and security senses. Deleting or rejecting a cache entry for a known STS host should be a very deliberate and well-considered act -- it shouldn't be something that users get used to doing as a matter of course: e.g., just "clicking through" in order to get work done. In other words, these features should not violate the [no immediate user recourse](#no-immediate-user-recourse) section.
+Such a feature should be made available very carefully from both user interface and security standpoints. Deleting or rejecting a cache entry for a known STS host should be a very deliberate and well-considered act -- it shouldn't be something that users get used to doing as a matter of course: e.g., just "clicking through" in order to get work done. In other words, these features should not violate the [no immediate user recourse](#no-immediate-user-recourse) section.
 
 ## Server implementation considerations
 
