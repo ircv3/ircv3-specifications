@@ -161,7 +161,7 @@ This advice is intended to avoid teaching users that strict security errors can 
 
 ### User-declared STS policy
 
-Clients might consider allowing users to explicitly define an STS policy for a given host, before any interaction with the host. This could help prevent a bootstrap MITM vulnerability as discussed in the (STS policy stripping)[#sts-policy-stripping] section.
+Clients might consider allowing users to explicitly define an STS policy for a given host, before any interaction with the host. This could help prevent a bootstrap MITM vulnerability as discussed in the [STS policy stripping](#sts-policy-stripping) section.
 
 ### STS policy deletion or rejection
 
