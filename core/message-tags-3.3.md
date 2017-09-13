@@ -131,7 +131,7 @@ Fully encoded and escaped JSON tag data is transmitted instead of `<tags>` in th
 
 To detect JSON-encoded tag data, clients and servers MUST check for `'{'` (0x7B) as the first character of tag data, after the leading `'@'` (0x40) character. The JSON data ends on the first space `' '` (0x20) character.
 
-If JSON tag data fails to decode correctly, clients MUST abort message parsing and discard the entire message, as this may be a symptom of incorrectly applied escaping rules, making the remainder of the message vulnerable to command injection. Servers MUST ignore incorrectly encoded JSON data entirely and MAY terminate the client connection as a result.
+If JSON tag data fails to decode correctly, clients and servers MUST treat the message as having no tags.
 
 ### Size limit
 
