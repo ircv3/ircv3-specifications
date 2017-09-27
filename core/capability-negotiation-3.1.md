@@ -98,7 +98,7 @@ Example:
 ### The CAP REQ subcommand
 
 The REQ subcommand is used to request a change in capabilities associated with the active
-connection.  It's sole parameter must be a list of space-separated capability identifiers.
+connection.  Its sole parameter must be a list of space-separated capability identifiers.
 Each capability identifier may be prefixed with a dash (`-`) to designate that the capability
 should be disabled.
 
