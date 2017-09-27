@@ -6,11 +6,11 @@ redirect_from:
 copyrights:
   -
     name: "Attila Molnar"
-    period: "2015-2016"
+    period: "2015-2017"
     email: "attilamolnar@hush.com"
   -
     name: "James Wheare"
-    period: "2016"
+    period: "2016-2017"
     email: "james@irccloud.com"
 ---
 
