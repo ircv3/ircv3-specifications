@@ -1,27 +1,18 @@
 ---
 title: IRCv3 Strict Transport Security
 layout: spec
-work-in-progress: true
 redirect_from:
   - /specs/core/sts-3.3.html
 copyrights:
   -
     name: "Attila Molnar"
-    period: "2015-2016"
+    period: "2015-2017"
     email: "attilamolnar@hush.com"
   -
     name: "James Wheare"
-    period: "2016"
+    period: "2016-2017"
     email: "james@irccloud.com"
 ---
-
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the unprefixed `sts` capability name. Instead, implementations SHOULD use the `draft/sts` capability name to be interoperable with other software implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed capability name.
 
 ## Description
 
@@ -29,7 +20,7 @@ Strict Transport Security (STS) is a mechanism which allows servers to advertise
 
 The policy is communicated to clients via the STS capability and should be processed by the client at capability negotiation time.
 
-The name of the STS capability is `draft/sts`.
+The name of the STS capability is `sts`.
 
 The value of the capability specifies the duration during which the client MUST only connect to the server securely (using TLS, aka. SSL), and the port number to use for secure connections.
 
@@ -230,7 +221,7 @@ STS is an improved solution and should be considered a replacement for multiple 
 A server tells a client connecting insecurely to connect securely on port 6697.
 
       Insecure Client: CAP LS 302
-               Server: CAP * LS :draft/sts=port=6697
+               Server: CAP * LS :sts=port=6697
 
 After the exchange, the client disconnects and reconnects securely to the same hostname on port 6697.
 
@@ -239,7 +230,7 @@ After the exchange, the client disconnects and reconnects securely to the same h
 A server tells a secure client to only use secure connections for roughly 6 months.
 
     Secure Client: CAP LS 302
-           Server: CAP * LS :draft/sts=duration=15552000
+           Server: CAP * LS :sts=duration=15552000
 
 Until the policy expires:
 
@@ -251,7 +242,7 @@ Until the policy expires:
 A server tells a insecure client to use secure connections for roughly 6 months. There is no port advertised.
 
       Insecure Client: CAP LS 302
-               Server: CAP * LS :draft/sts=duration=15552000
+               Server: CAP * LS :sts=duration=15552000
 
 The client ignores this because it has received an STS persistence policy over a insecure connection and the STS cap doesn't contain an upgrade policy.
 
@@ -260,7 +251,7 @@ The client ignores this because it has received an STS persistence policy over a
 A server tells a secure client to use secure connections for roughly a year, but the value of the STS capability also contains tokens the client doesn't recognise.
 
     Secure Client: CAP LS 302
-           Server: CAP * LS :draft/sts=unknown,duration=31536000,foo=bar
+           Server: CAP * LS :sts=unknown,duration=31536000,foo=bar
 
 The client ignores the keys it does not understand and until the policy expires:
 
@@ -272,7 +263,7 @@ The client ignores the keys it does not understand and until the policy expires:
 A server tells a client that is already connected securely to remove the STS policy immediately.
 
     Secure Client: CAP LS 302
-           Server: CAP * LS :draft/sts=duration=0
+           Server: CAP * LS :sts=duration=0
 
 If the client has an STS policy stored for the host it clears the policy. Future attempts to connect insecurely will be allowed.
 
@@ -281,7 +272,7 @@ If the client has an STS policy stored for the host it clears the policy. Future
 A client securely connects to a server, which advertises an STS policy.
 
     Secure Client: CAP LS 302
-           Server: CAP * LS :multi-prefix draft/sts=duration=2592000
+           Server: CAP * LS :multi-prefix sts=duration=2592000
 
 The client saves the policy and notes that it will expire in 2592000 seconds (roughly one month). It completes registration, then proceeds as usual.
 
@@ -295,7 +286,7 @@ The policy is still valid, so the client reschedules expiry for 2592000 seconds 
 
 A server updates an sts policy by sending a CAP NEW notification.
 
-    Server: CAP * NEW :draft/sts=duration=31536000
+    Server: CAP * NEW :sts=duration=31536000
 
 If the client has an STS policy stored for the host it updates the policy to expire after 31536000 seconds. Otherwise a new policy is saved for the server.
 
@@ -303,7 +294,7 @@ If the client has an STS policy stored for the host it updates the policy to exp
 
 A server removes an sts policy by sending a CAP NEW notification.
 
-    Server: CAP * NEW :draft/sts=duration=0
+    Server: CAP * NEW :sts=duration=0
 
 If the client has an STS policy stored for the host it clears the policy. Future attempts to connect insecurely will be allowed.
 
@@ -311,7 +302,7 @@ If the client has an STS policy stored for the host it clears the policy. Future
 
 A server makes an invalid attempt to remove an sts policy by disabling the CAP.
 
-    Server: CAP * DEL :draft/sts
+    Server: CAP * DEL :sts
 
 The client will ignore this attempt and only rely on receiving a duration of 0 to disable STS policies.
 
@@ -321,4 +312,4 @@ The client will ignore this attempt and only rely on receiving a duration of 0 t
 A client securely connects to a server, which advertises an STS policy and opts in to preload lists.
 
     Secure Client: CAP LS 302
-           Server: CAP * LS :draft/sts=duration=2592000,preload
+           Server: CAP * LS :sts=duration=2592000,preload
