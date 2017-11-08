@@ -348,7 +348,7 @@ in `CAP LS` and `CAP LIST` responses. Additionally client MAY request the capabi
 This lets clients blindly enable this capability, regardless of it being implicitly
 enabled by the server.
 
-Clients that do not support CAP Cersion 302 MAY request the `cap-notify` capability
+Clients that do not support CAP Version 302 MAY request the `cap-notify` capability
 explicitly. Such clients MAY disable the capability at any time.  This to ease the
 adaptation of new features.
 
