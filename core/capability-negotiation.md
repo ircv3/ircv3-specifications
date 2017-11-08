@@ -4,8 +4,7 @@ layout: spec
 redirect_from:
   - /specs/core/capability-negotiation-3.1.html
   - /specs/core/capability-negotiation-3.2.html
-updated-by:
-  - cap-notify
+  - /specs/extensions/cap-notify-3.2.html
 copyrights:
   -
     name: "Kevin L. Mitchell"
@@ -103,8 +102,8 @@ If a client has not indicated support for `CAP LS 302` features, the server MUST
 these new features to the client such as cap values and multiline replies.
 
 When CAP Version `302` is enabled, the client also implicitly indicates support for the
-[`cap-notify`](../extensions/cap-notify-3.2.html) capability, as described in that
-specification.
+`cap-notify` capability listed below, and support for the relevant `NEW` and `DEL`
+subcommands.
 
 Example:
 
@@ -225,9 +224,97 @@ command MUST be ignored by the server.
 Clients that support capabilities but do not wish to enter negotiation SHOULD send CAP END
 upon connection to the server.
 
-### The CAP NEW and CAP DEL subcommands
+### The CAP NEW subcommand
 
-The subcommands `NEW` and `DEL` are introducted by the [`cap-notify` specification](../extensions/cap-notify-3.2.html).
+The NEW subcommand MUST ONLY be sent to clients that have negotiated CAP Version `302` or
+enabled the `cap-notify` capability.
+
+The NEW subcommand signals that the server supports one or more new capabilities, and may be
+sent at any time. Clients that support `CAP NEW` messages should respond with a `CAP REQ`
+message if they wish to enable one of the newly-offered capabilities.
+
+The format of a `CAP NEW` message is:
+
+    CAP <nick> NEW :<extension 1> [<extension 2> ... [<extension n>]]
+
+As with `LS`, the last parameter is a space-separated list of new capabilities that are now
+offered by the server. If the client supports CAP Version `302`, the capabilities SHOULD be
+listed with values, as they would be if the client sent `CAP LS 302`.
+
+Example:
+
+    Server: :irc.example.com CAP modernclient NEW :batch
+
+Example with following `REQ`:
+
+    Server: :irc.example.com CAP tester NEW :away-notify extended-join
+    Client: CAP REQ :extended-join away-notify
+    Server: :irc.example.com CAP tester ACK :extended-join away-notify
+
+### The CAP DEL subcommand
+
+The NEW subcommand MUST ONLY be sent to clients that have negotiated CAP Version `302` or
+enabled the `cap-notify` capability.
+
+The DEL subcommand signals that the server no longer supports one or more capabilities that
+have been advertised. Upon receiving a `CAP DEL` message, the client MUST treat the listed
+capabilities cancelled and no longer available. Clients SHOULD NOT send `CAP REQ` messages
+to cancel the capabilities in `CAP DEL`, as they have already been canceled by the server.
+
+Servers MUST cancel any capability-specific behavior for a client after sending the
+`CAP DEL` message to the client.
+
+Clients MUST gracefully handle situations when the server removes support for any
+capability. If the client cannot continue to operate without a capability, disconnecting
+with an appropriate `QUIT` message is acceptable.
+
+The format of a `CAP DEL` message is:
+
+    CAP <nick> DEL :<extension 1> [<extension 2> ... [<extension n>]]
+
+The last parameter is a space-separated list of capabilities that are no longer available.
+
+Example:
+
+    Server: :irc.example.com CAP modernclient DEL :userhost-in-names multi-prefix away-notify
+
+Example showing new SASL mechanisms becoming available. This example requires the client to
+support both `CAP LS 302` and `batch`:
+
+        Client: CAP LS 302
+        Server: :irc.example.com CAP * LS :sasl=PLAIN batch
+        Client: CAP REQ batch
+        ...
+        Server: :irc.example.com BATCH +cap example.com/cap-value
+        Server: @batch=cap :irc.example.com CAP client DEL :sasl
+        Server: @batch=cap :irc.example.com CAP client NEW :sasl=PLAIN,EXTERNAL
+        Server: :irc.example.com BATCH -cap
+
+The `cap` batch indicates that (as in this example), the given `NEW`/`DEL` messages may be
+displayed together for simplicity's sake.
+
+## `cap-notify`
+
+The `cap-notify` capability indicates support for the `NEW` and `DEL` messages listed above.
+This capabilitiy MUST be implicitly enabled if the client requests `CAP LS` with a version
+of 302 or newer (`CAP LS 302`), as described above.
+
+Further, the `cap-notify` capability MAY NOT be disabled if the client requests `CAP LS`
+with a version of 302 or newer.
+
+When implicitly enabled via this mechanism, servers MAY list the `cap-notify` capability
+in `CAP LS` and `CAP LIST` responses. Additionally client MAY request the capability with
+`CAP REQ`, and capable servers MUST accept and `CAP ACK` the request without side effects.
+This lets clients blindly enable this capability, regardless of it being implicitly
+enabled by the server.
+
+Clients that do not support CAP Cersion 302 MAY request the `cap-notify` capability
+explicitly. Such clients MAY disable the capability at any time.  This to ease the
+adaptation of new features.
+
+When enabled, the server MUST notify the client about all new capabilities and about
+existing capabilities that are no longer available using the `NEW` and `DEL` subcommands
+listed above.
 
 ## Capability Negotiation Procedure
 
@@ -310,3 +397,11 @@ was clarified to limit capability values to the `LS` and `NEW` subcommands.
 Previous versions of this spec did not link to the `cap-notify` specification (nor note the fact
 that it is automatically enabled for clients that enable CAP Version 302). The specification now
 links to the `cap-notify` spec and lets authors know about the implicit enabling of this capability.
+
+Previous versions of this spec mistakenly missed `<nick>` between `CAP` and `NEW`/`DEL` subcommands,
+but had it in the examples anyway.
+
+Previous versions of this spec did not mention whether `NEW` and `DEL` can have values or not.
+
+Previous versions of this spec were missing clarification of client and server behaviour when the
+capability is implicitly enabled with CAP Version `302` or newer.
