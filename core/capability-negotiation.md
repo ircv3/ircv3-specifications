@@ -378,9 +378,8 @@ Vendor-Specific capabilities should be submitted to the IRCv3 working group for 
 ### Standardized
 
 Standardised capability names have no vendor namespace, and are listed on the
-[IRCv3 Capability Registry](http://ircv3.net/registry.html#capabilities). Standardised
-capabilities also have one or more documents in the set of IRCv3 specifications describing how
-the capability works.
+[IRCv3 Capability Registry](http://ircv3.net/registry.html#capabilities). These capabilities
+also have one or more documents in the set of IRCv3 specifications describing how they work.
 
 Names in the IRCv3 Capability Registry are reserved for your capability.
 
