@@ -189,23 +189,12 @@ Example:
 
 ### The CAP ACK subcommand
 
-The ACK subcommand has two uses:
+The ACK subcommand is sent by the server to acknowledge a client-sent REQ, and let the client
+know that their requested capabilities have been enabled.
 
-* the server sends it to acknowledge a REQ subcommand;
-* the client sends it to acknowledge capabilities which require client-side acknowledgement.
-
-If an ACK reply originating from the server is spread across multiple lines, a client MUST NOT
-change capabilities until the last ACK of the set is received. Equally, a server MUST NOT change
-the capabilities of the client until the last ACK of the set has been sent.
-
-In the first usage, acknowledging a REQ subcommand, the ACK subcommand has a single parameter
-consisting of a space separated list of capability names, which may optionally be preceded with
-one or more modifiers. 
-
-The second usage is when, in the preceding two cases, some capability names have been preceded
-with the ack modifier. ACK in this case is used to fully enable or disable the capability. Clients
-MUST NOT issue an ACK subcommand for any capability not marked with the ack modifier in a
-server-generated ACK subcommand.
+This subcommand has a single parameter consisting of a space-separated list of capability
+names. Each capability name may be prefixed with a dash (`-`), indicating that this
+capability has been disabled as requested.
 
 ### The CAP NAK subcommand
 
@@ -214,6 +203,11 @@ MUST NOT make any change to any capabilities if it replies with a NAK subcommand
 
 The argument of the NAK subcommand MUST consist of at least the first 100 characters of the
 capability list in the REQ subcommand which triggered the NAK.
+
+Example:
+
+    Client: CAP REQ :multi-prefix sasl ex3
+    Server: CAP * NAK :multi-prefix sasl ex3
 
 ### The CAP END subcommand
 
@@ -405,3 +399,7 @@ Previous versions of this spec did not mention whether `NEW` and `DEL` can have 
 
 Previous versions of this spec were missing clarification of client and server behaviour when the
 capability is implicitly enabled with CAP Version `302` or newer.
+
+Previous versions of this spec listed that `CAP ACK` could be sent from the client to server, for
+capabilities that required extra client acknowledgement. This was removed since cap modifiers have
+been deprecated and removed (except for `-`, which has been specified in other ways).
