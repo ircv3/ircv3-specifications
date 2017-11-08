@@ -26,23 +26,69 @@ copyrights:
     name: "Attila Molnar"
     period: "2014"
     email: "attilamolnar@hush.com"
+  -
+    name: "Daniel Oakley"
+    period: "2017"
+    email: "daniel@danieloaks.net"
 ---
-## What IRCv3 Client Capability Negotiation attempts to solve
+## What Client Capability Negotiation attempts to solve
 
-IRC is an asynchronous protocol, which means that IRC clients may issue additional
-IRC commands while a command is being processed.  Additionally, there is no guarantee
-of a specific kind of banner being issued upon connection.  Some servers also do not
-complain about unknown commands during registration, which means that a client cannot
-reliably do passive implementation discovery at registration time.
+The IRC protocol is old, and changing it is difficult because you need to convince other
+(sometimes years-old) software to support your changes. Client Capability Negotiation
+allows clients and servers to negotiate new features in a backwards-compatible way – even
+features that change how the protocol works in deep or extensive ways.
 
-If a client had to wait for a banner message, it would be incompatible with previous
-versions of the IRC client protocol.
+Client Capability Negotiation means that client and server authors can develop new
+extensions to the protocol, and software can use (or not use them) as they wish.
 
-The solution to these problems is to extend the registration process with actual
-capability negotiation.  If the server supports capability negotiation, the registration
-process will be suspended until negotiation is completed.  If the server does not support
-capability negotiation, then registration will complete immediately, and the client will
-not use any IRCv3 capabilities.
+## Connection Registration
+
+Upon connecting to the IRC server, clients need a way to negotiate capabilities (protocol
+extensions) with the server. Negotiation is done with the `CAP` command, using the
+subcommands below to list and request capabilities.
+
+Upon connecting to the server, the client attempts to start the capability negotiation
+process, as well as sending the standard `NICK`/`USER` commands (to complete registration
+if the server doesn't support capability negotiation).
+
+Upon connecting to the IRC server, clients SHOULD send one of the following messages:
+
+- `CAP LS [version]` to discover the available capabilities on the server.
+- `CAP REQ` to blindly request a particular set of capabilities.
+
+Following this, the client MUST send the standard `NICK` and `USER` IRC commands.
+
+Upon receiving either a `CAP LS` or `CAP REQ` command during connection registration, the
+server MUST not complete registration until the client sends a `CAP END` command to
+indicate that capability negotiation has ended. This allows clients to request their
+desired capabilities before completing registration.
+
+Once capability negotiation has completed with a client-send `CAP END` command, registration
+continues as normal.
+
+With the above registration process, clients will either recieve a `CAP` message indicating
+that registration is paused while capability negotiation happens, or registration will
+complete immediately, indicating that the server doesn't support capability negotiation.
+
+Example with capability negotiation:
+
+    Client: CAP LS 302
+    Client: NICK dan
+    Client: USER d * 0 :This is a really good name
+    Server: CAP * LS :multi-prefix sasl
+    Client: CAP REQ :multi-prefix
+    Server: CAP * ACK multi-prefix
+    Client: CAP END
+    Server: 001 dan :Welcome to the Internet Relay Network dan
+    ...
+
+Example without capability negotiation:
+
+    Client: CAP LS 302
+    Client: NICK dan
+    Client: USER d * 0 :This is a really good name
+    Server: 001 dan :Welcome to the Internet Relay Network dan
+    ...
 
 ## The CAP command
 
@@ -310,20 +356,6 @@ When enabled, the server MUST notify the client about all new capabilities and a
 existing capabilities that are no longer available using the `NEW` and `DEL` subcommands
 listed above.
 
-## Capability Negotiation Procedure
-
-Clients should take one of the following actions upon connection:
-
-* issue a CAP LS subcommand with an empty capability list to discover available capabilities;
-* issue a CAP REQ subcommand to request a particular set of capabilities blindly;
-* issue a CAP END subcommand to immediately end capability negotiation.
-
-While a client is permitted to not issue any CAP commands upon connection, this may have
-unintentional side effects (such as forcing a downgrade to RFC1459 client protocol).
-
-Once capability negotiation is completed with the END subcommand, registration should
-continue as normal.
-
 ## Rules for naming capabilities
 
 The full capability name MUST be treated as an opaque identifier.
@@ -403,3 +435,7 @@ capability is implicitly enabled with CAP Version `302` or newer.
 Previous versions of this spec listed that `CAP ACK` could be sent from the client to server, for
 capabilities that required extra client acknowledgement. This was removed since cap modifiers have
 been deprecated and removed (except for `-`, which has been specified in other ways).
+
+Previous versions of this spec listed connection registration in the middle. This section has been
+rewritten and placed near the front, now including examples of negotiating capabilities during
+initial registration.
