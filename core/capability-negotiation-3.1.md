@@ -188,9 +188,10 @@ Vendor-Specific capabilities should be submitted to the IRCv3 working group for 
 
 ### Standardized
 
-Names for which a corresponding document sits in the IRCv3 Extension Registry.
+Names that are on the [IRCv3 Capability Registry](http://ircv3.net/registry.html#capabilities) and
+for which a corresponding document sits in the IRCv3 Extension Registry.
 
-Names in the IRCv3 Extension Registry are reserved for your capability.
+Names in the IRCv3 Capability Registry are reserved for your capability.
 
 The IRCv3 Working Group reserves the right to reuse names which have not been submitted to the
 registry. If you do not wish to submit your capability then you MUST use a vendor-specific name
