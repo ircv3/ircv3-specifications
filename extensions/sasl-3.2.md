@@ -17,7 +17,7 @@ copyrights:
 
 This document describes how [SASL authentication](sasl-3.1.html)
 makes use of the
-[capability negotiation protocol updates introduced in 3.2](../core/capability-negotiation-3.2.html),
+[capability negotiation protocol updates introduced by CAP Version `302`](../core/capability-negotiation.html),
 and adds support for reauthentication if authentication is lost via the [cap-notify](cap-notify-3.2.html)
 capability.
 

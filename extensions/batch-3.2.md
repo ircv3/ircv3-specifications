@@ -63,7 +63,7 @@ Client MAY delay processing messages of inner batches to the end of outermost ba
 
 Batch types are specified by IRCv3 extensions, vendor-specific types MUST be
 prefixed the same way as how vendor-specific capabilities are prefixed.
-See [capability negotiation](../core/capability-negotiation-3.1.html) for the
+See [capability negotiation](../core/capability-negotiation.html) for the
 exact details.
 
 The full batch type name MUST be treated as an opaque identifier.

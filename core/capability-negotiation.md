@@ -1,8 +1,7 @@
 ---
-title: IRCv3.1 Client Capability Negotiation
+title: IRCv3 Client Capability Negotiation
 layout: spec
 updated-by:
-  - cap-3.2
   - cap-notify
 copyrights:
   -
@@ -21,6 +20,10 @@ copyrights:
     name: "William Pitcock"
     period: "2009-2012"
     email: "nenolod@dereferenced.org"
+  -
+    name: "Attila Molnar"
+    period: "2014"
+    email: "attilamolnar@hush.com"
 ---
 ## What IRCv3 Client Capability Negotiation attempts to solve
 
@@ -81,6 +84,68 @@ Example:
 
     Client: CAP LS
     Server: CAP * LS :multi-prefix sasl
+
+#### CAP LS Version
+
+The LS subcommand has an additional argument which is the version number of the latest
+capability negotiation protocol supported by the client.
+
+Clients that send `302` as the CAP LS version are presumed to support `CAP LS 302` features
+for the future life of the connection.
+
+Clients that do not send any version number with CAP LS are presumed to not support these
+extra features.
+
+If a client has not indicated support for `CAP LS 302` features, the server MUST NOT send
+these new features to the client such as cap values and multiline replies.
+
+Example:
+
+    Client: CAP LS 302
+    Server: CAP * LS :multi-prefix
+
+#### Capability Values
+
+If the client supports CAP Version `302`, the server MAY specify additional data for each
+capability using the `<name>=<value>` format in `CAP LS` and `CAP NEW` replies.
+
+Each capability, if it supports a value, defines what this value means in its' specification.
+
+Example:
+
+    Client: CAP LS 302
+    Server: CAP * LS :multi-prefix sasl=PLAIN,EXTERNAL server-time draft/packing=EX1,EX2
+
+#### Multiline replies to `CAP LS` and `CAP LIST`
+
+Servers MAY send multiple lines in response to `CAP LS`. If the reply contains multiple
+lines (due to IRC line length limitations), and the client supports CAP Version `302`,
+all but the last reply MUST have a parameter containing only an asterisk (`*`) preceding
+the capability list. This lets clients know that more CAP lines are incoming, so that it
+can delay capability negotiation until it has seen all available server capabilities.
+
+If a multi-line response to `CAP LIST` is sent, and the client supports CAP Version `302`,
+the server MUST delimit all replies except for the last one sent as noted above.
+
+Example with a client that **does not** support CAP version `302`:
+
+    Client: CAP LS
+    Server: CAP * LS :multi-prefix extended-join account-notify batch invite-notify tls
+    Server: CAP * LS :cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
+    Server: CAP * LS :userhost-in-names sasl=EXTERNAL,DH-AES,DH-BLOWFISH,ECDSA-NIST256P-CHALLENGE,PLAIN
+
+Example with a client that supports CAP version `302`:
+
+    Client: CAP LS 302
+    Server: CAP * LS * :multi-prefix extended-join account-notify batch invite-notify tls
+    Server: CAP * LS * :cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
+    Server: CAP * LS :userhost-in-names sasl=EXTERNAL,DH-AES,DH-BLOWFISH,ECDSA-NIST256P-CHALLENGE,PLAIN
+
+Example of a `LIST` reply with a client that supports CAP version `302`:
+
+    Client: CAP LIST
+    Server: CAP modernclient LIST * :example.org/example-cap example.org/second-example-cap account-notify
+    Server: CAP modernclient LIST :invite-notify batch example.org/third-example-cap
 
 ### The CAP LIST subcommand
 
@@ -151,7 +216,11 @@ that the server continue with client registration. If the client is already regi
 command MUST be ignored by the server.
 
 Clients that support capabilities but do not wish to enter negotiation SHOULD send CAP END
-upon connection to the server. 
+upon connection to the server.
+
+### The CAP NEW and CAP DEL subcommands
+
+The subcommands `NEW` and `DEL` are introducted by the [`cap-notify` specification](../extensions/cap-notify-3.2.html).
 
 ## Capability Negotiation Procedure
 
@@ -197,6 +266,16 @@ The IRCv3 Working Group reserves the right to reuse names which have not been su
 registry. If you do not wish to submit your capability then you MUST use a vendor-specific name
 (see above).
 
+### Capability Modifiers
+
+Prior versions of capability negotiation included 'capability modifiers', which were characters
+prepended to capability names to indicate that they could not be disabled or required extra client
+acknowledgement to be enabled.
+
+These modifiers have been deprecated. Capabilities MUST NOT require an `ACK` from the client to be
+activated. Instead of indicating a capability as 'sticky', servers should instead send a `NAK` to
+any request to disable these capabilities.
+
 ## Errata
 
 Previous versions of this specification referred to a CAP CLEAR command, which has been removed
@@ -217,3 +296,6 @@ resiliency.
 
 Previous versions of this spec defined 'capability modifiers'. These are not in use by software and
 have been removed from this specification.
+
+Previous versions of this spec did not specify when the `<name>=<value>` format could be used. This
+was clarified to limit capability values to the `LS` and `NEW` subcommands.

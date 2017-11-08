@@ -26,7 +26,7 @@ specified in this document.
 
 The `cap-notify` capability MUST be implicitly enabled if the client requests
 `CAP LS` with a version of 302 or newer (`CAP LS 302`), as described in the
-[capability negotiation 3.2 specification](../core/capability-negotiation-3.2.html).
+[capability negotiation specification](../core/capability-negotiation.html).
 Further, the `cap-notify` capability MAY NOT be disabled if the client requests
 `CAP LS` with a version of 302 or newer.
 
