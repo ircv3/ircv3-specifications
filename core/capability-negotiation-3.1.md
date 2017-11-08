@@ -196,21 +196,6 @@ The IRCv3 Working Group reserves the right to reuse names which have not been su
 registry. If you do not wish to submit your capability then you MUST use a vendor-specific name
 (see above).
 
-## Capability Modifiers
-
-There are three capability modifiers specified by this standard.  If a capability modifier is
-to be used, it MUST directly proceed the capability identifier.
-
-The capability modifiers are:
-
-* `-` modifier (disable): this modifier indicates that the capability is being disabled.
-
-* `~` modifier (ack): this modifier indicates the client must acknowledge the capability using
-  an ACK subcommand.
-
-* `=` modifier (sticky): this modifier indicates that the specified capability may not be
-  disabled.
-
 ## Errata
 
 Previous versions of this specification referred to a CAP CLEAR command, which has been removed
@@ -228,3 +213,6 @@ any capabilities.  This was clarified to match CAP LIST, requiring a reply with 
 Previous versions of this spec did not specify that the full capability name MUST be treated as
 an opaque identifier. This was added to better suit real-world usage and to improve client
 resiliency.
+
+Previous versions of this spec defined 'capability modifiers'. These are not in use by software and
+have been removed from this specification.
