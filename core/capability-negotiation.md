@@ -99,6 +99,10 @@ extra features.
 If a client has not indicated support for `CAP LS 302` features, the server MUST NOT send
 these new features to the client such as cap values and multiline replies.
 
+When CAP Version `302` is enabled, the client also implicitly indicates support for the
+[`cap-notify`](../extensions/cap-notify-3.2.html) capability, as described in that
+specification.
+
 Example:
 
     Client: CAP LS 302
@@ -299,3 +303,7 @@ have been removed from this specification.
 
 Previous versions of this spec did not specify when the `<name>=<value>` format could be used. This
 was clarified to limit capability values to the `LS` and `NEW` subcommands.
+
+Previous versions of this spec did not link to the `cap-notify` specification (nor note the fact
+that it is automatically enabled for clients that enable CAP Version 302). The specification now
+links to the `cap-notify` spec and lets authors know about the implicit enabling of this capability.
