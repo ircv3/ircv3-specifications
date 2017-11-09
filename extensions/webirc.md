@@ -41,6 +41,8 @@ These options are defined and may be sent by clients while connecting:
 - `remote-port=<port>`: This flag indicates the remote port the client has connected to the gateway from.
 - `local-port=<port>`: This flag indicates the port the gateway accepted the client connection on (e.g. `6697`, `6667`).
 
+Servers MUST be able to handle options that don't currently have defined values gaining values in the future. For example, they MUST treat the options `secure` and `secure=examplevalue123` in exactly the same way.
+
 ### Examples
 Generic format.
 
@@ -60,7 +62,7 @@ Secure connection.
 
 Secure connection with ports passed through.
 
-    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure local-port=6697 remote-port=21726
+    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure=examplevalue local-port=6697 remote-port=21726
 
 Error from invalid password.
 
