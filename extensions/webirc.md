@@ -21,20 +21,30 @@ When a user connects through an indirect connection to the IRC server, the user'
 ## Format
 The `WEBIRC` command MUST be the first command sent from the WebIRC gateway to the IRC server and MUST be sent before capability negotiation.
 
-The `WEBIRC` command takes four parameters: `password `, `gateway`, `hostname`, and `ip`.
+The `WEBIRC` command may take five parameters: `password `, `gateway`, `hostname`, `ip`, and `options`.
 - `password` Password authenticating the WebIRC gateway to the IRC server which must be agreed upon ahead of time
 - `gateway` WebIRC gateway service name
 - `hostname` User's resolved hostname
 - `ip` IPv4 or IPv6 address of the connecting user. If the IP address cannot be resolved to a DNS name, the IP address MUST be sent as both the `hostname` and `ip`.
+- `options` is an optional set of space-separated arguments detailing other information about the connection.
 
 If forward and reverse DNS do not match, the IP address SHOULD be sent as the `hostname` and the unverified `hostname` SHOULD NOT be sent (see [Security Considerations](#security-considerations)). If the connection fails to the IRC server, the WebIRC gateway MUST return an `ERROR` with an appropriate message and terminate the connection.
 
 Note: Previous implementations referred to the `gateway` field as `user`. This change is for documentation clarity only and maintains compatibility with all existing implementations.
 
+### Options
+The `options` parameter is a space-separated set of additional arguments, each argument having the form `<name>[=<value>]`.
+
+These options are defined and may be sent by clients while connecting:
+
+- `secure`: This flag indicates that the client has a TLS-secured connection to the gateway. Servers MUST ONLY treat the connection as secure if this flag is sent and the connection from the gateway to the server is also secure with TLS or similar.
+- `remote_port=<port>`: This flag indicates the remote port the client has connected to the gateway from.
+- `local_port=<port>`: This flag indicates the port the gateway accepted the client connection on (e.g. `6697`, `6667`).
+
 ### Examples
 Generic format.
 
-    WEBIRC password gateway hostname ip
+    WEBIRC password gateway hostname ip [:option1 option2...]
 
 IP address resolves to hostname.
 
@@ -43,6 +53,14 @@ IP address resolves to hostname.
 IP address does not resolve to hostname.
 
     WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3
+
+Secure connection.
+
+    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 secure
+
+Secure connection with ports passed through.
+
+    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure local_port=6697 remote_port=21726
 
 Error from invalid password.
 
