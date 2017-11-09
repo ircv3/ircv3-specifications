@@ -37,9 +37,9 @@ The `options` parameter is a space-separated set of additional arguments, each a
 
 These options are defined and may be sent by clients while connecting:
 
-- `secure`: This flag indicates that the client has a TLS-secured connection to the gateway. Servers MUST ONLY treat the connection as secure if this flag is sent and the connection from the gateway to the server is also secure with TLS or similar.
-- `remote_port=<port>`: This flag indicates the remote port the client has connected to the gateway from.
-- `local_port=<port>`: This flag indicates the port the gateway accepted the client connection on (e.g. `6697`, `6667`).
+- `secure`: This flag indicates that the client has a TLS-secured connection to the gateway. Servers MUST ONLY treat the connection as secure if this flag is sent and the connection from the gateway to the server is also secure with TLS.
+- `remote-port=<port>`: This flag indicates the remote port the client has connected to the gateway from.
+- `local-port=<port>`: This flag indicates the port the gateway accepted the client connection on (e.g. `6697`, `6667`).
 
 ### Examples
 Generic format.
@@ -60,7 +60,7 @@ Secure connection.
 
 Secure connection with ports passed through.
 
-    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure local_port=6697 remote_port=21726
+    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure local-port=6697 remote-port=21726
 
 Error from invalid password.
 
