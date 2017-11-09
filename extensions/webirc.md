@@ -21,7 +21,7 @@ When a user connects through an indirect connection to the IRC server, the user'
 ## Format
 The `WEBIRC` command MUST be the first command sent from the WebIRC gateway to the IRC server and MUST be sent before capability negotiation.
 
-The `WEBIRC` command may take five parameters: `password `, `gateway`, `hostname`, `ip`, and `options`.
+The `WEBIRC` command takes four or five parameters: `password `, `gateway`, `hostname`, `ip`, and `options`.
 - `password` Password authenticating the WebIRC gateway to the IRC server which must be agreed upon ahead of time
 - `gateway` WebIRC gateway service name
 - `hostname` User's resolved hostname
