@@ -318,21 +318,6 @@ Example:
 
     Server: :irc.example.com CAP modernclient DEL :userhost-in-names multi-prefix away-notify
 
-Example showing new SASL mechanisms becoming available. This example requires the client to
-support both `CAP LS 302` and `batch`:
-
-        Client: CAP LS 302
-        Server: :irc.example.com CAP * LS :sasl=PLAIN batch
-        Client: CAP REQ batch
-        ...
-        Server: :irc.example.com BATCH +cap example.com/cap-value
-        Server: @batch=cap :irc.example.com CAP client DEL :sasl
-        Server: @batch=cap :irc.example.com CAP client NEW :sasl=PLAIN,EXTERNAL
-        Server: :irc.example.com BATCH -cap
-
-The `cap` batch indicates that (as in this example), the given `NEW`/`DEL` messages may be
-displayed together for simplicity's sake.
-
 ## `cap-notify`
 
 The `cap-notify` capability indicates support for the `NEW` and `DEL` messages listed above.
