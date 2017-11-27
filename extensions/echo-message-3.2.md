@@ -72,4 +72,4 @@ formatting and sends the final version back:
 
 Previous versions of this specification didn't include the Limitations section.
 
-Previous versions of this specification didn't allow for fakes messages when spam filtering.
+Previous versions of this specification didn't allow for faked messages when spam filtering.
