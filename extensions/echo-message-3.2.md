@@ -17,7 +17,7 @@ This client capability MUST be named `echo-message`.
 
 If enabled, servers MUST send `PRIVMSG` and `NOTICE` messages back to
 the client that sent them. If servers apply any modifications to these
-messages, they SHOULD send the final version of the message back to the
+messages, they MUST send the final version of the message back to the
 originating client.
 
 For clients, receiving a message with themselves as the sender acts as
@@ -40,6 +40,10 @@ clients attached to a bouncer. In this scenario, when users send
 messages from one client, the messages get automatically relayed to
 other attached clients. This allows all attached clients to display
 full conversation.
+
+Servers MAY send a faked message back to the client instead, in cases
+where the final version is silently blocked, for example when spam
+filtering.
 
 ## Limitations
 
@@ -68,6 +72,4 @@ formatting and sends the final version back:
 
 Previous versions of this specification didn't include the Limitations section.
 
-Previous versions of this specifications required exactly the same message to be
-echoed back to the user in all circumstances. This was relaxed to allow for spam
-filtering without letting the spammer know that their message was filtered.
+Previous versions of this specification didn't allow for fakes messages when spam filtering.
