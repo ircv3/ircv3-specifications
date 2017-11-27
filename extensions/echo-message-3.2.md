@@ -42,8 +42,8 @@ other attached clients. This allows all attached clients to display
 full conversation.
 
 Servers MAY send a faked message back to the client instead, in cases
-where the final version is silently blocked, for example when spam
-filtering.
+where the final version is silently blocked, for example when filtering
+spam.
 
 ## Limitations
 
@@ -72,4 +72,4 @@ formatting and sends the final version back:
 
 Previous versions of this specification didn't include the Limitations section.
 
-Previous versions of this specification didn't allow for faked messages when spam filtering.
+Previous versions of this specification didn't allow for faked messages when filtering spam.
