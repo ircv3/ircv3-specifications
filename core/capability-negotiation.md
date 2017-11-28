@@ -82,6 +82,16 @@ Example with capability negotiation:
     Server: 001 dan :Welcome to the Internet Relay Network dan
     ...
 
+Example with capability negotiation, but where the client recognises no advertised caps: 
+
+    Client: CAP LS 302
+    Client: NICK dan
+    Client: USER d * 0 :This is a really good name
+    Server: CAP * LS :draft/example-1 draft/example-2
+    Client: CAP END
+    Server: 001 dan :Welcome to the Internet Relay Network dan
+    ...
+
 Example without capability negotiation:
 
     Client: CAP LS 302
