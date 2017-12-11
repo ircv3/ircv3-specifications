@@ -33,13 +33,15 @@ copyrights:
 ---
 ## What Client Capability Negotiation attempts to solve
 
-The IRC protocol is old, and changing it is difficult because you need to convince other
-(sometimes years-old) software to support your changes. Client Capability Negotiation
-allows clients and servers to negotiate new features in a backwards-compatible way – even
-features that change how the protocol works in deep or extensive ways.
+Client Capability Negotiation allows IRC clients and servers to negotiate new features
+in a backwards-compatible way – even features that change how the protocol works in deep
+and extensive ways. Capability negotiation avoids the issues of breaking compatibility
+with clients/servers not supporting new features by allowing clients and servers to
+enable the features they both understand.
 
-Client Capability Negotiation means that client and server authors can develop new
-extensions to the protocol, and software can use (or not use them) as they wish.
+Capability Negotiation means that client and server authors can develop new extensions to
+the protocol, and software can use (or not use them) as they wish. It allows older
+clients to connect to servers supporting new features and vice-versa.
 
 ## Connection Registration
 
@@ -146,16 +148,15 @@ Example:
 #### CAP LS Version
 
 The LS subcommand has an additional argument which is the version number of the latest
-capability negotiation protocol supported by the client.
+capability negotiation protocol supported by the client. Newer verisons of capability
+negotiation allow newer features, as described below:
 
 Clients that send `302` as the CAP LS version are presumed to support `CAP LS 302` features
-for the future life of the connection.
-
-Clients that do not send any version number with CAP LS are presumed to not support these
-extra features.
+for the future life of the connection. Clients that do not send any version number with
+`CAP LS` are presumed to not support these extra features.
 
 If a client has not indicated support for `CAP LS 302` features, the server MUST NOT send
-these new features to the client such as cap values and multiline replies.
+these new features to the client.
 
 When CAP Version `302` is enabled, the client also implicitly indicates support for the
 `cap-notify` capability listed below, and support for the relevant `NEW` and `DEL`
@@ -166,12 +167,21 @@ Example:
     Client: CAP LS 302
     Server: CAP * LS :multi-prefix
 
+##### CAP LS Version Features
+
+As an overview, these are the new features introduced with each `CAP LS` version:
+
+| CAP | Name | Description |
+| `302` | Capability values | Additional data with each capability name when advertised in `CAP LS` and `CAP NEW`. |
+| `302` | Multiline replies | `CAP LS` and `CAP LIST` can be split across multiple lines, with a minor syntax change that allows clients to wait for the last message and process them together. |
+| `302` | `cap-notify` | This capability is enabled implicitly with `302`, and adds the `CAP NEW` and `CAP DEL` messages which let the client know about added and removed capabilities. |
+
 #### Capability Values
 
 If the client supports CAP Version `302`, the server MAY specify additional data for each
 capability using the `<name>=<value>` format in `CAP LS` and `CAP NEW` replies.
 
-Each capability, if it supports a value, defines what this value means in its' specification.
+Each capability, if it supports a value, defines what this value means in its specification.
 
 Example:
 
@@ -238,10 +248,15 @@ The capability identifier set must be accepted as a whole, or rejected entirely.
 If a client issues a REQ subcommand, registration must be suspended until an END subcommand
 is received.
 
-Example:
+Example adding a capability:
 
     Client: CAP REQ :multi-prefix sasl
     Server: CAP * ACK :multi-prefix sasl
+
+Example removing a capability:
+
+    Client: CAP REQ :-userhost-in-names
+    Server: CAP * ACK :-userhost-in-names
 
 ### The CAP ACK subcommand
 
@@ -271,17 +286,14 @@ The END subcommand signals to the server that capability negotiation is complete
 that the server continue with client registration. If the client is already registered, this
 command MUST be ignored by the server.
 
-Clients that support capabilities but do not wish to enter negotiation SHOULD send CAP END
-upon connection to the server.
-
 ### The CAP NEW subcommand
 
 The NEW subcommand MUST ONLY be sent to clients that have negotiated CAP Version `302` or
 enabled the `cap-notify` capability.
 
 The NEW subcommand signals that the server supports one or more new capabilities, and may be
-sent at any time. Clients that support `CAP NEW` messages should respond with a `CAP REQ`
-message if they wish to enable one of the newly-offered capabilities.
+sent at any time. Clients that support `CAP NEW` messages SHOULD respond with a `CAP REQ`
+message if they wish to enable one or more of the newly-offered capabilities.
 
 The format of a `CAP NEW` message is:
 
@@ -289,7 +301,7 @@ The format of a `CAP NEW` message is:
 
 As with `LS`, the last parameter is a space-separated list of new capabilities that are now
 offered by the server. If the client supports CAP Version `302`, the capabilities SHOULD be
-listed with values, as they would be if the client sent `CAP LS 302`.
+listed with values, as in the `CAP LS` response.
 
 Example:
 
@@ -308,8 +320,9 @@ enabled the `cap-notify` capability.
 
 The DEL subcommand signals that the server no longer supports one or more capabilities that
 have been advertised. Upon receiving a `CAP DEL` message, the client MUST treat the listed
-capabilities cancelled and no longer available. Clients SHOULD NOT send `CAP REQ` messages
-to cancel the capabilities in `CAP DEL`, as they have already been canceled by the server.
+capabilities as cancelled and no longer available. Clients SHOULD NOT send `CAP REQ`
+messages to cancel the capabilities in `CAP DEL`, as they have already been cancelled by
+the server.
 
 Servers MUST cancel any capability-specific behavior for a client after sending the
 `CAP DEL` message to the client.
@@ -370,27 +383,15 @@ e.g. `xn--e1afmkfd.org/foo`.
 
 Vendor-Specific capabilities should be submitted to the IRCv3 working group for consideration.
 
-### Standardized
+### Standardised
 
 Standardised capability names have no vendor namespace, and are listed on the
 [IRCv3 Capability Registry](http://ircv3.net/registry.html#capabilities). These capabilities
 also have one or more documents in the set of IRCv3 specifications describing how they work.
 
-Names in the IRCv3 Capability Registry are reserved for your capability.
-
 The IRCv3 Working Group reserves the right to reuse names which have not been submitted to the
 registry. If you do not wish to submit your capability then you MUST use a vendor-specific name
 (see above).
-
-### Capability Modifiers
-
-Prior versions of capability negotiation included 'capability modifiers', which were characters
-prepended to capability names to indicate that they could not be disabled or required extra client
-acknowledgement to be enabled.
-
-These modifiers have been deprecated. Capabilities MUST NOT require an `ACK` from the client to be
-activated. Instead of indicating a capability as 'sticky', servers should instead send a `NAK` to
-any request to disable these capabilities.
 
 ## Errata
 
@@ -418,7 +419,7 @@ was clarified to limit capability values to the `LS` and `NEW` subcommands.
 
 Previous versions of this spec did not link to the `cap-notify` specification (nor note the fact
 that it is automatically enabled for clients that enable CAP Version 302). The specification now
-links to the `cap-notify` spec and lets authors know about the implicit enabling of this capability.
+includes the `cap-notify` spec and lets authors know about the implicit enabling of this capability.
 
 Previous versions of this spec mistakenly missed `<nick>` between `CAP` and `NEW`/`DEL` subcommands,
 but had it in the examples anyway.
@@ -435,3 +436,14 @@ been deprecated and removed (except for `-`, which has been specified in other w
 Previous versions of this spec listed connection registration in the middle. This section has been
 rewritten and placed near the front, now including examples of negotiating capabilities during
 initial registration.
+
+Previous versions of this spec included capability modifiers. These have been deprecated and removed
+from this specification.
+
+Previous versions of this spec recommended sending `CAP END` upon connection if the client didn't
+want to perform CAP negotiation. This advice has been removed as sending only `CAP END` doesn't
+make much sense in this case.
+
+Previous versions of this spec required that when an `ACK` was split across multiple lines, clients
+and servers shouldn't change capabilities until the last `ACK` in the series. This advice has been
+removed because there's no reasonable way to tell whether it's a single-line or a multi-line `ACK`.
