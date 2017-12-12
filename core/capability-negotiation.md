@@ -267,6 +267,10 @@ This subcommand has a single parameter consisting of a space-separated list of c
 names. Each capability name may be prefixed with a dash (`-`), indicating that this
 capability has been disabled as requested.
 
+If an ACK reply originating from the server is spread across multiple lines, a client MUST NOT
+change capabilities until the last ACK of the set is received. Equally, a server MUST NOT
+change the capabilities of the client until the last ACK of the set has been sent.
+
 ### The CAP NAK subcommand
 
 The NAK subcommand designates that the requested capability change was rejected.  The server
@@ -443,7 +447,3 @@ from this specification.
 Previous versions of this spec recommended sending `CAP END` upon connection if the client didn't
 want to perform CAP negotiation. This advice has been removed as sending only `CAP END` doesn't
 make much sense in this case.
-
-Previous versions of this spec required that when an `ACK` was split across multiple lines, clients
-and servers shouldn't change capabilities until the last `ACK` in the series. This advice has been
-removed because there's no reasonable way to tell whether it's a single-line or a multi-line `ACK`.
