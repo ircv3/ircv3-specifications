@@ -94,9 +94,16 @@ Example with capability negotiation, but where the client recognises no advertis
     Server: 001 dan :Welcome to the Internet Relay Network dan
     ...
 
-Example without capability negotiation:
+Example where the server doesn't support capability negotiation:
 
     Client: CAP LS 302
+    Client: NICK dan
+    Client: USER d * 0 :This is a really good name
+    Server: 001 dan :Welcome to the Internet Relay Network dan
+    ...
+
+Example where the client doesn't support capability negotiation:
+
     Client: NICK dan
     Client: USER d * 0 :This is a really good name
     Server: 001 dan :Welcome to the Internet Relay Network dan
