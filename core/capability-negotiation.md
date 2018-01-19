@@ -96,7 +96,6 @@ Example with capability negotiation, but where the client recognises no advertis
 
 Example where the server doesn't support capability negotiation:
 
-    Client: CAP LS 302
     Client: NICK dan
     Client: USER d * 0 :This is a really good name
     Server: 001 dan :Welcome to the Internet Relay Network dan
@@ -179,6 +178,7 @@ Example:
 As an overview, these are the new features introduced with each `CAP LS` version:
 
 | CAP | Name | Description |
+| --- | ---- | ----------- |
 | `302` | Capability values | Additional data with each capability name when advertised in `CAP LS` and `CAP NEW`. |
 | `302` | Multiline replies | `CAP LS` and `CAP LIST` can be split across multiple lines, with a minor syntax change that allows clients to wait for the last message and process them together. |
 | `302` | `cap-notify` | This capability is enabled implicitly with `302`, and adds the `CAP NEW` and `CAP DEL` messages which let the client know about added and removed capabilities. |
