@@ -109,12 +109,12 @@ A client with the nick `dan` reconnecting. The old connection used the username 
     C2 - S: :irc.example.com CAP * LS :sasl draft/resume
     C2 - C: CAP REQ :sasl draft/resume
     C2 - S: :irc.example.com CAP dan- ACK :sasl draft/resume
+    C2 - C: RESUME dan 2017-04-13T15:12:51.620Z
     C2 - C: AUTHENTICATE PLAIN
     C2 - S: :irc.example.com AUTHENTICATE +
     C2 - C: AUTHENTICATE YnVubnkAYnVubnkAYnVubnk=
     C2 - S: :irc.example.com 900 dan- * bunny :You are now logged in as bunny
     C2 - S: :irc.example.com 903 dan- :SASL authentication successful
-    C2 - C: RESUME dan 2017-04-13T15:12:51.620Z
     C2 - S: :irc.example.com RESUMED dan ~d 127.0.0.1 2017-04-13T15:12:51.620Z
     ... C1's connection is closed and C1's attributes are applied to C2 ...
     C2 - C: CAP END
