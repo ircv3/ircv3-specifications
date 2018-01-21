@@ -21,7 +21,7 @@ This feature is enabled using the `draft/resume` capability, and uses various ne
 
 ### Capabilities
 
-The `draft/resume` capability is advertised by servers that support resuming connections. This capability is requested by clients that reconnect in this way with the `RESUME` command and have the ability to correctly parse the `RESUMED` message as described in this specification. Once the `draft/resume` capability has been negotiated for a client, servers MAY extend the "ping timeout" length for that client (with the expectation that if the client disconnects, it will try to resume its' connection using the method described here).
+The `draft/resume` and `sasl` capabilities are advertised by servers that support resuming connections. The `draft/resume` capability is requested by clients that support parsing the `RESUMED` message described in this specification, as well as those using the `RESUME` command to resume their previous connection. Once the `draft/resume` capability has been negotiated for a client, servers MAY extend the "ping timeout" length for that client (with the expectation that if the client disconnects, it will try to resume its' connection as described here).
 
 ### Messages
 
@@ -56,7 +56,7 @@ This message has the following format:
 
     :nick!olduser@oldhost RESUMED nick user host [timestamp]
 
-`nick` is the nickname of the client whose connection has been resumed. `user` and `host` are the username and hostname that the new connecting client has. The client receiving this message MUST update the username and hostname they have stored for the given client, in the same way that the `CHGHOST` message is parsed. `timestamp` if given, shows when the reconnecting client received their last message from the server. The timestamp may be used as a rough indication of how much message history has been lost.
+`nick` is the nickname of the client whose connection has been resumed. The `user` and `host` params are the username and hostname that the new connecting client has. The client receiving this message MUST update the username and hostname they have stored for the given client, in the same way that the `CHGHOST` message is parsed. `timestamp` if given, shows when the reconnecting client received their last message from the server. The timestamp may be used as a rough indication of how much message history has been lost.
 
 When sent to other clients, the `RESUMED` message MUST have the source of the old client's nickmask. This is illustrated in the examples below.
 
@@ -80,7 +80,7 @@ Upon connection, clients request the `draft/resume` capability. If they receive 
 
 After successfully completing SASL authentication, clients wishing to resume an old connection send an appropriate `RESUME` command indicating the nickname they wish to take over and when the client received the last message from the server (to assist in replaying history and let other clients know how long they've been disconnected for). If resuming is successful, clients are sent the `RESUMED` message and then connection registration continues, eventually ending in the registration burst (`001`-`005` and all).
 
-Once the registration burst has been sent to the client, the server sends the channel `JOIN` messages and the usual numerics that are sent on joining a channel, and dispatches the relevant messages and numerics to other clients in related channels. The new client is also given the user modes that were active on the old client, as appropriate.
+Once the registration burst has been sent to the client, the server sends the channel `JOIN` messages and the usual numerics that are sent on joining a channel and dispatches the relevant messages and numerics to other clients in those channels (i.e. either just the `RESUMED` message, or a `QUIT`+`JOIN`+etc if they don't support the `draft/resume` cap). The new client is also given the user modes that were active on the old client, as appropriate.
 
 Other clients that have the reconnecting user `MONITOR`'d MUST be sent one `RPL_MONOFFLINE` numeric and one `RPL_MONONLINE` numeric indicating that the user reconnected. The timestamps on both these messages, if sent, SHOULD be the current time.
 
