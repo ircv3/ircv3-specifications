@@ -70,7 +70,9 @@ Reason: more common URL-escaping eats more space, while IRC message's length is 
 Also having semicolon as `\:` makes it easy to split the `<tags>` string by `;` first.
 
 If a lone `\` exists at the end of an escaped value (with no escape character following it), then there
-SHOULD be no output character. For example, the escaped value `test\` should unescape to `test`.
+SHOULD be no output character. For example, the escaped value `test\` should unescape to `test`. If a
+`\` exists with no valid escape character (for example, `\b`), then the invalid backslash SHOULD be
+dropped. For example, `\b` should unescape to just `b`.
 
 ## Rules for naming message tags
 
@@ -124,5 +126,7 @@ an opaque identifier. This was added to improve client resiliency.
 Previous versions of this spec did not specify how to handle trailing backslashes with
 no escape character. This was added to help consistency across implementations.
 
+Previous versions of this spec did not specify how to handle invalid escapes. This was
+clarified to help consistency across implementations.
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
