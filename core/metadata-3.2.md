@@ -293,7 +293,7 @@ Setting metadata for an invalid target:
 Setting metadata with an invalid key:
 
     METADATA user1 SET $url$ :http://www.example.com
-    :irc.example.com 767 $url$ :invalid metadata key
+    :irc.example.com 767 $url$
 
 Listing metadata, with an implementation-defined visibility field:
 
