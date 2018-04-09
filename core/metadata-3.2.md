@@ -1,12 +1,19 @@
 ---
-title: IRCv3.2 Metadata
+title: Metadata
 layout: spec
-deprecated: true
 copyrights:
   -
     name: "Kiyoshi Aman"
     period: "2012"
     email: "kiyoshi.aman@gmail.com"
+  -
+    name: "Attila Molnar"
+    period: "2015-2016"
+    email: "attilamolnar@hush.com"
+  -
+    name: "James Wheare"
+    period: "2018"
+    email: "james@irccloud.com"
 ---
 ## Introduction
 
@@ -64,7 +71,7 @@ The format MUST be as follows:
 
 This subcommand MUST list all currently-set metadata keys along with their
 values. The response will be zero or more `RPL_KEYVALUE` events,
-	following by `RPL_METADATAEND` event.
+followed by a `RPL_METADATAEND` event.
 
 Servers MAY omit certain metadata, which is considered not visible for
 the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
@@ -77,8 +84,7 @@ In case of invalid target `RPL_METADATAEND` MUST NOT be sent.
 
 This subcommand is used to set a required key to an optional value. If no value
 is given, the key is removed; otherwise, the value is assigned to the key. The
-format of
- `METADATA SET` MUST be as follows:
+format of `METADATA SET` MUST be as follows:
 
     METADATA <Target> SET <Key> [:Value]
 
@@ -95,11 +101,18 @@ It is an error for users to set keys on targets for which they lack
 authorization from the server, and the server MUST respond with
 `ERR_KEYNOPERMISSION` and fail the request.
 
+Servers MAY respond with only an `ERR_METADATARATELIMIT` event and fail the
+request. When a client receives an `ERR_METADATARATELIMIT` event, it SHOULD
+retry the `METADATA SET` request at a later time. If the
+`ERR_METADATARATELIMIT` event contains the OPTIONAL `<RetryAfter>` parameter,
+the parameter value MUST be a positive integer indicating the minimum number
+of seconds the client SHOULD wait before retrying the request.
+
 If the request is successful the server MUST carry out the requested change and
 the response MUST be one `RPL_KEYVALUE` event, representing what was actually
 stored by the server, and one `RPL_METADATAEND` event.
 
-*Errors*: `ERR_METADATALIMIT`, `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`
+*Errors*: `ERR_METADATALIMIT`, `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`, `ERR_METADATARATELIMIT`
 
 ### METADATA CLEAR
 
@@ -120,6 +133,22 @@ authorization from the server. Servers MAY reject this subcommand for channels,
 using `ERR_KEYNOPERMISSION` with an asterisk (`*`) in the `<Key>` field.
 
 *Errors*: `ERR_KEYNOPERMISSION`
+
+### METADATA SYNC
+
+This subcommand requests the full synchronization of metadata associated with
+the given target.
+
+Syntax:
+
+    METADATA <Target> SYNC
+
+The result of this subcommand is either zero or more METADATA events on
+success, or a `ERR_METADATASYNCLATER` numeric if the synchronization cannot be
+performed at this time.
+
+For details, please see the Postponed synchronization subsection of the
+Metadata notifications section.
 
 ## Metadata Notifications
 
@@ -158,6 +187,29 @@ Metadata propagates to clients automatically under certain conditions:
    subscribe to users SHOULD have current metadata propagated to them for those
    users.
 
+### Postponed synchronization
+
+It can happen that a server needs to send a large number of `METADATA` events
+to a client due to the client subscribing to many targets at once.
+For example, this can happen if the client joins a large channel or when the
+client is already on some channels and turns on the `metadata-notify`
+capability. In this case the server MAY choose to not propagate the metadata
+of the newly subscribed targets to the client when the join or when the
+`CAP REQ` happens, but send a `ERR_METADATASYNCLATER` numeric instead.
+
+#### Handling `ERR_METADATASYNCLATER`
+
+`ERR_METADATASYNCLATER` signals that the target specified in the numeric has
+some metadata set that the client SHOULD request synchronization of at a later
+time.
+
+The client can then use the `METADATA SYNC` subcommand to request the
+synchronization of the metadata of the target.
+
+The `[<RetryAfter>]` parameter, if present, indicates the number of seconds
+the client SHOULD wait before sending the `METADATA SYNC` request for the
+`<Target>`.
+
 ## Metadata Restrictions
 
 Keys MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:`, and are
@@ -188,20 +240,23 @@ keys per-user; the format in that case MUST be `METADATA=<integer>`, where
 
 ## Numerics
 
-The numerics 760 through 769 MUST be reserved for metadata, carrying the
+The numerics 760 through 769 and 774 and 775 MUST be reserved for metadata, carrying the
 following labels and formats:
 
-| No. | Label                 | Format                                   |
-| --- | --------------------- | ---------------------------------------- |
-| 760 | `RPL_WHOISKEYVALUE`   | `<Target> <Key> <Visibility> :<Value>`   |
-| 761 | `RPL_KEYVALUE`        | `<Target> <Key> <Visibility>[ :<Value>]` |
-| 762 | `RPL_METADATAEND`     | `:end of metadata`                       |
-| 764 | `ERR_METADATALIMIT`   | `<Target> :metadata limit reached`       |
-| 765 | `ERR_TARGETINVALID`   | `<Target> :invalid metadata target`      |
-| 766 | `ERR_NOMATCHINGKEY`   | `<Target> <Key> :no matching key`        |
-| 767 | `ERR_KEYINVALID`      | `<Key> :invalid metadata key`            |
-| 768 | `ERR_KEYNOTSET`       | `<Target> <Key> :key not set`            |
-| 769 | `ERR_KEYNOPERMISSION` | `<Target> <Key> :permission denied`      |
+| No. | Label                   | Format                                   |
+| --- | ----------------------- | ---------------------------------------- |
+| 760 | `RPL_WHOISKEYVALUE`     | `<Target> <Key> <Visibility> :<Value>`   |
+| 761 | `RPL_KEYVALUE`          | `<Target> <Key> <Visibility>[ :<Value>]` |
+| 762 | `RPL_METADATAEND`       | `:end of metadata`                       |
+| 764 | `ERR_METADATALIMIT`     | `<Target> :metadata limit reached`       |
+| 765 | `ERR_TARGETINVALID`     | `<Target> :invalid metadata target`      |
+| 766 | `ERR_NOMATCHINGKEY`     | `<Target> <Key> :no matching key`        |
+| 767 | `ERR_KEYINVALID`        | `<Key> :invalid metadata key`            |
+| 768 | `ERR_KEYNOTSET`         | `<Target> <Key> :key not set`            |
+| 769 | `ERR_KEYNOPERMISSION`   | `<Target> <Key> :permission denied`      |
+
+| 774 | `ERR_METADATASYNCLATER` | `<Target> [<RetryAfter>]`                |
+| 775 | `ERR_METADATARATELIMIT` | `<Target> <Key> <RetryAfter> :<Value>`   |
 
 The `<Visibility>` field for numerics follows the same rules and requirements
 as specified for notifications' visibility.
@@ -267,6 +322,45 @@ External server sets metadata on a user:
 
     :irc.example.com METADATA user1 account * :user1
 
+Server rate limits setting metadata with a RetryAfter value
+
+    METADATA * SET url :http://www.example.com
+    :irc.example.com 775 * url 5 :http://www.example.com
+
+Server rate limits setting metadata with no RetryAfter value
+
+    METADATA * SET url :http://www.example.com
+    :irc.example.com 775 * url * :http://www.example.com
+
+Client joins a channel, gets `ERR_METADATASYNCLATER` and requests a sync later
+
+    C: JOIN #bigchan
+    S: modernclient!modernclient@example.com JOIN #bigchan
+    S: :irc.example.com 353 modernclient @ #bigchan :user1 user2 user3 user4 user5 ...
+    S: :irc.example.com 353 modernclient @ #bigchan :user51 user52 user53 user54 ...
+    S: :irc.example.com 353 modernclient @ #bigchan :user101 user102 user103 user104 ...
+    S: :irc.example.com 353 modernclient @ #bigchan :user151 user152 user153 user154 ...
+    S: :irc.example.com 366 modernclient #bigchan :End of /NAMES list.
+    S: :irc.example.com 774 modernclient #bigchan 4
+    
+    client waits 4 seconds
+    
+    C: METADATA #bigchan SYNC
+    S: :irc.example.com 774 modernclient #bigchan 6
+    
+    client waits 6 seconds
+    
+    C: METADATA #bigchan SYNC
+    S: :irc.example.com METADATA user52 foo * :example value 1
+    S: :irc.example.com METADATA user2 bar * :second example value 
+    S: :irc.example.com METADATA user1 foo * :third example value
+    S: :irc.example.com METADATA user1 bar * :this is another example value
+    S: :irc.example.com METADATA user152 baz * :Lorem ipsum
+    S: :irc.example.com METADATA user3 website * :www.example.com
+    S: :irc.example.com METADATA user152 bar * :dolor sit amet
+
+    ...and many more metadata messages   
+
 ### Non-normative
 
 The following examples describe how an implementation might use certain
@@ -289,3 +383,6 @@ Notification for a user becoming an operator:
 * Earlier versions of this spec did not specify `metadata-notify` as OPTIONAL.
 * Due to discovered issues around rate-limiting and notifications being solved,
   this specification has been deprecated for the time being.
+* Earlier versions of this spec lacked rate limiting protocol mechanics.
+* Earlier versions of this spec lacked support for delayed synchronization
+  and `METADATA SYNC`.
