@@ -277,6 +277,9 @@ By default, the client is not subscribed to any keys.
 
 Managing subscriptions are possible with the protocol described below.
 
+Clients MUST handle the case where a metadata notification is sent even if they
+haven't subscribed to any key.
+
 ## Compatibility with `metadata-notify`
 
 It is pointless to use the new metadata notify cap described in this document
