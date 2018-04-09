@@ -95,7 +95,7 @@ Servers MUST respond to requests to remove a key that has a valid name but is
 not set with only an `ERR_KEYNOTSET` event and fail the request.
 
 Servers MAY respond to certain keys, considered not settable by the requesting
-user, with `ERR_KEYNOPERMISSION`.
+user, or otherwise disallowed by the server, with `ERR_KEYNOPERMISSION`.
 
 It is an error for users to set keys on targets for which they lack
 authorization from the server, and the server MUST respond with
