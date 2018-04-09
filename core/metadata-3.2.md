@@ -212,7 +212,7 @@ the client SHOULD wait before sending the `METADATA SYNC` request for the
 
 ## Metadata Restrictions
 
-Keys MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:`, and are
+Keys MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are
 case-insensitive. Values are unrestricted, except that they MUST be UTF-8.
 Server and client authors cannot assume that keys will carry specific
 formatting or meaning.
