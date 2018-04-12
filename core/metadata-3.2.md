@@ -281,6 +281,9 @@ If the client is subscribed to too many keys then the server MUST include a
 `ERR_METADATATOOMANYSUBS` numeric in its reply and not process any further keys
 in the command.
 
+The `<key>` parameter of this numeric is the first key that the client was not
+subscribed to.
+
 If the client successfully subscribes to a key it is not subscribed to then the
 key MUST appear in a `RPL_METADATASUBOK` reply numeric.
 
@@ -337,6 +340,8 @@ The replied `RPL_METADATASUBS` numerics, collectively, MUST contain all keys
 the client is subscribed to exactly once and MUST NOT contain keys the client
 is not subscribed to.
 
+The order of the keys is undefined.
+
 ### METADATA SYNC
 
 This subcommand requests the full synchronization of metadata associated with
@@ -352,15 +357,6 @@ performed at this time.
 
 For details, please see the Postponed synchronization subsection of the
 Metadata notifications section.
-
-### RPL_METADATASUBS
-
-The order of the keys is undefined.
-
-### ERR_METADATATOOMANYSUBS
-
-The `<key>` parameter of this numeric is the first key that the client was not
-subscribed to.
 
 ## Notification Mechanics (TODO merge with Metadata Notifications)
 
