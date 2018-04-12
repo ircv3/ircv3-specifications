@@ -1,6 +1,7 @@
 ---
 title: Metadata
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Kiyoshi Aman"
@@ -39,35 +40,139 @@ This proposal aims to codify one mechanism for working with metadata: metadata
 may be configured through a client-to-server event created specifically for
 this purpose.
 
-## METADATA
+## Mechanisms
 
-All metadata subcommands will flow through the outgoing `METADATA` verb.
+This document defines the following new protocol features:
 
-This specification adds the `metadata` capability.
+* Capability: `metadata`
+* Server notification: `METADATA`
+* Client command: `METADATA`
+* Server reply and error numerics
 
-For the purposes of this specification, 'targets' are entities for which
-metadata may be set. Such entities MUST be a valid nickname or channel. As a
-convenient shorthand, an asterisk (`*`) MAY be specified to indicate that the
-target is the client itself. Invalid targets MUST be responded to with
-`ERR_TARGETINVALID`.
+### Capability
 
-Implementations MUST provide a mechanism for controlling the ability to set or
-clear metadata on channels. Such mechanisms SHALL respond to unauthorized
-attempts with `ERR_KEYNOPERMISSION`.
+The `metadata` capability and value indicates that a server supports metadata, and communicates any configuration value keys that may affect the level of support.
 
-Implementations MAY provide a mechanism for limiting visibility of certain
-metadata to certain users. Such mechanism is implementation-defined;
-for instance, it may depend on some permission level or a flag.
+The ABNF format of the `metadata` capability and value is: (TODO verify ABNF)
 
-### Capability value
+    capability ::= 'metadata' ['=' value]
+    value      ::= value_item [',' value_item]*
+    value_item ::= ( 'maxsub=' integer ) |  ( 'maxkey=' integer )
 
-The value of the `metadata` capability introduced in this document MUST
-have the following format:
+The value keys are defined as follows:
 
-    [<anything>,]maxsub=<N>[,<anything>]`
+* `maxsub`: the maximum number of keys a client is allowed in its subscripion list. See the [Metadata subscriptions](#todo) section for more details.
+* `maxkey`: the maximum number of keys a client is allowed to set on its own nickname.
 
-`<N>` is an integer indicating the maximum number of keys a client is allowed
-to be subscribed to.
+
+TODO is this still required? include it for back compat?
+If `METADATA` is supported, it MUST be specified in `RPL_ISUPPORT` using the
+`METADATA` key. Servers MAY specify a limit on the number of explicitly-set
+keys per-user; the format in that case MUST be `METADATA=<integer>`, where
+`<integer>` is the limit.
+
+
+### Server notification
+
+Clients that request the `metadata` capability MUST be able to handle the `METADATA` server notification. After negotiating this capability, servers MAY send these notifications to clients at any time.
+
+The format of the `METADATA` server notication is:
+
+    METADATA <Target> <Key> <Visibility> <Value>
+
+`Target` MUST be any valid nickname or channel name.
+
+`Key` MUST be a valid key name
+
+`Visibility` MUST be an asterisk (`*`) for keys visible to everyone, or an implementation-defined value which describes the key's visibility status; for instance, it MAY be a permission level or flag. (TODO should we define a prefix like STATUSMSG for this value?)
+
+`Value` MUST be any UTF-8 encoded value.
+
+### Client command
+
+The format of the `METADATA` client command is:
+
+    METADATA <Target> <Subcommand> [<Param 1> ... [<Param n>]]
+
+`Target` MUST be any valid nickname or channel name. Clients MAY use the asterisk symbol (`*`) when targeting their own nickname.
+
+`Subcommand` MUST be one of the following, described in detail along with any `Param` further in the document:
+
+* [GET](#todo)
+* [LIST](#todo)
+* [SET](#todo)
+* [CLEAR](#todo)
+* [SUB](#todo)
+* [UNSUB](#todo)
+* [SUBS](#todo)
+* [SYNC](#todo)
+
+### Numerics
+
+The following numerics 760 through 775 are reserved for metadata, with these labels and parameters:
+
+| No. | Label                     | Parameters                               |
+| --- | ------------------------- | ---------------------------------------- |
+| 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
+| 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
+| 762 | `RPL_METADATAEND`         | `:end of metadata`                       |
+| 764 | `ERR_METADATALIMIT`       | `<Target> :metadata limit reached`       |
+| 765 | `ERR_TARGETINVALID`       | `<Target> :invalid metadata target`      |
+| 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
+| 767 | `ERR_KEYINVALID`          | `:<InvalidKey>`                          |
+| 768 | `ERR_KEYNOTSET`           | `<Target> <Key> :key not set`            |
+| 769 | `ERR_KEYNOPERMISSION`     | `<Target> <Key> :permission denied`      |
+| 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
+| 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
+| 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
+| 773 | `ERR_METADATATOOMANYSUBS` | `<Key>`                                  |
+| 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
+| 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
+
+Reference table listing which subcommands of `METADATA` or any other commands that produce these numerics:
+
+| Label                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
+| ------------------------- | --- | ---- | --- | ----- | --- | ----- | ---- | ---- | ------- |
+| `RPL_WHOISKEYVALUE`       |     |      |     |       |     |       |      |      | `WHOIS` |
+| `RPL_KEYVALUE`            | *   | *    | *   | *     |     |       |      |      |         |
+| `RPL_METADATAEND`         |     | *    | *   | *     | *   | *     | *    |      |         |
+| `ERR_METADATALIMIT`       |     |      | *   |       |     |       |      |      |         |
+| `ERR_TARGETINVALID`       | *   | *    | *   | *     | *   | *     | *    | *    |         |
+| `ERR_NOMATCHINGKEY`       | *   |      |     |       |     |       |      |      |         |
+| `ERR_KEYINVALID`          | *   |      | *   |       | *   | *     |      |      |         |
+| `ERR_KEYNOTSET`           |     |      | *   |       |     |       |      |      |         |
+| `ERR_KEYNOPERMISSION`     | *   | *    | *   |       | *   | *     |      |      |         |
+| `RPL_METADATASUBOK`       |     |      |     |       | *   |       |      |      |         |
+| `RPL_METADATAUNSUBOK`     |     |      |     |       |     | *     |      |      |         |
+| `RPL_METADATASUBS`        |     |      |     |       |     |       | *    |      |         |
+| `ERR_METADATATOOMANYSUBS` |     |      |     |       | *   |       |      |      |         |
+| `ERR_METADATASYNCLATER`   |     |      |     |       |     |       |      | *    | `JOIN`  |
+| `ERR_METADATARATELIMIT`   |     |      | *   |       |     |       |      |      |         |
+
+Each subcommand documentation describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple commands:
+
+Replies:
+
+* `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined as specified in the [server notification](#todo) format.
+* `RPL_METADATAEND` delimits the end of a sequence of metadata replies.
+
+Errors:
+
+* `ERR_TARGETINVALID` when a client refers to an invalid target.
+* `ERR_KEYINVALID` when a client refers to an invalid key.
+* `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target without sufficient permission.
+
+### Keys and values
+
+Keys MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Values are unrestricted, except that they MUST be UTF-8.
+
+The expected client behaviour of individual metadata keys SHOULD be defined in separate specifications and listed in the IRCv3 extension registry.
+
+Servers MAY impose a limit on the number of keys a client is allowed to set via the `maxkey` capability value.
+
+Servers MAY impose a limit on the number of keys a client is allowed in its subscripion list via the `maxsub` capability value.
+
+## Subcommands
 
 ### METADATA GET
 
