@@ -456,108 +456,60 @@ The `[<RetryAfter>]` parameter, if present, indicates the number of seconds
 the client SHOULD wait before sending the `METADATA SYNC` request for the
 `<Target>`.
 
-## Metadata Restrictions
-
-Keys MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are
-case-insensitive. Values are unrestricted, except that they MUST be UTF-8.
-Server and client authors cannot assume that keys will carry specific
-formatting or meaning.
-
-If a limit is set for keys, it MUST only apply to user-set keys and MUST be
-communicated to the user via `RPL_ISUPPORT` as a numeric value on the
-`METADATA` key.
-
 ## WHOIS
 
 A subset of metadata MAY be sent via the `RPL_WHOISKEYVALUE` event; this
 subset SHALL be set explicitly, rather than informatively or as a side-effect
 of other events. For a complete view of user metadata, see `METADATA LIST`.
 
-## IRC Daemons
-
-IRC servers may choose to accept or deny any key for any reason, and SHOULD
-implement a blacklist or whitelist functionality for this purpose, configurable
-by the server operators.
-
-If `METADATA` is supported, it MUST be specified in `RPL_ISUPPORT` using the
-`METADATA` key. Servers MAY specify a limit on the number of explicitly-set
-keys per-user; the format in that case MUST be `METADATA=<integer>`, where
-`<integer>` is the limit.
-
-## Numerics
-
-The numerics 760 through 775 MUST be reserved for metadata, carrying the
-following labels and formats:
-
-| No. | Label                     | Format                                   |
-| --- | ------------------------- | ---------------------------------------- |
-| 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
-| 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
-| 762 | `RPL_METADATAEND`         | `:end of metadata`                       |
-| 764 | `ERR_METADATALIMIT`       | `<Target> :metadata limit reached`       |
-| 765 | `ERR_TARGETINVALID`       | `<Target> :invalid metadata target`      |
-| 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
-| 767 | `ERR_KEYINVALID`          | `:<InvalidKey>`                          |
-| 768 | `ERR_KEYNOTSET`           | `<Target> <Key> :key not set`            |
-| 769 | `ERR_KEYNOPERMISSION`     | `<Target> <Key> :permission denied`      |
-| 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
-| 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
-| 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
-| 773 | `ERR_METADATATOOMANYSUBS` | `<Key>`                                  |
-| 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
-| 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
-
-The `<Visibility>` field for numerics follows the same rules and requirements
-as specified for notifications' visibility.
-
 ## Examples
 
 Setting metadata for self:
 
     METADATA * SET url :http://www.example.com
-    :irc.example.com 761 * url * :http://www.example.com
-    :irc.example.com 762 :end of metadata
+    :irc.example.com RPL_KEYVALUE * url * :http://www.example.com
+    :irc.example.com RPL_METADATAEND :end of metadata
 
 Setting metadata for channel:
 
     METADATA #example SET url :http://www.example.com
-    :irc.example.com 761 #example url * :http://www.example.com
-    :irc.example.com 762 :end of metadata
+    :irc.example.com RPL_KEYVALUE #example url * :http://www.example.com
+    :irc.example.com RPL_METADATAEND :end of metadata
 
 Setting metadata for another user, no permission:
 
     METADATA user1 SET url :http://www.example.com
-    :irc.example.com 769 user1 url :permission denied
+    :irc.example.com ERR_KEYNOPERMISSION user1 url :permission denied
 
 Setting metadata for self, limit reached:
 
     METADATA * SET url :http://www.example.com
-    :irc.example.com 764 * :metadata limit reached
+    :irc.example.com ERR_METADATALIMIT * :metadata limit reached
 
 Setting metadata for an invalid target:
 
     METADATA $a:user SET url :http://www.example.com
-    :irc.example.com 765 $a:user :invalid metadata target
+    :irc.example.com ERR_TARGETINVALID $a:user :invalid metadata target
 
 Setting metadata with an invalid key:
 
     METADATA user1 SET $url$ :http://www.example.com
-    :irc.example.com 767 $url$
+    :irc.example.com ERR_KEYINVALID $url$
 
 Listing metadata, with an implementation-defined visibility field:
 
     METADATA user1 LIST
-    :irc.example.com 761 user1 url * :http://www.example.com
-    :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
-    :irc.example.com 761 user1 bot-likeliness-score visible-only-for-admin :42
-    :irc.example.com 762 :end of metadata
+    :irc.example.com RPL_KEYVALUE user1 url * :http://www.example.com
+    :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
+    :irc.example.com RPL_KEYVALUE user1 bot-likeliness-score visible-only-for-admin :42
+    :irc.example.com RPL_METADATAEND :end of metadata
 
 Getting several keys of metadata of the same user:
 
     METADATA user1 GET blargh splot im.xmpp
-    :irc.example.com 766 user1 blargh :no matching key
-    :irc.example.com 766 user1 splot :no matching key
-    :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
+    :irc.example.com ERR_NOMATCHINGKEY user1 blargh :no matching key
+    :irc.example.com ERR_NOMATCHINGKEY user1 splot :no matching key
+    :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
 
 User sets metadata on a channel:
 
@@ -574,12 +526,12 @@ External server sets metadata on a user:
 Server rate limits setting metadata with a RetryAfter value
 
     METADATA * SET url :http://www.example.com
-    :irc.example.com 775 * url 5 :http://www.example.com
+    :irc.example.com ERR_METADATARATELIMIT * url 5 :http://www.example.com
 
 Server rate limits setting metadata with no RetryAfter value
 
     METADATA * SET url :http://www.example.com
-    :irc.example.com 775 * url * :http://www.example.com
+    :irc.example.com ERR_METADATARATELIMIT * url * :http://www.example.com
 
 Client joins a channel, gets `ERR_METADATASYNCLATER` and requests a sync later
 
@@ -590,12 +542,12 @@ Client joins a channel, gets `ERR_METADATASYNCLATER` and requests a sync later
     S: :irc.example.com 353 modernclient @ #bigchan :user101 user102 user103 user104 ...
     S: :irc.example.com 353 modernclient @ #bigchan :user151 user152 user153 user154 ...
     S: :irc.example.com 366 modernclient #bigchan :End of /NAMES list.
-    S: :irc.example.com 774 modernclient #bigchan 4
+    S: :irc.example.com ERR_METADATASYNCLATER modernclient #bigchan 4
     
     client waits 4 seconds
     
     C: METADATA #bigchan SYNC
-    S: :irc.example.com 774 modernclient #bigchan 6
+    S: :irc.example.com ERR_METADATASYNCLATER modernclient #bigchan 6
     
     client waits 6 seconds
     
