@@ -21,7 +21,7 @@ Once in use, this:
 
 ### How the proof works
 
-The IRC network creates the proof by generating JWT tokens and sending them to the client. The client may use this token to open an external service with the token in its URL.
+The IRC network creates the proof by generating signed JWT tokens and sending them to the client. The client may use this token to open an external service with the token in its URL.
 
 The JWT token (https://jwt.io/) is an encoded JSON payload that is signed with a shared secret string between the IRC server and the external service. The JSON payload consists of known properties (claims) that include:
 * `exp` `1529917513` Expiry time for this token. Usually less than 1 minute from the token generation.
@@ -42,9 +42,9 @@ Only one new command is introduced in this extension, `EXTJWT`.
 
 Syntax: `EXTJWT [channel]`
 
-Response syntax: `EXTJWT <requested_target> [*] <JWT_token>`
+Response syntax: `EXTJWT <requested_target> [*] <jwt_token>`
 
-The client may send `EXTJWT` or `EXTJWT *` to the server to request a new JWT token. The server must then reply with `EXTJWT *` and a JWT token as its second parameter, containing the following claims that are relevant to the client at that time:
+The client MAY send `EXTJWT` or `EXTJWT *` to the server to request a new JWT token. The server MUST then reply with `EXTJWT *` and a JWT token as its jwt_token parameter containing the following claims that are relevant to the client at that time:
 
 * `exp` Number; Unix timestamp for when this token expires. Usually less than 1 minute from the token generation.
 * `iss` String; The server name that generated this token.
@@ -52,18 +52,18 @@ The client may send `EXTJWT` or `EXTJWT *` to the server to request a new JWT to
 * `account` String; The account name of the user that requested this token. Empty if not available.
 * `net_modes` []String; An array of user modes the IRCd may want to disclose. Eg, if the user is an operator.
 
-The command must also support a single parameter of a channel name. Eg. `EXTJWT #channel`. The server must then reply with the channel name as its first parameter and the JWT token containing the above claims and also the following claims relevant to the channel at that time:
+The command MUST also support a single parameter of a channel name. Eg. `EXTJWT #channel`. The server MUST then reply with the channel name as its requested_target parameter, the JWT token containing the above claims and also the following claims relevant to the channel at that time:
 
 * `channel` String; The channel name this token is related to.
 * `joined` Boolean; True if the client that requested this token is joined to the channel.
 * `time_joined` Number; The time in which the user joined the channel.
 * `modes` []String; An array of the channel modes the client has in this channel.
 
-The IRC server must include the above claims but may include any extra claims.
+The IRC server MUST include the above claims but MAY include any extra claims.
 
 #### Handling long responses
 
-In some cases the encoded token may be longer than the maximum line length allowed between the client and server. In this case, the first parameter of the response must be `*` to indicate that further data will follow. The final chunk of the response sent to the client must not include `*` as the first parameter.
+In some cases the encoded token may be longer than the maximum line length allowed between the client and server. In this case, the first parameter of the response MUST be `*` to indicate that further data will follow. The final chunk of the response sent to the client MUST NOT include `*` as the first parameter.
 
 Eg:
 ~~~
