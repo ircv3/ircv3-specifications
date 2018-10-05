@@ -40,7 +40,7 @@ Only one new command is introduced in this extension, `EXTJWT`.
 
 ### The EXTJWT Command
 
-Syntax: `EXTJWT [channel]`
+Syntax: `EXTJWT ( <channel> | * )`
 
 Response syntax: `EXTJWT <requested_target> [*] <jwt_token>`
 
@@ -55,8 +55,7 @@ The client MAY send `EXTJWT` or `EXTJWT *` to the server to request a new JWT to
 The command MUST also support a single parameter of a channel name. Eg. `EXTJWT #channel`. The server MUST then reply with the channel name as its requested_target parameter, the JWT token containing the above claims and also the following claims relevant to the channel at that time:
 
 * `channel` String; The channel name this token is related to.
-* `joined` Boolean; True if the client that requested this token is joined to the channel.
-* `time_joined` Number; The time in which the user joined the channel.
+* `joined` Number; Unix timestamp of the time in which the client the channel. 0 if not joined.
 * `modes` []String; An array of the channel modes the client has in this channel.
 
 The IRC server MUST include the above claims but MAY include any extra claims.
@@ -102,10 +101,10 @@ Where the replied token is decoded into:
 #### A client logged into the IRC server and has channel operator privileges on a channel
 ~~~
 [C -> S] EXTJWT #channel
-[S -> C] EXTJWT #channel eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mjk5MTc1MTMsImlzcyI6ImlyYy5leGFtcGxlLm9yZyIsIm5pY2siOiJ0ZXN0bmljayIsImFjY291bnQiOiJ0ZXN0bmljayIsIm5ldF9tb2RlcyI6W10sImNoYW5uZWwiOiIjY2hhbm5lbCIsImpvaW5lZCI6dHJ1ZSwidGltZV9qb2luZWQiOjE1Mjk5MTc1MDEsIm1vZGVzIjpbIm8iXX0.jd1VHnEN02mSw4g2BfB-gYOooktpua2HSd9qtcUBZ4M
+[S -> C] EXTJWT #channel eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mjk5MTc1MTMsImlzcyI6ImlyYy5leGFtcGxlLm9yZyIsIm5pY2siOiJ0ZXN0bmljayIsImFjY291bnQiOiJ0ZXN0bmljayIsIm5ldF9tb2RlcyI6W10sImNoYW5uZWwiOiIjY2hhbm5lbCIsImpvaW5lZCI6MTUyOTkxNzUwMSwibW9kZXMiOlsibyJdfQ.AKVHXXHoPFs8dOT2BfethA0ydKAjvGMjzL2vFcms-kc
 ~~~
 
 Where the replied token is decoded into:
 ~~~json
-{"exp":1529917513,"iss":"irc.example.org","nick":"testnick","account":"testnick","net_modes":[],"channel":"#channel","joined":true,"time_joined":1529917501,"modes":["o"]}
+{"exp":1529917513,"iss":"irc.example.org","nick":"testnick","account":"testnick","net_modes":[],"channel":"#channel","joined":1529917501,"modes":["o"]}
 ~~~
