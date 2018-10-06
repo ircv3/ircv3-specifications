@@ -34,7 +34,7 @@ When an external service is opened with this token in its URL, the external serv
 
 ## Usage
 
-If the feature is available on the IRC server, the `EXTJWT` token is added to its ISUPPORT list.
+If the feature is available on the IRC server, the `EXTJWT=1` token pair is added to its ISUPPORT list where `1` denotes the version of this feature.
 
 Only one new command is introduced in this extension, `EXTJWT`.
 
