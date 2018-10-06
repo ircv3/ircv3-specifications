@@ -24,11 +24,11 @@ Once in use, this:
 The IRC network creates the proof by generating signed JWT tokens and sending them to the client. The client may use this token to open an external service with the token in its URL.
 
 The JWT token (https://jwt.io/) is an encoded JSON payload that is signed with a shared secret string between the IRC server and the external service. The JSON payload consists of known properties (claims) that include:
-* `exp` `1529917513` Expiry time for this token. Usually less than 1 minute from the token generation.
+* `exp` `1529917513` Expiry time for this token.
 * `iss` `"irc.example.org"` The server name that generated this token.
 * `sub` `"somenick"` The nick of the user that generated this token.
 * `account` `"somenick"` The account name of the user that generated this token. Empty if not logged in.
-* `net_modes` `["o"]` User modes the IRCd wishes to disclose. Eg, if the user an operator.
+* `net_modes` `["o"]` User modes the IRCd wishes to disclose. Eg, if the user is an operator.
 
 When an external service is opened with this token in its URL, the external service verifies that the token has not been tampered with using its pre-configured secret string and can then use the available claims to create any required user accounts and log the user in automatically.
 
@@ -46,7 +46,7 @@ Response syntax: `EXTJWT <requested_target> [*] <jwt_token>`
 
 The client MAY send `EXTJWT` or `EXTJWT *` to the server to request a new JWT token. The server MUST then reply with `EXTJWT *` and a JWT token as its jwt_token parameter containing the following claims that are relevant to the client at that time:
 
-* `exp` Number; Unix timestamp for when this token expires. Usually less than 1 minute from the token generation.
+* `exp` Number; Unix timestamp for when this token expires. See below for notes on the expiry claim.
 * `iss` String; The server name that generated this token.
 * `sub` String; The nick of the client that requested this token.
 * `account` String; The account name of the user that requested this token. Empty if not available.
@@ -71,6 +71,12 @@ Eg:
 [S -> C] EXTJWT #channel * iY2xhaW0yIjoic29tZSBsb25nIHZhbHVlIiwiY2xhaW0zIjoic29tZSBsb25nIHZhbHVlIiwiY2xhaW00Ijoic29tZSBsb25nIHZhbHVlIiwiY2xhaW01Ijoic29tZSBsb25nIHZhbHVlIiwiY2xhaW02Ijoic29tZSBsb25nIHZhbHVlIiwiY2xhaW03Ijoic29tZSBsb25nIHZhbHVlIiwiY2xhaW04Ijoic29tZSBsb25nZXIgdmFsdWUgdG8gbWFrZSBzdXJlIHRoaXMgdG9rZW4gaXMgdG9vIGxvbmc
 [S -> C] EXTJWT #channel gdG8gc2VuZCBvbiBvbmUgSVJDIDUxMiBjaGFyYWN0ZXIgbGluZSJ9.c9_pKy1jFsDeevja7o6spPa-JUyzg4z4k3A65fxwZWw
 ~~~
+
+#### Notes on the token expiry claim
+
+When generating a token, the expiry (exp) claim must be configured with enough length of time for the token to be used but also be short enough that the token does not last indefinately, leaving the user with a valid token after the user has left a channel or changed its network modes.
+
+One minute is usually enough time for the client to receive the token from the `EXTJWT` command and then open the external service webpage, however, non-webpage based services may require a longer expiration depending on its implementation.
 
 ## Examples
 
