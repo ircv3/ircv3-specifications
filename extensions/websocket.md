@@ -15,7 +15,7 @@ Web based IRC clients are becoming more common and they all increase the demand 
 
 This specification provides a common implementation for web and other websocket clients to connect to IRC networks using common and standard development tools used on web pages, with a focus on a simple client facing interface.
 
-## Websocket features and encoding
+## WebSocket features and encoding
 
 Websockets offer different transports of communication, binary and strings. With the consideration that the IRC protocol is entirely lines of text, we make use of the message based text implementation that websockets natively provide. These are UTF8 encoded text messages where one websocket message consists of a single complete IRC message line.
 
