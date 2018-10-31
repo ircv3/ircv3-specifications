@@ -29,7 +29,7 @@ The syntax of IRC lines MUST NOT be changed. However, IRC servers and clients MU
 
 ## Client example
 ~~~
-let socket = new Websocket('https://ws.example.org');
+let socket = new WebSocket('wss://ws.example.org');
 socket.addEventListener('open', () => {
 	socket.send('USER 0 0 0 0');
 	socket.send('NICK bob');
