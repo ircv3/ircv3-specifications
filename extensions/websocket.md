@@ -17,7 +17,7 @@ This specification provides a common implementation for web and other websocket 
 
 ## Websocket features and encoding
 
-Websockets offer different transports of communication, binary and strings. With the consideration that the IRC protocol is entirely lines of text, we make use of the message based text implementation that websockets natively provide. These are UTf8 encoded text messages where one websocket message consists of a single complete IRC message line.
+Websockets offer different transports of communication, binary and strings. With the consideration that the IRC protocol is entirely lines of text, we make use of the message based text implementation that websockets natively provide. These are UTF8 encoded text messages where one websocket message consists of a single complete IRC message line.
 
 The internal websocket protocol handles message fragmentation and termination via frames, which is out of scope for this document.
 
