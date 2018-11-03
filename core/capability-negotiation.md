@@ -178,6 +178,11 @@ Example:
     Client: CAP LS
     Server: CAP * LS :multi-prefix sasl
 
+Example with no available capabilities:
+
+    Client: CAP LS
+    Server: CAP * LS :
+
 #### CAP LS Version
 
 The LS subcommand has an additional argument which is the version number of the latest
@@ -272,6 +277,11 @@ Example:
 
     Client: CAP LIST
     Server: CAP * LIST :multi-prefix
+
+Example with no enabled capabilities:
+
+    Client: CAP LIST
+    Server: CAP * LIST :
 
 ### The CAP REQ subcommand
 
