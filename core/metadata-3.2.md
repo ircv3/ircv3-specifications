@@ -53,11 +53,13 @@ This document defines the following new protocol features:
 
 The `metadata` capability and value indicates that a server supports metadata, and communicates any configuration value keys that may affect the level of support.
 
-The ABNF format of the `metadata` capability and value is: (TODO verify ABNF)
+The ABNF format of the `metadata` capability and value is:
 
-    capability ::= 'metadata' ['=' value]
-    value      ::= value_item [',' value_item]*
-    value_item ::= ( 'maxsub=' integer ) |  ( 'maxkey=' integer )
+    capability ::= 'metadata' ['=' tokens]
+    tokens     ::= token [',' token]*
+    token      ::= key ['=' value]
+    key        ::= <sequence of a-zA-Z0-9_.:- >
+    value      ::= <utf8>
 
 The value keys are defined as follows:
 
