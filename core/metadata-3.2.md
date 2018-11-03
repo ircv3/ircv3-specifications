@@ -82,13 +82,13 @@ The format of the `METADATA` server notication is:
 
     METADATA <Target> <Key> <Visibility> <Value>
 
-`Target` MUST be any valid nickname or channel name.
+`Target` MUST be a valid nickname or channel name.
 
 `Key` MUST be a valid key name
 
 `Visibility` MUST be an asterisk (`*`) for keys visible to everyone, or an implementation-defined value which describes the key's visibility status; for instance, it MAY be a permission level or flag. (TODO should we define a prefix like STATUSMSG for this value?)
 
-`Value` MUST be any UTF-8 encoded value.
+`Value` MUST be a UTF-8 encoded value.
 
 ### Client command
 
@@ -96,7 +96,7 @@ The format of the `METADATA` client command is:
 
     METADATA <Target> <Subcommand> [<Param 1> ... [<Param n>]]
 
-`Target` MUST be any valid nickname or channel name. Clients MAY use the asterisk symbol (`*`) when targeting their own nickname.
+`Target` MUST be a valid nickname or channel name. Clients MAY use the asterisk symbol (`*`) when targeting their own nickname.
 
 `Subcommand` MUST be one of the following, described in detail along with any `Param` further in the document:
 
