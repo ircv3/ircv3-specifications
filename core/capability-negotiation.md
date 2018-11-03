@@ -129,7 +129,20 @@ with several subcommands.  The command added is named `CAP`.  `CAP` takes a sing
 required subcommand, optionally followed by a single parameter. Each subcommand defines any
 further parameters.
 
-The subcommands for `CAP` are: `LS`, `LIST`, `REQ`, `ACK`, `NAK`, and `END`.
+The subcommands for `CAP` are: `LS`, `LIST`, `REQ`, `ACK`, `NAK`, `NEW`, `DEL`, and `END`.
+
+Here is a handy table of the available `CAP` subcommands and which side sends them:
+
+| Subcommand | Client sent | Server sent (triggered by) |
+| --- | --- | --- |
+| `LS` | * | * (`LS`) |
+| `LIST` | * | * (`LIST`) |
+| `REQ` | * | |
+| `ACK` | | * (`REQ`) |
+| `NAK` | | * (`REQ`) |
+| `END` | * | |
+| `NEW` (302)| | * |
+| `DEL` (302)| | * |
 
 Some subcommands may include a space-separated list of capabilities as their final parameter.
 The list of capabilities MUST be parsed and processed from left to right and capabilities
@@ -137,7 +150,7 @@ SHOULD only be sent once per command. If a capability is sent multiple times, th
 received takes priority.
 
 If a client sends a subcommand which is not in the list above or otherwise issues an
-invalid command, then numeric 410 (ERR_INVALIDCAPCMD) should be sent.  The first parameter
+invalid command, then numeric `410` (`ERR_INVALIDCAPCMD`) should be sent.  The first parameter
 after the client identifier (usually nickname) should be the commandname; the second parameter
 should be a human-readable description of the error.
 
@@ -400,6 +413,10 @@ listed above.
 
 The full capability name MUST be treated as an opaque identifier.
 
+Capability names are case-sensitive. Typical capability names SHOULD be lowercase, and use
+hyphens (`-`) to separate words. For example: `echo-message`, `extended-join`,
+`invite-notify`, `draft/labeled-response`, `message-tags`.
+
 There are different types of capability names, which are described below.
 
 ### Vendor-Specific capabilities
@@ -417,8 +434,8 @@ Vendor-Specific capabilities should be submitted to the IRCv3 working group for 
 
 ### Draft capabilities
 
-In some cases, the `draft/` vendor namespace can be used for capabilities that are currently
-being considered by the IRCv3 WG. Particularly for capabilities that 
+The `draft/` vendor namespace may be used when the working group is considering specifications.
+However, vendor names should be preferred in most cases.
 
 ### Standardised capabilities
 
