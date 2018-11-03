@@ -114,7 +114,7 @@ Example where the client doesn't support capability negotiation:
 The client capability negotiation extension is implemented by the addition of one command
 with several subcommands.  The command added is named `CAP`.  `CAP` takes a single
 required subcommand, optionally followed by a single parameter of space-separated capability
-identifiers.  Each capability in the list may be preceded by a capability modifier.
+identifiers.
 
 The subcommands for `CAP` are: `LS`, `LIST`, `REQ`, `ACK`, `NAK`, and `END`.
 
