@@ -131,7 +131,7 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
 | 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
 
-Reference table listing which subcommands of `METADATA` or any other commands that produce these numerics:
+Reference table of numerics and the subcommands of `METADATA` or any other commands that produce them:
 
 | Label                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
 | ------------------------- | --- | ---- | --- | ----- | --- | ----- | ---- | ---- | ------- |
