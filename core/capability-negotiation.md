@@ -28,8 +28,12 @@ copyrights:
     email: "attilamolnar@hush.com"
   -
     name: "Daniel Oakley"
-    period: "2017"
+    period: "2017-2018"
     email: "daniel@danieloaks.net"
+  -
+    name: "James Wheare"
+    period: "2017-2018"
+    email: "james@irccloud.com"
 ---
 ## What Client Capability Negotiation attempts to solve
 
@@ -65,10 +69,10 @@ server MUST not complete registration until the client sends a `CAP END` command
 indicate that capability negotiation has ended. This allows clients to request their
 desired capabilities before completing registration.
 
-Once capability negotiation has completed with a client-send `CAP END` command, registration
+Once capability negotiation has completed with a client-sent `CAP END` command, registration
 continues as normal.
 
-With the above registration process, clients will either recieve a `CAP` message indicating
+With the above registration process, clients will either receive a `CAP` message indicating
 that registration is paused while capability negotiation happens, or registration will
 complete immediately, indicating that the server doesn't support capability negotiation.
 
@@ -94,6 +98,15 @@ Example with capability negotiation, but where the client recognises no advertis
     Server: 001 dan :Welcome to the Internet Relay Network dan
     ...
 
+Example of capability negotiation without a prior `LS`:
+
+    Client: CAP REQ multi-prefix
+    Client: NICK dan
+    Client: USER d * 0 :This is a really good name
+    Server: CAP * ACK multi-prefix
+    Client: CAP END
+    Server: 001 dan :Welcome to the Internet Relay Network dan
+
 Example where the server doesn't support capability negotiation:
 
     Client: CAP LS 302
@@ -113,16 +126,15 @@ Example where the client doesn't support capability negotiation:
 
 The client capability negotiation extension is implemented by the addition of one command
 with several subcommands.  The command added is named `CAP`.  `CAP` takes a single
-required subcommand, optionally followed by a single parameter of space-separated capability
-identifiers.
+required subcommand, optionally followed by a single parameter. Each subcommand defines any
+further parameters.
 
 The subcommands for `CAP` are: `LS`, `LIST`, `REQ`, `ACK`, `NAK`, and `END`.
 
-The `LS`, `LIST`, `REQ`, `ACK` and `NAK` subcommands may be followed by a single parameter
-containing a space-separated list of capabilities.  If more than one capability is named,
-the RFC1459 designated sentinel (`:`) for a multi-parameter argument must be present. The
-list of capabilities MUST be parsed from left to right and capabilities SHOULD only be sent
-once per command. If a capability is sent multiple times, the last one received takes priority.
+Some subcommands may include a space-separated list of capabilities as their final parameter.
+The list of capabilities MUST be parsed and processed from left to right and capabilities
+SHOULD only be sent once per command. If a capability is sent multiple times, the last one
+received takes priority.
 
 If a client sends a subcommand which is not in the list above or otherwise issues an
 invalid command, then numeric 410 (ERR_INVALIDCAPCMD) should be sent.  The first parameter
@@ -137,15 +149,16 @@ Example:
     Client: CAP FOO
     Server: :example.org 410 * FOO :Invalid CAP command
 
-The client MUST be able to use the `CAP` command anytime, even after registration.
+The server MUST accept the `CAP` command at any time, including after registration.
 
 ### The CAP LS subcommand
 
 The LS subcommand is used to list the capabilities supported by the server.  The client
 should send an LS subcommand with no other arguments to solicit a list of all capabilities.
 
-If a client issues an LS subcommand, registration must be suspended until an END subcommand
-is received.  If no capabilities are available, an empty parameter must be sent.
+If a server receives an `LS` subcommand while client registration is in progress, it MUST
+suspend registration until an `END` subcommand is received from the client. If no capabilities
+are available, an empty parameter MUST be sent.
 
 Example:
 
@@ -155,7 +168,7 @@ Example:
 #### CAP LS Version
 
 The LS subcommand has an additional argument which is the version number of the latest
-capability negotiation protocol supported by the client. Newer verisons of capability
+capability negotiation protocol supported by the client. Newer versions of capability
 negotiation allow newer features, as described below:
 
 Clients that send `302` as the CAP LS version are presumed to support `CAP LS 302` features
@@ -198,11 +211,13 @@ Example:
 
 #### Multiline replies to `CAP LS` and `CAP LIST`
 
-Servers MAY send multiple lines in response to `CAP LS`. If the reply contains multiple
-lines (due to IRC line length limitations), and the client supports CAP Version `302`,
-all but the last reply MUST have a parameter containing only an asterisk (`*`) preceding
-the capability list. This lets clients know that more CAP lines are incoming, so that it
-can delay capability negotiation until it has seen all available server capabilities.
+Servers MAY send multiple lines in response to `CAP LS` and `CAP LIST`.
+
+If the reply contains multiple lines (due to IRC line length limitations), and the client
+supports CAP Version `302`, all but the last reply MUST have a parameter containing only
+an asterisk (`*`) preceding the capability list. This lets clients know that more CAP
+lines are incoming, so that it can delay capability negotiation until it has seen all
+available server capabilities.
 
 If a multi-line response to `CAP LIST` is sent, and the client supports CAP Version `302`,
 the server MUST delimit all replies except for the last one sent as noted above.
@@ -211,8 +226,7 @@ Example with a client that **does not** support CAP version `302`:
 
     Client: CAP LS
     Server: CAP * LS :multi-prefix extended-join account-notify batch invite-notify tls
-    Server: CAP * LS :cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
-    Server: CAP * LS :userhost-in-names sasl=EXTERNAL,DH-AES,DH-BLOWFISH,ECDSA-NIST256P-CHALLENGE,PLAIN
+    Server: CAP * LS :cap-notify server-time example.org/dummy-capuserhost-in-names sasl
 
 Example with a client that supports CAP version `302`:
 
@@ -220,6 +234,12 @@ Example with a client that supports CAP version `302`:
     Server: CAP * LS * :multi-prefix extended-join account-notify batch invite-notify tls
     Server: CAP * LS * :cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
     Server: CAP * LS :userhost-in-names sasl=EXTERNAL,DH-AES,DH-BLOWFISH,ECDSA-NIST256P-CHALLENGE,PLAIN
+
+Example of a `LIST` reply with a client that **does not** support CAP version `302`:
+
+    Client: CAP LIST
+    Server: CAP oldclient LIST :example.org/example-cap example.org/second-example-cap account-notify
+    Server: CAP oldclient LIST :invite-notify batch example.org/third-example-cap
 
 Example of a `LIST` reply with a client that supports CAP version `302`:
 
@@ -229,11 +249,11 @@ Example of a `LIST` reply with a client that supports CAP version `302`:
 
 ### The CAP LIST subcommand
 
-The LIST subcommand is used to list the capabilities associated with the active connection.
+The LIST subcommand is used to list the capabilities enabled on the client's connection.
 The client should send a LIST subcommand with no other arguments to solicit a list of
-active capabilities.
+enabled capabilities.
 
-If no capabilities are active, an empty parameter must be sent.
+If no capabilities are enabled, an empty parameter must be sent.
 
 Example:
 
@@ -253,8 +273,8 @@ handling this capability was successful.
 
 The capability identifier set must be accepted as a whole, or rejected entirely.
 
-If a client issues a REQ subcommand, registration must be suspended until an END subcommand
-is received.
+If a server receives a REQ subcommand while client registration is in progress, it MUST
+suspend registration until an END subcommand is received.
 
 Example adding a capability:
 
@@ -327,7 +347,7 @@ Example with following `REQ`:
 
 ### The CAP DEL subcommand
 
-The NEW subcommand MUST ONLY be sent to clients that have negotiated CAP Version `302` or
+The DEL subcommand MUST ONLY be sent to clients that have negotiated CAP Version `302` or
 enabled the `cap-notify` capability.
 
 The DEL subcommand signals that the server no longer supports one or more capabilities that
@@ -356,21 +376,21 @@ Example:
 ## `cap-notify`
 
 The `cap-notify` capability indicates support for the `NEW` and `DEL` messages listed above.
-This capabilitiy MUST be implicitly enabled if the client requests `CAP LS` with a version
-of 302 or newer (`CAP LS 302`), as described above.
+This capability MUST be implicitly enabled if the client requests `CAP LS` with a version
+of 302 or newer (`CAP LS 302`), as described in the `CAP LS` section above.
 
-Further, the `cap-notify` capability MAY NOT be disabled if the client requests `CAP LS`
-with a version of 302 or newer.
+Further, servers MUST NOT disable the `cap-notify` capability if the client requests
+`CAP LS` with a version of 302 or newer.
 
 When implicitly enabled via this mechanism, servers MAY list the `cap-notify` capability
-in `CAP LS` and `CAP LIST` responses. Additionally client MAY request the capability with
+in `CAP LS` and `CAP LIST` responses. Clients MAY also request the capability with
 `CAP REQ`, and capable servers MUST accept and `CAP ACK` the request without side effects.
 This lets clients blindly enable this capability, regardless of it being implicitly
 enabled by the server.
 
 Clients that do not support CAP Version 302 MAY request the `cap-notify` capability
-explicitly. Such clients MAY disable the capability at any time.  This to ease the
-adaptation of new features.
+explicitly. Such clients MAY explicitly disable the capability, and servers MUST allow
+these clients to do so. This to ease the adaptation of new features.
 
 When enabled, the server MUST notify the client about all new capabilities and about
 existing capabilities that are no longer available using the `NEW` and `DEL` subcommands
@@ -380,9 +400,9 @@ listed above.
 
 The full capability name MUST be treated as an opaque identifier.
 
-There are two capability namespaces:
+There are different types of capability names, which are described below.
 
-### Vendor-Specific
+### Vendor-Specific capabilities
 
 Names which contain a slash character (`/`) designate a vendor-specific capability namespace.
 
@@ -395,9 +415,14 @@ e.g. `xn--e1afmkfd.org/foo`.
 
 Vendor-Specific capabilities should be submitted to the IRCv3 working group for consideration.
 
-### Standardised
+### Draft capabilities
 
-Standardised capability names have no vendor namespace, and are listed on the
+In some cases, the `draft/` vendor namespace can be used for capabilities that are currently
+being considered by the IRCv3 WG. Particularly for capabilities that 
+
+### Standardised capabilities
+
+Standardised capabilities have no vendor namespace, and are listed on the
 [IRCv3 Capability Registry](http://ircv3.net/registry.html#capabilities). These capabilities
 also have one or more documents in the set of IRCv3 specifications describing how they work.
 
@@ -450,7 +475,7 @@ rewritten and placed near the front, now including examples of negotiating capab
 initial registration.
 
 Previous versions of this spec included capability modifiers. These have been deprecated and removed
-from this specification.
+from this specification (and have been as of ~2015 with capability negotiation 3.2).
 
 Previous versions of this spec recommended sending `CAP END` upon connection if the client didn't
 want to perform CAP negotiation. This advice has been removed as sending only `CAP END` doesn't
