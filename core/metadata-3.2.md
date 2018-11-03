@@ -166,7 +166,9 @@ Errors:
 
 ### Keys and values
 
-Keys MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Values are unrestricted, except that they MUST be UTF-8.
+Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Key names MUST not start with a colon (`:`).
+
+Values are unrestricted, except that they MUST be encoded using UTF-8.
 
 The expected client behaviour of individual metadata keys SHOULD be defined in separate specifications and listed in the IRCv3 extension registry.
 
