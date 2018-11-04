@@ -335,9 +335,7 @@ change the capabilities of the client until the last ACK of the set has been sen
 The NAK subcommand designates that the requested capability change was rejected.  The server
 MUST NOT make any change to any capabilities if it replies with a NAK subcommand.
 
-The last parameter is a space-separated list of capabilities. This parameter MUST consist of
-at least the first 100 characters of the capability list in the REQ subcommand which
-triggered the NAK.
+The last parameter is a space-separated list of capabilities.
 
 Example:
 
@@ -516,3 +514,8 @@ from this specification (and have been as of ~2015 with capability negotiation 3
 Previous versions of this spec recommended sending `CAP END` upon connection if the client didn't
 want to perform CAP negotiation. This advice has been removed as sending only `CAP END` doesn't
 make much sense in this case.
+
+Previous versions of this spec required that when sending `CAP NAK`, servers MUST have the final
+parameter (the capability list) consist of _"at least the first 100 characters of the capability list
+in the REQ subcommand which triggered the NAK"_. This was removed as it's a bit arbitrary, already
+covered in the existing language, and honestly more likely to just confuse vendors.
