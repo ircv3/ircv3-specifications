@@ -34,6 +34,8 @@ Note: Previous implementations referred to the `gateway` field as `user`. This c
 ### Options
 The `options` parameter is a space-separated set of additional arguments, each argument having the form `<name>[=<value>]`.
 
+The option values are escaped using the same escaping method as [message tags values](https://ircv3.net/specs/core/message-tags-3.2.html#escaping-values). It is acknowledged that some of the escaping rules are not strictly required, but the same escaping method is used for consistency.
+
 These options are defined and may be sent by clients while connecting:
 
 - `secure`: This flag indicates that the client has a TLS-secured connection to the gateway. Servers MUST ONLY treat the connection as secure if this flag is sent and the connection from the gateway to the server is also secure with TLS.
