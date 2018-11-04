@@ -390,8 +390,7 @@ Servers MUST cancel any capability-specific behavior for a client after sending 
 `CAP DEL` message to the client.
 
 Clients MUST gracefully handle situations when the server removes support for any
-capability. If the client cannot continue to operate without a capability, disconnecting
-with an appropriate `QUIT` message is acceptable.
+capability.
 
 The format of a `CAP DEL` message is:
 
