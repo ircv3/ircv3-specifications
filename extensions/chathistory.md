@@ -20,37 +20,47 @@ When a client with the above mentioned capabilities requests `chathistory` conte
 The `server-time` SHOULD be the time at which the message was received from the IRC server and the `batch id` a unique ID for the entire batch. `draft/label` SHOULD be included and MUST be a unique ID used to identify the `chathistory` request and any replies. A `draft/msgid` to identify each individual message MUST be the `draft/msgid` included when each message was first received from the IRC server.
 
 ### `CHATHISTORY` Command
-`CHATHISTORY` content can be requested by the client to the server by sending the `CHATHISTORY` command to the server. A `batch` MUST be returned by the server. If no content exists to return, an empty batch SHOULD be returned to avoid the client waiting for a reply. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick CHATHISTORY=max_message_count :are supported by this server`
+`CHATHISTORY` content can be requested by the client to the server by sending the `CHATHISTORY` command to the server. A `batch` MUST be returned by the server. If no content exists to return, an empty batch SHOULD be returned to avoid the client waiting for a reply. Command support is sent to the client as the RPL_ISUPPORT 005 numeric `:irc.host 005 nick CHATHISTORY=max_messages :are supported by this server`
 
-Both the `message_count` and `max_message_count` MUST be integers. `message_count` MUST be a non-zero and `max_message_count` MUST be greater than or equal to zero. The client SHOULD not request a `message_count` with an absolute value greater than the `max_message_count` parameter sent in the command.
+Both the `limit` and `max_messages` MUST be integers, and `max_messages` MUST be greater than or equal to zero. The client SHOULD NOT request a `limit` with an absolute value greater than the `max_messages` parameter sent in the command. If the `limit` is 0 or no `limit` is provided, the number of messages equal to `max_messages` MUST BE returned.
 
-Both the `start` and `end` parameters support `draft/msgid` and `timestamp`. The `end` parameter also accepts a `message_count`. If the number of lines between the `start` and `end` parameters exceeds the `max_message_count`, the server SHOULD return a number of lines equal to the `max_message_count` and the appropriate warning as described below. A `max_message_count` of 0 indicates that no maximum exists.
-
-A positive `message_count` or tag `draft/msgid` prepended with a `+` indicates the client is requesting content after the `start`. A negative  `message_count` or `draft/msgid` tag prepended with a `-` indicates the client is requested content before the specified `start`.
+Both the `start` and `end` parameters support `draft/msgid` and `timestamp`. If the number of lines between the `start` and `end` parameters exceeds the `max_messages`, the server SHOULD return a number of lines equal to the `max_messages` and the appropriate warning as described below. A`limit` or `max_messages` of 0 indicates that no limit or maximum exists.
 
 The `target` parameter specifies a single channel or query from which history SHOULD be retrieved. Wildcards or multiple targets are not supported.
+
+#### Context
+
+The following keywords are used to describe how the server should return messages relative to the `timestamp(s)` or `draft/msgid(s)` given.
+
+`BEFORE` get up to `limit` number of messages before the given `timestamp` or `draft/msgid`. The `limit` MUST BE positive.
+
+`AFTER` get up to `limit` number of messages after the given `timestamp` or `draft/msgid`. The `limit` MUST BE positive.
+
+`LATEST` get the most recent (up to `limit`) messages that have been sent since the given `timestamp` or `draft/msgid`. The `limit` MUST BE positive.
+
+`AROUND` get a number of messages before and after the `timestamp` or `draft/msgid`. The `limit` MUST BE positive.
+
+`BETWEEN` get up to `limit` number of messages between the given `timestamps` or `draft/msgids`. The `limit` MAY positive or negative. If the `limit` is positive, messages will be returned in ascending order starting at the oldest message. If the `limit` is negative, messages will be returned in decending order starting at the newest message. 
 
 #### Format
 `chathistory` uses the following generic format:
 
-    @draft/label=ID CHATHISTORY <target> <start> <end>
+    @draft/label=ID CHATHISTORY <target> <context> <start> <end> [<direction>] [<limit>]
 
 The `chathistory` content can requested using timestamps:
 
-    @draft/label=ID CHATHISTORY <target> timestamp=YYYY-MM-DDThh:mm:ss.sssZ message_count=<message_count>
+    @draft/label=ID CHATHISTORY <target> <context> timestamp=YYYY-MM-DDThh:mm:ss.sssZ [<direction>] [<limit>]
 
 Alternatively, content can be requested using a `draft/msgid`:
 
-    @draft/label=ID CHATHISTORY <target> draft/msgid=<message_id> timestamp=<timestamp>
+    @draft/label=ID CHATHISTORY <target> <context> draft/msgid=<message_id> timestamp=<timestamp>
 
-Content can also be requested up to a specified timestamp or `draft/msgid` in place of the `message_count`. The start and end parameter types do not have to match:
-
-    @draft/label=ID CHATHISTORY <target> timestamp=<timestamp> +draft/msgid=<message_id>   
+For `BEFORE`, `AFTER`, `LATEST`, and `AROUND`, a single `timestamp` or `draft/msgid` is required.  For `BETWEEN`, both a `start` and `end` `timestamp` and/or `draft/msgid` is required. The  `limit` is optional for all contexts.
 
 #### Errors and Warnings
 If the server receives a `CHATHISTORY` command with missing parameters, the `NEED_MORE_PARAMS` error code SHOULD be returned.
 
-If the number of lines between the `start` and `end` parameters exceeds the `max_message_count`, warn code `MAX_MSG_COUNT_EXCEEDED` SHOULD be returned. The command SHOULD continue to be processed as described above.
+If the number of lines between the `start` and `end` parameters exceeds the `max_messages`, warn code `MAX_MSG_COUNT_EXCEEDED` SHOULD be returned. The command SHOULD continue to be processed as described above.
 
 If the target has no `chathistory` content to return or the user does not have permission to view the requested content, `NO_SUCH_NICK` or `NO_SUCH_CHANNEL` SHOULD be returned accordingly.
 
@@ -82,7 +92,7 @@ A method for securely identifying the requesting user MUST exist to ensure conte
 ## Security Considerations
 Secure identification of users and clients MUST exist in order to ensure that users cannot obtain history they are not authorized to view. Use of account names, internal account identifiers, or certificate fingerprints SHOULD be strongly considered when matching content to users. The server MUST verify the current user's identity matches that of the desired content. This information is not sent as part of the `CHATHISTORY` command and MUST be validated via other means, such as those stated above. Access MUST be checked first and return a `NO_SUCH_NICK` or `NO_SUCH_CHANNEL` error as appropriate. If no authorization error exists, the server can check for returnable content. If no returntable content is found, the server MUST send a `NO_TEXT_TO_SEND` error. The server MUST NOT expose the existence of valid targets to unauthorized users.
 
-While a `max_message_count` of 0 MAY be used to indicate no limit exists, servers SHOULD set and enforce a reasonable `max_message_count` and properly throttle `CHATHISTORY` commands to prevent abuse.
+While a `max_messages` of 0 MAY be used to indicate no limit exists, servers SHOULD set and enforce a reasonable `max_messages` and properly throttle `CHATHISTORY` commands to prevent abuse.
 
 ## Current Implementations
 A ZNC-module implementation exists as [znc-chathistory](https://github.com/MuffinMedic/znc-chathistory). Client-side support for the ZNC module is in progress. Interest in supporting the batch type and command without ZNC has also been obtained, although specifics are not available at this time.
