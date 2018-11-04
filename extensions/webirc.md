@@ -1,7 +1,6 @@
 ---
 title: IRCv3 WebIRC extension
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: "Evan Magaliff"
@@ -21,7 +20,7 @@ When a user connects through an indirect connection to the IRC server, the user'
 ## Format
 The `WEBIRC` command MUST be the first command sent from the WebIRC gateway to the IRC server and MUST be sent before capability negotiation.
 
-The `WEBIRC` command takes four parameters: `password `, `gateway`, `hostname`, and `ip`.
+The `WEBIRC` command takes four parameters: `password`, `gateway`, `hostname`, and `ip`.
 - `password` Password authenticating the WebIRC gateway to the IRC server which must be agreed upon ahead of time
 - `gateway` WebIRC gateway service name
 - `hostname` User's resolved hostname

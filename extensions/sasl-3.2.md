@@ -1,6 +1,8 @@
 ---
 title: IRCv3.2 SASL Authentication
 layout: spec
+updates:
+  - sasl-3.1
 copyrights:
   -
     name: "Attila Molnar"

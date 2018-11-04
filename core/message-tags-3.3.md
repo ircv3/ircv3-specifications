@@ -2,6 +2,8 @@
 title: IRCv3.3 Message Tags
 layout: spec
 work-in-progress: true
+updates:
+  - message-tags-3.2
 copyrights:
   -
     name: "Kiyoshi Aman"
@@ -103,8 +105,6 @@ Servers MAY apply moderation to this command using existing or newly specified m
 
 Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message tags capability.
 
-Servers SHOULD reject any `TAGMSG` command sent without tags. In this case, they MUST use the `ERR_NEEDMOREPARAMS` (`461`) error numeric.
-
 See [`PRIVMSG` in RFC2812](https://tools.ietf.org/html/rfc2812#section-3.3.1) for more details on replies and examples.
 
 Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the message.
@@ -119,7 +119,7 @@ In the following description, **tag data** describes the bytes between the leadi
 
 Clients MUST NOT send messages with tag data exceeding 4094 bytes, this includes tags with or without the client-only prefix.
 
-Servers MUST NOT add tag data to messages that exceeds 510 bytes.
+Servers MUST NOT add tag data exceeding 510 bytes to messages.
 
     <server_max>    (512)  :: '@' <tag_data  510> ' '
     <client_max>   (4096)  :: '@' <tag_data 4094> ' '
@@ -133,9 +133,15 @@ Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client
 ## Security considerations
 
 Client-only tags should be treated as untrusted data. They can contain any value
-and are not validated by servers in any way.
+and are not validated by servers in any way. The server MAY unescape tag values
+after receiving data and escape those values before sending them out.
 
-Some specifications may involve servers accepting client-initiated tags without the client-only prefix. Such tag values SHOULD be validated by the server before being sent with any response to a client, unless they are specifically specified to be untrusted data.
+Tags without the client-only prefix MUST be removed by the server before being relayed
+with any message to another client.
+
+Some specifications may involve servers accepting client-initiated tags without
+the client-only prefix, they MUST define a process to be performed by the server
+on these tags prior to their removal.
 
 ## Client implementation considerations
 
@@ -219,14 +225,15 @@ A `TAGMSG` sent to a channel with [`labeled-response`](../extensions/labeled-res
 
 ---
 
-A `TAGMSG` sent by a client without any tags and rejected by the server with an `ERR_NEEDMOREPARAMS` (`461`) error numeric.
-
-    C: TAGMSG #channel
-    S: :server.example.com 461 nick TAGMSG :Not enough parameters
-
----
-
 A `TAGMSG` sent by a client with tags that exceed the size limit and rejected by the server with an `ERR_INPUTTOOLONG` (`417`) error numeric. `[...]` is used to represent tags omitted for readability.
 
     C: @+tag1;+tag2;+tag[...];+tag5000 TAGMSG #channel
     S: :server.example.com 417 nick :Input line was too long
+
+---
+
+A `TAGMSG` sent by a client with an un-prefixed tag that has no specified behaviour. The server removes the tag before relaying the message
+
+    C: @unknown-tag TAGMSG #channel
+    S: :nick!user@example.com TAGMSG #channel
+

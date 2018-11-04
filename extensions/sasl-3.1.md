@@ -1,6 +1,8 @@
 ---
 title: IRCv3.1 SASL Authentication
 layout: spec
+updated-by:
+  - sasl-3.2
 copyrights:
   -
     name: "Jilles Tjoelker"
@@ -60,6 +62,9 @@ The server MAY place a limit on the total length of a response.
 
     regular-authenticate-set = *("AUTHENTICATE" SP 400BASE64 CRLF) "AUTHENTICATE" SP (1*399BASE64 / "+") CRLF
 
+If the mechanism finishes with the server sending a non-empty challenge (such
+as in SCRAM), clients MUST still send an empty response.
+
 The client can abort an authentication by sending an asterisk as the data.
 The server will send a 906 numeric.
 
@@ -80,12 +85,12 @@ without authentication.
 This document does not specify use of the AUTHENTICATE command in
 registered (person) state.
 
-Example protocol exchange
+## Example protocol exchange
 
 C: indicates lines sent by the client, S: indicates lines sent by the server.
 
 The client is using the PLAIN SASL mechanism with authentication identity
-jilles, authorization identity jilles and password sesame.
+`jilles`, authorization identity `jilles` and password `sesame`.
 
     C: CAP REQ :sasl
     C: NICK jilles
@@ -95,10 +100,34 @@ jilles, authorization identity jilles and password sesame.
     S: NOTICE AUTH :*** Checking Ident
     S: NOTICE AUTH :*** No Ident response
     S: NOTICE AUTH :*** Found your hostname
-    S: :jaguar.test CAP jilles ACK :sasl 
+    S: :jaguar.test CAP jilles ACK :sasl
     C: AUTHENTICATE PLAIN
     S: AUTHENTICATE +
     C: AUTHENTICATE amlsbGVzAGppbGxlcwBzZXNhbWU=
+    S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles
+    S: :jaguar.test 903 jilles :SASL authentication successful
+    C: CAP END
+    S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
+    (usual welcome messages)
+
+The client is using the SCRAM-SHA-1 mechanism.
+
+    C: CAP REQ :sasl
+    C: NICK jilles
+    C: USER jilles cheetah.stack.nl 1 :Jilles Tjoelker
+    S: NOTICE AUTH :*** Processing connection to jaguar.test
+    S: NOTICE AUTH :*** Looking up your hostname...
+    S: NOTICE AUTH :*** Checking Ident
+    S: NOTICE AUTH :*** No Ident response
+    S: NOTICE AUTH :*** Found your hostname
+    S: :jaguar.test CAP jilles ACK :sasl
+    C: AUTHENTICATE SCRAM-SHA-1
+    S: AUTHENTICATE +
+    C: AUTHENTICATE bixhPWppbGxlcyxuPWppbGxlcyxyPWM1UnFMQ1p5MEw0ZkdrS0FaMGh1akZCcw==
+    S: AUTHENTICATE cj1jNVJxTENaeTBMNGZHa0tBWjBodWpGQnNYUW9LY2l2cUN3OWlEWlBTcGIscz01bUpPNmQ0cmpDbnNCVTFYLGk9NDA5Ng==
+    C: AUTHENTICATE Yz1iaXhoUFdwcGJHeGxjeXc9LHI9YzVScUxDWnkwTDRmR2tLQVowaHVqRkJzWFFvS2NpdnFDdzlpRFpQU3BiLHA9T1ZVaGdQdTh3RW0yY0RvVkxmYUh6VlVZUFdVPQ==
+    S: AUTHENTICATE dj1aV1IyM2M5TUppcjBaZ2ZHZjVqRXRMT242Tmc9
+    C: AUTHENTICATE +
     S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles
     S: :jaguar.test 903 jilles :SASL authentication successful
     C: CAP END
@@ -118,7 +147,7 @@ an additional capability.
     S: NOTICE AUTH :*** Found your hostname
     S: :jaguar.test CAP * LS :multi-prefix sasl
     C: CAP REQ :multi-prefix sasl
-    S: :jaguar.test CAP jilles ACK :multi-prefix sasl 
+    S: :jaguar.test CAP jilles ACK :multi-prefix sasl
     C: AUTHENTICATE PLAIN
     S: AUTHENTICATE +
     C: AUTHENTICATE amlsbGVzAGppbGxlcwBzZXNhbWU=
@@ -178,3 +207,4 @@ between implementations and translations.)_
 is RPL_SASLMECHS being sent.
 * Clarified the language how responses are transmitted.
 * Added empty initial server response for client-first mechanisms. This had happened de-facto already.
+* Added empty final client response for certain mechanisms. This had happened de-facto already.

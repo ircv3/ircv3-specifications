@@ -1,6 +1,10 @@
 ---
 title: IRCv3.2 Client Capability Negotiation
 layout: spec
+updates:
+  - cap-3.1
+extended-by:
+  - cap-notify
 copyrights:
   -
     name: "Kevin L. Mitchell"

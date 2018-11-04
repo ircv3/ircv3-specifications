@@ -26,7 +26,7 @@ sends numeric 670 (RPL_STARTTLS), and the client initiates a SSL/TLS handshake.
 
 If there is an error with setting up TLS on the server side, the server must send
 numeric 691 (ERR_STARTTLS) containing a human-readable description of the error as
-it's parameter.
+its parameter.
 
 ## Recommendations
 

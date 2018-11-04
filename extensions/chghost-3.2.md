@@ -44,3 +44,20 @@ to support it. The proper way to do so is this:
 2) Update the user and host portions of data structures and process channel
    users as appropriate.
 
+## Examples
+
+In this example, `tim!~toolshed@backyard` gets their username changed to `b` and
+their hostname changed to `ckyard`:
+
+    :tim!~toolshed@backyard CHGHOST b ckyard
+
+In this example, `tim!b@ckyard` gets their username changed to `~toolshed` and
+their hostname changed to `backyard`:
+
+    :tim!b@ckyard CHGHOST ~toolshed backyard
+
+## Errata
+
+A previous version of this specification did not include any examples, which made
+it unclear as to whether the de-facto `~` prefix should be included on CHGHOST
+messages. The new examples make clear that it should be included.
