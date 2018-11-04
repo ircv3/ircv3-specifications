@@ -1,7 +1,6 @@
 ---
 title: IRCv3 WebIRC extension
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: "Evan Magaliff"
