@@ -80,12 +80,12 @@ Failing to rename a channel because it has been renamed recently:
 
 Server implementations MUST implement a fallback method for legacy clients. This method SHOULD involve sending the legacy client a `PART` message for the old channel name, with the rename reason as the part message if given, followed by the usual messages that would be sent if the legacy client had joined the new channel normally (`JOIN`, `RPL_TOPIC`, `RPL_NAMREPLY`, etc) and finally a `MODE` message to restore any prefix modes that the legacy client has applied to it.
 
-Server implementations SHOULD implement `JOIN` redirection from the old channel to the new channel for as long as is deemed necessary.
+Server implementations MAY implement `JOIN` redirection from the old channel to the new channel for as long as is deemed necessary.
 
-Server implementations SHOULD implement a cooldown system to prevent abuse.
+Server implementations MAY implement a cooldown system to prevent abuse.
 
 ## Security Considerations
 
 Server implementations that link across a network MUST take measures to prevent channel name collisions. An example of such a method would be to use channel identifiers similar to how user identifiers are used to prevent nickname collisions in server-to-server protocols.
 
-Server implementations SHOULD limit the renaming of channels to privileged individuals in order to prevent abuse.
+Server implementations MAY limit the renaming of channels to privileged individuals in order to prevent abuse.
