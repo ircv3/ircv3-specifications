@@ -175,8 +175,11 @@ The LS subcommand is used to list the capabilities supported by the server.  The
 should send an LS subcommand with no other arguments to solicit a list of all capabilities.
 
 If a server receives an `LS` subcommand while client registration is in progress, it MUST
-suspend registration until an `END` subcommand is received from the client. If no capabilities
-are available, an empty parameter MUST be sent.
+suspend registration until an `END` subcommand is received from the client.
+
+When sent by the server, the last parameter is a space-separated list of capabilities
+(possibly with values, depending on the CAP LS Version described below). If no
+capabilities are available, an empty parameter MUST be sent.
 
 Example:
 
@@ -276,6 +279,7 @@ The LIST subcommand is used to list the capabilities enabled on the client's con
 The client should send a LIST subcommand with no other arguments to solicit a list of
 enabled capabilities.
 
+When sent by the server, the last parameter is a space-separated list of capabilities.
 If no capabilities are enabled, an empty parameter must be sent.
 
 Example:
@@ -291,9 +295,9 @@ Example with no enabled capabilities:
 ### The CAP REQ subcommand
 
 The REQ subcommand is used to request a change in capabilities associated with the active
-connection.  Its sole parameter must be a list of space-separated capability identifiers.
-Each capability identifier may be prefixed with a dash (`-`) to designate that the capability
-should be disabled.
+connection. The last parameter is a space-separated list of capabilities. Each capability
+identifier may be prefixed with a dash (`-`) to designate that the capability should be
+disabled.
 
 If a client requests a capability which is already enabled, or tries to disable a capability
 which is not enabled, the server MUST continue processing the REQ subcommand as though
@@ -319,9 +323,8 @@ Example removing a capability:
 The ACK subcommand is sent by the server to acknowledge a client-sent REQ, and let the client
 know that their requested capabilities have been enabled.
 
-This subcommand has a single parameter consisting of a space-separated list of capability
-names. Each capability name may be prefixed with a dash (`-`), indicating that this
-capability has been disabled as requested.
+The last parameter is a space-separated list of capabilities. Each capability name may be
+prefixed with a dash (`-`), indicating that this capability has been disabled as requested.
 
 If an ACK reply originating from the server is spread across multiple lines, a client MUST NOT
 change capabilities until the last ACK of the set is received. Equally, a server MUST NOT
@@ -332,8 +335,9 @@ change the capabilities of the client until the last ACK of the set has been sen
 The NAK subcommand designates that the requested capability change was rejected.  The server
 MUST NOT make any change to any capabilities if it replies with a NAK subcommand.
 
-The argument of the NAK subcommand MUST consist of at least the first 100 characters of the
-capability list in the REQ subcommand which triggered the NAK.
+The last parameter is a space-separated list of capabilities. This parameter MUST consist of
+at least the first 100 characters of the capability list in the REQ subcommand which
+triggered the NAK.
 
 Example:
 
