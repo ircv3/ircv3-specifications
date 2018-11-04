@@ -78,7 +78,7 @@ Failing to rename a channel because it has been renamed recently:
 
 ## Implementation Considerations
 
-Server implementations MUST implement a fallback method for legacy clients. This method SHOULD involve sending the legacy client a `PART` message for the old channel name, with the rename reason as the part message if given, followed by the usual messages that would be sent if the legacy client had joined the new channel normally (`JOIN`, `RPL_TOPIC`, `RPL_NAMREPLY`, etc) and finally a `MODE` message to restore any prefix modes that the legacy client has applied to it.
+Server implementations MUST implement a fallback method for legacy clients. This method MUST involve sending the legacy client a `PART` message for the old channel name, with the rename reason as the part message if given, followed by the usual messages that would be sent if the legacy client had joined the new channel normally (`JOIN`, `RPL_TOPIC`, `RPL_NAMREPLY`, etc) and finally a `MODE` message to restore any prefix modes that the legacy client has applied to it.
 
 Server implementations MAY implement `JOIN` redirection from the old channel to the new channel for as long as is deemed necessary.
 
