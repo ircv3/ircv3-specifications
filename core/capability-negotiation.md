@@ -146,8 +146,8 @@ Here is a handy table of the available `CAP` subcommands and which side sends th
 
 Some subcommands may include a space-separated list of capabilities as their final parameter.
 The list of capabilities MUST be parsed and processed from left to right and capabilities
-SHOULD only be sent once per command. If a capability is sent multiple times, the last one
-received takes priority.
+SHOULD only be sent once per command. If a capability with values is sent multiple times, the
+last one received takes priority.
 
 If a client sends a subcommand which is not in the list above or otherwise issues an
 invalid command, then numeric `410` (`ERR_INVALIDCAPCMD`) should be sent.  The first parameter
