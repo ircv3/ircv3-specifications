@@ -157,7 +157,12 @@ should be a human-readable description of the error.
 Replies from the server must contain the client identifier name or asterisk if one is not yet
 available.
 
-Example:
+Example with nick `jw`:
+
+    Client: CAP FOO
+    Server: :example.org 410 jw FOO :Invalid CAP command
+
+Example before nick is set (e.g. during registration):
 
     Client: CAP FOO
     Server: :example.org 410 * FOO :Invalid CAP command
@@ -445,7 +450,7 @@ Vendor-Specific capabilities should be submitted to the IRCv3 working group for 
 ### Draft capabilities
 
 The `draft/` vendor namespace may be used when the working group is considering specifications.
-However, vendor names should be preferred in most cases.
+However, vendor names should be preferred.
 
 ### Standardised capabilities
 
