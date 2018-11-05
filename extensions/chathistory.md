@@ -28,9 +28,9 @@ Both the `start` and `end` parameters support `draft/msgid` and `timestamp`. If 
 
 The `target` parameter specifies a single channel or query from which history SHOULD be retrieved. Wildcards or multiple targets are not supported.
 
-#### Context
+#### Subcommand
 
-The following keywords are used to describe how the server should return messages relative to the `timestamp(s)` or `draft/msgid(s)` given.
+The following subcommands are used to describe how the server should return messages relative to the `timestamp(s)` or `draft/msgid(s)` given.
 
 `BEFORE` get up to `limit` number of messages before the given `timestamp` or `draft/msgid`. The `limit` MUST BE positive.
 
@@ -45,17 +45,17 @@ The following keywords are used to describe how the server should return message
 #### Format
 `chathistory` uses the following generic format:
 
-    @draft/label=ID CHATHISTORY <target> <context> <start> <end> [<direction>] [<limit>]
+    @draft/label=ID CHATHISTORY <target> <subcommand> <start> <end> [<direction>] [<limit>]
 
 The `chathistory` content can requested using timestamps:
 
-    @draft/label=ID CHATHISTORY <target> <context> timestamp=YYYY-MM-DDThh:mm:ss.sssZ [<direction>] [<limit>]
+    @draft/label=ID CHATHISTORY <target> <subcommand> timestamp=YYYY-MM-DDThh:mm:ss.sssZ [<direction>] [<limit>]
 
 Alternatively, content can be requested using a `draft/msgid`:
 
-    @draft/label=ID CHATHISTORY <target> <context> draft/msgid=<message_id> timestamp=<timestamp>
+    @draft/label=ID CHATHISTORY <target> <subcommand> draft/msgid=<message_id> timestamp=<timestamp>
 
-For `BEFORE`, `AFTER`, `LATEST`, and `AROUND`, a single `timestamp` or `draft/msgid` is required.  For `BETWEEN`, both a `start` and `end` `timestamp` and/or `draft/msgid` is required. The  `limit` is optional for all contexts.
+For `BEFORE`, `AFTER`, `LATEST`, and `AROUND`, a single `timestamp` or `draft/msgid` is required.  For `BETWEEN`, both a `start` and `end` `timestamp` and/or `draft/msgid` is required. The  `limit` is optional for all subcommands.
 
 #### Errors and Warnings
 If the server receives a `CHATHISTORY` command with missing parameters, the `NEED_MORE_PARAMS` error code SHOULD be returned.
