@@ -60,7 +60,7 @@ For `BEFORE`, `AFTER`, `LATEST`, and `AROUND`, a single `timestamp` or `draft/ms
 #### Errors and Warnings
 If the server receives a `CHATHISTORY` command with missing parameters, the `NEED_MORE_PARAMS` error code SHOULD be returned.
 
-If the number of lines between the `start` and `end` parameters exceeds the `max_messages`, warn code `MAX_MSG_COUNT_EXCEEDED` SHOULD be returned. The command SHOULD continue to be processed as described above.
+If the number of lines between the `start` and `end` parameters exceeds the `max_messages`, warn code `MAX_MESSAGES_EXCEEDED` SHOULD be returned. The command SHOULD continue to be processed as described above.
 
 If the target has no `chathistory` content to return or the user does not have permission to view the requested content, `NO_SUCH_NICK` or `NO_SUCH_CHANNEL` SHOULD be returned accordingly.
 
@@ -77,9 +77,9 @@ The examples below are written with `draft/msgid` and `draft/label` tags include
 
     :irc.host BATCH -ID
 
-    @draft/label=ID :nick!ident@host CHATHISTORY ERR ERR_CODE
+    @draft/label=ID :nick!ident@host ERR CHATHISTORY ERR_CODE
 
-    @draft/label=ID :nick!ident@host CHATHISTORY WARN WARN_CODE
+    @draft/label=ID :nick!ident@host WARN CHATHISTORY WARN_CODE
 
 ## Use Cases
 The batch type and supporting command are useful for allowing an "infinite scroll" type capability within the client. A client will, upon scrolling to the top of the active window or a manual trigger, may request `chathistory` from the server and, after receiving returned content, append it to the top of the window. Users can repeat this historic scrolling to retrieve prior history until limitations are met (see below).
