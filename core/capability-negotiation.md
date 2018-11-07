@@ -453,6 +453,11 @@ Vendor-Specific capabilities should be submitted to the IRCv3 working group for 
 The `draft/` vendor namespace may be used when the working group is considering specifications.
 However, vendor names should be preferred.
 
+While capabilities are in draft status, they may need to be given a new identifier, to prevent
+clients from negotiating incompatible versions. When updating a draft capability name, the
+typical method is to add `-0.x` to the name, where `x` is a version number. For example:
+`draft/foo` would become `draft/foo-0.2`, and so on.
+
 ### Standardised capabilities
 
 Standardised capabilities have no vendor namespace, and are listed on the
