@@ -125,9 +125,10 @@ On a successful request, the session information that MUST be applied from the o
 - User modes.
 - Logged-in user account.
 
-Session information that SHOULD NOT be applied from the old client and replayed includes:
+Session information that MUST NOT be applied from the old client and replayed includes:
 
 - Enabled client capabilities.
+- The old client's resume token (after completing the resume request, this token is thrown away).
 
 If the resume request is unsuccessful, the server continues as though the new client is a normal client joining the server.
 
