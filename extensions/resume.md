@@ -198,7 +198,7 @@ Failed attempt from a client with the nick `dan` reconnecting. The old connectio
     C2 - C: AUTHENTICATE YnVubnkAYnVubnkAYnVubnk=
     C2 - S: :irc.example.com 900 dan-backup-nick * bunny :You are now logged in as bunny
     C2 - S: :irc.example.com 903 dan-backup-nick :SASL authentication successful
-    C2 - S: :irc.example.com 001 dan :Welcome to the Internet Relay Network dan-backup-nick
+    C2 - S: :irc.example.com 001 dan-backup-nick :Welcome to the Internet Relay Network dan-backup-nick
     ... regular connection ...
 
 
