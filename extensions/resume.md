@@ -25,6 +25,8 @@ Upon indicating they support session resumption, clients are provided with a res
 
 Servers MUST ensure that this token is long, cryptographically secure, and not able to be easily brute-forced as this token will protect the security of clients' information. Resumption tokens are case-sensitive, and clients MUST treat them as opaque values.
 
+The token MUST NOT contain any spaces and MUST NOT start with a colon character `(:)`, as these would break the protocol framing. There is no sort of encoding or decoding defined for the token.
+
 ### Capabilities
 
 The `draft/resume-0.2` capability is advertised by servers that support resuming connections.
