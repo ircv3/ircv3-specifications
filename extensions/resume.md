@@ -229,5 +229,5 @@ Servers should decide whether, on resuming the session of an IRC operator, the o
 
 Without this specification, if you know a client's account credentials you can typically close their connection (using something like `/NS GHOST` or `/NS REGAIN`).
 
-With this specification, if you have a client's resume token you're able to see which hidden channels they've joined and essentially take-over their connection (and indeed, this is the point of the feature). Servers have to ensure that resume tokens are cryptographically-strong as they become the new baseline for authenticating as an active, online user. Clients should display incoming `RESUMED` messages in such a way that users are explicitly aware that the given client has reconnected.
+With this specification, if you have a client's resume token you're able to see which hidden channels they've joined and essentially take-over their connection. Servers have to ensure that resume tokens are cryptographically-strong as they become the new baseline for authenticating as an active, online user. Clients should display incoming `RESUMED` messages in such a way that users are explicitly aware that the given client has reconnected.
  
