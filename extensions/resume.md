@@ -208,11 +208,11 @@ This section notes considerations software authors will need to take into accoun
 
 Right now, when clients detect that their connection to the server may have dropped they tend to send a `QUIT` command, close their current connection and then create a new connection to the server. In cases where the server supports resuming connections, clients may find it more useful to attempt to establish a new link to the server and resume the connection before closing their old one. If this is done, clients should be able to better take advantage of connection resumption.
 
-In addition, users sometimes manually reconnect when they see that there is lag on their connection. In these cases, clients may also wish to do the above rather than closing the connection and then reconnecting. However, it could be good to make this configurable.
+In addition, users sometimes manually reconnect when they see that there is lag on their connection. In these cases, clients may also wish to do the above rather than closing the connection and then reconnecting.
 
 When clients see a `RESUMED` message for another client which contains a timestamp, they can calculate how much time has passed since the timestamp and the current time and then display this next to the reconnect notice. Displaying this can assist users in knowing how much message history has been lost in private queries and channels.
 
-A client that disconnects and reconnects to the server should explicitly display the reconnection, even if they're able to resume the connection. This is so that the user knows why they may be missing message history and similar issues.
+A client that disconnects and reconnects to the server should explicitly display the reconnection, even if they're able to resume successfully. This is so that the user knows why they may be missing message history and similar issues.
 
 Servers may wish to check the new hostmask of resuming clients, to ensure that it does not fall under their list of banned hosts or hostmasks.
 
@@ -225,6 +225,7 @@ When servers apply the old client's session information to the new client, ensur
 
 Servers should decide whether, on resuming the session of an IRC operator, the old client's operator status should be applied to the new client. This may depend on other operator authentication considerations such as client certificates or similar.
 
-Without this specification, if you know a client's account credentials you can typically close their connection (using something like `/NS GHOST` or `/NS REGAIN`), and find out which non-hidden channels they're joined to with a regular `WHOIS`.
+Without this specification, if you know a client's account credentials you can typically close their connection (using something like `/NS GHOST` or `/NS REGAIN`).
 
-With this specification, if you have a client's account credentials you're able to see which hidden channels they've joined and essentially take-over their connection. This is a security concern that's not addressed by this specification (and is very difficult to address for explicitly unprepared reconnections such as the ones this specification focuses on). Clients should display incoming `RESUMED` messages in such a way that users are explicitly aware that the given client has reconnected, and servers may choose to limit connection resumption to cases where TLS is used on both the old and new connections.
+With this specification, if you have a client's resume token you're able to see which hidden channels they've joined and essentially take-over their connection (and indeed, this is the point of the feature). Servers have to ensure that resume tokens are cryptographically-strong as they become the new baseline for authenticating as an active, online user. Clients should display incoming `RESUMED` messages in such a way that users are explicitly aware that the given client has reconnected.
+ 
