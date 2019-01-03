@@ -1,5 +1,5 @@
 ---
-title: IRCv3.3 Message Tags
+title: IRCv3 Message Tags
 layout: spec
 work-in-progress: true
 updates:
