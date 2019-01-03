@@ -28,9 +28,12 @@ The final version of the specification will use an unprefixed capability name.
 
 ## Introduction
 
-This specification adds a new capability for general message tags support and
-a prefix for expressing client-only tags. It also defines a new command for
-tag-only messages, and increases the byte limit for tags.
+This specification extends the [IRCv3.2 Message Tags](./message-tags-3.2.html) specification in a number of ways:
+
+* Adds a new capability to indicate base support for message tags
+* Defines a prefix for expressing client-only tags
+* Defines a new command for tag-only messages
+* Increases the size limit for tags
 
 ## Motivation
 
@@ -38,7 +41,7 @@ Previously, clients were required to negotiate a capability with servers for eac
 supported tag. This made tags inappropriate for client-only features. By adding a
 new base capability, this specification allows clients to indicate support for
 receiving any well-formed tag, whether or not it is recognised or used. This also
-frees servers from having to filter message tags for each individual client
+frees servers from having to filter individual message tags for each client
 response.
 
 The client-only tag prefix allows servers to safely relay untrusted client tags,
@@ -125,7 +128,7 @@ Servers MUST NOT add tag data exceeding 510 bytes to messages.
     <client_max>   (4096)  :: '@' <tag_data 4094> ' '
     <combined_max> (4607)  :: '@' <tag_data  510> ';' <tag_data 4094> ' '
 
-Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tag data than the allowed limit. Servers MUST NOT truncate tags to allow lines that exceed this limit.
+Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tag data than the allowed limit. Servers MUST NOT truncate tags but MUST always reject lines that exceed this limit.
 
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
