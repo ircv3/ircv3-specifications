@@ -128,7 +128,7 @@ Servers MUST NOT add tag data exceeding 510 bytes to messages.
     <client_max>   (4096)  :: '@' <tag_data 4094> ' '
     <combined_max> (4607)  :: '@' <tag_data  510> ';' <tag_data 4094> ' '
 
-Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tag data than the allowed limit. Servers MUST NOT truncate tags but MUST always reject lines that exceed this limit.
+Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tag data than the allowed limit. Servers MUST NOT truncate tags and MUST always reject lines that exceed this limit.
 
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
