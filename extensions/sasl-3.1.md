@@ -22,7 +22,7 @@ mechanism. The most commonly used 'PLAIN' mechanism is documented in
 [RFC 4616](https://tools.ietf.org/html/rfc4616).
 
 SASL authentication relies on the
-[CAP client capability framework](../core/capability-negotiation-3.1.html).
+[CAP client capability framework](../core/capability-negotiation.html).
 
 Support for SASL authentication is indicated with the "sasl" capability.
 The client MUST enable the sasl capability before using the AUTHENTICATE

@@ -28,7 +28,7 @@ Contributing to the [ircv3-ideas](https://github.com/ircv3/ircv3-ideas) reposito
 
 ## Feature Proposals
 
-A new feature proposal includes things like [`account-tag`](http://ircv3.net/specs/extensions/account-tag-3.2.html), [`cap-notify`](http://ircv3.net/specs/extensions/cap-notify-3.2.html) and [`echo-message`](http://ircv3.net/specs/extensions/echo-message-3.2.html).
+A new feature proposal includes things like [`account-tag`](http://ircv3.net/specs/extensions/account-tag-3.2.html), [`cap-notify`](http://ircv3.net/specs/core/capability-negotiation.html) and [`echo-message`](http://ircv3.net/specs/extensions/echo-message-3.2.html).
 
 Contributing a proposal to the IRCv3-Specifications repo requires a few things. These include:
 

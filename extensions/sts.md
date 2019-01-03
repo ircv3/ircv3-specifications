@@ -40,7 +40,7 @@ An STS policy has several parts:
 * A **persistence policy**, expressed via the [`duration` key](#the-duration-key) over a secure connection. *REQUIRED*
 * A **preload policy**, expressed via the [`preload` key](#the-preload-key) over a secure connection. *OPTIONAL*
 
-See [capability negotiation 3.2](../core/capability-negotiation-3.2.html) for more information about capabilities with values.
+See the [capability negotiation](../core/capability-negotiation.html) specification for more information about capabilities with values.
 
 ### Mechanism
 
@@ -52,7 +52,7 @@ If the secure connection succeeds but an STS persistence policy is not present, 
 
 Clients MUST NOT request this capability with `CAP REQ`. Servers MAY reply with a `CAP NAK` message if a client requests this capability.
 
-Servers MAY communicate changes to their STS persistence policy using the `CAP NEW` command provided by `cap-notify` or [capability negotiation 3.2](../core/capability-negotiation-3.2.html). Clients MUST store or update an STS policy for the hostname of a securely connected server if they receive a new STS capability notification.
+Servers MAY communicate changes to their STS persistence policy using the `CAP NEW` command provided by `cap-notify` or [CAP Version `302`](../core/capability-negotiation.html). Clients MUST store or update an STS policy for the hostname of a securely connected server if they receive a new STS capability notification.
 
 Servers MUST NOT send `CAP DEL` to disable this capability, and clients MUST ignore any attempts to do so. The mechanism for disabling an STS persistence policy is described in the `duration` key section.
 

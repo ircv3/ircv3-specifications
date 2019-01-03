@@ -51,7 +51,7 @@ John joined #chan during the leap second of June 2012 (notice the :60)
 	@time=2012-06-30T23:59:60.419Z :John!~john@1.2.3.4 JOIN #chan
 
 
-[cap]: ../core/capability-negotiation-3.1.html
+[cap]: ../core/capability-negotiation.html
 [message tag]: ../core/message-tags-3.2.html
 
 
