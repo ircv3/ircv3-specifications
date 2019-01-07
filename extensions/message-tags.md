@@ -91,7 +91,7 @@ Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
 
-## Capability negotiation
+## Capabilities
 
 Tags are enabled via capability negotiation. Clients and servers that negotiate a capability that uses tags MUST support the full tag specification.
 
