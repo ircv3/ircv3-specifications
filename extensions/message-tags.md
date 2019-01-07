@@ -138,7 +138,7 @@ This means client-only tags that aren't specified in the IRCv3 extension registr
 use a vendor prefix and SHOULD be submitted to the IRCv3 working group for consideration
 if they are appropriate for more widespread adoption.
 
-### The `TAGMSG` tag-only command
+### The `TAGMSG` tag-only message
 
        Command: TAGMSG
     Parameters: <msgtarget>
