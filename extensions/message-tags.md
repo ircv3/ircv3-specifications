@@ -1,120 +1,78 @@
 ---
 title: IRCv3 Message Tags
 layout: spec
-work-in-progress: true
-updates:
-  - message-tags-3.2
+redirect_from:
+  - /specs/core/message-tags-3.3.html
+  - /specs/core/message-tags-3.2.html
 copyrights:
   -
+    name: "Alexey Sokolov"
+    period: 2012-2014
+    email: "alexey-irc@asokolov.org"
+  -
+    name: "Stéphan Kochen"
+    period: "2012"
+    email: "stephan@kochen.nl"
+  -
+    name: "Kyle Fuller"
+    period: "2012"
+    email: "inbox@kylefuller.co.uk"
+  -
     name: "Kiyoshi Aman"
-    period: 2016
+    period: "2016"
     email: "kiyoshi.aman@gmail.com"
   -
     name: "James Wheare"
-    period: 2016
+    period: "2016-2019"
     email: "james@irccloud.com"
 ---
 
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `message-tags` capability name. Instead, implementations SHOULD use
-the `draft/message-tags-0.2` capability name to be interoperable with other software
-implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed capability name.
-
 ## Introduction
 
-This specification extends the [IRCv3.2 Message Tags](./message-tags-3.2.html) specification in a number of ways:
+Message tags are a mechanism for adding additional metadata on a per-message basis. This is achieved via an extension to the protocol message format, enabled via capability negotiation.
 
-* Adds a new capability to indicate base support for message tags
-* Defines a prefix for expressing client-only tags
-* Defines a new command for tag-only messages
-* Increases the size limit for tags
+Tagged messages can be initiated by both servers and clients. The usage of individual tags are specified in their own documents.
 
-## Motivation
+## Format
 
-Previously, clients were required to negotiate a capability with servers for each
-supported tag. This made tags inappropriate for client-only features. By adding a
-new base capability, this specification allows clients to indicate support for
-receiving any well-formed tag, whether or not it is recognised or used. This also
-frees servers from having to filter individual message tags for each client
-response.
+The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is extended as follows:
 
-The client-only tag prefix allows servers to safely relay untrusted client tags,
-keeping them distinct from server-initiated tags that carry verified meaning.
+    <message>       ::= ['@' <tags> <SPACE>] [':' <prefix> <SPACE> ] <command> <params> <crlf>
+    <tags>          ::= <tag> [';' <tag>]*
+    <tag>           ::= <key> ['=' <escaped value>]
+    <key>           ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens ('-')>
+    <escaped value> ::= <sequence of any characters except NUL, CR, LF, semicolon (`;`) and SPACE>
+    <vendor>        ::= <host>
 
-To allow for tagged data to be sent to channels and users without any accompanying
-message text, a new command for tag-only messages is needed.
+Not all tag keys have a value.
 
-With the scope of tags expanded for use as general purpose message metadata, the
-number and size of tags attached to a message will potentially increase. As a
-result, an increased limit is implied by negotiating the new capability.
-
-## Architecture
-
-### Capabilities
-
-This specification adds the `draft/message-tags-0.2` capability. Clients requesting
-this capability indicate that they are capable of parsing all well-formed tags,
-even if they don't handle them specifically.
-
-Servers advertising this capability indicate that they are capable of parsing
-any tag received from a client, with or without the client-only prefix.
-
-### Tags
-
-Client-only tags are client-initiated tags that servers MUST attach as-is
-to any relevant message relayed to other clients. A client-only tag is prefixed
-with a plus sign (`+`) and otherwise conforms to the format specified in
-[IRCv3.2 tags](./message-tags-3.2.html).
-
-Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` messages, and MAY be relayed on other messages.
-
-Any server-initiated tags attached to messages MUST be included before client-only
-tags to prevent them from being pushed outside of the byte limit.
-
-The expected client behaviour of individual client-only tags SHOULD be defined
-in separate specifications, in the same way as server-initiated tags.
-
-This means client-only tags that aren't specified in the IRCv3 extension registry MUST
-use a vendor prefix and SHOULD be submitted to the IRCv3 working group for consideration
-if they are appropriate for more widespread adoption.
-
-The updated pseudo-BNF for keys is as follows:
-
-    <key> ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens ('-')>
+The ordering of tags is not meaningful.
 
 Individual tag keys MUST only be used a maximum of once per message. Clients
 receiving messages with more than one occurrence of a tag key SHOULD discard all
 but the final occurrence.
 
-### The `TAGMSG` tag-only message
+## Escaping values
 
-       Command: TAGMSG
-    Parameters: <msgtarget>
+The mapping between characters in tag values and their representation in `<escaped value>` is defined as follows:
 
-A new message command `TAGMSG` is defined for sending messages with tags but no text content.
-This message MUST be delivered to targets in the same way as `PRIVMSG` and `NOTICE`
-messages. This means for example, honouring channel membership, modes,
-[`echo-message`](../extensions/echo-message-3.2.html),
-[`STATUSMSG`](https://tools.ietf.org/html/draft-hardy-irc-isupport-00#section-4.18)
-prefixes, etc.
+| Character       | Sequence in `<escaped value>` |
+|-----------------|-------------------------------|
+| `;` (semicolon) | `\:` (backslash and colon)    |
+| `SPACE`         | `\s`                          |
+| `\`             | `\\`                          |
+| `CR`            | `\r`                          |
+| `LF`            | `\n`                          |
+| all others      | the character itself          |
 
-Servers MAY apply moderation to this command using existing or newly specified modes or configuration.
+This escape format is more space efficient than URL-escaping, and ensures that message parts can easily by split on spaces and semi-colons before further parsing.
 
-Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message tags capability.
+If a lone `\` exists at the end of an escaped value (with no escape character following it), then there
+SHOULD be no output character. For example, the escaped value `test\` should unescape to `test`.
 
-See [`PRIVMSG` in RFC2812](https://tools.ietf.org/html/rfc2812#section-3.3.1) for more details on replies and examples.
+## Size limit
 
-Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the message.
-
-### Size limit
-
-The size limit for message tags is increased from 512 to 4607 bytes, including the leading `'@'` (0x40) and trailing space `' '` (0x20) characters. The size limit for the rest of the message is unchanged.
+The size limit for message tags is 4607 bytes, including the leading `'@'` (0x40) and trailing space `' '` (0x20) characters. The size limit for the rest of the message remains unchanged at 512 bytes.
 
 This limit is separated between server-initiated and client-initiated tags. This prevents servers from overflowing the overall limit by adding tags to a client message sent within the allowed limit.
 
@@ -132,6 +90,101 @@ Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client
 
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
+
+## Capability negotiation
+
+Tags are enabled via capability negotiation. Clients and servers that negotiate a capability that uses tags MUST support the full tag specification.
+
+The following capabilities implicitly depend on the tag format:
+
+* `account-tag`
+* `server-time`
+* `batch`
+
+But there is also a generic capability for negotiating tag usage.
+
+* `message-tags`
+
+### `message-tags` capability
+
+The `message-tags` capability allows clients to indicate support for
+receiving any well-formed tag, whether or not it is recognised or used. It also frees servers from having to filter individual message tags for each client response.
+
+This capability enables the use of client-only tags and the `TAGMSG` command, described below.
+
+Clients requesting this capability indicate that they are capable of parsing all well-formed tags, even if they don't handle them specifically.
+
+Servers advertising this capability indicate that they are capable of parsing
+any tag received from a client, with or without the client-only prefix.
+
+### Client-only tags
+
+Client-only tags are client-initiated tags that servers MUST attach as-is
+to any relevant message relayed to other clients. A client-only tag is prefixed
+with a plus sign (`+`).
+
+Client-only tag prefix allows servers to safely relay untrusted client tags,
+keeping them distinct from server-initiated tags that carry verified meaning.
+
+Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` messages, and MAY be relayed on other messages.
+
+Any server-initiated tags attached to messages MUST be included before client-only
+tags to prevent them from being pushed outside of the byte limit.
+
+The expected client behaviour of individual client-only tags are defined
+in separate specifications.
+
+This means client-only tags that aren't specified in the IRCv3 extension registry MUST
+use a vendor prefix and SHOULD be submitted to the IRCv3 working group for consideration
+if they are appropriate for more widespread adoption.
+
+### The `TAGMSG` tag-only command
+
+       Command: TAGMSG
+    Parameters: <msgtarget>
+
+A new message command `TAGMSG` is defined for sending messages with tags but no text content.
+This message MUST be delivered to targets in the same way as `PRIVMSG` and `NOTICE`
+messages. This means for example, honouring channel membership, modes,
+[`echo-message`](../extensions/echo-message-3.2.html),
+[`STATUSMSG`][statusmsg]
+prefixes, etc.
+
+Servers MAY apply moderation to this command using existing or newly specified modes or configuration.
+
+Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message tags capability.
+
+See [`PRIVMSG` in RFC2812][privmsg] for more details on replies and examples.
+
+Clients that receive a `TAGMSG` command MUST NOT display them in the message history by default. Display guidelines are defined in the specifications of tags attached to the message.
+
+## Rules for naming message tags
+
+Full tag names, including any vendor prefixes MUST be treated as an opaque identifier.
+
+There are two tag namespaces:
+
+### Vendor-Specific
+
+Names which contain a slash character (`/`) designate a vendor-specific tag namespace.
+These names are prefixed by a valid DNS domain name.
+
+For example: `znc.in/server-time`.
+
+In cases where the prefix contains non-ASCII characters, punycode MUST be used,
+e.g. `xn--e1afmkfd.org/foo`.
+
+Vendor-Specific tags should be submitted to the IRCv3 working group for consideration.
+
+### Standardized
+
+Names for which a corresponding document sits in the IRCv3 Extension Registry.
+
+Names in the IRCv3 Extension Registry are reserved for your tag.
+
+The IRCv3 Working Group reserves the right to reuse names which have not been submitted
+to the registry. If you do not wish to submit your tag then you MUST use a vendor-specific
+name (see above).
 
 ## Security considerations
 
@@ -164,6 +217,24 @@ that act on tag content as well.
 ## Examples
 
 This section is non-normative. The tags used in these examples may or may not have a specified meaning elsewhere.
+
+---
+
+A message with 0 tags:
+
+    :nick!ident@host.com PRIVMSG me :Hello
+
+---
+
+A message sent by the server with 3 tags:
+
+    S: @aaa=bbb;ccc;example.com/ddd=eee :nick!ident@host.com PRIVMSG me :Hello
+
+* standardized tag `aaa` with value `bbb`
+
+* standardized tag `ccc` with no value
+
+* tag `ddd` specific to software of `example.com` with value `eee`
 
 ---
 
@@ -202,7 +273,7 @@ A client-only tag `+example` with a value containing valid raw and escaped chara
 * Raw value: `raw+:=,escaped; \`
 * Escaped value: `raw+:=,escaped\:\s\\`
 
-In this example, plus signs, colons, equals signs and commas are transmitted raw in tag values; while semicolons, spaces and backslashes are escaped. [Escaping rules](./message-tags-3.2.html#escaping-values) are unchanged from IRCv3.2 tags.
+In this example, plus signs, colons, equals signs and commas are transmitted raw in tag values; while semicolons, spaces and backslashes are escaped.
 
     C: @+example=raw+:=,escaped\:\s\\ :irc.example.com NOTICE #channel :Message
 
@@ -240,3 +311,14 @@ A `TAGMSG` sent by a client with an un-prefixed tag that has no specified behavi
     C: @unknown-tag TAGMSG #channel
     S: :nick!user@example.com TAGMSG #channel
 
+## Errata
+
+Previous versions of this spec did not specify that the full tag name MUST be parsed as
+an opaque identifier. This was added to improve client resiliency.
+
+Previous versions of this spec did not specify how to handle trailing backslashes with
+no escape character. This was added to help consistency across implementations.
+
+[rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
+[privmsg]: https://tools.ietf.org/html/rfc2812#section-3.3.1
+[statusmsg]: https://tools.ietf.org/html/draft-hardy-irc-isupport-00#section-4.18
