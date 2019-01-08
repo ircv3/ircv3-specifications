@@ -100,16 +100,16 @@ any tag received from a client, with or without the client-only prefix.
 
 ### Client-only tags
 
-Client-only tags are client-initiated tags that servers MUST attach as-is
+Client-only tags are tags normally sent by clients that servers MUST attach as-is
 to any relevant message relayed to other clients. A client-only tag is prefixed
-with a plus sign (`+`).
+with a plus sign (`+`). Servers MAY send client-only tags that weren't provided explicitly by the client.
 
-Client-only tag prefix allows servers to safely relay untrusted client tags,
-keeping them distinct from server-initiated tags that carry verified meaning.
+The client-only tag prefix allows servers to safely relay untrusted client tags,
+keeping them distinct from unprefixed tags that carry verified meaning.
 
 Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` messages, and MAY be relayed on other messages.
 
-Any server-initiated tags attached to messages MUST be included before client-only
+Any server-sent tags attached to messages MUST be included before client-only
 tags to prevent them from being pushed outside of the byte limit.
 
 The expected client behaviour of individual client-only tags are defined
@@ -197,8 +197,8 @@ after receiving data and escape those values before sending them out.
 Tags without the client-only prefix MUST be removed by the server before being relayed
 with any message to another client.
 
-Some specifications may involve servers accepting client-initiated tags without
-the client-only prefix, they MUST define a process to be performed by the server
+Some specifications may involve servers accepting client-sent tags without
+the client-only prefix. These specifications MUST define a process to be performed by the server
 on these tags prior to their removal.
 
 ## Client implementation considerations
