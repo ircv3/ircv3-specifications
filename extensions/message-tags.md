@@ -159,9 +159,7 @@ Vendor-Specific tags should be submitted to the IRCv3 working group for consider
 
 ### Standardized
 
-Names for which a corresponding document exists in the [IRCv3 Extension Registry][registry].
-
-Names in the IRCv3 Extension Registry are reserved for your tag.
+Reserved names for which a corresponding document exists in the [IRCv3 Extension Registry][registry].
 
 The IRCv3 Working Group reserves the right to reuse names which have not been submitted
 to the registry. If you do not wish to submit your tag then you MUST use a vendor-specific
