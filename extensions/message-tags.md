@@ -67,7 +67,7 @@ The mapping between characters in tag values and their representation in `<escap
 | `LF`            | `\n`                          |
 | all others      | the character itself          |
 
-This escape format is more space efficient than URL-escaping, and ensures that message parts can easily by split on spaces and semi-colons before further parsing.
+This escape format is space efficient, and ensures that message parts can easily be split on spaces and semi-colons before further parsing.
 
 If a lone `\` exists at the end of an escaped value (with no escape character following it), then there
 SHOULD be no output character. For example, the escaped value `test\` should unescape to `test`.
