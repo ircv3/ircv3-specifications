@@ -117,7 +117,7 @@ in separate specifications.
 
 This means client-only tags that aren't specified in the IRCv3 extension registry MUST
 use a vendor prefix and SHOULD be submitted to the IRCv3 working group for consideration
-if they are appropriate for more widespread adoption.
+if they are appropriate for more widespread adoption. See [Rules for naming message tags](#rules-for-naming-message-tags).
 
 ### The `TAGMSG` tag-only message
 
@@ -159,7 +159,7 @@ Vendor-Specific tags should be submitted to the IRCv3 working group for consider
 
 ### Standardized
 
-Names for which a corresponding document sits in the IRCv3 Extension Registry.
+Names for which a corresponding document exists in the [IRCv3 Extension Registry][registry].
 
 Names in the IRCv3 Extension Registry are reserved for your tag.
 
@@ -324,3 +324,4 @@ no escape character. This was added to help consistency across implementations.
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
 [privmsg]: https://tools.ietf.org/html/rfc2812#section-3.3.1
 [statusmsg]: https://tools.ietf.org/html/draft-hardy-irc-isupport-00#section-4.18
+[registry]: https://ircv3.net/registry.html#tags
