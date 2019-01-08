@@ -31,7 +31,9 @@ copyrights:
 
 Message tags are a mechanism for adding additional metadata on a per-message basis. This is achieved via an extension to the protocol message format, enabled via capability negotiation.
 
-Tagged messages can be initiated by both servers and clients. The usage of individual tags are specified in their own documents.
+Tags are simple keys that MAY have optional string data as values.
+
+Tagged messages can be sent by both servers and clients. The usage of individual tags are specified in their own documents.
 
 ## Format
 
@@ -39,12 +41,12 @@ The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is exte
 
     <message>       ::= ['@' <tags> <SPACE>] [':' <prefix> <SPACE> ] <command> <params> <crlf>
     <tags>          ::= <tag> [';' <tag>]*
-    <tag>           ::= <key> ['=' <escaped value>]
-    <key>           ::= [ '+' ] [ <vendor> '/' ] <sequence of letters, digits, hyphens ('-')>
-    <escaped value> ::= <sequence of any characters except NUL, CR, LF, semicolon (`;`) and SPACE>
+    <tag>           ::= <key> ['=' <escaped_value>]
+    <key>           ::= [ <client_prefix> ] [ <vendor> '/' ] <key_name>
+    <client_prefix> ::= '+'
+    <key_name>      ::= <sequence of letters, digits, hyphens ('-')>
+    <escaped_value> ::= <sequence of any characters except NUL, CR, LF, semicolon (`;`) and SPACE>
     <vendor>        ::= <host>
-
-Not all tag keys have a value.
 
 The ordering of tags is not meaningful.
 
