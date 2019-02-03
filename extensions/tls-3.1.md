@@ -1,6 +1,7 @@
 ---
 title: IRCv3.1 `tls` Extension
 layout: spec
+deprecated: true
 copyrights:
   -
     name: "William Pitcock"
@@ -56,3 +57,7 @@ expected to go away.
 
 _(The final "text" parameter is not to be machine-parsed, as it tends to vary
 between implementations and translations.)_
+
+## Errata
+
+* This extension has been [deprecated](https://github.com/ircv3/ircv3.github.io/pull/211) in favour of encouraging IRC networks to use implicit TLS and deploy [Strict Transport Security](sts.html) instead. This is in alignment with the recommendations given in [RFC 8314](https://tools.ietf.org/html/rfc8314).
