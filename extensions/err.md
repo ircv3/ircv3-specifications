@@ -8,7 +8,7 @@ copyrights:
     email: "daniel@danieloaks.net"
 ---
 
-This document specifies the `ERR` message, intended to replace future error numerics and provide a clean, consistent interface for sending general errors to clients.
+This document specifies the `ERR` message, intended to provide a clean, consistent interface for sending general errors to clients. We want implementors to be able to provide appropriate error information for newly-developed commands and functions without having to reserve new numerics.
 
 The `ERR` message may indicate a complete failure to process a given command or function, or simply something about how the processing goes that clients should be aware of.
 
