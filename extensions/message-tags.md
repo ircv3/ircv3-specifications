@@ -7,7 +7,7 @@ redirect_from:
 copyrights:
   -
     name: "Alexey Sokolov"
-    period: 2012-2014
+    period: "2012-2014"
     email: "alexey-irc@asokolov.org"
   -
     name: "Stéphan Kochen"
