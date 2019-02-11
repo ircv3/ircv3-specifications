@@ -167,7 +167,7 @@ name (see above).
 
 ## Size limit
 
-The size limit for message tags is 4607 bytes, including the leading `'@'` (0x40) and trailing space `' '` (0x20) characters. The size limit for the rest of the message remains unchanged at 512 bytes.
+The size limit for message tags is 8191 bytes, including the leading `'@'` (0x40) and trailing space `' '` (0x20) characters. The size limit for the rest of the message remains unchanged at 512 bytes.
 
 This limit is separated between tags added by the server and tags sent by the client. This prevents servers from overflowing the overall limit by adding tags to a client message sent within the allowed limit.
 
@@ -175,11 +175,11 @@ In the following description, **tag data** describes the bytes between the leadi
 
 Clients MUST NOT send messages with tag data exceeding 4094 bytes, this includes tags with or without the client-only prefix.
 
-Servers MUST NOT add tag data exceeding 510 bytes to messages.
+Servers MUST NOT add tag data exceeding 4094 bytes to messages.
 
-    <server_max>    (512)  :: '@' <tag_data  510> ' '
+    <server_max>   (4096)  :: '@' <tag_data 4094> ' '
     <client_max>   (4096)  :: '@' <tag_data 4094> ' '
-    <combined_max> (4607)  :: '@' <tag_data  510> ';' <tag_data 4094> ' '
+    <combined_max> (8191)  :: '@' <tag_data 4094> ';' <tag_data 4094> ' '
 
 Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client sends a message with more tag data than the allowed limit. Servers MUST NOT truncate tags and MUST always reject lines that exceed this limit.
 
