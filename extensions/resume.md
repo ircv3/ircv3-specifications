@@ -5,8 +5,12 @@ work-in-progress: true
 copyrights:
   -
     name: Daniel Oakley
-    period: 2017-2018
+    period: 2017-2019
     email: daniel@danieloaks.net
+  -
+    name: Shivaram Lingamneni
+    period: 2019
+    email: slingamn@cs.stanford.edu
 ---
 ## Introduction
 
@@ -17,30 +21,22 @@ The `resume` feature vastly simplifies this form of reconnection, for both the c
 
 ## Architecture
 
-This feature is enabled using the `draft/resume-0.2` capability, introduces the `RESUME` command, and uses the messages described below to convey state about the reconnection process and reconnecting clients.
-
-### Resumption Token
-
-Upon indicating they support session resumption, clients are provided with a resumption token. This token is used to authenticate future `RESUME` attempts.
-
-Servers MUST ensure that this token is long, cryptographically secure, and not able to be easily brute-forced as this token will protect the security of clients' information. Resumption tokens are case-sensitive, and clients MUST treat them as opaque values.
-
-The token MUST NOT contain any spaces and MUST NOT start with a colon character `(:)`, as these would break the protocol framing. There is no sort of encoding or decoding defined for the token.
+This feature is enabled using the `draft/resume-0.3` capability, introduces the `RESUME` command, and uses the messages described below to convey state about the reconnection process and reconnecting clients.
 
 ### Capabilities
 
-The `draft/resume-0.2` capability is advertised by servers that support resuming connections.
+The `draft/resume-0.3` capability is advertised by servers that support resuming connections.
 
-When this capability is negotiated, the server sends the client the resumption token, which is used to authenticate future connection resumptions. In addition, servers MAY extend the "ping timeout" length for that client (with the expectation that if the client disconnects, it will try to resume its connection as described here).
+When this capability is negotiated, the server sends the client their resume token, which is used to authenticate future connection resumptions. In addition, servers MAY extend the "ping timeout" length for that client (with the expectation that if the client disconnects, it will try to resume its connection as described here).
 
-Servers MAY ONLY generate and provide a resumption token to a client when the client negotiates the `draft/resume-0.2` capability.
+Servers MUST ONLY generate and provide a resume token to a client when the client negotiates the `draft/resume-0.3` capability.
 
 Capability negotiation example:
 
     C: CAP LS
-    S: CAP * LS :multi-prefix draft/resume-0.2
-    C: CAP REQ :draft/resume-0.2
-    S: CAP * ACK :draft/resume-0.2
+    S: CAP * LS :multi-prefix draft/resume-0.3
+    C: CAP REQ :draft/resume-0.3
+    S: CAP * ACK :draft/resume-0.3
     S: RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt87Bb0YaQlyOzuQciz6cB2R
 
 ### Commands
@@ -49,9 +45,9 @@ Capability negotiation example:
 
 This command MAY ONLY be sent by a client during connection registration, and indicates that the client wishes to resume their session.
 
-    RESUME <oldnick> <token> [timestamp]
+    RESUME <token> [timestamp]
 
-`<oldnick>` is their old nickname, and `<token>` is the old connection's resumption token.
+`<token>` is the old connection's resume token.
 
 `<timestamp>`, if given, is a timestamp indicating when the client received the last message from the server on the old connection. This timestamp uses the same format as the IRCv3 `server-time` extension (i.e. `YYYY-MM-DDThh:mm:ss.sssZ`, or in UTC using extended format as specified by ISO 8601:2004(E) 4.3.2), and is passed to other clients to indicates how long the disconnection lasted.
 
@@ -65,19 +61,19 @@ If a client does not recognise a `RESUME` subcommand they receive, they `MUST` s
 
     RESUME SUCCESS <oldnick>
 
-The `SUCCESS` message indicates that the attempt to resume the connection from `<oldnick>` was successful.
+The `SUCCESS` message indicates that the attempt to resume the connection was successful, registration will now complete and the client will get the current state replayed to them.
 
 #### `RESUME WARN` Message
 
-    RESUME WARN <oldnick> <info>
+    RESUME WARN <info>
 
 The `WARN` message indicates that there was a warning about the resume attempt, but not that it has succeeded or failed (it will be followed up by a `SUCCESS` or `ERR`). `<info>` is an information text string indicating the reson for the warning (e.g.: `"Chat history may be truncated"`).
 
 #### `RESUME ERR` Message
 
-    RESUME ERR <oldnick> <info>
+    RESUME ERR <info>
 
-The `ERR` message indicates that the attempt to resume the connection from `<oldnick>` failed. `<info>` is an information text string indicating the reson for the failure (e.g.: `"Cannot resume connection, token is not valid"`).
+The `ERR` message indicates that the resume attempt failed. `<info>` is an information text string indicating the reson for the failure (e.g.: `"Cannot resume connection, token is not valid"`).
 
 #### `RESUMED` Message
 
@@ -90,24 +86,26 @@ Upon receiving a `RESUMED` message, clients MUST display in some way that the gi
 
 ## Capability Negotiation
 
-The first step in successfully resuming a connection is for the 'old client' to negotiate the `draft/resume-0.2` capability and receive a resumption token. This process is illustrated here:
+The first step in successfully resuming a connection is for the 'old client' to negotiate the `draft/resume-0.3` capability and receive a resume token. This process is illustrated here:
 
     C: CAP LS
-    S: CAP * LS :multi-prefix draft/resume-0.2
-    C: CAP REQ :draft/resume-0.2
-    S: CAP * ACK :draft/resume-0.2
+    S: CAP * LS :multi-prefix draft/resume-0.3
+    C: CAP REQ :draft/resume-0.3
+    S: CAP * ACK :draft/resume-0.3
     S: RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt87Bb0YaQlyOzuQciz6cB2R
+
+Considerations around tokens and the process for generating them is described below in the [Resume Token](#resume-token) section.
 
 
 ## Resuming A Connection
 
 When a client detects that it has become disconnected from a server, it SHOULD try to resume before it breaks the existing connection.
 
-Upon establishing the new connection, the client begins capability negotiation, negotiates supported capabilities, and MUST confirm that the `draft/resume-0.2` capability exists. If this capability does not exist, the client continues connection registration without attempting to resume. If this capability does exist, the client sends the `RESUME` command and MUST wait for either a `RESUME SUCCESS` or a `RESUME ERR` message before continuing registration. It should be noted that the client MUST NOT perform SASL authentication if the `draft/resume-0.2` capability exists, as this will end connection registration and abort the resumption attempt.
+Upon establishing the new connection, the client begins capability negotiation, negotiates all mutually-supported capabilities, and MUST confirm that the `draft/resume-0.3` capability exists. If this capability does not exist, the client continues connection registration without attempting to resume. If this capability does exist, the client sends the `RESUME` command and MUST wait for either a `RESUME SUCCESS` or a `RESUME ERR` message before continuing registration. It should be noted that the client MUST NOT perform SASL authentication if the `draft/resume-0.3` capability exists, as this will end connection registration and abort the resumption attempt before the resume attempt can complete.
 
-If the token provided by the new client matches the old client's resumption token, and both the old and new clients use TLS, then the attempt SHOULD be successful. If the attempt is successful, the server MUST send a `RESUME SUCCESS` message and complete connection registration immediately. If the attempt is unsuccessful, the server MUST send a `RESUME ERR` message and allow the server to continue connection registration.
+If the token provided by the new client is validated by the server, and both the old and new clients use TLS, then the attempt SHOULD be successful. If the attempt is successful, the server MUST send a `RESUME SUCCESS` message and complete connection registration immediately (at which time the state will begin to replay as described below). If the attempt is unsuccessful, the server MUST send a `RESUME ERR` message, MAY send any additional error numerics, and then allows the client to continue connection registration.
 
-If the client receives a `RESUME SUCCESS` message, connection registration will complete immediately and state will begin to replay. If the client receives a `RESUME ERR`, the client MUST continue registration as though they are joining the server normally.
+If the client receives a `RESUME SUCCESS` message, connection registration will complete immediately and state will begin to replay as described below. If the client receives a `RESUME ERR`, the client MUST continue registration as though they are joining the server normally.
 
 On a successful request, the server:
 
@@ -131,8 +129,30 @@ Session information that MUST NOT be applied from the old client and replayed in
 
 - Enabled client capabilities.
 - The old client's resume token (after completing the resume request, this token is thrown away).
+    - Including both the old client's resume ID and resume key, if using the token values described above.
 
-If the resume request is unsuccessful, the server continues as though the new client is a normal client joining the server.
+
+## Resume Token
+
+Upon indicating they support session resumption, clients are provided with a resume token. This token is used to authenticate future `RESUME` attempts with the server.
+
+Clients MUST treat their resume token as an opaque value, and provide it to the server as given.
+
+Servers use resume tokens to authenticate and allow a user to resume their old connection. Typical resume tokens contain two values:
+
+- Resume ID: A random, unique value that identifies the client's session, which allows the server to look-up which session should be resumed.
+- Resume Key: A random, cryptographically-secure value for the client's session, which is used to authenticate that the new client can resume the given existing session.
+
+The format of the token is implementation-defined, but MUST NOT contain any spaces and MUST NOT start with a colon character `(:)`, as these would break the protocol framing.
+
+To validate a token during a resume attempt, a typical server implementation with a token as described above would:
+
+1. Accept the resume token from the client.
+2. Extract the ID and Key from the token.
+3. Use the ID to look-up the session the client wishes to resume.
+4. Use a **constant-time comparison function** to compare the provided key and the key of the session being resumed, to ensure they match.
+
+This approach is recommended as it protects against timing attacks. Implementers MAY use their own methods of validating tokens, but are cautioned to think very carefully about security considerations and possible attacks.
 
 
 ## Examples
@@ -150,11 +170,11 @@ Successful attempt from a client with the nick `dan` reconnecting. The old conne
     C2 - C: CAP LS
     C2 - C: NICK dan-backup-nick
     C2 - C: USER d * 0 :An example user!
-    C2 - S: :irc.example.com CAP * LS :multi-prefix draft/resume-0.2 sasl
-    C2 - C: CAP REQ :multi-prefix draft/resume-0.2 sasl
-    C2 - S: :irc.example.com CAP dan-backup-nick ACK :multi-prefix draft/resume-0.2 sasl
+    C2 - S: :irc.example.com CAP * LS :multi-prefix draft/resume-0.3 sasl
+    C2 - C: CAP REQ :multi-prefix draft/resume-0.3 sasl
+    C2 - S: :irc.example.com CAP dan-backup-nick ACK :multi-prefix draft/resume-0.3 sasl
     C2 - S: :irc.example.com RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt8
-    C2 - C: RESUME dan A8KgnZPYDaRiGMzZWLu2frVvtN7lbCxO3hTwGLO 2017-04-13T15:12:51.620Z
+    C2 - C: RESUME A8KgnZPYDaRiGMzZWLu2frVvtN7lbCxO3hTwGLO 2017-04-13T15:12:51.620Z
     C2 - S: :irc.example.com RESUME SUCCESS dan
     ... C1's connection is closed and C1's attributes are applied to C2 ...
     C2 - S: :irc.example.com 001 dan :Welcome to the Internet Relay Network dan
@@ -166,15 +186,15 @@ Successful attempt from a client with the nick `dan` reconnecting. The old conne
     C2 - S: :irc.example.com 353 dan @ #test :@dan @george +violet roger
     C2 - S: :irc.example.com MODE #test +o dan
 
-Here is this successful reconnection seen by `george`, a client that does not have the `draft/resume-0.2` capability enabled:
+Here is this successful reconnection seen by `george`, a client that does not have the `draft/resume-0.3` capability enabled:
 
     S: :dan!~old@192.168.0.5 QUIT :Client reconnected (24 seconds of message history lost)
     S: :dan!~d@127.0.0.1 JOIN #test
     S: :irc.example.com MODE #test +o dan
 
-And here is this reconnection seen by `violet`, a client that has the `draft/resume-0.2` capability:
+And here is this reconnection seen by `violet`, a client that has the `draft/resume-0.3` capability:
 
-    S: :dan!~old@192.168.0.5 RESUMED dan ~d 10.0.0.3 2017-04-13T15:12:51.620Z
+    S: :dan!~old@192.168.0.5 RESUMED ~d 10.0.0.3 2017-04-13T15:12:51.620Z
 
 ### Failed Resumption
 
@@ -189,11 +209,11 @@ Failed attempt from a client with the nick `dan` reconnecting. The old connectio
     C2 - C: CAP LS
     C2 - C: NICK dan-backup-nick
     C2 - C: USER d * 0 :An example user!
-    C2 - S: :irc.example.com CAP * LS :multi-prefix draft/resume-0.2 sasl
-    C2 - C: CAP REQ :multi-prefix draft/resume-0.2 sasl
-    C2 - S: :irc.example.com CAP dan-backup-nick ACK :multi-prefix draft/resume-0.2 sasl
+    C2 - S: :irc.example.com CAP * LS :multi-prefix draft/resume-0.3 sasl
+    C2 - C: CAP REQ :multi-prefix draft/resume-0.3 sasl
+    C2 - S: :irc.example.com CAP dan-backup-nick ACK :multi-prefix draft/resume-0.3 sasl
     C2 - S: :irc.example.com RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt8
-    C2 - C: RESUME dan A8KgnZPYDaRiGMzZWLu2frVvtN7lbCxO3hTwGLO 2017-04-13T15:12:51.620Z
+    C2 - C: RESUME A8KgnZPYDaRiGMzZWLu2frVvtN7lbCxO3hTwGLO 2017-04-13T15:12:51.620Z
     C2 - S: :irc.example.com RESUME ERR :Cannot resume connection, token is not valid
     C2 - C: AUTHENTICATE PLAIN
     C2 - S: :irc.example.com AUTHENTICATE +
@@ -223,7 +243,9 @@ Servers may wish to check the new hostmask of resuming clients, to ensure that i
 
 This section notes security-specific considerations software authors will need to take into account while implementing this specification. This section is non-normative.
 
-When servers apply the old client's session information to the new client, ensure that the new client retains their own unique resumption token. Clients shouldn't share resumption tokens under any circumstances.
+When servers apply the old client's session information to the new client, ensure that the new client retains their own unique resume token. Clients shouldn't share resume tokens under any circumstances.
+
+Servers must construct resume tokens in a secure way. The [Resume Token](#resume-token) section above lays out a method that should prevent timing attacks. Any implementers creating their own method must protect against timing attacks and other possible attacks against their authentication method.
 
 Servers should decide whether, on resuming the session of an IRC operator, the old client's operator status should be applied to the new client. This may depend on other operator authentication considerations such as client certificates or similar.
 
