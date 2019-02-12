@@ -103,7 +103,7 @@ When a client detects that it has become disconnected from a server, it SHOULD t
 
 Upon establishing the new connection, the client begins capability negotiation, negotiates all mutually-supported capabilities, and MUST confirm that the `draft/resume-0.3` capability exists. If this capability does not exist, the client continues connection registration without attempting to resume. If this capability does exist, the client sends the `RESUME` command and MUST wait for either a `RESUME SUCCESS` or a `RESUME ERR` message before continuing registration. It should be noted that the client MUST NOT perform SASL authentication if the `draft/resume-0.3` capability exists, as this will end connection registration and abort the resumption attempt before the resume attempt can complete.
 
-If the token provided by the new client is validated by the server, and both the old and new clients use TLS, then the attempt SHOULD be successful. If the attempt is successful, the server MUST send a `RESUME SUCCESS` message and complete connection registration immediately (at which time the state will begin to replay as described below). If the attempt is unsuccessful, the server MUST send a `RESUME ERR` message, MAY send any additional error numerics, and then allows the client to continue connection registration.
+If the token provided by the new client is validated by the server, the old client completed connection registration with the server, and both the old and new clients use TLS, then the attempt SHOULD be successful. If the attempt is successful, the server MUST send a `RESUME SUCCESS` message and complete connection registration immediately (at which time the state will begin to replay as described below). If the attempt is unsuccessful, the server MUST send a `RESUME ERR` message, MAY send any additional error numerics, and then allows the client to continue connection registration.
 
 If the client receives a `RESUME SUCCESS` message, connection registration will complete immediately and state will begin to replay as described below. If the client receives a `RESUME ERR`, the client MUST continue registration as though they are joining the server normally.
 
@@ -128,8 +128,7 @@ On a successful request, the session information that MUST be applied from the o
 Session information that MUST NOT be applied from the old client and replayed includes:
 
 - Enabled client capabilities.
-- The old client's resume token (after completing the resume request, this token is thrown away).
-    - Including both the old client's resume ID and resume key, if using the token values described above.
+- The old client's resume token (after completing the resume request, this token is thrown away), including any session-specific values that the server uses internally to create and validate the token.
 
 
 ## Resume Token
@@ -243,9 +242,13 @@ Servers may wish to check the new hostmask of resuming clients, to ensure that i
 
 This section notes security-specific considerations software authors will need to take into account while implementing this specification. This section is non-normative.
 
+Servers should verify that clients cannot use `resume` to unintentionally bypass or evade any checks normally performed during registration, such as the `PASS` command or IP/nickmask bans. For this reason, we recommend only allowing clients to resume if their old session had completed connection registration successfully.
+
 When servers apply the old client's session information to the new client, ensure that the new client retains their own unique resume token. Clients shouldn't share resume tokens under any circumstances.
 
 Servers must construct resume tokens in a secure way. The [Resume Token](#resume-token) section above lays out a method that should prevent timing attacks. Any implementers creating their own method must protect against timing attacks and other possible attacks against their authentication method.
+
+It is recommended that the token provide at least 128 bits of security strength. This reflects recommendations such as that of NIST [[1]](https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-4/final) that modern systems target a 128-bit security level. In the relevant threat model of online attack by a classical adversary, this can be achieved through the use of a secret with 128 bits of entropy from a cryptographically secure pseudorandom source. With the 'typical method' of generating tokens, it is sufficient to ensure that the 'resume key' value of the token has this property.
 
 Servers should decide whether, on resuming the session of an IRC operator, the old client's operator status should be applied to the new client. This may depend on other operator authentication considerations such as client certificates or similar.
 
