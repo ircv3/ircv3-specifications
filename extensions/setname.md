@@ -41,14 +41,14 @@ to actually disconnect and reconnect.
 This capability MUST be referred to as `draft/setname` at capability
 negotiation time.
 
-When enabled, clients are allowed to send a `SETNAME` message to notify servers
+When enabled, clients are allowed to send a `SETNAME` command to notify servers
 of their intent to update their realname.
 
-This client-to-server `SETNAME` coammdn looks as follows:
+This client-to-server `SETNAME` command looks as follows:
 
     SETNAME :realname goes here
 
-This coammdn represents the intent to change the realname. The only, trailing
+This command represents the intent to change the realname. The only, trailing
 parameter is the new realname. Until the server confirms this change, the
 client MUST assume that no change has happened yet.
 
