@@ -73,3 +73,25 @@ modified to support it. The proper way to do so is this:
 
 2) Update the realname portion of data structures and process channel users as
    appropriate.
+
+## Examples
+
+**Client-to-Server**
+
+Complex realname with spaces
+
+    SETNAME :Bruce Wayne <bruce@wayne.enterprises>
+    
+Simple Realname
+
+    SETNAME Batman
+
+**Server-to-Client**
+
+Complex realname with spaces
+
+    :batman@~batman!bat.cave SETNAME :Bruce Wayne <bruce@wayne.enterprises>
+    
+Simple Realname
+
+    :batman@~batman!bat.cave SETNAME Batman
