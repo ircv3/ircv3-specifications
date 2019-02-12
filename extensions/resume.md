@@ -138,12 +138,12 @@ Upon indicating they support session resumption, clients are provided with a res
 
 Clients MUST treat their resume token as an opaque value, and provide it to the server as given.
 
-Servers use resume tokens to authenticate and allow a user to resume their old connection. Typical resume tokens contain two values:
+Servers use resume tokens to authenticate and allow a user to resume their old connection. The format of the token is implementation-defined, but MUST NOT contain any spaces and MUST NOT start with a colon character `(:)`, as these would break the protocol framing.
+
+Described here is the 'typical method' of creating and validating resume tokens. Typical resume tokens contain two values:
 
 - Resume ID: A random, unique value that identifies the client's session, which allows the server to look-up which session should be resumed.
 - Resume Key: A random, cryptographically-secure value for the client's session, which is used to authenticate that the new client can resume the given existing session.
-
-The format of the token is implementation-defined, but MUST NOT contain any spaces and MUST NOT start with a colon character `(:)`, as these would break the protocol framing.
 
 To validate a token during a resume attempt, a typical server implementation with a token as described above would:
 
@@ -152,7 +152,7 @@ To validate a token during a resume attempt, a typical server implementation wit
 3. Use the ID to look-up the session the client wishes to resume.
 4. Use a **constant-time comparison function** to compare the provided key and the key of the session being resumed, to ensure they match.
 
-This approach is recommended as it protects against timing attacks. Implementers MAY use their own methods of validating tokens, but are cautioned to think very carefully about security considerations and possible attacks.
+This approach is recommended as it protects against timing attacks. Implementers MAY use their own methods of validating tokens, but are cautioned to think very carefully about security considerations and possible attacks against their method.
 
 
 ## Examples
