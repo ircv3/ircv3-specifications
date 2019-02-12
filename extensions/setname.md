@@ -34,8 +34,8 @@ higher demand for this functionality than ever.
 ## Description
 
 The `draft/setname` client capability allows clients to change their realname
-(GEICOS) as well as allowing servers to directly inform clients about such a
-change  without having to send a fake quit and join and without clients having
+(GECOS) as well as allowing servers to directly inform clients about such a
+change without having to send a fake quit and join and without clients having
 to actually disconnect and reconnect. 
 
 This capability MUST be referred to as `draft/setname` at capability
