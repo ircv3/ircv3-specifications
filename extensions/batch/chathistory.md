@@ -44,6 +44,10 @@ message being replayed (e.g. `JOIN`). `[orig-parameters]` are the parameters of
 the original message. The `CHEVENT` message SHOULD include any tags which were
 on the original message that's being replayed.
 
+If a client is not able to handle an incoming `CHEVENT` (for example, they
+don't know how to handle the given `<orig-verb>`, or there's otherwise some
+issue parsing it), the client MUST silently drop the message and continue.
+
 The server MAY replay any message to a client using this method, if that client
 has negotiated the `event-playback` capability. If the client has not negotiated
 this capability and the server wishes to replay a given event, the server MAY
