@@ -52,9 +52,9 @@ closes - in which case it will be used for a `QUIT` reason from the client.
 
     BRB SUCCESS
 
-Used to tell the client that their request for a disconnection that keeps their 
-session open was successful. This message MUST be immediately followed by the 
-server terminating the TCP connection with the client.
+Used to tell the client that their `BRB` command was successful.
+
+This is to be immediately followed by the server terminating the TCP connection.
 
 #### Failure
 
