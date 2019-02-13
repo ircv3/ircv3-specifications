@@ -50,11 +50,13 @@ closes - in which case it will be used for a `QUIT` reason from the client.
 
 #### Success
 
-    BRB SUCCESS
+    BRB SUCCESS <time>
 
-Used to tell the client that their `BRB` command was successful.
+`<time>` is a positive integer, representing the window of time the client has
+to reconnect.
 
-This is to be immediately followed by the server terminating the TCP connection.
+Used to tell the client that their `BRB` command was successful. This is to be
+immediately followed by the server terminating the TCP connection.
 
 #### Failure
 
