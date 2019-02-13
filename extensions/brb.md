@@ -33,7 +33,7 @@ designed solely for ping timeouts.)
 
 ## Dependencies
 
-Clients wishing to use this capability must also support the `draft/resume-0.3`
+Clients wishing to use this capability MUST also support the `draft/resume-0.3`
 capability and the `FAIL` message.
 
 ## Architecture
