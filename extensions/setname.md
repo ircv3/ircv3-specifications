@@ -45,6 +45,9 @@ negotiation time.
 When enabled, clients are allowed to send a `SETNAME` command to notify servers
 of their intent to update their realname.
 
+If a client sends a `SETNAME` command without having negotiated the capability,
+the server SHOULD handle it silently, as the historic implementations did.
+
 This client-to-server `SETNAME` command looks as follows:
 
     SETNAME :realname goes here
