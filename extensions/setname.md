@@ -57,8 +57,9 @@ This client-to-server `SETNAME` command looks as follows:
     SETNAME :realname goes here
 
 This command represents the intent to change the realname. The only, trailing
-parameter is the new realname. Until the server confirms this change, the
-client MUST assume that no change has happened yet.
+parameter is the new realname. If the capability is negotiated, the client
+MUST assume that no change has happened yet until the server confirms this
+change.
 
 Servers MUST check the realname for validity (taking length limits into
 consideration). If they accept the realname change, they MUST send the
