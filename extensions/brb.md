@@ -53,7 +53,7 @@ closes - in which case it will be used for a `QUIT` reason from the client.
     BRB SUCCESS <time>
 
 `<time>` is a positive integer, representing the window of time the client has
-to reconnect.
+to reconnect in seconds.
 
 Used to tell the client that their `BRB` command was successful. This is to be
 immediately followed by the server terminating the TCP connection.
