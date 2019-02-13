@@ -42,13 +42,15 @@ This avoids clients having to actually disconnect and reconnect.
 This capability MUST be referred to as `draft/setname` at capability
 negotiation time.
 
-When advertised by the server, clients are allowed to send a `SETNAME` command
-to notify servers of their intent to update their realname. They SHOULD NOT
-send it otherwise, as they can not reliably ensure that the server will
-understand it.
+Servers advertising the `draft/setname` capability MUST implement the command
+as specified here, and MUST support usage of the command even while the
+capability is not negotiated.
 
 If a client sends a `SETNAME` command without having negotiated the capability,
 the server SHOULD handle it silently, as the historic implementations did.
+
+Absence of this capability MUST NOT cause the client to prevent the user from
+sending this command.
 
 This client-to-server `SETNAME` command looks as follows:
 
