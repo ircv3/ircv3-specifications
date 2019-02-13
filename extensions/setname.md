@@ -43,7 +43,7 @@ This capability MUST be referred to as `draft/setname` at capability
 negotiation time.
 
 When advertised by the server, clients are allowed to send a `SETNAME` command
-to notify servers of their intent to update their realname. They SHOULD not
+to notify servers of their intent to update their realname. They SHOULD NOT
 send it otherwise, as they can not reliably ensure that the server will
 understand it.
 
