@@ -24,7 +24,7 @@ The final version of the specification will use an unprefixed capability name.
 
 Occasionally, clients will need to restart in order to update software and, at
 the moment, this will cause a `QUIT` to be sent out for the user on all their 
-networks (unless the client supports in-place upgrading e.g. weechat.)
+networks (unless the client supports upgrading in-place)
 
 With the introduction of the `resume` spec, we have an opportunity to leverage 
 the ability to resume an old session to achieve this but we need a way to 
