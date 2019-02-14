@@ -24,12 +24,14 @@ The final version of the specification will use an unprefixed capability name.
 
 Occasionally, clients will need to restart in order to update software and, at
 the moment, this will cause a `QUIT` to be sent out for the user on all their 
-networks (unless the client supports upgrading in-place)
+networks (unless the client supports upgrading in-place.) This specification
+provides a feature to allow clients to do these upgrades in an effectively
+silent manner, using the `draft/resume` capability.
 
-With the introduction of the `resume` spec, we have an opportunity to leverage 
-the ability to resume an old session to achieve this but we need a way to 
-client-initiate a clean disconnect that holds a session open (`resume` is 
-designed solely for ping timeouts.)
+With the introduction of the `draft/resume` capability, half of this goal is
+achieved (resuming a previous session) but we still need a way to agree on a clean
+close of the client<->server TCP connection such that it can be resumed after a
+software upgrade; that's where `BRB` comes in.
 
 ## Dependencies
 
