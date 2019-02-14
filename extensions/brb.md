@@ -43,7 +43,7 @@ capability and the `FAIL` message.
 #### `BRB` Command
 
 This command MAY ONLY be sent by a client that has previously negotiated the 
-`resume` capability.
+`resume` capability, and has received and stored their resume token.
 
     BRB <reason>
 
