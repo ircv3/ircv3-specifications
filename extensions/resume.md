@@ -227,6 +227,8 @@ Failed attempt from a client with the nick `dan` reconnecting. The old connectio
 
 This section notes considerations software authors will need to take into account while implementing this specification. This section is non-normative.
 
+Server authors should allow clients to resume across server links on the same network. For example, if A and B are both servers on the same network, and a client who was on server A tries to resume when connected to server B, the server software should transfer the session across to server B silently.
+
 When reconnecting and intending to use `RESUME`, clients should first try to reconnect to the same server / IP address before falling back to any server on the same network. Some server software may have difficulty transferring the connection between two different servers, so doing this can help give clients the best chance of successfully using this feature.
 
 Right now, when clients detect that their connection to the server may have dropped they tend to send a `QUIT` command, close their current connection and then create a new connection to the server. In cases where the server supports resuming connections, clients may find it more useful to attempt to establish a new link to the server and resume the connection before closing their old one. If this is done, clients should be able to better take advantage of connection resumption.
