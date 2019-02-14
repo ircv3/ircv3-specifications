@@ -76,7 +76,7 @@ Used when, for any reason, the server could not accept the `BRB` request.
 #### Successful request
 
     C: BRB :software updates!
-    S: BRB SUCCESS 
+    S: BRB SUCCESS 30
     ... TCP connection is immediately terminated by the server ...
 
     ... client reconnects and does draft/resume-0.3 handshake ...
