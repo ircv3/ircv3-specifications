@@ -44,7 +44,7 @@ See the [capability negotiation](../core/capability-negotiation.html) specificat
 
 ### Mechanism
 
-When a client sees an STS upgrade policy over a insecure connection, it MUST first establish a secure connection (see the [`port` key](#the-port-key)) and confirm that the STS persistence policy is present.
+When a client sees an STS upgrade policy over an insecure connection, it MUST first establish a secure connection (see the [`port` key](#the-port-key)) and confirm that the STS persistence policy is present.
 
 Once a client has connected securely, and it has verified that an STS persistence policy is in place, it then MUST only use a secure transport to connect to the server at the requested hostname in future, until the policy expires (see the [`duration` key](#the-duration-key)). Once an STS persistence policy has been verified, clients MUST refuse to connect if a secure connection cannot be established to the server for any reason during the lifetime of the policy.
 
@@ -84,7 +84,7 @@ Servers MAY send this key to all clients, but insecurely connected clients MUST 
 
 Preload list providers MUST only consider hosts for inclusion after validating their connection security and ensuring a valid STS policy with a `preload` key is in place. This allows IRC network administrators to opt-in for inclusion in preload lists.
 
-Servers SHOULD be prepared to offer secure connections for the long term when enabling a preload policy. Timely removal of hostnames from preload lists might not be possible.
+Servers SHOULD be prepared to offer secure connections for the long-term when enabling a preload policy. Timely removal of hostnames from preload lists might not be possible.
 
 Preload list providers SHOULD consider STS persistence policy durations and MAY set minimum duration requirements prior to inclusion. Clients using preload lists SHOULD consider how their release cycle compares to any duration requirements imposed by list providers.
 
@@ -158,7 +158,7 @@ Clients might consider allowing users to explicitly define an STS policy for a g
 
 ### STS policy deletion or rejection
 
-Clients might consider allowing users or administrators to reject or delete cached STS policies on a per-host basis, in case a server's policy is accidentally or maliciously injected on a secure connection.
+Clients might consider allowing users or administrators to reject or remove cached STS policies on a per-host basis, in case a server's policy is accidentally or maliciously injected on a secure connection.
 
 Such a feature should be made available very carefully from both user interface and security standpoints. Deleting or rejecting a cache entry for a known STS host should be a very deliberate and well-considered act -- it shouldn't be something that users get used to doing as a matter of course: e.g., just "clicking through" in order to get work done. In other words, these features should not violate the [no immediate user recourse](#no-immediate-user-recourse) section.
 
@@ -174,7 +174,7 @@ Constant values into the future can be achieved by a configured number of second
 
 Fixed expiry times will involve a dynamic `duration` value being calculated on each connection attempt.
 
-Server implementers should be aware that fixed expiry times might not be precisely guaranteed in the case where clients reschedule policy expiry on disconnect, or periodically while connected.
+Server implementors should be aware that fixed expiry times might not be precisely guaranteed in the case where clients reschedule policy expiry on disconnect, or periodically while connected.
 
 Which approach to take will depend on a number of considerations. For example, a server might wish their STS Policy to expire at the same time as their hostname certificate. Alternatively, a server might wish their STS policy to last for as long as possible.
 
@@ -196,11 +196,11 @@ This section is non-normative.
 
 ### Relationship with STARTTLS
 
-STARTTLS is a mechanism for upgrading a connection which has started out as a insecure connection to a secure connection without reconnecting to a different port. This means a server can offer both insecure and secure connections on the same port for compatible clients at the cost of more complex implementations in both clients and servers.
+STARTTLS is a mechanism for upgrading a connection which has started out as an insecure connection to a secure connection without reconnecting to a different port. This means a server can offer both insecure and secure connections on the same port for compatible clients at the cost of more complex implementations in both clients and servers.
 
 In practice, switching protocols in the middle of the stream has proven to be complicated enough that only a small number of clients bothered implementing STARTTLS.
 
-STS expects that servers instead offer a port that directly services secure connections and it is incompatible with servers that offer secure connections only via STARTTLS on a insecure port.
+STS expects that servers instead offer a port that directly services secure connections and it is incompatible with servers that offer secure connections only via STARTTLS on an insecure port.
 
 ### Relationship with the `tls` capability
 
@@ -239,12 +239,12 @@ Until the policy expires:
 
 ### Ignoring an invalid request
 
-A server tells a insecure client to use secure connections for roughly 6 months. There is no port advertised.
+A server tells an insecure client to use secure connections for roughly 6 months. There is no port advertised.
 
       Insecure Client: CAP LS 302
                Server: CAP * LS :sts=duration=15552000
 
-The client ignores this because it has received an STS persistence policy over a insecure connection and the STS cap doesn't contain an upgrade policy.
+The client ignores this because it has received an STS persistence policy over an insecure connection and the STS cap doesn't contain an upgrade policy.
 
 ### Handling tokens with unknown keys
 
