@@ -11,10 +11,6 @@ copyrights:
     name: "James Wheare"
     period: "2016"
     email: "james@irccloud.com"
-  -
-    name: "Terrance Robotham"
-    period: "2019"
-    email: "nitemare@darenet.org"
 ---
 
 ## Notes for implementing work-in-progress version
