@@ -174,7 +174,7 @@ Constant values into the future can be achieved by a configured number of second
 
 Fixed expiry times will involve a dynamic `duration` value being calculated on each connection attempt.
 
-Server implementors should be aware that fixed expiry times might not be precisely guaranteed in the case where clients reschedule policy expiry on disconnect, or periodically while connected.
+Server implementers should be aware that fixed expiry times might not be precisely guaranteed in the case where clients reschedule policy expiry on disconnect, or periodically while connected.
 
 Which approach to take will depend on a number of considerations. For example, a server might wish their STS Policy to expire at the same time as their hostname certificate. Alternatively, a server might wish their STS policy to last for as long as possible.
 
