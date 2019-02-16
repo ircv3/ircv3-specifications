@@ -84,7 +84,7 @@ Servers MAY send this key to all clients, but insecurely connected clients MUST 
 
 Preload list providers MUST only consider hosts for inclusion after validating their connection security and ensuring a valid STS policy with a `preload` key is in place. This allows IRC network administrators to opt-in for inclusion in preload lists.
 
-Servers SHOULD be prepared to offer secure connections for the long-term when enabling a preload policy. Timely removal of hostnames from preload lists might not be possible.
+Servers SHOULD be prepared to offer secure connections for the longterm when enabling a preload policy. Timely removal of hostnames from preload lists might not be possible.
 
 Preload list providers SHOULD consider STS persistence policy durations and MAY set minimum duration requirements prior to inclusion. Clients using preload lists SHOULD consider how their release cycle compares to any duration requirements imposed by list providers.
 
