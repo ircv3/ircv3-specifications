@@ -13,7 +13,7 @@ copyrights:
     email: "james@irccloud.com"
   -
     name: "Terrance Robotham"
-    period: "2010"
+    period: "2019"
     email: "nitemare@darenet.org"
 ---
 
