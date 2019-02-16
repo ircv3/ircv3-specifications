@@ -11,6 +11,10 @@ copyrights:
     name: "James Wheare"
     period: "2016"
     email: "james@irccloud.com"
+  -
+    name: "Terrance Robotham"
+    period: "2010"
+    email: "nitemare@darenet.org"
 ---
 
 ## Notes for implementing work-in-progress version
@@ -30,7 +34,7 @@ This specification adds a new message tag sent by clients and repeated by server
 
 ## Motivation
 
-Certain client actions can result in responses from the server that vary in interpretion depending on how they were triggered, or otherwise lack a robust way to correlate with local state. Clients have historically needed to keep track of additional local state and/or apply comparison heuristics to server responses to correlate these appropriately.
+Certain client actions can result in responses from the server that vary in interpretation depending on how they were triggered, or otherwise lack a robust way to correlate with local state. Clients have historically needed to keep track of additional local state and/or apply comparison heuristics to server responses to correlate these appropriately.
 
 Labeled responses enable a much simpler form of correlation by using a single id attached to a client request and repeated by the server in its response.
 
@@ -44,7 +48,7 @@ This specification uses the [message tags framework](/specs/core/message-tags-3.
 
 ### Capabilities
 
-This specifiation adds the `draft/labeled-response` capability.
+This specification adds the `draft/labeled-response` capability.
 
 Clients requesting this capability indicate that they are capable of handling the message tag described below from servers.
 
