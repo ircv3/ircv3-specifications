@@ -5,7 +5,7 @@ copyrights:
   -
     name: "Christine Dodrill"
     period: "2013"
-    email: "xena@yolo-swag.com"
+    email: "me@christine.website"
   -
     name: "Ryan"
     period: "2016"
