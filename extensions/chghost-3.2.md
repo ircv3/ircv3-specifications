@@ -20,11 +20,6 @@ When the capability is enabled, servers MUST send the `CHGHOST` message to
 clients sharing the same channel as the target client, informing those clients
 that the user or host of the target client has changed.
 
-Servers SHOULD also send the `CHGHOST` command to the client who changed their
-host, as well as the previously-unspecified `396` numeric, whose exact value
-count changes per implementation (from two to three arguments), but always
-places the client's new host in the second-to-last position.
-
 The `CHGHOST` message is as follows:
 
     :nick!user@old_host.local CHGHOST new-user new_host.local
