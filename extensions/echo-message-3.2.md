@@ -15,7 +15,7 @@ copyrights:
 
 This client capability MUST be named `echo-message`.
 
-If enabled, servers MUST send `PRIVMSG` and `NOTICE` messages back to
+If enabled, servers MUST send `PRIVMSG`, `NOTICE`, and `TAGMSG` messages back to
 the client that sent them. If servers apply any modifications to these
 messages, they MUST send the final version of the message back to the
 originating client.
