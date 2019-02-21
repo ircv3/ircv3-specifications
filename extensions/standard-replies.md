@@ -8,13 +8,15 @@ copyrights:
     email: "daniel@danieloaks.net"
 ---
 
-This document specifies the standard `FAIL`, `WARN`, and `NOTE` messages, intended to provide a clean, consistent interface for sending general errors, warnings, and informational messages to clients. Implementers should not need to reserve new numerics for error, warning, or general informational messages, especially as numerics themselves and the mapping of numerics to names can be unclear or conflicting.
+This document specifies the standard `FAIL`, `WARN`, `NOTE`, and `OK` messages, intended to provide a clean, consistent interface for sending general errors, warnings, and informational messages to clients. Implementers should not need to reserve new numerics for error, warning, or general informational messages, especially as numerics themselves and the mapping of numerics to names can be unclear or conflicting.
 
 The `FAIL` message indicates a complete failure to process a given command/function, or simply some error about the current session that clients should be aware of.
 
 The `WARN` message indicates some non-fatal feedback about a given command/function, or some less vital feedback on the current session.
 
-The `NOTE` message indicates some informational message about a given command/function, or about the current session.
+The `NOTE` message indicates an informational message about a given command/function, or about the current session.
+
+The `OK` message indicates a successful response for a given command/function, or that some other process/function has been successful on the current session.
 
 
 ## Message Format
@@ -30,13 +32,13 @@ Some non-normative examples:
 
 Here's what each parameter means:
 
-- `<type>`: Either `FAIL`, `WARN`, or `NOTE`, this indicates the message type.
+- `<type>`: Either `FAIL`, `WARN`, `NOTE`, or `OK`, this indicates the message type.
 - `<command>`: Indicates the user command which spawned this reply, or is `*` for messages initiated outside client commands (for example, an on-connect message).
 - `<code>`: Machine-readable reply code representing the meaning of the message to client software.
 - `<context>`: Optional parameters that give humans extra context as to where and why the reply was spawned (for example, a particular subcommand or sub-process).
 - `<description>`: A required plain-text description of the reply which is shown to users.
 
-`<type>` is the verb of the reply, and is one of `FAIL` (indicating that a command/function could not be processed, or some significant issue with the current session), `WARN` (indicating some non-fatal feedback about a command/function or the session), or `NOTE` (indicating an informational message).
+`<type>` is the verb of the reply, and is one of `FAIL` (indicating that a command/function could not be processed, or some significant issue with the current session), `WARN` (indicating some non-fatal feedback about a command/function or the session), `NOTE` (indicating an informational message), or `OK` (indicating a successful response).
 
 `<command>` is a case-insensitive, required parameter which is either a command name (e.g. `MODE`, `AUTHENTICATE`, `NICK`, etc), or is `*` to indicate a message that was not spawned from a particular command. This message SHOULD also be given a [label](./labeled-response.html), if one was provided by the client with the original command that spawned this reply.
 
@@ -79,7 +81,14 @@ In this example, the command is `REHASH`, with no arguments. The code is `CONFIG
     Client: REHASH
     Server: WARN REHASH CERTS_EXPIRED :Certificate [blahblah.irc.example.com] has expired
 
-In this example, the command is `REHASH`, with no arguments. The code is `CERTS_EXPIRED`, and the description tells the user that the certificates have expired, but the rehash still completed successfully.
+In this example, the command is `REHASH`, with no arguments. The code is `CERTS_EXPIRED`, and the description tells the user that the certificates have expired, but that this error was not a fatal error (the rehash still continued to process). If the command given by the user is using standard replies, this `WARN` message would likely be followed-up by either an `OK` or a `FAIL` message depending on whether the command could complete processing.
+
+### Rehash Success
+
+    Client: REHASH
+    Server OK REHASH SUCCESS :Server configuration successfully reloaded
+
+In this example, the command is `REHASH`, with no arguments. The code is `SUCCESS`, and the description tells the user that the command completed successfully. The final `OK` message could also be proceeded by `WARN` messages, here.
 
 ### Note on connecting to the network
 
