@@ -28,11 +28,11 @@ copyrights:
     email: "attilamolnar@hush.com"
   -
     name: "Daniel Oakley"
-    period: "2017-2018"
+    period: "2017-2019"
     email: "daniel@danieloaks.net"
   -
     name: "James Wheare"
-    period: "2017-2018"
+    period: "2017-2019"
     email: "james@irccloud.com"
 ---
 ## What Client Capability Negotiation attempts to solve
@@ -208,10 +208,28 @@ When CAP Version `302` is enabled, the client also implicitly indicates support 
 `cap-notify` capability listed below, and support for the relevant `NEW` and `DEL`
 subcommands.
 
+The CAP version number argument MUST be treated as a digit by the server. If the client's
+CAP version is not supported by the server, the server MUST enable the features it does
+support below the given version. For example, if a server supports `302` and `303`
+features, and a client sends version `304`, the server would enable those `302` and `303`
+features (just as it would do if a client sent the `303` version number). However, if the
+server also supported a `306` feature, it whould NOT enable this feature for the client.
+
+A client MAY negotiate a higher CAP version at any time, but MAY NOT downgrade their
+CAP version. Servers MUST store only the highest requested capability negotiation version
+requested by the client.
+
 Example:
 
     Client: CAP LS 302
-    Server: CAP * LS :multi-prefix
+    Server: CAP * LS :multi-prefix sasl=PLAIN,EXTERNAL
+    Client: CAP LS
+    Server: CAP * LS :multi-prefix sasl=PLAIN,EXTERNAL
+
+Example with a server supporting only `302` versioned features:
+
+    Client: CAP LS 307
+    Server: CAP * LS :multi-prefix sasl=PLAIN,EXTERNAL
 
 ##### CAP LS Version Features
 
@@ -304,6 +322,10 @@ which is not enabled, the server MUST continue processing the REQ subcommand as 
 handling this capability was successful.
 
 The capability identifier set must be accepted as a whole, or rejected entirely.
+
+Clients SHOULD ensure that their list of requested capabilities is not too long to be
+replied to with a single ACK or NAK message. If a REQ's final parameter gets sufficiently
+large (approaching the 510 byte limit), clients SHOULD instead send multiple REQ subcommands.
 
 If a server receives a REQ subcommand while client registration is in progress, it MUST
 suspend registration until an END subcommand is received.
@@ -523,3 +545,10 @@ Previous versions of this spec required that when sending `CAP NAK`, servers MUS
 parameter (the capability list) consist of _"at least the first 100 characters of the capability list
 in the REQ subcommand which triggered the NAK"_. This was removed as it's a bit arbitrary, already
 covered in the existing language, and honestly more likely to just confuse vendors.
+
+Previous versions of this spec did not mention how servers treat higher CAP LS versions. This was
+clarified so that if a client sends a higher version number than the server supports, they get the
+appropriate features.
+
+Previous versions of this spec did not mention how servers handle clients attempting to downgrade
+their CAP LS version. It has been clarified that clients MAY NOT downgrade this.
