@@ -121,6 +121,8 @@ This means client-only tags that aren't specified in the IRCv3 extension registr
 use a vendor prefix and SHOULD be submitted to the IRCv3 working group for consideration
 if they are appropriate for more widespread adoption. See [Rules for naming message tags](#rules-for-naming-message-tags).
 
+Client-only tags are intended to replace the use of future [CTCP commands][ctcp].
+
 ### The `TAGMSG` tag-only message
 
        Command: TAGMSG
@@ -328,3 +330,4 @@ clarified to help consistency across implementations.
 [privmsg]: https://tools.ietf.org/html/rfc2812#section-3.3.1
 [statusmsg]: https://tools.ietf.org/html/draft-hardy-irc-isupport-00#section-4.18
 [registry]: https://ircv3.net/registry.html#tags
+[ctcp]: https://tools.ietf.org/html/draft-oakley-irc-ctcp-02
