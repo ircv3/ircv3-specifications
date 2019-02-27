@@ -190,6 +190,8 @@ Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
 
+If a server sends a message with more tag data than the allowed limit, clients MAY ignore the message.
+
 ## Security considerations
 
 Client-only tags should be treated as untrusted data. They can contain any value
