@@ -44,8 +44,8 @@ The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is exte
     <tag>           ::= <key> ['=' <escaped_value>]
     <key>           ::= [ <client_prefix> ] [ <vendor> '/' ] <key_name>
     <client_prefix> ::= '+'
-    <key_name>      ::= <sequence of letters, digits, hyphens ('-')>
-    <escaped_value> ::= <sequence of any characters except NUL, CR, LF, semicolon (`;`) and SPACE>
+    <key_name>      ::= <non-empty sequence of ascii letters, digits, hyphens ('-')>
+    <escaped_value> ::= <sequence of zero or more bytes except NUL, CR, LF, semicolon (`;`) and SPACE>
     <vendor>        ::= <host>
 
 The ordering of tags is not meaningful.
