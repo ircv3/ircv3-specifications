@@ -54,6 +54,8 @@ Individual tag keys MUST only be used a maximum of once per message. Clients
 receiving messages with more than one occurrence of a tag key SHOULD discard all
 but the final occurrence.
 
+Implementations MUST interpret empty tag values (e.g. `foo=`) as equivalent to missing tag values (e.g. `foo`). Specifications MUST NOT differentiate meaning between tags with empty and missing values. Implementations MAY normalise tag values by converting the empty form to the missing form, but MUST NOT convert values from missing to empty, to prevent size limit issues.
+
 ## Escaping values
 
 The mapping between characters in tag values and their representation in `<escaped value>` is defined as follows:
@@ -327,6 +329,9 @@ no escape character. This was added to help consistency across implementations.
 
 Previous versions of this spec did not specify how to handle invalid escapes. This was
 clarified to help consistency across implementations.
+
+Previous versions of this spec did not specify the difference between empty and missing
+tag values.
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
 [privmsg]: https://tools.ietf.org/html/rfc2812#section-3.3.1
