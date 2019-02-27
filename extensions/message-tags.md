@@ -107,7 +107,7 @@ with a plus sign (`+`). Servers MAY send client-only tags that weren't provided 
 The client-only tag prefix allows servers to safely relay untrusted client tags,
 keeping them distinct from unprefixed tags that carry verified meaning.
 
-Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` messages, and MAY be relayed on other messages.
+Client-only tags MUST be relayed on `PRIVMSG`, `NOTICE` and `TAGMSG` messages, and MAY be relayed on other messages.
 
 Any server-sent tags attached to messages MUST be included before client-only
 tags to prevent them from being pushed outside of the byte limit.
