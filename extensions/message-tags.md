@@ -163,6 +163,16 @@ e.g. `xn--e1afmkfd.org/foo`.
 
 Vendor-Specific tags should be submitted to the IRCv3 working group for consideration.
 
+### Drafts
+
+The `draft/` vendor namespace may be used when the working group is considering tag specifications.
+However, vendor names should be preferred.
+
+While tags are in draft status, they may need to be given a new identifier, to prevent
+implementation compatibility issues. When updating a draft tag key name, the
+typical method is to add `-0.x` to the name, where `x` is a version number. For example:
+`draft/foo` would become `draft/foo-0.2`, and so on.
+
 ### Standardized
 
 Reserved names for which a corresponding document exists in the [IRCv3 Extension Registry][registry].
