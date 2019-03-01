@@ -50,9 +50,7 @@ The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is exte
 
 The ordering of tags is not meaningful.
 
-Individual tag keys MUST only be used a maximum of once per message. Clients
-receiving messages with more than one occurrence of a tag key SHOULD discard all
-but the final occurrence.
+Individual tag keys MUST only be used a maximum of once per message. Implementations receiving messages with more than one occurrence of a tag key name SHOULD disregard all but the final occurrence.
 
 Implementations MUST interpret empty tag values (e.g. `foo=`) as equivalent to missing tag values (e.g. `foo`). Specifications MUST NOT differentiate meaning between tags with empty and missing values. Implementations MAY normalise tag values by converting the empty form to the missing form, but MUST NOT convert values from missing to empty, to prevent size limit issues.
 
