@@ -307,7 +307,7 @@ A `TAGMSG` sent to a channel with [`labeled-response`](../extensions/labeled-res
 
 ---
 
-A `TAGMSG` sent by a client with tags that exceed the size limit and rejected by the server with an `ERR_INPUTTOOLONG` (`417`) error numeric. `[...]` is used to represent tags omitted for readability.
+A `TAGMSG` sent by a client with tags that exceed the size limit. The message is rejected by the server with an `ERR_INPUTTOOLONG` (`417`) error numeric. `[...]` is used to represent tags omitted for readability.
 
     C: @+tag1;+tag2;+tag[...];+tag5000 TAGMSG #channel
     S: :server.example.com 417 nick :Input line was too long
