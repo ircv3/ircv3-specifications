@@ -28,6 +28,9 @@ message to the target. Clients may choose to disable local echoing
 of sent `PRIVMSG` and `NOTICE` messages altogether, or present them
 in pending state.
 
+When the [`message-tags`](../extensions/message-tags.html) capability
+has been enabled, the same rules apply to `TAGMSG` messages.
+
 ## Use cases
 
 The capability is useful for clients to get an acknowledgement that a

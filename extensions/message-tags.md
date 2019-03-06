@@ -44,15 +44,17 @@ The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is exte
     <tag>           ::= <key> ['=' <escaped_value>]
     <key>           ::= [ <client_prefix> ] [ <vendor> '/' ] <key_name>
     <client_prefix> ::= '+'
-    <key_name>      ::= <sequence of letters, digits, hyphens ('-')>
-    <escaped_value> ::= <sequence of any characters except NUL, CR, LF, semicolon (`;`) and SPACE>
+    <key_name>      ::= <non-empty sequence of ascii letters, digits, hyphens ('-')>
+    <escaped_value> ::= <sequence of zero or more bytes except NUL, CR, LF, semicolon (`;`) and SPACE>
     <vendor>        ::= <host>
 
 The ordering of tags is not meaningful.
 
-Individual tag keys MUST only be used a maximum of once per message. Clients
-receiving messages with more than one occurrence of a tag key SHOULD discard all
-but the final occurrence.
+Individual tag keys MUST only be used a maximum of once per message. Implementations receiving messages with more than one occurrence of a tag key name SHOULD disregard all but the final occurrence.
+
+Implementations MUST treat tag key names as opaque identifiers and MUST NOT perform any validation that would reject the message if an invalid tag key name is used. This allows future modifications to the tag key name format.
+
+Implementations MUST interpret empty tag values (e.g. `foo=`) as equivalent to missing tag values (e.g. `foo`). Specifications MUST NOT differentiate meaning between tags with empty and missing values. Implementations MAY normalise tag values by converting the empty form to the missing form, but MUST NOT convert values from missing to empty, to prevent size limit issues.
 
 ## Escaping values
 
@@ -70,7 +72,9 @@ The mapping between characters in tag values and their representation in `<escap
 This escape format is space efficient, and ensures that message parts can easily be split on spaces and semi-colons before further parsing.
 
 If a lone `\` exists at the end of an escaped value (with no escape character following it), then there
-SHOULD be no output character. For example, the escaped value `test\` should unescape to `test`.
+SHOULD be no output character. For example, the escaped value `test\` should unescape to `test`. If a
+`\` exists with no valid escape character (for example, `\b`), then the invalid backslash SHOULD be
+dropped. For example, `\b` should unescape to just `b`.
 
 ## Capabilities
 
@@ -107,7 +111,7 @@ with a plus sign (`+`). Servers MAY send client-only tags that weren't provided 
 The client-only tag prefix allows servers to safely relay untrusted client tags,
 keeping them distinct from unprefixed tags that carry verified meaning.
 
-Client-only tags MUST be relayed on `PRIVMSG` and `NOTICE` messages, and MAY be relayed on other messages.
+Client-only tags MUST be relayed on `PRIVMSG`, `NOTICE` and `TAGMSG` messages, and MAY be relayed on other messages.
 
 Any server-sent tags attached to messages MUST be included before client-only
 tags to prevent them from being pushed outside of the byte limit.
@@ -118,6 +122,8 @@ in separate specifications.
 This means client-only tags that aren't specified in the IRCv3 extension registry MUST
 use a vendor prefix and SHOULD be submitted to the IRCv3 working group for consideration
 if they are appropriate for more widespread adoption. See [Rules for naming message tags](#rules-for-naming-message-tags).
+
+Client-only tags are intended to replace the use of future [CTCP commands][ctcp].
 
 ### The `TAGMSG` tag-only message
 
@@ -157,6 +163,16 @@ e.g. `xn--e1afmkfd.org/foo`.
 
 Vendor-Specific tags should be submitted to the IRCv3 working group for consideration.
 
+### Drafts
+
+The `draft/` vendor namespace may be used when the working group is considering tag specifications.
+However, vendor names should be preferred.
+
+While tags are in draft status, they may need to be given a new identifier, to prevent
+implementation compatibility issues. When updating a draft tag key name, the
+typical method is to add `-0.x` to the name, where `x` is a version number. For example:
+`draft/foo` would become `draft/foo-0.2`, and so on.
+
 ### Standardized
 
 Reserved names for which a corresponding document exists in the [IRCv3 Extension Registry][registry].
@@ -185,6 +201,8 @@ Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client
 
     417    ERR_INPUTTOOLONG
           ":Input line was too long"
+
+If a server sends a message with more tag data than the allowed limit, clients MAY ignore the message.
 
 ## Security considerations
 
@@ -299,7 +317,7 @@ A `TAGMSG` sent to a channel with [`labeled-response`](../extensions/labeled-res
 
 ---
 
-A `TAGMSG` sent by a client with tags that exceed the size limit and rejected by the server with an `ERR_INPUTTOOLONG` (`417`) error numeric. `[...]` is used to represent tags omitted for readability.
+A `TAGMSG` sent by a client with tags that exceed the size limit. The message is rejected by the server with an `ERR_INPUTTOOLONG` (`417`) error numeric. `[...]` is used to represent tags omitted for readability.
 
     C: @+tag1;+tag2;+tag[...];+tag5000 TAGMSG #channel
     S: :server.example.com 417 nick :Input line was too long
@@ -319,7 +337,14 @@ an opaque identifier. This was added to improve client resiliency.
 Previous versions of this spec did not specify how to handle trailing backslashes with
 no escape character. This was added to help consistency across implementations.
 
+Previous versions of this spec did not specify how to handle invalid escapes. This was
+clarified to help consistency across implementations.
+
+Previous versions of this spec did not specify the difference between empty and missing
+tag values.
+
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
 [privmsg]: https://tools.ietf.org/html/rfc2812#section-3.3.1
 [statusmsg]: https://tools.ietf.org/html/draft-hardy-irc-isupport-00#section-4.18
 [registry]: https://ircv3.net/registry.html#tags
+[ctcp]: https://tools.ietf.org/html/draft-oakley-irc-ctcp-02

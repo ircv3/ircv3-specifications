@@ -32,7 +32,7 @@ This tag provides a means of communicating with context-sensitive, potentially n
 
 ### Dependencies
 
-Clients wishing to use this tag MUST negotiate the [`draft/message-tags`](../core/message-tags-3.3.html) capability with the server. Additionally, this tag MUST be used in conjunction with the [`+draft/reply`](./reply.html) client tag.
+Clients wishing to use this tag MUST negotiate the [`message-tags`](../extensions/message-tags.html) capability with the server. Additionally, this tag MUST be used in conjunction with the [`+draft/reply`](./reply.html) client tag.
 
 ### Format
 

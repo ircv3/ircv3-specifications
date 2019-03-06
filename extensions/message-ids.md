@@ -34,7 +34,7 @@ The message ID tag is a way for servers to enable these enhancements.
 
 ### Dependencies
 
-This specification doesn't define any capabilities of its own, but the `draft/message-tags` capability MUST be negotiated for servers wishing to use this tag.
+This specification doesn't define any capabilities of its own, but the [`message-tags`](../extensions/message-tags.html) capability MUST be negotiated for servers wishing to use this tag.
 
 ### Tags
 
@@ -119,12 +119,12 @@ Two channel `PRIVMSG` messages sent by the server, with possible non-standard ex
     S: @draft/msgid=msgid1;example/split :nick!user@host PRIVMSG #channel :Hello
     S: @draft/msgid=msgid2;example/concat=msgid1 :nick!user@host PRIVMSG #channel : World
 
-A client negotiating the `draft/message-tags` capability to enable and disable messages tagged with IDs.
+A client negotiating the `message-tags` capability to enable and disable messages tagged with IDs.
 
     S: :nick!user@host PRIVMSG #channel :Hello
-    C: CAP REQ draft/message-tags
-    S: :irc.example.com CAP me ACK :draft/message-tags
+    C: CAP REQ message-tags
+    S: :irc.example.com CAP me ACK :message-tags
     S: @draft/msgid=msgid-a :nick!user@host PRIVMSG #channel :Hello again
-    C: CAP REQ -draft/message-tags
-    S: :irc.example.com CAP me ACK :-draft/message-tags
+    C: CAP REQ -message-tags
+    S: :irc.example.com CAP me ACK :-message-tags
     S: :nick!user@host PRIVMSG #channel :Another hello
