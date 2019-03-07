@@ -42,6 +42,14 @@ This avoids clients having to actually disconnect and reconnect.
 This capability MUST be referred to as `draft/setname` at capability
 negotiation time.
 
+Servers advertising the `draft/setname` capability MUST support usage of the
+command even while the capability is not negotiated. Clients MUST NOT prevent
+users from manually using the command while the capability is not negotiated.
+
+If a client sends a `SETNAME` command without having negotiated the capability,
+the server SHOULD handle it silently (with no response), as historic
+implementations did.
+
 When enabled, servers MUST provide a `NAMELEN` token in `RPL_ISUPPORT` with the
 maximum allowed length for realnames.
 
