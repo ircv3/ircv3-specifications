@@ -47,9 +47,7 @@ as specified here, and MUST support usage of the command even while the
 capability is not negotiated.
 
 Servers advertising the capability MUST also provide a `NAMELEN` token in
-`RPL_ISUPPORT` with the maximum allowed length for realnames. They MUST NOT
-apply a different maximum allowed length than the one advertised in
-`RPL_ISUPPORT`.
+`RPL_ISUPPORT` with the maximum allowed length for realnames.
 
 If a client sends a `SETNAME` command without having negotiated the capability,
 the server SHOULD handle it silently, as the historic implementations did.
