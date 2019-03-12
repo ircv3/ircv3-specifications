@@ -75,13 +75,13 @@ Actually submitting the document is as simple as forking the [ircv3-specificatio
 ### Editing the spec
 This is the longest part of writing a spec. Once submitted, other implementers and members of the IRCv3 Working Group will make comments, discuss potential changes, and go back-and-forth about the specifics of the submitted document.
 
-During the editing this process, other members of the group will probably write up implementations of your submission, and come back with where they had trouble, changes they would recommend, and where things could be explained more simply or more clearly.
+During the editing process, other members of the group will probably write up implementations of your submission, and come back with where they had trouble, changes they would recommend, and where things could be explained more simply or more clearly.
 
 For a spec to move out of the editing stage and get accepted, it requires a few implementations, a good portion of the [technical board](https://ircv3.net/charter.html#technical-board) being on-board with it, and for remaining discussions or questions about the document to be answered and resolved.
 
 ### Accepted or rejected
 And the result is that either the specification will be accepted, or that it will be rejected.
 
-If your spec is accepted, other implements will be able to write draft implementations of it and feed-back on it. If necessary changes will be made to clarify points of the spec, and/or to resolve issues that are found with a wider pool of implementations. Once we're happy with it, it will be moved out of draft status and accepted completely.
+If your spec is accepted, other implementers will be able to write draft implementations of it and feed-back on it. If necessary changes will be made to clarify points of the spec, and/or to resolve issues that are found with a wider pool of implementations. Once we're happy with it, it will be moved out of draft status and accepted completely.
 
 If your spec is rejected, we will give some feedback as to why. It's good to keep this feedback in mind if you intend to rewrite or otherwise edit and re-submit your proposal at some point in the future. This may also be a good time to let a different member of the group that agrees with your proposal take it on themselves, letting them change it up and propose it instead.
