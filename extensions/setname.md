@@ -1,6 +1,7 @@
 ---
 title: IRCv3 `setname` Extension
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Janne Mareike Koschinski"
