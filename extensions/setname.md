@@ -90,7 +90,7 @@ modified to support it. The proper way to do so is this:
 
 ## Errors
 
-The server MUST use the FAIL spec to notify the client of failed `SETNAME`
+The server MUST use the standard replies extension to notify the client of failed `SETNAME`
 commands.
 
 If the server rejects the realname due to invalidity, it MUST send a FAIL
