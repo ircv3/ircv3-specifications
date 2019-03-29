@@ -99,7 +99,7 @@ message with the `INVALID_REALNAME` code.
     FAIL SETNAME INVALID_REALNAME :Realname is not valid
     
 If the server rejects the change for any other reason, it MUST send a `FAIL`
-message indicating this:
+message with the `CANNOT_CHANGE_REALNAME` code and an appropriate description of the reason:
 
     FAIL SETNAME CANNOT_CHANGE_REALNAME :Slow down your realname changes
     FAIL SETNAME CANNOT_CHANGE_REALNAME :Cannot change realname while banned from a channel
