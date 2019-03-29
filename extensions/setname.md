@@ -54,7 +54,7 @@ implementations did.
 When enabled, servers MUST provide a `NAMELEN` token in `RPL_ISUPPORT` with the
 maximum allowed length for realnames.
 
-This client-to-server `SETNAME` command looks as follows:
+The client-to-server `SETNAME` command looks as follows:
 
     SETNAME :realname goes here
 
