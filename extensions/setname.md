@@ -85,7 +85,7 @@ modified to support it. The proper way to do so is this:
 
 ## Errors
 
-The server MUST use the standard replies extension to notify the client of
+The server MUST use the [standard replies extension][1] to notify the client of
 failed `SETNAME` commands.
 
 If the server rejects the realname as a result of a validation failure, it MUST
@@ -116,3 +116,5 @@ Example with realname rejected by the server
 
     C: SETNAME :Heute back ich, morgen brau ich, übermorgen hol ich der Königin ihr Kind; ach, wie gut, dass niemand weiß, dass ich Rumpelstilzchen heiß!
     S: FAIL SETNAME INVALID_REALNAME :Realname is not valid
+
+[1]: https://github.com/ircv3/ircv3-specifications/pull/357
