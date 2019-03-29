@@ -85,7 +85,7 @@ modified to support it. The proper way to do so is this:
 1) Enable the `draft/setname` capability at capability negotiation time during
    the login handshake.
 
-2) Update the realname portion of data structures and process channel users as
+2) On receipt of a server-to-client `SETNAME` message, update the realname portion of data structures and process channel users as
    appropriate.
 
 ## Errors
