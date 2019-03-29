@@ -94,7 +94,7 @@ The server MUST use the standard replies extension to notify the client of faile
 commands.
 
 If the server rejects the realname as a result of a validation failure, it MUST send a `FAIL`
-message of the following format:
+message with the `INVALID_REALNAME` code.
 
     FAIL SETNAME INVALID_REALNAME :Realname is not valid
     
