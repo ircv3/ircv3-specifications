@@ -93,7 +93,7 @@ modified to support it. The proper way to do so is this:
 The server MUST use the standard replies extension to notify the client of failed `SETNAME`
 commands.
 
-If the server rejects the realname due to invalidity, it MUST send a FAIL
+If the server rejects the realname as a result of a validation failure, it MUST send a `FAIL`
 message of the following format:
 
     FAIL SETNAME INVALID_REALNAME :Realname is not valid
