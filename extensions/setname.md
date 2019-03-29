@@ -71,7 +71,7 @@ channels, as well as to the client from which it originated.
 The `SETNAME` message MUST NOT be sent to clients which do not have the
 `draft/setname` capability negotiated.
 
-This server-to-client `SETNAME` message looks as follows:
+The server-to-client `SETNAME` message looks as follows:
 
     :nick!user@host SETNAME :realname goes here
 
