@@ -66,7 +66,7 @@ change.
 Servers MUST check the realname for validity (taking length limits into
 consideration). If they accept the realname change, they MUST send the
 server-to-client version of the `SETNAME` message to all clients in common
-channels, as well as to the client from which it originated.
+channels, as well as to the client from which it originated, to confirm the change has occurred.
 
 The `SETNAME` message MUST NOT be sent to clients which do not have the
 `draft/setname` capability negotiated.
