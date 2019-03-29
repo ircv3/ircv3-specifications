@@ -98,7 +98,7 @@ message of the following format:
 
     FAIL SETNAME INVALID_REALNAME :Realname is not valid
     
-If the server rejects the change for any other reason, it MUST send a FAIL
+If the server rejects the change for any other reason, it MUST send a `FAIL`
 message indicating this:
 
     FAIL SETNAME CANNOT_CHANGE_REALNAME :Slow down your realname changes
