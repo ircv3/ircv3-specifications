@@ -129,6 +129,7 @@ The IRC server MUST also send an `RPL_LOGGEDIN` (900) numeric and consider the c
 Upon error, the IRC server MUST send a [`FAIL` message](https://github.com/ircv3/ircv3-specifications/pull/357) with one of the codes below using the given format, and including an appropriate description of the error:
 
 | Code | Format |
+| ---- | ------ |
 | `ACCOUNT_ALREADY_VERIFIED` | `:<server> FAIL ACC ACCOUNT_ALREADY_VERIFIED <accountname> :Account already verified` |
 | `ACCOUNT_INVALID_VERIFY_CODE` | `:<server> FAIL ACC ACCOUNT_INVALID_VERIFY_CODE <accountname> :Invalid verification code` |
 | `VERIFY_UNSPECIFIED_ERROR` | `:<server> FAIL ACC VERIFY_UNSPECIFIED_ERROR <accountname> [<contexts>...] <description>` |
