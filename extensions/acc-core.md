@@ -40,14 +40,37 @@ Servers MUST use the [standard replies extension](https://github.com/ircv3/ircv3
 ## The `ACC LS` subcommand
 The `ACC LS` subcommand signals that a client wishes to receive a list of supported `ACC` subcommands. The response is one or more `ACC LS` messages sent to the client with this format:
 
-    :<server> ACC LS :subcommand names go here
+    :<server> ACC LS [*] <type> <data>
 
-If the reply contains multiple lines (due to IRC line length limitations), all but the last reply MUST have a parameter containing only an asterisk (`*`) preceding the subcommand list. This lets clients know that more `ACC LS` lines are incoming. For example:
+And here are examples of the returned data:
 
-    :<server> ACC LS * :LS REGISTER VERIFY
-    :<server> ACC LS * :subcommand names go here
-    :<server> ACC LS * :subcommand names go here
-    :<server> ACC LS :final names go here
+    :<server> ACC LS SUBCOMMANDS :LS REGISTER VERIFY
+    :<server> ACC LS CALLBACKS :* mailto sms
+    :<server> ACC LS CREDTYPES :passphrase certfp
+    :<server> ACC LS FLAGS :regnick
+
+For the `SUBCOMMANDS` type, `<data>` is a space-separated, case-insensitive list of supported subcommands.
+
+For the `CALLBACKS` type, `<data>` is a space-separated list of supported verification callback namespaces.
+
+For the `CREDTYPES` type, `<data>` is a space-separated list of supported account credential types.
+
+For the `FLAGS` type, `<data>` is a space-separated, case-insensitive list of flags that specify additional information about how the account system on this server works.
+
+Callbacks, credential types, and flags, along with what they mean, are described at the end of this document.
+
+Clients MUST silently ignore types that they do not recognise.
+
+The presence of the asterisk (`*`) parameter indicates that the reply contains additional lines. This lets clients collect all `ACC LS` information before, for example, presenting an account registration interface to the user or taking some other action.
+
+Here is an example:
+
+    :<server> ACC LS * SUBCOMMANDS :LS REGISTER
+    :<server> ACC LS * SUBCOMMANDS :VERIFY
+    :<server> ACC LS * CALLBACKS :*
+    :<server> ACC LS * CREDTYPES :passphrase certfp
+    :<server> ACC LS * CREDTYPES :another-example-type
+    :<server> ACC LS FLAGS :regnick
 
 If this subcommand is given with any additional parameters, servers MUST ignore these and process the subcommand as normal. This allows for future extension of this subcommand.
 
@@ -59,20 +82,17 @@ An `ACC REGISTER` subcommand has the following format:
 
     ACC REGISTER <accountname> [callback_namespace:]<callback> [cred_type] :<credential>
 
-The `accountname` parameter specifies the account name the client wishes to register.  If the account name is `*`, it indicates that the client wishes to register with their current nickname as the account name.  If the `REGNICK` ISUPPORT token is advertised, the client MUST send `*` for this parameter.
+The `accountname` parameter specifies the account name the client wishes to register.  If the account name is `*`, it indicates that the client wishes to register with their current nickname as the account name.  If the `regnick` flag is advertised, the client MUST send `*` for this parameter.
 
-The `callback` parameter indicates where the verification code should be sent. This parameter MAY contain an asterisk `*`, indicating that no verification code is required and that account registration shall complete immediately. Otherwise, this parameter contains a standard URI, the namespace being contained in the IANA URI Schemes registry (as per [RFC 7595](https://tools.ietf.org/html/rfc7595)) and listed in the `REGCALLBACKS` ISUPPORT token. If a callback namespace is not explicitly provided, the IRC server MUST use `mailto` as a default.
+The `callback` parameter indicates where the verification code should be sent. This parameter MAY contain an asterisk `*`, indicating that no verification code is required and that account registration shall complete immediately. Otherwise, this parameter contains a standard URI, the namespace being contained in the IANA URI Schemes registry (as per [RFC 7595](https://tools.ietf.org/html/rfc7595)) and listed in an `ACC LS CALLBACKS` message. If a callback namespace is not explicitly provided, the IRC server MUST use `mailto` as a default.
 
-The `cred_type` parameter indicates the type of authentication that's required to login to the account once it has been registered. The supported credential types are:
-
-- `passphrase`: `<credential>` is a plain-text passphrase that the client will use to authenticate with SASL once the account is registered. Passphrases MAY contain spaces.
-- `certfp`: The client's TLS certificate is used as the as the authentication mechanism for future connections. In short, if the client connects and presents the same TLS certificate, they can use the `SASL EXTERNAL` method to authenticate. The client SHOULD provide an empty credential (`*`), and the server MUST ignore the credential value provided by the client. If no certificate is presented by the client, the server MUST respond with the `REG_INVALID_CRED_TYPE` `FAIL` code.
+The `cred_type` parameter indicates the type of authentication that's required to login to the account once it has been registered. The supported credential types are listed below in the <a href="#"><code>ACC LS CALLBACKS</code> section</a>.
 
 If the client does not provide the `cred_type` parameter, the server MUST use the `passphrase` credential type. If the client provides a credential type that's now supported, the server MUST respond with the `REG_INVALID_CRED_TYPE` `FAIL` code.
 
 Clients SHOULD NOT be sent legacy (e.g. from NickServ) privmsgs or notices in response to `ACC` commands where numerics and messages defined in this document can replace them.
 
-After this, if verification is required, the IRC server MUST send the `RPL_REG_VERIFICATION_REQUIRED` numeric. If verification is not required, the IRC server MUST instead send the `RPL_REG_SUCCESS` numeric.
+After this, if verification is required, the IRC server MUST generate and send the verification token to the user out-of-band using the given callback information, and send the client the `RPL_REG_VERIFICATION_REQUIRED` numeric. The verification token MAY NOT be an asterisk (`*`), and SHOULD be an unguessable combination of characters. If verification is not required, the IRC server MUST instead send the `RPL_REG_SUCCESS` numeric.
 
 | No. | Label | Format |
 | --- | ----- | ------ |
@@ -98,11 +118,11 @@ A `ACC VERIFY` subcommand consists of the following format:
 
     ACC VERIFY <accountname> <auth_code>
 
-Upon success, the IRC server MUST send the `RPL_VERIFYSUCCESS` numeric, which looks like:
+Upon success, the IRC server MUST send the `RPL_VERIFY_SUCCESS` numeric, which looks like:
 
 | No. | Label | Format |
 | --- | ----- | ------ |
-| 923 | `RPL_VERIFYSUCCESS` | `:<server> 923 <user_nickname> <accountname> :Account verification successful` |
+| 923 | `RPL_VERIFY_SUCCESS` | `:<server> 923 <user_nickname> <accountname> :Account verification successful` |
 
 The IRC server MUST also send an `RPL_LOGGEDIN` (900) numeric and consider the client to be logged in to the account that has been successfully verified.
 
@@ -113,39 +133,57 @@ Upon error, the IRC server MUST send a [`FAIL` message](https://github.com/ircv3
 | `ACCOUNT_INVALID_VERIFY_CODE` | `:<server> FAIL ACC ACCOUNT_INVALID_VERIFY_CODE <accountname> :Invalid verification code` |
 | `VERIFY_UNSPECIFIED_ERROR` | `:<server> FAIL ACC VERIFY_UNSPECIFIED_ERROR <accountname> [<contexts>...] <description>` |
 
-
-## The `REGCALLBACKS` `RPL_ISUPPORT` token
-Implementations which require a verification token should list the types of verification callbacks they support, using the `REGCALLBACKS` RPL_ISUPPORT (005) token.  The `REGCALLBACKS` token takes a comma-separated list of supported callback methods.  In general, the `REGCALLBACKS` token is limited to URI schemes defined in the IANA URI Schemes registry, per [RFC 7595][https://tools.ietf.org/html/rfc7595].
-
-If verification is not required by the implementation and account registration can complete immediately, the `REGCALLBACKS` token MUST contain an asterisk (`*`) which indicates this.
-
-An example 005 reply indicating that the `mailto` and `sms` callbacks are supported is:
-
-    :irc.example.com 005 kaniini REGCALLBACKS=mailto,sms :are supported by this server
-
-An example 005 reply indicating that no verification callback methods are supported is:
-
-    :irc.example.com 005 kaniini REGCALLBACKS=* :are supported by this server
+Servers MAY allow IRC Operators or other privileged users to verify a given account by supplying an asterisk (`*`) in place of the `<auth_code>` parameter. If a client does verify an account in this way, they are sent the `RPL_VERIFY_SUCCESS` numeric, but are not logged into the account or sent the `RPL_LOGGEDIN` numeric.
 
 
-## The `REGCREDTYPES` `RPL_ISUPPORT` token
-Implementations which provide support for account registration using this framework MUST specify the supported credential types using the `REGCREDTYPES` RPL_ISUPPORT (005) token.  The `REGCREDTYPES` token takes a comma-separated list of supported commands.  Other extensions MAY define new credential types.
+## ACC LS CALLBACKS
+Implementations which require a verification token MUST list the verification callback types that they support. The `ACC LS CALLBACKS` data parameter is a space-separate list of callback methods. In general, these methods are limited to URI schemes defined in the IANA URI Schemes registry, per [RFC 7595][https://tools.ietf.org/html/rfc7595]. However, if verification is not required by the implementation and account registration can complete immediately with just the `ACC REGISTER` subcommand, the supported verification method list MUST contain an asterisk (`*`) which indicates this.
 
-An example 005 reply indicating support for credential types is:
+An example `ACC LS` reply indicating that the `mailto` and `sms` callbacks are supported:
 
-    :irc.example.com 005 kaniini REGCREDTYPES=passphrase,certfp :are supported by this server
+    :irc.example.com ACC LS CALLBACKS :mailto sms
 
-The credential types specified by this document are described above in the <a href=""><code>ACC REGISTER</code> subcommand description</a>.
+An example `ACC LS` reply indicating that no verification callbacks are supported or required:
+
+    :irc.example.com ACC LS CALLBACKS *
 
 
-## The `REGNICK` `RPL_ISUPPORT` token
-Some implementations restrict the account name that can be registered to the current nickname of the client (that is, they tie account name registration to nicknames). Implementations which restrict registration in this way MUST advertise the `REGNICK` RPL_ISUPPORT (005) token.
+## ACC LS CREDTYPES
+Implementations which provide support for account registration using this framework MUST specify the credential types which they support. The `ACC LS CREDTYPES` data parameter is a space-separated list of credential types.
 
-This token has no value, and an example 005 reply indicating this behaviour is:
+The credential types defined here are:
 
-    :irc.example.com 005 dan REGNICK :are supported by this server
+- `passphrase`: `<credential>` is a plain-text passphrase that the client will use to authenticate with SASL once the account is registered. Passphrases MAY contain spaces.
+- `certfp`: The client's TLS certificate is used as the as the authentication mechanism for future connections. In short, if the client connects and presents the same TLS certificate, they can use the `SASL EXTERNAL` method to authenticate. The client SHOULD provide an empty credential (`*`), and the server MUST ignore the credential value provided by the client. If no certificate is presented by the client, the server MUST respond with the `REG_INVALID_CRED_TYPE` `FAIL` code.
 
-When registering on a network that enforces this policy, clients MUST send `*` as `<accountname>` in the `ACC REGISTER` command (which indicates that the server use the client's current nickname as the account name). If a client sends does not send an asterisk `*` on a network enforcing this policy, the server MUST return the `REG_MUST_USE_REGNICK` `FAIL` code with an appropriate description.
+Other extensions MAY define new credential types.
+
+An example `ACC LS` reply indicating that the `passphrase` and `certfp` credential types are supported:
+
+    :irc.example.com ACC LS CREDTYPES : passphrase certfp
+
+An example `ACC LS` reply indicating that just the `passphrase` credential type is supported:
+
+    :irc.example.com ACC LS CREDTYPES passphrase
+
+
+## ACC LS FLAGS
+Some implementations have other restrictions or options for account registration and management. The `ACC LS FLAGS` data parameter is a space-separated, case-insensitive list of flags for clients.
+
+An example `ACC LS` reply displaying the `regnick` and made-up `others` flag:
+
+    :irc.example.com ACC LS FLAGS :regnick others
+
+An example `ACC LS` reply displaying the `regnick` flag:
+
+    :irc.example.com ACC LS FLAGS regnick
+
+Clients MUST silently ignore flags that they do not understand.
+
+### regnick Flag
+The `regnick` flag indicates that when a client registers an account, the account name MUST be the current nickname of the client (that is, they tie account name registration to nicknames).
+
+When registering an account on a network with this flag, clients MUST send an asterisk (`*`) as the `<accountname>` in the `ACC REGISTER` command. This indicates that the server use the client's current nickname as the account name. If a client sends does not send an asterisk `*` on a network enforcing this policy, the server MUST return the `REG_MUST_USE_REGNICK` `FAIL` code.
 
 
 ## Account Required
@@ -180,8 +218,10 @@ These examples show how to perform common tasks with this framework.
 ### Registering the account "kaniini" with e-mail address kaniini@example.com:
 
     C: ACC REGISTER kaniini mailto:kaniini@example.com passphrase :testpassphrase123
-    S: 920 kaniini kaniini :Account registered
     S: 927 kaniini kaniini kaniini@example.com :A verification code was sent
+
+    ... server sends an email to kaniini@example.com with the verification code ...
+
     C: ACC VERIFY kaniini 3qw4tq4te4gf34
     S: 923 kaniini kaniini :Account verification successful
     S: 903 kaniini :Authentication successful
@@ -189,22 +229,22 @@ These examples show how to perform common tasks with this framework.
 ### Registering the account "kaniini" with e-mail address kaniini@example.com:
 
     C: ACC REGISTER kaniini kaniini@example.com passphrase :testpassphrase123
-    S: 920 kaniini kaniini :Account registered
     S: 927 kaniini kaniini kaniini@example.com :A verification code was sent
     ...
 
 ### Registering with the client's current nickname "dan-":
 
     C: ACC REGISTER * mailto:dan@example.com passphrase :testpassphrase123
-    S: 920 dan- dan- :Account registered
     S: 927 dan- dan- dan@example.com :A verification code was sent
     ...
 
 ### Registering the account "rabbit" with SMS number +11234567890:
 
     C: ACC REGISTER rabbit sms:+11234567890 passphrase :testpassphrase123
-    S: 920 kaniini rabbit :Account registered
     S: 927 kaniini rabbit +11234567890 :A verification code was sent
+
+    ... server sends a text message to +11234567890 with the verification code ...
+
     C: ACC VERIFY rabbit 123456
     S: 923 kaniini rabbit :Account verification successful
     S: 903 kaniini :Authentication successful
@@ -217,8 +257,10 @@ These examples show how to perform common tasks with this framework.
 ### Registering the account "rabbit", but providing an invalid verification token:
 
     C: ACC REGISTER rabbit mailto:kaniini@example.com passphrase :testpassphrase123
-    S: 920 kaniini rabbit :Account registered
     S: 927 kaniini rabbit kaniini@example.com :A verification code was sent
+
+    ... server sends an email to kaniini@example.com with the verification code ...
+
     C: ACC VERIFY rabbit 3qw4tq4te4gf34
     S: FAIL ACC ACCOUNT_INVALID_VERIFY_CODE rabbit :Invalid verification code
 
@@ -228,7 +270,19 @@ These examples show how to perform common tasks with this framework.
     S: 920 kaniini rabbit :Account registered
     S: 903 kaniini :Authentication successful
 
-### Registering the account "harold" where REGNICK is present in RPL_ISUPPORT:
+### Operator verifying a user's account registration:
+
+In this example, C1 is the normal user and C2 is the IRC operator or other privileged user.
+
+    C1: ACC REGISTER pix mailto:pix@example.com passphrase :testpassphrase123
+    S1: 927 daniel pix pix@example.com :A verification code was sent
+
+    C2: ACC VERIFY pix *
+    S2: 923 george pix :Account verification successful
+
+    ... C1 can now reconnect and/or perform SASL authentication to log into the account ..
+
+### Registering the account "harold" where regnick is advertised:
 
     C: ACC REGISTER harold * passphrase :testpassphrase123
     S: FAIL ACC REG_MUST_USE_REGNICK harold :Must register with current nickname instead of separate account name
