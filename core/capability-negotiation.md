@@ -215,16 +215,18 @@ features, and a client sends version `304`, the server would enable those `302` 
 features (just as it would do if a client sent the `303` version number). However, if the
 server also supported a `306` feature, it whould NOT enable this feature for the client.
 
-A client MAY negotiate a higher CAP version at any time, but MAY NOT downgrade their
-CAP version. Servers MUST store only the highest requested capability negotiation version
-requested by the client.
+If a client sends a higher CAP version at any time, the server MUST store the higher
+version. If a client sends a lower CAP version (or omits the version number entirely),
+servers SHOULD return a `CAP LS` reply consistent with the request's version, but keep
+storing the original (higher) version.
 
 Example:
 
     Client: CAP LS 302
     Server: CAP * LS :multi-prefix sasl=PLAIN,EXTERNAL
     Client: CAP LS
-    Server: CAP * LS :multi-prefix sasl=PLAIN,EXTERNAL
+    Server: CAP * LS :multi-prefix sasl
+    ... server should continue considering the client to support CAP LS version 302 ...
 
 Example with a server supporting only `302` versioned features:
 
