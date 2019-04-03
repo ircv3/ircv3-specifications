@@ -213,7 +213,7 @@ CAP version is not supported by the server, the server MUST enable the features 
 support below the given version. For example, if a server supports `302` and `303`
 features, and a client sends version `304`, the server would enable those `302` and `303`
 features (just as it would do if a client sent the `303` version number). However, if the
-server also supported a `306` feature, it whould NOT enable this feature for the client.
+server also supported a `306` feature, it would NOT enable this feature for the client.
 
 If a client sends a higher CAP version at any time, the server MUST store the higher
 version. If a client sends a lower CAP version (or omits the version number entirely),
