@@ -208,7 +208,7 @@ When CAP Version `302` is enabled, the client also implicitly indicates support 
 `cap-notify` capability listed below, and support for the relevant `NEW` and `DEL`
 subcommands.
 
-The CAP version number argument MUST be treated as a digit by the server. If the client's
+The CAP version number argument MUST be treated as a number by the server. If the client's
 CAP version is not supported by the server, the server MUST enable the features it does
 support below the given version. For example, if a server supports `302` and `303`
 features, and a client sends version `304`, the server would enable those `302` and `303`
