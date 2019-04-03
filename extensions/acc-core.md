@@ -1,5 +1,5 @@
 ---
-title: "The ACC command framework"
+title: "The Account Management framework"
 layout: spec
 copyrights:
   -
@@ -20,7 +20,7 @@ The final version of the specification will use an unprefixed capability name.
 
 
 ## Introduction
-The `ACC` command framework provides a unified, standardized interface for account management. Typically, managing this account has been done through `NickServ` or other services bots, which has made it difficult for clients to present clean, consistent interfaces to users.
+The Account Management framework provides a unified, standardized interface for account management using the `ACC` command. Typically, managing this account has been done through `NickServ` or other services bots, which has made it difficult for clients to present clean, consistent interfaces to users.
 
 This specification defines the `ACC REGISTER` and `VERIFY` subcommands, which standardise account creation and validation to the network's authentication layer.  This allows for a network to provide a common interface regardless of what authentication layer they have chosen for their network to operate, i.e. traditional services, a different central authority, or a decentralized model similar to [IRCX](https://en.wikipedia.org/wiki/IRCX).
    
