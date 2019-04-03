@@ -36,6 +36,8 @@ The `ACC` command exposes a number of subcommands as described below. Servers MA
 
 Servers MUST use the [standard replies extension](https://github.com/ircv3/ircv3-specifications/pull/357) to notify the client of failed `ACC` subcommands. The specific codes and format to use are given with each command's description.
 
+Servers MUST allow the `ACC LS` subcommand to be used at any time (before, during, and after connection registration). Servers MAY allow clients to use other subcommands while connecting to the server (for example, the server may allow registering for or verifying an account while connecting). If the client attempts to run a disallowed subcommand before connection registration has completed, the server MUST return the `ERR_NOTREGISTERED (451)` numeric.
+
 
 ## The `ACC LS` subcommand
 The `ACC LS` subcommand signals that a client wishes to receive a list of supported `ACC` subcommands. The response is one or more `ACC LS` messages sent to the client with this format:
@@ -104,6 +106,7 @@ Upon error, the IRC server MUST send a [`FAIL` message](https://github.com/ircv3
 | Code | Format |
 | ---- | ------ |
 | `ACCOUNT_ALREADY_EXISTS` | `:<server> FAIL ACC ACCOUNT_ALREADY_EXISTS <accountname> :Account already exists` |
+| `REG_INVALID_ACCOUNT_NAME` | `:<server> FAIL ACC REG_INVALID_ACCOUNT_NAME <accountname> :Account name is invalid` |
 | `REG_INVALID_CALLBACK` | `:<server> FAIL ACC REG_INVALID_CALLBACK <accountname> <callback> :Callback is invalid` |
 | `REG_INVALID_CRED_TYPE` | `:<server> FAIL ACC REG_INVALID_CRED_TYPE <accountname> <cred_type> :Credential type is invalid` |
 | `REG_MUST_USE_REGNICK` | `:<server> FAIL ACC REG_MUST_USE_REGNICK <accountname> :Must register with current nickname instead of separate account name` |
