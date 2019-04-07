@@ -135,6 +135,7 @@ Upon error, the IRC server MUST send a [`FAIL` message](https://github.com/ircv3
 | ---- | ------ |
 | `ACCOUNT_ALREADY_VERIFIED` | `:<server> FAIL ACC ACCOUNT_ALREADY_VERIFIED <accountname> :Account already verified` |
 | `ACCOUNT_INVALID_VERIFY_CODE` | `:<server> FAIL ACC ACCOUNT_INVALID_VERIFY_CODE <accountname> :Invalid verification code` |
+| `REG_UNAVAILABLE` | `:<server> FAIL ACC REG_UNAVAILABLE :Account registration is currently unavailable` |
 | `VERIFY_UNSPECIFIED_ERROR` | `:<server> FAIL ACC VERIFY_UNSPECIFIED_ERROR <accountname> [<contexts>...] <description>` |
 
 Servers MAY allow IRC Operators or other privileged users to verify a given account by supplying an asterisk (`*`) in place of the `<auth_code>` parameter. If a client does verify an account in this way, they are sent the `RPL_VERIFY_SUCCESS` numeric, but are not logged into the account or sent the `RPL_LOGGEDIN` numeric.
