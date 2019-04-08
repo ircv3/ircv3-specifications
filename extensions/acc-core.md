@@ -199,7 +199,7 @@ The `nospaces` flag indicates that passphrase MAY NOT contain space characters. 
 
 ## Account Required
 
-Certain actions on a network may require a client to be logged-into an account. These may include registering a channel, joining specific channels, connecting to the network at all, etc. The `ACCOUNT_REQUIRED` `FAIL` code indicates that the client must be logged into an account in order to complete an action or continue using the network.
+Certain actions on a network may require a client to be logged-into an account. These may include registering a channel, joining specific channels, connecting to the network at all, etc. The `ACCOUNT_REQUIRED` code indicates that the client must be logged into an account in order to complete an action or continue using the network. This code may be sent using either `FAIL` or `WARN`, depending on the situation (i.e. a `FAIL` for a command not processing, a `WARN` for a notice that your nickname will be changed if you don't authenticate in time).
 
 Upon receiving the `ACCOUNT_REQUIRED` code, clients SHOULD alert users that they need to register/login or provide an interface to do so. The `ACCOUNT_REQUIRED` code MAY be received at any time – before, during, or after connection registration.
 
@@ -207,7 +207,7 @@ Upon receiving the `ACCOUNT_REQUIRED` code, clients SHOULD alert users that they
 | ---- | ------ |
 | `ACCOUNT_REQUIRED` | `:<server> FAIL * ACCOUNT_REQUIRED :You must have an account to connect to this server` |
 
-If the response was triggered by a command, this command should be given with the `FAIL` message. If the user must register outside IRC (for example, through a web interface), a link to do so should be provided in the description.
+If the response was triggered by a command, this command should be given with the message. Otherwise, the standard `*` marker is used. If the user must register their account outside IRC (for example, through a web interface), a link to do so should be provided in the description.
 
 
 ## Examples
