@@ -81,7 +81,7 @@ The `ERR` message indicates that the resume attempt failed. `<info>` is an infor
 
 This message is sent to indicate that a client has reconnected. `<nick>`, `<olduser>`, and `<oldhost>` indicate the client that has reconnected, and are the details of the old client. `<user>` and `<host>` indicate the reconnecting client's new username and hostname, and the client MUST process this information as they would a regular [`CHGHOST`](https://ircv3.net/specs/extensions/chghost-3.2.html) message. `<timestamp>`, if given, is a timestamp of the form described above which indicates the last message received by the reconnecting clent.
 
-Upon receiving a `RESUMED` message, clients MUST display in some way that the given user has reconnected. If `<timestamp>` is given, clients SHOULD use this to display how much message history seems to have been lost.
+Upon receiving a `RESUMED` message, clients SHOULD display in some way that the given user has reconnected (as message history may have been lost and the users' chat may have been interrupted). If `<timestamp>` is given, clients SHOULD use this to display how much message history seems to have been lost.
 
 
 ## Capability Negotiation
@@ -158,7 +158,7 @@ This approach is recommended as it protects against timing attacks. Implementers
 
 ### Successful Resumption
 
-Successful attempt from a client with the nick `dan` reconnecting. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection uses the username `~d` and the host `10.0.0.3`:
+Successful attempt from a client with the nick `dan` reconnecting. The nickname the new client is connecting with is `dan-backup-nick`. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection has the username `~d` and the host `10.0.0.3`:
 
     C1 - C: PING 12345678
     C1 - S: :irc.example.com PONG 12345678
@@ -197,7 +197,7 @@ And here is this reconnection seen by `violet`, a client that has the `draft/res
 
 ### Failed Resumption
 
-Failed attempt from a client with the nick `dan` reconnecting. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection uses the username `~d` and the host `10.0.0.3`:
+Failed attempt from a client with the nick `dan` reconnecting. The nickname the new client is connecting with is `dan-backup-nick`. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection uses the username `~d` and the host `10.0.0.3`:
 
     C1 - C: PING 12345678
     C1 - S: :irc.example.com PONG 12345678
