@@ -94,7 +94,7 @@ If the client does not provide the `cred_type` parameter, the server MUST use th
 
 Clients SHOULD NOT be sent legacy (e.g. from NickServ) privmsgs or notices in response to `ACC` commands where numerics and messages defined in this document can replace them.
 
-After this, if verification is required, the IRC server MUST generate and send the verification token to the user out-of-band using the given callback information, and send the client the `RPL_REG_VERIFICATION_REQUIRED` numeric. The verification token MAY NOT be an asterisk (`*`), and SHOULD be an unguessable combination of characters. If verification is not required, the IRC server MUST instead send the `RPL_REG_SUCCESS` numeric.
+After this, if verification is required, the IRC server MUST generate and send the verification token to the user out-of-band using the given callback information, and send the client the `RPL_REG_VERIFICATION_REQUIRED` numeric. The verification token MAY NOT be an asterisk (`*`), and SHOULD be an unguessable combination of characters. If verification is not required, the IRC server MUST instead send the `RPL_REG_SUCCESS` and `RPL_LOGGEDIN` (900) numerics.
 
 | No. | Label | Format |
 | --- | ----- | ------ |
@@ -229,7 +229,7 @@ These examples show how to perform common tasks with this framework.
 
     C: ACC VERIFY kaniini 3qw4tq4te4gf34
     S: 923 kaniini kaniini :Account verification successful
-    S: 903 kaniini :Authentication successful
+    S: 900 kaniini kaniini!kan@ini kaniini :You are now logged in as kaniini
 
 ### Registering the account "kaniini" with e-mail address kaniini@example.com:
 
@@ -252,7 +252,7 @@ These examples show how to perform common tasks with this framework.
 
     C: ACC VERIFY rabbit 123456
     S: 923 kaniini rabbit :Account verification successful
-    S: 903 kaniini :Authentication successful
+    S: 900 kaniini kaniini!kan@ini rabbit :You are now logged in as rabbit
 
 ### Registering the account "rabbit" with an unsupported verification method:
 
@@ -273,7 +273,7 @@ These examples show how to perform common tasks with this framework.
 
     C: ACC REGISTER rabbit * passphrase :testpassphrase123
     S: 920 kaniini rabbit :Account registered
-    S: 903 kaniini :Authentication successful
+    S: 900 kaniini kaniini!kan@ini rabbit :You are now logged in as rabbit
 
 ### Operator verifying a user's account registration:
 
@@ -285,7 +285,7 @@ In this example, C1 is the normal user and C2 is the IRC operator or other privi
     C2: ACC VERIFY pix *
     S2: 923 george pix :Account verification successful
 
-    ... C1 can now reconnect and/or perform SASL authentication to log into the account ..
+    ... C1 can now perform SASL authentication to log into the account ..
 
 ### Registering the account "harold" where regnick is advertised:
 
