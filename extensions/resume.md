@@ -9,8 +9,12 @@ copyrights:
     email: daniel@danieloaks.net
   -
     name: Shivaram Lingamneni
-    period: 2019
+    period: "2019"
     email: slingamn@cs.stanford.edu
+  -
+    name: "Jess"
+    period: "2019"
+    email: "jess@jesopo.uk"
 ---
 ## Introduction
 Occasionally, clients disconnect from IRC. What normally happens is that the client connects with a different nickname, joins all their old channels, waits for the old connection to time out (or manually kills it using services), and then changes back to their original nickname.
@@ -19,7 +23,10 @@ The `resume` feature vastly simplifies this form of reconnection, for both the c
 
 
 ## Architecture
-This feature is enabled using the `draft/resume-0.4` capability, introduces the `RESUME` command, and uses the messages described below to convey state about the reconnection process and reconnecting clients.
+This feature is enabled using the `draft/resume-0.4` capability, introduces the `RESUME` command, and uses the messages described below to convey state about the reconnection process and reconnecting clients. It also introduces the `BRB` command, which allows clients to close their connection while leaving their session on the server open for some time (to perform software upgrades, for example).
+
+These commands use the [standard replies extension](https://github.com/ircv3/ircv3-specifications/pull/357) to relay warning information and indicate when they are not successful. The specific `FAIL` codes are given with each command's description.
+
 
 ### Capabilities
 The `draft/resume-0.4` capability is advertised by servers that support resuming connections.
@@ -36,7 +43,10 @@ Capability negotiation example:
     S: CAP * ACK :draft/resume-0.4
     S: RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt87Bb0YaQlyOzuQciz6cB2R
 
-### `RESUME` Command
+
+### Resuming Messages
+
+#### `RESUME` Command
 This command, sent from a client to a server, indicates that the client wishes to resume their old session. This command MAY ONLY be sent during connection registration.
 
     RESUME <token> [timestamp]
@@ -45,32 +55,63 @@ This command, sent from a client to a server, indicates that the client wishes t
 
 `<timestamp>`, if given, is a timestamp indicating when the client received the last message from the server on the old connection. This timestamp uses the same format as the IRCv3 `server-time` extension (i.e. `YYYY-MM-DDThh:mm:ss.sssZ`, or in UTC using extended format as specified by ISO 8601:2004(E) 4.3.2), and is passed to other clients to indicates how long the disconnection lasted.
 
-### `RESUME` Message
-This message, when sent from a server to a client, indicates that a `RESUME` request has been successful.
+If the request is successful, the server returns a `RESUME` message as described below, registration immediately completes, and the server begins replaying the current client state.
 
-    RESUME <oldnick>
-
-`<oldnick>` is the nickname of the session being resumed. After receiving this message, the client MUST assume that their nickname is this.
-
-Following this message, registration immediately completes and the server will replay the current client state back to the client.
-
-### `FAIL` Message
-This command uses the [standard replies extension](https://github.com/ircv3/ircv3-specifications/pull/357) to relay warning information and indicate unsuccessful resume attempts. In particular, these codes and formats are used to indicate why a resume attempt has failed:
+If the request is unsuccessful, the server returns a `FAIL RESUME` message with one of the codes below using the given format, including an appropriate description of the error:
 
 | Code | Format |
 | ---- | ------ |
 | `INSECURE_SESSION` | `:<server> FAIL RESUME INSECURE_SESSION :Cannot resume connection, you are not connected with TLS` |
 | `INVALID_TOKEN` | `:<server> FAIL RESUME INVALID_TOKEN :Cannot resume connection, token is not valid` |
 | `REGISTRATION_IS_COMPLETED` | `:<server> FAIL RESUME REGISTRATION_IS_COMPLETED :Cannot resume connection, connection registration has completed` |
+| `CANNOT_RESUME` | `:<server> FAIL RESUME CANNOT_RESUME :Cannot resume connection, for a different reason described here` |
 
 If a client receives a `FAIL RESUME` message, regardless of the code, then they MUST abort the resume attempt and connect to the server normally instead.
 
-### `RESUMED` Message
+#### `RESUME` Message
+This message, sent from a server to a client, indicates that a `RESUME` request has been successful.
+
+    RESUME <oldnick>
+
+`<oldnick>` is the nickname of the session being resumed. After receiving this message, the client MUST assume that this is their nickname.
+
+#### `RESUMED` Message
+This message is sent by the server to indicate that another client has reconnected:
+
     :nick!olduser@oldhost RESUMED <user> <host> [timestamp]
 
-This message is sent to indicate that another client has reconnected. `<nick>`, `<olduser>`, and `<oldhost>` indicate the client that has reconnected, and are the details of the old client. `<user>` and `<host>` indicate the reconnecting client's new username and hostname, and the receiving client MUST process this information as they would a regular [`CHGHOST`](https://ircv3.net/specs/extensions/chghost-3.2.html) message. `<timestamp>`, if given, is a timestamp of the form described above which indicates the last message received by the reconnecting clent.
+`<nick>`, `<olduser>`, and `<oldhost>` indicate the client that has reconnected, and are the details of the old client. `<user>` and `<host>` indicate the reconnecting client's new username and hostname, and the receiving client MUST process this information as they would a regular [`CHGHOST`](https://ircv3.net/specs/extensions/chghost-3.2.html) message. `<timestamp>`, if given, is a timestamp of the form described above which indicates the last message received by the reconnecting clent.
 
 Upon receiving a `RESUMED` message, clients SHOULD display in some way that the given user has reconnected (as message history may have been lost and the users' chat may have been interrupted). If `<timestamp>` is given, clients SHOULD use this to display how much message history seems to have been lost.
+
+
+### BRB Messages
+
+#### `BRB` Command
+This command, sent from a client to a server, indicates that the client wishes to disconnect from the server and resume their connection within some amount of time.
+
+    BRB <reason>
+
+`<reason>` is used as an `AWAY` reason for the client until either the client resumes their session or the window of time for resumption closes - in which case it will be used as the displayed `QUIT` reason.
+
+If the request is successful, the server returns a `BRB` message as described below, and the client's connection to the server is immediately terminated.
+
+If the request is unsuccessful, the server returns a `FAIL BRB` message with one of the codes below using the given format, including an appropriate description of the error:
+
+| Code | Format |
+| ---- | ------ |
+| `CANNOT_BRB` | `:<server> FAIL BRB CANNOT_BRB :BRB is not supported` |
+
+If a client receives a `FAIL BRB` message, regardless of the code, then they MUST assume the attempt has failed.
+
+#### `BRB` Message
+This message, sent from a server to a client, indicates that a `BRB` request has been successful.
+
+    BRB <timeout>
+
+`<timeout>` is an integer that represents how many seconds the client has to reconnect before their session is closed and they will no longer be able to resume. If the server cannot give an accurate duration, it should either approximate the length of time or give a zero `0` (representing that the server cannot estimate how long until the session is terminated).
+
+After this message is returned, the client's connection to the server is immediately terminated.
 
 
 ## Capability Negotiation
@@ -143,7 +184,7 @@ This approach is recommended as it protects against timing attacks. Implementers
 ## Examples
 
 ### Successful Resumption
-Successful attempt from a client with the nick `dan` reconnecting. The nickname the new client is connecting with is `dan-backup-nick`. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection has the username `~d` and the host `10.0.0.3`:
+Successful `RESUME` attempt from a client with the nick `dan` reconnecting. The nickname the new client is connecting with is `dan-backup-nick`. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection has the username `~d` and the host `10.0.0.3`:
 
     C1 - C: PING 12345678
     C1 - S: :irc.example.com PONG 12345678
@@ -181,7 +222,7 @@ And here is this reconnection seen by `violet`, a client that has the `draft/res
     S: :dan!~old@192.168.0.5 RESUMED ~d 10.0.0.3 2017-04-13T15:12:51.620Z
 
 ### Failed Resumption
-Failed attempt from a client with the nick `dan` reconnecting. The nickname the new client is connecting with is `dan-backup-nick`. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection uses the username `~d` and the host `10.0.0.3`:
+Failed `RESUME` attempt from a client with the nick `dan` reconnecting. The nickname the new client is connecting with is `dan-backup-nick`. The old connection used the username `~old` and the host `192.168.0.5`, and the new connection uses the username `~d` and the host `10.0.0.3`:
 
     C1 - C: PING 12345678
     C1 - S: :irc.example.com PONG 12345678
@@ -205,6 +246,27 @@ Failed attempt from a client with the nick `dan` reconnecting. The nickname the 
     C2 - S: :irc.example.com 903 dan-backup-nick :SASL authentication successful
     C2 - S: :irc.example.com 001 dan-backup-nick :Welcome to the Internet Relay Network dan-backup-nick
     ... regular connection ...
+
+### Successful BRB
+Successful `BRB` attempt from a client with the nickname `dan`:
+
+    C: BRB :Software updates
+    S: BRB 60
+    ... client connection is immediately terminated ...
+
+Other clients receive:
+
+    S: :dan!user@host AWAY :Software updates
+
+If `dan` does not resume their connection in time, their connection is closed and other clients receive something like this:
+
+    S: :dan!user@host QUIT :Quit: Software updates
+
+### Failed BRB
+Failed `BRB` attempt from a client:
+
+    C: BRB :Software updates
+    S: :irc.example.com FAIL BRB CANNOT_BRB :BRB is unavailable at this time
 
 
 ## Implementation Considerations
