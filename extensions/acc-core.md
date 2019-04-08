@@ -107,7 +107,7 @@ Upon error, the IRC server MUST send a [`FAIL` message](https://github.com/ircv3
 | ---- | ------ |
 | `ACCOUNT_ALREADY_EXISTS` | `:<server> FAIL ACC ACCOUNT_ALREADY_EXISTS <accountname> :Account already exists` |
 | `REG_INVALID_ACCOUNT_NAME` | `:<server> FAIL ACC REG_INVALID_ACCOUNT_NAME <accountname> :Account name is invalid` |
-| `REG_INVALID_CALLBACK` | `:<server> FAIL ACC REG_INVALID_CALLBACK <accountname> <callback> :Callback is invalid` |
+| `REG_INVALID_CALLBACK` | `:<server> FAIL ACC REG_INVALID_CALLBACK <accountname> <callback> :Cannot send verification code there` |
 | `REG_INVALID_CRED_TYPE` | `:<server> FAIL ACC REG_INVALID_CRED_TYPE <accountname> <cred_type> :Credential type is invalid` |
 | `REG_MUST_USE_REGNICK` | `:<server> FAIL ACC REG_MUST_USE_REGNICK <accountname> :Must register with current nickname instead of separate account name` |
 | `REG_UNAVAILABLE` | `:<server> FAIL ACC REG_UNAVAILABLE :Account registration is currently unavailable` |
