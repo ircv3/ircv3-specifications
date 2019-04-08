@@ -194,7 +194,7 @@ The `regnick` flag indicates that when a client registers an account, the accoun
 When registering an account on a network with this flag, clients MUST send an asterisk (`*`) as the `<accountname>` in the `ACC REGISTER` command. This indicates that the server use the client's current nickname as the account name. If a client sends does not send an asterisk `*` on a network enforcing this policy, the server MUST return the `REG_MUST_USE_REGNICK` `FAIL` code.
 
 ### nospaces Flag
-The `nospaces` flag indicates that passphrase MAY NOT contain space characters. This may include just the SPACE (`0x20`) ASCII character or any other form of whitespace as well. When this flag is advertised, clients SHOULD NOT send a passphrase that contains any whitespace, as it may be rejected by the server with the `REG_INVALID_CRED_TYPE` `FAIL` code.
+The `nospaces` flag indicates that passphrase MAY NOT contain space characters. This may include just the SPACE (`0x20`) ASCII character or any other form of whitespace as well. When this flag is advertised, clients SHOULD NOT send a passphrase that contains any whitespace, as it may be rejected by the server with the `REG_INVALID_CREDENTIAL` `FAIL` code.
 
 
 ## Account Required
