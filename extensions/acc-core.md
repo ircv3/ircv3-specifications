@@ -90,7 +90,7 @@ The `callback` parameter indicates where the verification code should be sent. T
 
 The `cred_type` parameter indicates the type of authentication that's required to login to the account once it has been registered. The supported credential types are listed below in the <a href="#"><code>ACC LS CALLBACKS</code> section</a>.
 
-If the client does not provide the `cred_type` parameter, the server MUST use the `passphrase` credential type. If the client provides a credential type that's now supported, the server MUST respond with the `REG_INVALID_CRED_TYPE` `FAIL` code.
+If the client does not provide the `cred_type` parameter, the server MUST use the `passphrase` credential type. If the client provides a credential type that's not supported, the server MUST respond with the `REG_INVALID_CRED_TYPE` `FAIL` code. If the given credential is invalid (for example, the client tries to use the `certfp` method without advertising a client certificate, or tries to use `passphrase` but gives an empty passphrase parameter), the server MUST respond with the `REG_INVALID_CREDENTIAL` `FAIL` code.
 
 Clients SHOULD NOT be sent legacy (e.g. from NickServ) privmsgs or notices in response to `ACC` commands where numerics and messages defined in this document can replace them.
 
@@ -109,9 +109,12 @@ Upon error, the IRC server MUST send a [`FAIL` message](https://github.com/ircv3
 | `REG_INVALID_ACCOUNT_NAME` | `:<server> FAIL ACC REG_INVALID_ACCOUNT_NAME <accountname> :Account name is invalid` |
 | `REG_INVALID_CALLBACK` | `:<server> FAIL ACC REG_INVALID_CALLBACK <accountname> <callback> :Cannot send verification code there` |
 | `REG_INVALID_CRED_TYPE` | `:<server> FAIL ACC REG_INVALID_CRED_TYPE <accountname> <cred_type> :Credential type is invalid` |
+| `REG_INVALID_CREDENTIAL` | `:<server> FAIL ACC REG_INVALID_CREDENTIAL <accountname> :Passphrase is invalid` |
 | `REG_MUST_USE_REGNICK` | `:<server> FAIL ACC REG_MUST_USE_REGNICK <accountname> :Must register with current nickname instead of separate account name` |
 | `REG_UNAVAILABLE` | `:<server> FAIL ACC REG_UNAVAILABLE :Account registration is currently unavailable` |
 | `REG_UNSPECIFIED_ERROR` | `:<server> FAIL ACC REG_UNSPECIFIED_ERROR <accountname> [<contexts>...] <description>` |
+
+In particular, the `REG_INVALID_CREDENTIAL` code's description SHOULD describe why the given credential is invalid in a way that helps the user resolve the problem. For example, _"Passphrase is invalid"_, _"You must connect with a TLS client certificate to use certfp"_.
 
 
 ## The `ACC VERIFY` subcommand
@@ -158,8 +161,8 @@ Implementations which provide support for account registration using this framew
 
 The credential types defined here are:
 
-- `passphrase`: `<credential>` is a plain-text passphrase that the client will use to authenticate with SASL once the account is registered. Passphrases MAY contain spaces.
-- `certfp`: The client's TLS certificate is used as the as the authentication mechanism for future connections. In short, if the client connects and presents the same TLS certificate, they can use the `SASL EXTERNAL` method to authenticate. The client SHOULD provide an empty credential (`*`), and the server MUST ignore the credential value provided by the client. If no certificate is presented by the client, the server MUST respond with the `REG_INVALID_CRED_TYPE` `FAIL` code.
+- `passphrase`: `<credential>` is a plain-text passphrase that the client will use to authenticate with SASL once the account is registered. Passphrases MAY contain spaces unless the `nospaces` flag is advertised.
+- `certfp`: The client's TLS certificate is used as the as the authentication mechanism for future connections. In short, if the client connects and presents the same TLS certificate, they can use the `SASL EXTERNAL` method to authenticate. The client SHOULD provide an empty credential (`*`), and the server MUST ignore the credential value provided by the client. If no certificate is presented by the client, the server MUST respond with the `REG_INVALID_CREDENTIAL` `FAIL` code.
 
 Other extensions MAY define new credential types.
 
@@ -189,6 +192,9 @@ Clients MUST silently ignore flags that they do not understand.
 The `regnick` flag indicates that when a client registers an account, the account name MUST be the current nickname of the client (that is, they tie account name registration to nicknames).
 
 When registering an account on a network with this flag, clients MUST send an asterisk (`*`) as the `<accountname>` in the `ACC REGISTER` command. This indicates that the server use the client's current nickname as the account name. If a client sends does not send an asterisk `*` on a network enforcing this policy, the server MUST return the `REG_MUST_USE_REGNICK` `FAIL` code.
+
+### nospaces Flag
+The `nospaces` flag indicates that passphrase MAY NOT contain space characters. This may include just the SPACE (`0x20`) ASCII character or any other form of whitespace as well. When this flag is advertised, clients SHOULD NOT send a passphrase that contains any whitespace, as it may be rejected by the server with the `REG_INVALID_CRED_TYPE` `FAIL` code.
 
 
 ## Account Required
