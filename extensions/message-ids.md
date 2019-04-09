@@ -1,24 +1,12 @@
 ---
 title: IRCv3 Message IDs
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: "James Wheare"
     period: 2016
     email: "james@irccloud.com"
 ---
-
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `msgid` tag name. Instead, implementations SHOULD use
-the `draft/msgid` tag name to be interoperable with other software
-implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed tag name.
 
 ## Introduction
 
@@ -38,7 +26,7 @@ This specification doesn't define any capabilities of its own, but the [`message
 
 ### Tags
 
-This specification adds the `draft/msgid` tag, which has a required value.
+This specification adds the `msgid` tag, which has a required value.
 
 Servers MAY attach this tag on any event. If this tag is being used, it SHOULD be attached to all `PRIVMSG` and `NOTICE` events.
 
@@ -91,40 +79,40 @@ This section is non-normative, message IDs are not required to be UUIDs or have 
 
 A channel `PRIVMSG` sent by the server:
 
-    S: @draft/msgid=63E1033A051D4B41B1AB1FA3CF4B243E :nick!user@host PRIVMSG #channel :Hello!
+    S: @msgid=63E1033A051D4B41B1AB1FA3CF4B243E :nick!user@host PRIVMSG #channel :Hello!
 
 A private `PRIVMSG` sent by the server:
 
-    S: @draft/msgid=server1-1480339715754191-21 :nick!user@host PRIVMSG me :Hello!
+    S: @msgid=server1-1480339715754191-21 :nick!user@host PRIVMSG me :Hello!
 
 A channel `NOTICE` sent by the server:
 
-    S: @draft/msgid=G6PuDDBWQYmu3HmXXOAPzA :nick!user@host NOTICE #channel :Hello!
+    S: @msgid=G6PuDDBWQYmu3HmXXOAPzA :nick!user@host NOTICE #channel :Hello!
 
 A private `NOTICE` sent by the server:
 
-    S: @draft/msgid=ticketid-5 :nick!user@host NOTICE me :Hello!
+    S: @msgid=ticketid-5 :nick!user@host NOTICE me :Hello!
 
 A channel `JOIN` sent by the server:
 
-    S: @draft/msgid=msgid123 :nick!user@host JOIN #channel account :Real Name
+    S: @msgid=msgid123 :nick!user@host JOIN #channel account :Real Name
 
 A channel `PRIVMSG` sent by the server, and a possible client response. The `+example/reply` tag is a non-standard example:
 
-    S: @draft/msgid=msgid1 :nick!user@host PRIVMSG #channel :Hello!
+    S: @msgid=msgid1 :nick!user@host PRIVMSG #channel :Hello!
     C: @+example/reply=msgid1 :nick2!user2@host2 PRIVMSG #channel :Hello to you!
 
 Two channel `PRIVMSG` messages sent by the server, with possible non-standard example annotations to indicate split message concatenation:
 
-    S: @draft/msgid=msgid1;example/split :nick!user@host PRIVMSG #channel :Hello
-    S: @draft/msgid=msgid2;example/concat=msgid1 :nick!user@host PRIVMSG #channel : World
+    S: @msgid=msgid1;example/split :nick!user@host PRIVMSG #channel :Hello
+    S: @msgid=msgid2;example/concat=msgid1 :nick!user@host PRIVMSG #channel : World
 
 A client negotiating the `message-tags` capability to enable and disable messages tagged with IDs.
 
     S: :nick!user@host PRIVMSG #channel :Hello
     C: CAP REQ message-tags
     S: :irc.example.com CAP me ACK :message-tags
-    S: @draft/msgid=msgid-a :nick!user@host PRIVMSG #channel :Hello again
+    S: @msgid=msgid-a :nick!user@host PRIVMSG #channel :Hello again
     C: CAP REQ -message-tags
     S: :irc.example.com CAP me ACK :-message-tags
     S: :nick!user@host PRIVMSG #channel :Another hello
