@@ -31,7 +31,7 @@ Some non-normative examples:
 Here's what each parameter means:
 
 - `<type>`: Either `FAIL`, `WARN`, or `NOTE`, this indicates the message type.
-- `<command>`: Indicates the user command which spawned this reply, or is `*` for messages initiated outside client commands (for example, an on-connect message).
+- `<command>`: Indicates the user command which this reply is related to, or is `*` for messages initiated outside client commands (for example, an on-connect message).
 - `<code>`: Machine-readable reply code representing the meaning of the message to client software.
 - `<context>`: Optional parameters that give humans extra context as to where and why the reply was spawned (for example, a particular subcommand or sub-process).
 - `<description>`: A required plain-text description of the reply which is shown to users.
