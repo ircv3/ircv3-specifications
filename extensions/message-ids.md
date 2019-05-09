@@ -32,11 +32,11 @@ Servers MAY attach this tag on any event. If this tag is being used, it SHOULD b
 
 #### Tag value
 
-The tag value is chosen by the originating server and MUST be unique, meaning any other message transmitted on the entire network at any time MUST NOT share the same value.
+The tag value MUST be a unique ID chosen by the originating server. Uniqueness in this context means that any other message transmitted on the entire network at any time MUST NOT share the same value.
 
 However, if a message is re-transmitted as-is, for example with the [`chathistory`](./batch/chathistory-3.3.html) batch type, the ID SHOULD be reused. As a result, clients MUST accept shared IDs.
 
-The tag value MUST be treated as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
+Clients MUST treat the ID as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
 
 ### Relationships with other specifications
 
@@ -62,6 +62,8 @@ When using timestamps, make sure they're correctly synchronised using NTP or sim
 Networks might also consider the risk of collisions when there's a chance of merging with another network in future, and choose an appropriately resistant ID format.
 
 Although clients are required to treat IDs as case sensitive opaque values, servers might still choose a case insensitive ID format internally.
+
+Servers might wish to encode additional information within the ID, for internal use only. This could allow servers to take further actions on a message. For instance, including account information for the author in an ID could enable authenticated message edits or deletes without having to maintain and consult a separate message store. Take care not to include private data without appropriate encryption.
 
 ## Client implementation considerations
 
