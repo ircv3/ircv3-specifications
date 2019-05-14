@@ -14,7 +14,7 @@ This specification describes a message tag indicating a server supplied unique I
 
 ## Motivation
 
-Communication on IRC has historically been limited to a flat structure of sequential messages without unique identifiers shared across clients. As a result, the protocol lacks an ability to establish relationships between messages and other entities. This places limits on client-side enhancements such as reply tracking, message editing, rating or sending other forms of message annotation.
+Communication on IRC has historically been limited to a flat structure of sequential messages without unique identifiers shared across clients. As a result, the protocol lacks the ability to establish relationships between messages and other entities. This places limits on client-side enhancements such as reply tracking, message editing, rating or sending other forms of message annotation.
 
 The message ID tag is a way for servers to enable these enhancements.
 
