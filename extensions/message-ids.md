@@ -63,7 +63,7 @@ Networks might also consider the risk of collisions when there's a chance of mer
 
 Although clients are required to treat IDs as case sensitive opaque values, servers might still choose a case insensitive ID format internally.
 
-Servers might wish to encode additional information within the ID, for internal use only. This could allow servers to take further actions on a message. For instance, including account information for the author in an ID could enable authenticated message edits or deletes without having to maintain and consult a separate message store. Take care not to include private data without appropriate encryption.
+Servers might wish to encode additional information within the ID, for internal use only. For instance, including account information for the author in an ID could enable authenticated message edits or deletes, without having to maintain and consult a separate message store. This requires careful attention to several concerns: security, privacy, and backwards and forwards compatibility of different ID generation schemes.
 
 ## Client implementation considerations
 
