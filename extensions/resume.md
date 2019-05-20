@@ -31,7 +31,7 @@ These commands use the [standard replies extension](https://github.com/ircv3/irc
 ### Capabilities
 The `draft/resume-0.4` capability is advertised by servers that support resuming connections.
 
-When this capability is negotiated, the server sends the client their resume token, which is used to authenticate future connection resumptions. In addition, servers MAY extend the "ping timeout" length for that client (with the expectation that if the client disconnects, it will try to resume its connection as described here).
+When this capability is negotiated, the server sends the client their resume token, which is used to authenticate future connection resumptions. Servers MAY extend the "ping timeout" length for that client (with the expectation that if the client disconnects, it will try to resume its connection as described here). Servers MAY also treat disconnections without `QUIT` as though the client used the `BRB` command described below.
 
 Servers MUST ONLY generate and provide a resume token to a client when the client negotiates the `draft/resume-0.4` capability.
 
