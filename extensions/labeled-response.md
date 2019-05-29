@@ -75,7 +75,7 @@ When a client sends a message to itself, the server MUST NOT include the label t
 
 #### Tag value
 
-The tag value is chosen by the client and MUST be treated as an opaque identifier. The client SHOULD NOT reuse a tag value until it has received a complete response for that value from the server.
+The tag value is chosen by the client and MUST be treated as an opaque identifier. The client SHOULD NOT reuse a tag value until it has received a complete response for that value from the server. The value MUST NOT exceed 64 bytes.
 
 ## Client implementation considerations
 
