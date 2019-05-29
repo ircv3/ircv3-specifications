@@ -60,7 +60,7 @@ This specification adds the `draft/label` message tag, which has a required valu
 
 This tag MAY be sent by a client for any messages that need to be correlated with a response from the server.
 
-For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message. Servers MUST include the tag in exactly one logical message.
+For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message where it is feasible to do so. Servers MUST include the tag in exactly one logical message.
 
 If a response consists of more than one message, and the `batch` capability is enabled, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
 
@@ -80,6 +80,8 @@ The tag value is chosen by the client and MUST be treated as an opaque identifie
 ## Client implementation considerations
 
 This section is non-normative.
+
+Bear in mind that in some cases, it might not be feasible for servers to attach a label to a message, for instance on certain remote or asynchronous actions. Handle these cases as normal for a server with no support for labeled responses.
 
 In the case of `echo-message` (see example below), a client can use labeled responses to correlate a server's acknowledgment of their own messages with a temporary message displayed locally. The temporary message can be displayed to the user immediately in a pending state to reduce perceived lag, and then removed once a labeled response from the server is received.
 
