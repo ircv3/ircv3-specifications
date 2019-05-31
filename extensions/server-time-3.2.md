@@ -52,7 +52,7 @@ John joined #chan during the leap second of June 2012 (notice the :60)
 
 
 [cap]: ../core/capability-negotiation.html
-[message tag]: ../core/message-tags-3.2.html
+[message tag]: ../extensions/message-tags.html
 
 
 ## Errata
