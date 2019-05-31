@@ -7,7 +7,7 @@ copyrights:
     period: "2013-2015"
     email: "grawity@gmail.com"
 ---
-The `account-tag` capability causes the server to add a message-tag containing
+The `account-tag` capability causes the server to add a [message tag][] containing
 the command sender's services account to commands sent to the client that has
 requested this capability. It supersedes the `identify-msg` extension.
 
@@ -46,3 +46,5 @@ This extension supersedes `identify-msg`. This extension does not deprecate
 just the account name. Similarly, this extension does not deprecate
 `account-notify`, as the latter provides real-time notifications while this
 extension does not.
+
+[message tag]: ../extensions/message-tags.html
