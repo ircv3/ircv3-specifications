@@ -56,7 +56,7 @@ Implementations MUST treat tag key names as opaque identifiers and MUST NOT perf
 
 Implementations MUST interpret empty tag values (e.g. `foo=`) as equivalent to missing tag values (e.g. `foo`). Specifications MUST NOT differentiate meaning between tags with empty and missing values. Implementations MAY normalise tag values by converting the empty form to the missing form, but MUST NOT convert values from missing to empty, to prevent size limit issues.
 
-## Escaping values
+### Escaping values
 
 The mapping between characters in tag values and their representation in `<escaped value>` is defined as follows:
 
@@ -78,7 +78,7 @@ dropped. For example, `\b` should unescape to just `b`.
 
 ## Capabilities
 
-Tags are enabled via capability negotiation. Clients and servers that negotiate a capability that uses tags MUST support the full tag specification.
+Tags are enabled via capability negotiation. Clients and servers that negotiate a capability that uses tags MUST support the full tag format above.
 
 The following capabilities implicitly depend on the tag format:
 
@@ -94,6 +94,8 @@ But there is also a generic capability for negotiating tag usage.
 
 The `message-tags` capability allows clients to indicate support for
 receiving any well-formed tag, whether or not it is recognised or used. It also frees servers from having to filter individual message tags for each client response.
+
+The `message-tags` capability is the only guarantee that an implementation supports the full tag format. Following the robustness principle, implementations that use tags MUST support the full message tag format. However, implementations SHOULD NOT assume support for all tags when an individual tag capability is negotiated.
 
 This capability enables the use of client-only tags and the `TAGMSG` command, described below.
 
