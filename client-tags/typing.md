@@ -54,5 +54,5 @@ This specification is primarily intended for instances where all users are famil
 ## Privacy Considerations
 Typing status indicators introduce additional privacy concerns for users who may not wish to inform others of when they are creating or replying to a message. Clients are encouraged to provide appropriate privacy controls when enabling this feature. Standard implementation guidelines on [message tag moderation considerations][tags] also apply to servers.
 
-[batch]: http://ircv3.net/specs/extensions/batch-3.2.html
-[tags]: http://ircv3.net/specs/core/message-tags-3.3.html
+[batch]: ../extensions/batch-3.2.html
+[tags]: ../extensions/message-tags.html
