@@ -72,7 +72,7 @@ When a client sends a message to itself, the server MUST NOT include the label t
 
 The tag value is chosen by the client and MUST be treated as an opaque identifier. The client SHOULD NOT reuse a tag value until it has received a complete response for that value from the server.
 
-### The `ACK` command
+### The `ACK` response
 
 Servers MUST respond with a labeled `ACK` message when a client sends a labeled command that normally produces no response. It takes no additional parameters and is defined as follows
 
