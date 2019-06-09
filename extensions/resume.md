@@ -66,24 +66,37 @@ If the request is unsuccessful, the server returns a `FAIL RESUME` message with 
 | `REGISTRATION_IS_COMPLETED` | `:<server> FAIL RESUME REGISTRATION_IS_COMPLETED :Cannot resume connection, connection registration has completed` |
 | `CANNOT_RESUME` | `:<server> FAIL RESUME CANNOT_RESUME :Cannot resume connection, for a different reason described here` |
 
-If a client receives a `FAIL RESUME` message, regardless of the code, then they MUST abort the resume attempt and connect to the server normally instead.
+If a client receives a `FAIL RESUME` message with a code other than `INVALID_TOKEN`, then they MUST abort the resume attempt and connect to the server normally instead. If they receive a `FAIL RESUME` message with code `INVALID_TOKEN`, then they MAY submit a different candidate token (in case of doubt as to whether a previous `RESUME` attempt was accepted), or else abort the resume attempt and connect normally.
+
+If the request is successful, the server may also send a `WARN RESUME` message with one of the codes below using the given format, including an appropriate description of the warning:
+
+| Code | Format |
+| ---- | ------ |
+| `HISTORY_LOST` | `:<server> WARN RESUME HISTORY_LOST :Up to 30 seconds of history may have been lost` |
 
 #### `RESUME` Message
-This message, sent from a server to a client, indicates that a `RESUME` request has been successful.
+This message is sent from the server to the client and has two forms, `RESUME TOKEN` and `RESUME SUCCESS`. `RESUME TOKEN` is used as described above, to communicate the resume token to the client after the client's first negotiation of the `draft/resume-0.4` capability:
 
-    RESUME <oldnick>
+    RESUME TOKEN <token>
+
+The second form is `RESUME SUCCESS`, sent to indicate that a `RESUME` request has been successful:
+
+    RESUME SUCCESS <oldnick>
 
 `<oldnick>` is the nickname of the session being resumed. After receiving this message, the client MUST assume that this is their nickname.
 
 #### `RESUMED` Message
 This message is sent by the server to indicate that another client has reconnected:
 
-    :nick!user@oldhost RESUMED <host> [timestamp]
+    :nick!user@oldhost RESUMED <host> [status]
 
-`<nick>` and `<oldhost>` indicate the client that has reconnected, and are the details of the old client. `<host>` indicates the reconnecting client's new hostname, and the receiving client MUST process this information as they would from a regular [`CHGHOST`](https://ircv3.net/specs/extensions/chghost-3.2.html) message. `<timestamp>`, if given, is a timestamp of the form described above which indicates the last message received by the reconnecting clent.
+`<nick>` and `<oldhost>` indicate the client that has reconnected, and are the details of the old client. `<host>` indicates the reconnecting client's new hostname, and the receiving client MUST process this information as they would from a regular [`CHGHOST`](https://ircv3.net/specs/extensions/chghost-3.2.html) message.
+
+The `[status]` parameter is used to indicate the server's belief about how much history was lost. If it is the string `ok`, this means the server believes no history was lost, i.e., any messages that were missed will be replayed to the client. If it is a timestamp, then the client may have lost history messages that were sent between that time and the resumption. If it is omitted, then the client may have lost an unknown amount of history.
 
 Upon receiving a `RESUMED` message, clients SHOULD display in some way that the given user has reconnected (as message history may have been lost and the users' chat may have been interrupted). If `<timestamp>` is given, clients SHOULD use this to display how much message history seems to have been lost.
 
+As a substitute for the `RESUMED` message, if the server believes that history may have been lost, clients lacking the `draft/resume-0.4` capability MUST be sent consecutive `QUIT` and `JOIN` lines whose messages describe the reconnection; the messages SHOULD carry information about whether history was lost, and if so how much. However, if the server believes that no history was lost, it MAY either send `QUIT` and `JOIN` lines indicating this, or else send no notification at all.
 
 ### BRB Messages
 
@@ -143,7 +156,7 @@ On a successful request, the server:
 4. Replays the client's session to the new client.
 5. Sends `RESUMED` or `QUIT`+`JOIN` messages to other clients as appropriate.
 6. Sends clients that have the reconnecting user `MONITOR`'d one `RPL_MONOFFLINE` numeric and one `RPL_MONONLINE` numeric indicating that the user has reconnected. The timestamps on both these messages, if sent, SHOULD be the current time.
-7. If message history could not be replayed (because it is not stored, or for any other reason), sends the new client a `RESUME WARN` message making them aware of this.
+7. If message history could not be replayed (because it is not stored, or for any other reason), sends the new client a `WARN RESUME HISTORY_LOST` message making them aware of this.
 
 On a successful request, the session information that MUST be applied from the old client and replayed includes, but is not limited to:
 
@@ -280,11 +293,15 @@ Right now, when clients detect that their connection to the server may have drop
 
 In addition, users sometimes manually reconnect when they see that there is lag on their connection. In these cases, clients may also wish to do the above rather than closing the connection and then reconnecting.
 
+If the server supports the `server-time` capability, clients should use those values to calculate their `RESUME` timestamp parameter. This provides greater resiliency against lag and clock skew between client and server.
+
 When clients see a `RESUMED` message for another client which contains a timestamp, they can calculate how much time has passed since the timestamp and the current time and then display this next to the reconnect notice. Displaying this can assist users in knowing how much message history has been lost in private queries and channels.
 
 A client that disconnects and reconnects to the server should explicitly display the reconnection, even if they're able to resume successfully. This is so that the user knows why they may be missing message history and similar issues.
 
 Servers may wish to check the new hostmask of resuming clients, to ensure that it does not fall under their list of banned hosts or hostmasks.
+
+In case of network instability, a client may be uncertain which token to submit. For example, if the client attempted to resume, received a new token, submitted the old token, and then lost their connection again without receiving a response, the client will be uncertain whether the token was accepted and processed (in which case further `RESUME` attempts should use the new token) or whether it was never received (in which case further `RESUME` attempts should retransmit the old token). In this case, the client may wish to respond to `INVALID_TOKEN` by trying a different token. Although the server must choose cryptographically secure tokens that are intractable for a client to guess by means of repeated `RESUME` attempts, they may wish to restrict the total number of attempts allowed (per client connection) for performance or security hardening reasons, or even allow a maximum of one attempt.
 
 
 ## Security Considerations
