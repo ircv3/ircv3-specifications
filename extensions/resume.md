@@ -23,24 +23,24 @@ The `resume` feature vastly simplifies this form of reconnection, for both the c
 
 
 ## Architecture
-This feature is enabled using the `draft/resume-0.4` capability, introduces the `RESUME` command, and uses the messages described below to convey state about the reconnection process and reconnecting clients. It also introduces the `BRB` command, which allows clients to close their connection while leaving their session on the server open for some time (to perform software upgrades, for example).
+This feature is enabled using the `draft/resume-0.5` capability, introduces the `RESUME` command, and uses the messages described below to convey state about the reconnection process and reconnecting clients. It also introduces the `BRB` command, which allows clients to close their connection while leaving their session on the server open for some time (to perform software upgrades, for example).
 
 These commands use the [standard replies extension](https://github.com/ircv3/ircv3-specifications/pull/357) to relay warning information and indicate when they are not successful. The specific `FAIL` codes are given with each command's description.
 
 
 ### Capabilities
-The `draft/resume-0.4` capability is advertised by servers that support resuming connections.
+The `draft/resume-0.5` capability is advertised by servers that support resuming connections.
 
 When this capability is negotiated, the server sends the client their resume token, which is used to authenticate future connection resumptions. Servers MAY extend the "ping timeout" length for that client (with the expectation that if the client disconnects, it will try to resume its connection as described here). Servers MAY also treat disconnections without `QUIT` as though the client used the `BRB` command described below.
 
-Servers MUST ONLY generate and provide a resume token to a client when the client negotiates the `draft/resume-0.4` capability.
+Servers MUST ONLY generate and provide a resume token to a client when the client negotiates the `draft/resume-0.5` capability.
 
 Capability negotiation example:
 
     C: CAP LS
-    S: CAP * LS :multi-prefix draft/resume-0.4
-    C: CAP REQ :draft/resume-0.4
-    S: CAP * ACK :draft/resume-0.4
+    S: CAP * LS :multi-prefix draft/resume-0.5
+    C: CAP REQ :draft/resume-0.5
+    S: CAP * ACK :draft/resume-0.5
     S: RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt87Bb0YaQlyOzuQciz6cB2R
 
 
@@ -75,7 +75,7 @@ If the request is successful, the server may also send a `WARN RESUME` message w
 | `HISTORY_LOST` | `:<server> WARN RESUME HISTORY_LOST :Up to 30 seconds of history may have been lost` |
 
 #### `RESUME` Message
-This message is sent from the server to the client and has two forms, `RESUME TOKEN` and `RESUME SUCCESS`. `RESUME TOKEN` is used as described above, to communicate the resume token to the client after the client's first negotiation of the `draft/resume-0.4` capability:
+This message is sent from the server to the client and has two forms, `RESUME TOKEN` and `RESUME SUCCESS`. `RESUME TOKEN` is used as described above, to communicate the resume token to the client after the client's first negotiation of the `draft/resume-0.5` capability:
 
     RESUME TOKEN <token>
 
@@ -96,7 +96,7 @@ The `[status]` parameter is used to indicate the server's belief about how much 
 
 Upon receiving a `RESUMED` message, clients SHOULD display in some way that the given user has reconnected (as message history may have been lost and the users' chat may have been interrupted). If `<timestamp>` is given, clients SHOULD use this to display how much message history seems to have been lost.
 
-The `RESUMED` message can only be sent to clients that have negotiated the `draft/resume-0.4` capability. Clients taht have not negotiated this MUST be either sent consecutive `QUIT` and `JOIN` messages that describe the reconnection (and how much history may have been lost), or no notification at all if no history has been lost.
+The `RESUMED` message can only be sent to clients that have negotiated the `draft/resume-0.5` capability. Clients taht have not negotiated this MUST be either sent consecutive `QUIT` and `JOIN` messages that describe the reconnection (and how much history may have been lost), or no notification at all if no history has been lost.
 
 ### BRB Messages
 
@@ -128,12 +128,12 @@ After this message is returned, the client's connection to the server is immedia
 
 
 ## Capability Negotiation
-The first step in successfully resuming a connection is for the 'old client' to negotiate the `draft/resume-0.4` capability and receive a resume token. This process is illustrated here:
+The first step in successfully resuming a connection is for the 'old client' to negotiate the `draft/resume-0.5` capability and receive a resume token. This process is illustrated here:
 
     C: CAP LS
-    S: CAP * LS :multi-prefix draft/resume-0.4
-    C: CAP REQ :draft/resume-0.4
-    S: CAP * ACK :draft/resume-0.4
+    S: CAP * LS :multi-prefix draft/resume-0.5
+    C: CAP REQ :draft/resume-0.5
+    S: CAP * ACK :draft/resume-0.5
     S: RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt87Bb0YaQlyOzuQciz6cB2R
 
 Considerations around tokens and the process for generating them is described below in the [Resume Token](#resume-token) section.
@@ -142,7 +142,7 @@ Considerations around tokens and the process for generating them is described be
 ## Resuming A Connection
 When a client detects that it has become disconnected from a server, it SHOULD try to resume before it breaks the existing connection.
 
-Upon establishing the new connection, the client begins capability negotiation, negotiates all mutually-supported capabilities, and MUST confirm that the `draft/resume-0.4` capability exists. If this capability does not exist, the client continues connection registration without attempting to resume. If this capability does exist, the client sends the `RESUME` command and MUST wait for either a `RESUME` or a `FAIL RESUME` message from the server before continuing registration. It should be noted that the client MUST NOT perform SASL authentication if the `draft/resume-0.4` capability exists and they wish to resume their session, as completing SASL auth will end connection registration and abort the resumption attempt.
+Upon establishing the new connection, the client begins capability negotiation, negotiates all mutually-supported capabilities, and MUST confirm that the `draft/resume-0.5` capability exists. If this capability does not exist, the client continues connection registration without attempting to resume. If this capability does exist, the client sends the `RESUME` command and MUST wait for either a `RESUME` or a `FAIL RESUME` message from the server before continuing registration. It should be noted that the client MUST NOT perform SASL authentication if the `draft/resume-0.5` capability exists and they wish to resume their session, as completing SASL auth will end connection registration and abort the resumption attempt.
 
 If the token provided by the new client is validated by the server, the old client completed connection registration with the server, and both the old and new clients use TLS, then the attempt SHOULD be successful. If the attempt is successful, the server MUST send the client a `RESUME` message and complete connection registration immediately (at which time the state will begin to replay as described below). If the attempt is unsuccessful (for example, if either session is not using a secure connection), the server MUST send a `FAIL RESUME` message, and then allow the client to continue connection registration.
 
@@ -208,9 +208,9 @@ Successful `RESUME` attempt from a client with the nick `dan` reconnecting. The 
     C2 - C: CAP LS
     C2 - C: NICK dan-backup-nick
     C2 - C: USER d * 0 :An example user!
-    C2 - S: :irc.example.com CAP * LS :multi-prefix draft/resume-0.4 sasl
-    C2 - C: CAP REQ :multi-prefix draft/resume-0.4 sasl
-    C2 - S: :irc.example.com CAP dan-backup-nick ACK :multi-prefix draft/resume-0.4 sasl
+    C2 - S: :irc.example.com CAP * LS :multi-prefix draft/resume-0.5 sasl
+    C2 - C: CAP REQ :multi-prefix draft/resume-0.5 sasl
+    C2 - S: :irc.example.com CAP dan-backup-nick ACK :multi-prefix draft/resume-0.5 sasl
     C2 - S: :irc.example.com RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt8
     C2 - C: RESUME A8KgnZPYDaRiGMzZWLu2frVvtN7lbCxO3hTwGLO 2017-04-13T15:12:51.620Z
     C2 - S: :irc.example.com RESUME dan
@@ -224,13 +224,13 @@ Successful `RESUME` attempt from a client with the nick `dan` reconnecting. The 
     C2 - S: :irc.example.com 353 dan @ #test :@dan @george +violet roger
     C2 - S: :irc.example.com MODE #test +o dan
 
-Here is this successful reconnection seen by `george`, a client that does not have the `draft/resume-0.4` capability enabled:
+Here is this successful reconnection seen by `george`, a client that does not have the `draft/resume-0.5` capability enabled:
 
     S: :dan!~u@192.168.0.5 QUIT :Client reconnected (24 seconds of message history lost)
     S: :dan!~u@10.0.0.3 JOIN #test
     S: :irc.example.com MODE #test +o dan
 
-And here is this reconnection seen by `violet`, a client that has the `draft/resume-0.4` capability:
+And here is this reconnection seen by `violet`, a client that has the `draft/resume-0.5` capability:
 
     S: :dan!~old@192.168.0.5 RESUMED 10.0.0.3 2017-04-13T15:12:51.620Z
 
@@ -246,9 +246,9 @@ Failed `RESUME` attempt from a client with the nick `dan` reconnecting. The nick
     C2 - C: CAP LS
     C2 - C: NICK dan-backup-nick
     C2 - C: USER d * 0 :An example user!
-    C2 - S: :irc.example.com CAP * LS :multi-prefix draft/resume-0.4 sasl
-    C2 - C: CAP REQ :multi-prefix draft/resume-0.4 sasl
-    C2 - S: :irc.example.com CAP dan-backup-nick ACK :multi-prefix draft/resume-0.4 sasl
+    C2 - S: :irc.example.com CAP * LS :multi-prefix draft/resume-0.5 sasl
+    C2 - C: CAP REQ :multi-prefix draft/resume-0.5 sasl
+    C2 - S: :irc.example.com CAP dan-backup-nick ACK :multi-prefix draft/resume-0.5 sasl
     C2 - S: :irc.example.com RESUME TOKEN JKbAypzFiovffzuD8VEfcs6bOLrXsSenxsyZNt8
     C2 - C: RESUME A8KgnZPYDaRiGMzZWLu2frVvtN7lbCxO3hTwGLO 2017-04-13T15:12:51.620Z
     C2 - S: :irc.example.com FAIL RESUME INVALID_TOKEN :Cannot resume connection, token is not valid
