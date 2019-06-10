@@ -88,6 +88,23 @@ Servers SHOULD be prepared to offer secure connections for the long term when en
 
 Preload list providers SHOULD consider STS persistence policy durations and MAY set minimum duration requirements prior to inclusion. Clients using preload lists SHOULD consider how their release cycle compares to any duration requirements imposed by list providers.
 
+### Project Aliases and Matching
+
+Sometimes, third-parties create domain aliases that point towards IRC networks (for example, setting `irc.ircv3.net` as a `CNAME` of `irc.example.com`). Unfortunately, this means that TLS certificate validation does not work on the alias, and the network will not be able to use STS without breaking clients that do connect using the alias (e.g. if a user connects via `irc.ircv3.net`, they will not be able to validate the TLS certificate as the cert is valid for `irc.example.com`).
+
+Networks that require this sort of control over incoming connections can advertise these two keys, and not advertise the `port` key described above:
+
+- `if-host-match`: Space-separated list of hostnames and hostname patterns to match against. This uses regular IRC 'glob' syntax, where `?` matches any single character and `*` matches zero or more characters.
+- `port-if-match`: This is the port to connect to.
+
+If the hostname that the client connected to is matched by the `if-host-match` list, then the client follows the regular STS process using the `port-if-match` key as the TLS port to connect to.
+
+Using these two keys and not advertising the `port` key means that only clients who understand how to process the `if-host-match` key will follow the STS policy.
+
+Example 1: `irc.ircv3.net` is an alias of the canonical server `irc.example.com`. Alice connects to `irc.ircv3.net` and sees the capability: `"sts=duration=1,if-host-match=*.example.com,port-if-match=6697"`. Because Alice connected to `irc.ircv3.net` and does not see a pattern matching that, Alice does not perform an STS upgrade.
+
+Example 2: Alice connects to `irc.example.com` and sees the capability: `"sts=duration=1,if-host-match=*.example.net\s*.example.com,port-if-match=6697"`. The pattern `*.example.com` matches `irc.example.com`, so Alice connects to port `6697` and follows the STS process as usual.
+
 ### Server Name Indication
 
 Before advertising an STS persistence policy over a secure connection, servers SHOULD verify whether the hostname provided by clients, for example, via TLS Server Name Indication (SNI), has been whitelisted by administrators in the server configuration.
