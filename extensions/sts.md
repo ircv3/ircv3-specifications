@@ -332,3 +332,10 @@ A client securely connects to a server, which advertises an STS policy and opts 
 
     Secure Client: CAP LS 302
            Server: CAP * LS :sts=duration=2592000,preload
+
+
+## Errata
+
+New versions of this specification add the `if-host-match` and `port-if-match` keys, which allows some installations to not advertise the `port` key.
+
+Previous versions of this specification only implied that clients ignore poicies that do not include required keys. The specification now explicitly states that clients ignore these invalid policies.
