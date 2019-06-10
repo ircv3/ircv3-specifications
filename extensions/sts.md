@@ -40,6 +40,8 @@ An STS policy has several parts:
 * A **persistence policy**, expressed via the [`duration` key](#the-duration-key) over a secure connection. *REQUIRED*
 * A **preload policy**, expressed via the [`preload` key](#the-preload-key) over a secure connection. *OPTIONAL*
 
+If any required key does not exist, clients MUST silently ignore the policy.
+
 See the [capability negotiation](../core/capability-negotiation.html) specification for more information about capabilities with values.
 
 ### Mechanism
