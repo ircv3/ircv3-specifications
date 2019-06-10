@@ -94,7 +94,7 @@ Sometimes, third-parties create domain aliases that point towards IRC networks (
 
 Networks that require this sort of control over connection upgrades can advertise these two keys. Servers that advertise these two keys MUST NOT advertise the regular `port` key:
 
-- `if-host-match`: Space-separated list of hostnames and hostname patterns to match against. This uses regular IRC 'glob' syntax, where `?` matches any single character and `*` matches zero or more characters.
+- `if-host-match`: Semicolon-separated list of hostnames and hostname patterns to match against. This uses regular IRC 'glob' syntax, where `?` matches any single character and `*` matches zero or more characters.
 - `port-if-match`: This is the port to connect to.
 
 If the hostname that the client connected to is matched by the `if-host-match` list, the client MUST follow the regular STS process using the `port-if-match` key as the TLS port to connect to.
@@ -103,7 +103,7 @@ Advertising these two keys and not advertising the `port` key means that only cl
 
 Example 1: `irc.ircv3.net` is an alias of the canonical server `irc.example.com`. Alice connects to `irc.ircv3.net` and sees the capability: `"sts=duration=1,if-host-match=*.example.com,port-if-match=6697"`. Because Alice connected to `irc.ircv3.net` and does not see a pattern matching that, Alice does not perform an STS upgrade.
 
-Example 2: Alice connects to `irc.example.com` and sees the capability: `"sts=duration=1,if-host-match=*.example.net\s*.example.com,port-if-match=6697"`. The pattern `*.example.com` matches `irc.example.com`, so Alice connects to port `6697` and follows the STS process as usual.
+Example 2: Alice connects to `irc.example.com` and sees the capability: `"sts=duration=1,if-host-match=*.example.net;*.example.com,port-if-match=6697"`. The pattern `*.example.com` matches `irc.example.com`, so Alice connects to port `6697` and follows the STS process as usual.
 
 ### Server Name Indication
 
