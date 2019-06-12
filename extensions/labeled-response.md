@@ -17,10 +17,7 @@ copyrights:
 
 This is a work-in-progress specification.
 
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `label` tag or `labeled-response` CAP/batch names. Instead, implementations
-SHOULD use the `draft/label` tag and the `draft/labeled-response` CAP/batch names to be
-interoperable with other software implementing a compatible work-in-progress version.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `label` tag or `labeled-response` CAP/batch names. Instead, implementations SHOULD use the `draft/label` tag, `draft/labeled-response-0.2` CAP and `draft/labeled-response` batch names to be interoperable with other software implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed tag name.
 
@@ -44,7 +41,7 @@ This specification uses the [message tags framework](../extensions/message-tags.
 
 ### Capabilities
 
-This specification adds the `draft/labeled-response` capability.
+This specification adds the `draft/labeled-response-0.2` capability.
 
 Clients requesting this capability indicate that they are capable of handling the message tag described below from servers.
 
@@ -67,8 +64,6 @@ If a response consists of more than one message, and the `batch` capability is e
 * An existing type applicable to the entire response
 * `draft/labeled-response`
 
-If no response is required, an empty batch MUST be sent.
-
 If `batch` has not been enabled, the tag MAY be included on only one of the messages in the response.
 
 When a client sends a message to itself, the server MUST NOT include the label tag, except for any acknowledgment sent with the [`echo-message`](/specs/extensions/echo-message-3.2.html) mechanism. This allows clients to differentiate between the echoed message response, and the delivered message.
@@ -76,6 +71,12 @@ When a client sends a message to itself, the server MUST NOT include the label t
 #### Tag value
 
 The tag value is chosen by the client and MUST be treated as an opaque identifier. The client SHOULD NOT reuse a tag value until it has received a complete response for that value from the server. The value MUST NOT exceed 64 bytes.
+
+### The `ACK` response
+
+Servers MUST respond with a labeled `ACK` message when a client sends a labeled command that normally produces no response. It takes no additional parameters and is defined as follows
+
+    :irc.example.com ACK
 
 ## Client implementation considerations
 
@@ -126,6 +127,12 @@ Failed `PRIVMSG` with `ERR_NOSUCHNICK`
     ...
     Server: @batch=NMzYSq45x :irc.example.com 318 client nick :End of /WHOIS list.
     Server: :irc.example.com BATCH -NMzYSq45x
+
+A server replying with `ACK` where no response is required
+
+    Server: PING :foobar
+    Client: @label=abc PONG :foobar
+    Server: @label=abc :irc.example.com ACK
 
 ## Alternatives
 
