@@ -11,13 +11,17 @@ copyrights:
     name: "James Wheare"
     period: "2016"
     email: "james@irccloud.com"
+  -
+    name: "Ryan Heywood"
+    period: "2019"
+    email: "ryan@hashbang.sh"
 ---
 
 ## Notes for implementing work-in-progress version
 
 This is a work-in-progress specification.
 
-Software implementing this work-in-progress specification MUST NOT use the unprefixed `label` tag or `labeled-response` CAP/batch names. Instead, implementations SHOULD use the `draft/label` tag, `draft/labeled-response-0.2` CAP and `draft/labeled-response` batch names to be interoperable with other software implementing a compatible work-in-progress version.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `label` tag or `labeled-response` CAP/batch names. Instead, implementations SHOULD use the `draft/label` tag, `draft/labeled-response-0.3` CAP and `draft/labeled-response` batch names to be interoperable with other software implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed tag name.
 
@@ -37,15 +41,17 @@ Additionally, labeled responses allow bouncers with multiple connected clients t
 
 ### Dependencies
 
-This specification uses the [message tags framework](../extensions/message-tags.html) and the [`batch`](../extensions/batch-3.2.html) capability which SHOULD be negotiated at the same time.
+This specification uses the [message tags framework](../extensions/message-tags.html) and capability which SHOULD be negotiated before or during the current negotiation.
+
+This specification uses the [`batch`](../extensions/batch-3.2.html) capability which MUST be negotiated before or during the current negotiation.
 
 ### Capabilities
 
-This specification adds the `draft/labeled-response-0.2` capability.
+This specification adds the `draft/labeled-response-0.3` capability.
 
-Clients requesting this capability indicate that they are capable of handling the message tag described below from servers.
+Clients requesting this capability indicate that they are capable of handling the message tag, batch type, and `ACK` response described below from servers.
 
-Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, and will use the same tag and value in their response.
+Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, will use the same tag and value in their response, are capable of sending the `ACK` response when no normal output is produced, and are capable of sending the batch type described below for responses with multiple linese.
 
 ### Batch types
 
@@ -59,12 +65,10 @@ This tag MAY be sent by a client for any messages that need to be correlated wit
 
 For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message where it is feasible to do so. Servers MUST include the tag in exactly one logical message.
 
-If a response consists of more than one message, and the `batch` capability is enabled, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
+If a response consists of more than one message, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
 
 * An existing type applicable to the entire response
 * `draft/labeled-response`
-
-If `batch` has not been enabled, the tag MAY be included on only one of the messages in the response.
 
 When a client sends a message to itself, the server MUST NOT include the label tag, except for any acknowledgment sent with the [`echo-message`](/specs/extensions/echo-message-3.2.html) mechanism. This allows clients to differentiate between the echoed message response, and the delivered message.
 
