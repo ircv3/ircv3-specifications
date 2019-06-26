@@ -34,7 +34,7 @@ Servers MAY attach this tag on any event. If this tag is being used, it SHOULD b
 
 The tag value MUST be a unique ID chosen by the originating server. Uniqueness in this context means that any other message transmitted on the entire network at any time MUST NOT share the same value.
 
-To allow their use outside the tag space, e.g. as command parameters, message IDs MUST NOT start with a colon (`:`) and MUST NOT contain any of the following bytes: `SPACE`, `NUL`, `CR`, `LF`.
+To allow their use outside the tag space, e.g. as command parameters, message IDs MUST NOT start with a colon (`:`) and MUST NOT contain any of `SPACE`, `CR`, `LF`.
 
 However, if a message is re-transmitted as-is, for example with the [`chathistory`](./batch/chathistory-3.3.html) batch type, the ID SHOULD be reused. As a result, clients MUST accept shared IDs.
 
