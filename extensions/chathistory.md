@@ -84,9 +84,9 @@ Requesting the latest conversation upon joining a channel
 ~~~~
 [c] CHATHISTORY LATEST #channel * 50
 [s] :irc.host BATCH +ID chathistory #channel
-[s] @batch=ID;draft/msgid=1234;time=2019-01-04T14:33:26.123Z :nick!ident@host PRIVMSG #channel :message
-[s] @batch=ID;draft/msgid=1235;time=2019-01-04T14:33:38.123Z :nick!ident@host NOTICE #channel :message
-[s] @batch=ID;draft/msgid=1238;time=2019-01-04T14:34:17.123Z;+client_tag=val :nick!ident@host PRIVMSG #channel :ACTION message
+[s] @batch=ID;msgid=1234;time=2019-01-04T14:33:26.123Z :nick!ident@host PRIVMSG #channel :message
+[s] @batch=ID;msgid=1235;time=2019-01-04T14:33:38.123Z :nick!ident@host NOTICE #channel :message
+[s] @batch=ID;msgid=1238;time=2019-01-04T14:34:17.123Z;+client_tag=val :nick!ident@host PRIVMSG #channel :ACTION message
 [s] :irc.host BATCH -ID
 ~~~~
 
@@ -94,9 +94,9 @@ Requesting further message history than our client currently has
 ~~~~
 [c] CHATHISTORY BEFORE bob timestamp=2019-01-04T14:34:17.123Z 50
 [s] :irc.host BATCH +ID chathistory bob
-[s] @batch=ID;draft/msgid=1234;time=2019-01-04T14:34:09.123Z :bob!ident@host PRIVMSG alice :hello
-[s] @batch=ID;draft/msgid=1235;time=2019-01-04T14:34:10.123Z :alice!ident@host PRIVMSG bob :hi! how are you?
-[s] @batch=ID;draft/msgid=1238;time=2019-01-04T14:34:16.123Z; :bob!ident@host PRIVMSG alice :I'm good, thank you!
+[s] @batch=ID;msgid=1234;time=2019-01-04T14:34:09.123Z :bob!ident@host PRIVMSG alice :hello
+[s] @batch=ID;msgid=1235;time=2019-01-04T14:34:10.123Z :alice!ident@host PRIVMSG bob :hi! how are you?
+[s] @batch=ID;msgid=1238;time=2019-01-04T14:34:16.123Z; :bob!ident@host PRIVMSG alice :I'm good, thank you!
 [s] :irc.host BATCH -ID
 ~~~~
 
