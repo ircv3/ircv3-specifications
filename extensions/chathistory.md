@@ -33,7 +33,9 @@ The `chathistory` command uses the following general syntax structure:
 
     CHATHISTORY <subcommand> <target> <timestamp | msgid> <limit>
 
-The `target` parameter specifies a single buffer (channel or query name) from which history SHOULD be retrieved. Any `timestamp` values or parameters MUST be in the format of `YYYY-MM-DDThh:mm:ss.sssZ`.
+The `target` parameter specifies a single buffer (channel or nickname) from which history SHOULD be retrieved. Any `timestamp` values or parameters MUST be in the format of `YYYY-MM-DDThh:mm:ss.sssZ`.
+
+If a nickname is given as the `target` then the server SHOULD include history sent between both the current user and the target nickname as to give a full conversation. The server SHOULD attempt to include history involving other nicknames if either the current user or the target nickname has changed during the requested timeframe.
 
 #### Subcommands
 
@@ -51,7 +53,9 @@ Request up to `limit` number of messages after and excluding the given `timestam
 
 #### `LATEST`
     CHATHISTORY LATEST <target> <* | timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
-Request the most recent messages that have been sent since the given `timestamp` or `msgid`. If a `*` is given instead of a timestamp or msgid, the server MUST use the current time as a timestamp. The number of messages returned MUST be equal to or less than `limit`. Only one timestamp or msgid MUST be given, not both.
+Request the most recent messages that have been sent after and excluding the given `timestamp` or `msgid`. If a `*` is given instead of a timestamp or msgid, the server MUST use the current time as a timestamp. The number of messages returned MUST be equal to or less than `limit`. If a `*` is not given, only one timestamp or msgid MUST be given, not both.
+
+This is useful for retrieving the latest conversation when first joining a channel or opening a query buffer.
 
 #### `AROUND`
     CHATHISTORY AROUND <target> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
