@@ -34,6 +34,8 @@ Servers MAY attach this tag on any event. If this tag is being used, it SHOULD b
 
 The tag value MUST be a unique ID chosen by the originating server. Uniqueness in this context means that any other message transmitted on the entire network at any time MUST NOT share the same value.
 
+To allow their use outside the tag space, e.g. as command parameters, message IDs MUST NOT start with a colon (`:`) and MUST NOT contain any of `SPACE`, `CR`, `LF`.
+
 However, if a message is re-transmitted as-is, for example with the [`chathistory`](./batch/chathistory-3.3.html) batch type, the ID SHOULD be reused. As a result, clients MUST accept shared IDs.
 
 Clients MUST treat the ID as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
@@ -118,3 +120,7 @@ A client negotiating the `message-tags` capability to enable and disable message
     C: CAP REQ -message-tags
     S: :irc.example.com CAP me ACK :-message-tags
     S: :nick!user@host PRIVMSG #channel :Another hello
+
+## Errata
+
+Previous versions of this specification did not describe forbidden message ID bytes.
