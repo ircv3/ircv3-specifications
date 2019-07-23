@@ -95,7 +95,7 @@ But there is also a generic capability for negotiating tag usage.
 The `message-tags` capability allows clients to indicate support for
 receiving any well-formed tag, whether or not it is recognised or used. It also frees servers from having to filter individual message tags for each client response.
 
-Capabilities that implicitly depend on the tag format do not guarantee support for all well-formed tags.
+The `message-tags` capability is the only guarantee that an implementation supports the full tag format. Following the robustness principle, implementations that use tags MUST support the full message tag format. However, implementations SHOULD NOT assume support for all tags when an individual tag capability is negotiated.
 
 This capability enables the use of client-only tags and the `TAGMSG` command, described below.
 
