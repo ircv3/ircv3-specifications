@@ -54,7 +54,7 @@ Individual tag keys MUST only be used a maximum of once per message. Implementat
 
 Implementations MUST treat tag key names as opaque identifiers and MUST NOT perform any validation that would reject the message if an invalid tag key name is used. This allows future modifications to the tag key name format.
 
-Tag values MUST be encoded as UTF8. This ensures a shared interoperable baseline for data exchange. If tag values are encountered that cannot be decoded as UTF8, implementations MAY drop the value entirely, or substitute replacement bytes in place of invalid data.
+Tag values MUST be encoded as UTF8. This ensures a shared interoperable baseline for data exchange. If tag values are encountered that cannot be decoded as UTF8, implementations MAY drop the value entirely but MUST NOT substitute replacement bytes in place of invalid data.
 
 Implementations MUST interpret empty tag values (e.g. `foo=`) as equivalent to missing tag values (e.g. `foo`). Specifications MUST NOT differentiate meaning between tags with empty and missing values. Implementations MAY normalise tag values by converting the empty form to the missing form, but MUST NOT convert values from missing to empty, to prevent size limit issues.
 
