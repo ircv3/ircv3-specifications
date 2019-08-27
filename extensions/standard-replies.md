@@ -40,7 +40,7 @@ Here's what each parameter means:
 
 `<command>` is a case-insensitive, required parameter which is either a command name (e.g. `MODE`, `AUTHENTICATE`, `NICK`, etc), or is `*` to indicate a message that was not spawned from a particular command. This message SHOULD also be given a [label](./labeled-response.html), if one was provided by the client with the original command that spawned this reply.
 
-`<code>` is a case-insensitive, required parameter which lets the client software handle the message appropriately. The [IRCv3 Reply Code Registry](http://ircv3.net/registry.html#reply-codes) lists the reply codes currently in use, and implementers MUST use an existing code if one is already defined.
+`<code>` is a case-insensitive, required parameter which lets the client software handle the message appropriately. The [IRCv3 Reply Code Registry](http://ircv3.net/registry.html) lists the reply codes currently in use, and implementers MUST use an existing code if one is already defined.
 
 Reply codes (especially more widely-applicable ones such as `NO_SUCH_NICK`) may require different action or mean different things when referring to different commands. Because of this, clients acting on an incoming reply code should also take the `<command>` into account, or ensure that the given `<code>` is intended to be globally-unique.
 
