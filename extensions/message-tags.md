@@ -45,7 +45,7 @@ The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is exte
     <key>           ::= [ <client_prefix> ] [ <vendor> '/' ] <key_name>
     <client_prefix> ::= '+'
     <key_name>      ::= <non-empty sequence of ascii letters, digits, hyphens ('-')>
-    <escaped_value> ::= <sequence of zero or more bytes except NUL, CR, LF, semicolon (`;`) and SPACE>
+    <escaped_value> ::= <sequence of zero or more utf8 characters except NUL, CR, LF, semicolon (`;`) and SPACE>
     <vendor>        ::= <host>
 
 The ordering of tags is not meaningful.
@@ -53,6 +53,8 @@ The ordering of tags is not meaningful.
 Individual tag keys MUST only be used a maximum of once per message. Implementations receiving messages with more than one occurrence of a tag key name SHOULD disregard all but the final occurrence.
 
 Implementations MUST treat tag key names as opaque identifiers and MUST NOT perform any validation that would reject the message if an invalid tag key name is used. This allows future modifications to the tag key name format.
+
+Tag values MUST be encoded as UTF8. This ensures a shared interoperable baseline for data exchange. If tag values are encountered that cannot be decoded as UTF8, implementations MAY drop the value entirely but SHOULD NOT substitute replacement bytes in place of invalid data, which can result in collisions.
 
 Implementations MUST interpret empty tag values (e.g. `foo=`) as equivalent to missing tag values (e.g. `foo`). Specifications MUST NOT differentiate meaning between tags with empty and missing values. Implementations MAY normalise tag values by converting the empty form to the missing form, but MUST NOT convert values from missing to empty, to prevent size limit issues.
 
@@ -344,6 +346,8 @@ clarified to help consistency across implementations.
 
 Previous versions of this spec did not specify the difference between empty and missing
 tag values.
+
+Previous versions of this spec did not specify the UTF8 encoding for tag values
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
 [privmsg]: https://tools.ietf.org/html/rfc2812#section-3.3.1
