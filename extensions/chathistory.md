@@ -80,7 +80,7 @@ If the server receives a `CHATHISTORY` command with missing parameters, the `NEE
 > FAIL CHATHISTORY NEED_MORE_PARAMS the_given_command :Missing parameters
 
 If no message history can be returned due to an error, the `MESSAGE_ERROR` error code SHOULD be returned.
-> FAIL CHATHISTORY MESSAGE_ERROR the_given_command [extra_context] :Messages could not be retrieved
+> FAIL CHATHISTORY MESSAGE_ERROR the_given_command the_given_target [extra_context] :Messages could not be retrieved
 
 ### Examples
 
