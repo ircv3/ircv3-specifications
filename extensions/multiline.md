@@ -7,6 +7,10 @@ copyrights:
     name: "James Wheare"
     period: "2019"
     email: "james@irccloud.com"
+contributors:
+  -
+    name: "jesopo"
+    email: "jess@jesopo.uk"
 ---
 
 ## Notes for implementing work-in-progress version
