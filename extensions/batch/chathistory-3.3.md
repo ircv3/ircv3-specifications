@@ -3,9 +3,9 @@ title: IRCv3 chathistory Batch Type
 layout: spec
 copyrights:
   -
-    name: "Peter Powell"
+    name: "Sadie Powell"
     period: "2015"
-    email: "petpow@saberuk.com"
+    email: "sadie@witchery.services"
 ---
 ## `chathistory` Batch Type
 
