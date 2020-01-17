@@ -92,7 +92,7 @@ Servers MUST use `FAIL` messages from the [standard replies][] framework to noti
 
 ### Message tags ([spec][message tags])
 
-Clients MUST only send non-`batch` tags on the opening BATCH command when sending multiline batches.
+Clients MUST NOT send tags other than `draft/multiline-concat` and `batch` on messages within the batch. In particular, all client-only tags associated with the message must be sent attached to the initial BATCH command.
 
 ### Message ids ([spec][message ids])
 
