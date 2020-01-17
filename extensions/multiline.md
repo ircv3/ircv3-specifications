@@ -214,9 +214,9 @@ Invalid multiline batch target
 
     Server: :irc.example.com FAIl BATCH MULTILINE_MAX_BYTES 40000 :Multiline batch max-bytes exceeded
 
-`max-bytes` exceeded multiline batch
+`max-lines` exceeded multiline batch
     
-    Server: CAP * LS :draft/multiline=max-lines=10
+    Server: CAP * LS :draft/multiline=max-bytes=40000,max-lines=10
 
     Client: BATCH +abc draft/multiline #channel
     Client: @batch=abc PRIVMSG #channel hello
