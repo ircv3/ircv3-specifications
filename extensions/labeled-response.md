@@ -37,7 +37,7 @@ Additionally, labeled responses allow bouncers with multiple connected clients t
 
 ### Dependencies
 
-This specification uses the [message tags framework](../extensions/message-tags.html) and the [`batch`](../extensions/batch-3.2.html) capability which SHOULD be negotiated at the same time.
+This specification uses the [message tags framework](../extensions/message-tags.html) and depends on the [`batch`](../extensions/batch-3.2.html) capability which MUST be negotiated to use labeled responses.
 
 ### Capabilities
 
@@ -59,12 +59,10 @@ This tag MAY be sent by a client for any messages that need to be correlated wit
 
 For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message where it is feasible to do so. Servers MUST include the tag in exactly one logical message.
 
-If a response consists of more than one message, and the `batch` capability is enabled, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
+If a response consists of more than one message, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
 
 * An existing type applicable to the entire response
 * `draft/labeled-response`
-
-If `batch` has not been enabled, the tag MAY be included on only one of the messages in the response.
 
 When a client sends a message to itself, the server MUST NOT include the label tag, except for any acknowledgment sent with the [`echo-message`](/specs/extensions/echo-message-3.2.html) mechanism. This allows clients to differentiate between the echoed message response, and the delivered message.
 
