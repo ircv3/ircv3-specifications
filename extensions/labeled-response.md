@@ -82,7 +82,14 @@ Servers MUST respond with a labeled `ACK` message when a client sends a labeled 
 
 This section is non-normative.
 
-Bear in mind that in some cases, it might not be feasible for servers to attach a label to a message, for instance on certain remote or asynchronous actions. Handle these cases as normal for a server with no support for labeled responses.
+There are some cases where a server might not produce a labeled response, or even an `ACK`. Consider the example of an asynchronous command such as a remote `WHOIS nick nick` query that's forwarded to one or more other servers. If the command fails, for instance due to a netsplit, there are several potential outcomes:
+
+* the local server notices that the remote server is unavailable and sends a labeled `ACK` instead of a `WHOIS` response.
+* the local server is unable to tell whether the remote server will respond or not and sends neither an `ACK` nor a `WHOIS` response.
+* the local server has already begun responding when the netsplit occurs, so the batched response ends early.
+* the local server receives a response from the remote server after the netsplit resolves, and sends a `WHOIS` response to the client, potentially without any label.
+
+Clients should handle these cases as they would normally for a server without support for labeled responses.
 
 In the case of `echo-message` (see example below), a client can use labeled responses to correlate a server's acknowledgment of their own messages with a temporary message displayed locally. The temporary message can be displayed to the user immediately in a pending state to reduce perceived lag, and then removed once a labeled response from the server is received.
 
