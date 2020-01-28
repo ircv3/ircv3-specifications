@@ -45,7 +45,7 @@ Reference tag MUST contain only ASCII letters, numbers, and/or hyphen, and MUST 
 The `type` parameter indicates how messages are associated.
 The meaning of the additional parameters (if any) depend on the type.
 
-The batched events MUST use `batch` message tag referring to the batch's reference tag.
+The batched events MUST use `batch` [message tag][] referring to the batch's reference tag.
 Messages before start and after end of a batch (including start and end messages of that batch) MUST NOT refer to that batch.
 
 For every started batch, server MUST end that batch.
@@ -120,6 +120,7 @@ Notice that PRIVMSG line will be processed when batch `outer` ends,
 because end of batch `inner` is tagged by batch `outer`.
 The order in which these two batches start doesn't matter.
 
+[message tag]: ../extensions/message-tags.html
 
 ## Errata
 

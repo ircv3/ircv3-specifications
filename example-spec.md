@@ -116,9 +116,9 @@ If there are multiple clients, you may find it useful to give a short descriptio
 example represents and use the following format instead:
 
     C1 - C: @draft/label=abc PRIVMSG nick :Hello
-    C1 - S: @draft/label=abc;draft/msgid=9tohry :dan!d@127.0.0.1 PRIVMSG nick :Hello
+    C1 - S: @draft/label=abc;msgid=9tohry :dan!d@127.0.0.1 PRIVMSG nick :Hello
 
-    C2 - S: @draft/msgid=9tohry :dan!d@127.0.0.1 PRIVMSG nick :Hello
+    C2 - S: @msgid=9tohry :dan!d@127.0.0.1 PRIVMSG nick :Hello
 
 Where `C1 -` refers to the client/server-sent messages on C1's connection, and `C2 -` refers
 to the same thing on C2's connection.

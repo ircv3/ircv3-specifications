@@ -27,7 +27,7 @@ Additionally, labeled responses allow bouncers with multiple connected clients t
 
 ### Dependencies
 
-This specification uses the [message tags framework](/specs/core/message-tags-3.2.html) and the [`batch`](/specs/extensions/batch-3.2.html) capability which SHOULD be negotiated at the same time.
+This specification uses the [message tags framework](../extensions/message-tags.html) and depends on the [`batch`](../extensions/batch-3.2.html) capability which MUST be negotiated to use labeled responses.
 
 ### Capabilities
 
@@ -47,26 +47,37 @@ This specification adds the `label` message tag, which has a required value.
 
 This tag MAY be sent by a client for any messages that need to be correlated with a response from the server.
 
-For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message. Servers MUST include the tag in exactly one logical message.
+For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message where it is feasible to do so. Servers MUST include the tag in exactly one logical message.
 
-If a response consists of more than one message, and the `batch` capability is enabled, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `label` tag. The batch type MUST be one of:
+If a response consists of more than one message, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `label` tag. The batch type MUST be one of:
 
 * An existing type applicable to the entire response
 * `labeled-response`
 
-If no response is required, an empty batch MUST be sent.
-
-If `batch` has not been enabled, the tag MAY be included on only one of the messages in the response.
-
-When a client sends a message to itself, the server MUST NOT include the label tag, except for any acknowledgment sent with the [`echo-message`](/specs/extensions/echo-message-3.2.html) mechanism. This is because the delivered message is not a response, but a side effect.
+When a client sends a message to itself, the server MUST NOT include the label tag, except for any acknowledgment sent with the [`echo-message`](/specs/extensions/echo-message-3.2.html) mechanism. This allows clients to differentiate between the echoed message response, and the delivered message.
 
 #### Tag value
 
-The tag value is chosen by the client and MUST be treated as an opaque identifier. The client SHOULD NOT reuse a tag value until it has received a complete response for that value from the server.
+The tag value is chosen by the client and MUST be treated as an opaque identifier. The client SHOULD NOT reuse a tag value until it has received a complete response for that value from the server. The value MUST NOT exceed 64 bytes.
+
+### The `ACK` response
+
+Servers MUST respond with a labeled `ACK` message when a client sends a labeled command that normally produces no response. It takes no additional parameters and is defined as follows
+
+    :irc.example.com ACK
 
 ## Client implementation considerations
 
 This section is non-normative.
+
+There are some cases where a server might not produce a labeled response, or even an `ACK`. Consider the example of an asynchronous command such as a remote `WHOIS nick nick` query that's forwarded to one or more other servers. If the command fails, for instance due to a netsplit, there are several potential outcomes:
+
+* the local server notices that the remote server is unavailable and sends a labeled `ACK` instead of a `WHOIS` response.
+* the local server is unable to tell whether the remote server will respond or not and sends neither an `ACK` nor a `WHOIS` response.
+* the local server has already begun responding when the netsplit occurs, so the batched response ends early.
+* the local server receives a response from the remote server after the netsplit resolves, and sends a `WHOIS` response to the client, potentially without any label.
+
+Clients should handle these cases as they would normally for a server without support for labeled responses.
 
 In the case of `echo-message` (see example below), a client can use labeled responses to correlate a server's acknowledgment of their own messages with a temporary message displayed locally. The temporary message can be displayed to the user immediately in a pending state to reduce perceived lag, and then removed once a labeled response from the server is received.
 
@@ -111,6 +122,12 @@ Failed `PRIVMSG` with `ERR_NOSUCHNICK`
     ...
     Server: @batch=NMzYSq45x :irc.example.com 318 client nick :End of /WHOIS list.
     Server: :irc.example.com BATCH -NMzYSq45x
+
+A server replying with `ACK` where no response is required
+
+    Server: PING :foobar
+    Client: @label=abc PONG :foobar
+    Server: @label=abc :irc.example.com ACK
 
 ## Alternatives
 

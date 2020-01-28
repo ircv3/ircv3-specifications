@@ -16,11 +16,11 @@ This capability is designed to replace polling of WHO as a more
 efficient method of tracking the away state of users in a channel. The
 away-notify capability both conserves bandwidth as WHO requests are
 not continually sent and allows the client to be notified immediately
-upon a user setting or removing their away state (as opposed to when
+upon a user setting, changing or removing their away state (as opposed to when
 WHO is next polled).
 
 When this capability is enabled, clients will be sent an AWAY message
-when a user sharing a channel with them sets or removes their away
+when a user sharing a channel with them sets, changes or removes their away
 state, as well as when a user joins and has an away message set.
 (Note that AWAY will not be sent for joining users with no away
 message set.)

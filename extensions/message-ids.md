@@ -1,7 +1,6 @@
 ---
 title: IRCv3 Message IDs
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: "James Wheare"
@@ -9,24 +8,13 @@ copyrights:
     email: "james@irccloud.com"
 ---
 
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `msgid` tag name. Instead, implementations SHOULD use
-the `draft/msgid` tag name to be interoperable with other software
-implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed tag name.
-
 ## Introduction
 
 This specification describes a message tag indicating a server supplied unique ID for events.
 
 ## Motivation
 
-Communication on IRC has historically been limited to a flat structure of sequential messages without unique identifiers shared across clients. As a result, the protocol lacks an ability to establish relationships between messages and other entities. This places limits on client-side enhancements such as reply tracking, message editing, rating or sending other forms of message annotation.
+Communication on IRC has historically been limited to a flat structure of sequential messages without unique identifiers shared across clients. As a result, the protocol lacks the ability to establish relationships between messages and other entities. This places limits on client-side enhancements such as reply tracking, message editing, rating or sending other forms of message annotation.
 
 The message ID tag is a way for servers to enable these enhancements.
 
@@ -38,17 +26,19 @@ This specification doesn't define any capabilities of its own, but the [`message
 
 ### Tags
 
-This specification adds the `draft/msgid` tag, which has a required value.
+This specification adds the `msgid` tag, which has a required value.
 
 Servers MAY attach this tag on any event. If this tag is being used, it SHOULD be attached to all `PRIVMSG` and `NOTICE` events.
 
 #### Tag value
 
-The tag value is chosen by the originating server and MUST be unique, meaning any other message transmitted on the entire network at any time MUST NOT share the same value.
+The tag value MUST be a unique ID chosen by the originating server. Uniqueness in this context means that any other message transmitted on the entire network at any time MUST NOT share the same value.
+
+To allow their use outside the tag space, e.g. as command parameters, message IDs MUST NOT start with a colon (`:`) and MUST NOT contain any of `SPACE`, `CR`, `LF`.
 
 However, if a message is re-transmitted as-is, for example with the [`chathistory`](./batch/chathistory-3.3.html) batch type, the ID SHOULD be reused. As a result, clients MUST accept shared IDs.
 
-The tag value MUST be treated as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
+Clients MUST treat the ID as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
 
 ### Relationships with other specifications
 
@@ -75,6 +65,8 @@ Networks might also consider the risk of collisions when there's a chance of mer
 
 Although clients are required to treat IDs as case sensitive opaque values, servers might still choose a case insensitive ID format internally.
 
+Servers might wish to encode additional information within the ID, for internal use only. For instance, including account information for the author in an ID could enable authenticated message edits or deletes, without having to maintain and consult a separate message store. This requires careful attention to several concerns: security, privacy, and backwards and forwards compatibility of different ID generation schemes.
+
 ## Client implementation considerations
 
 This section is non-normative.
@@ -91,40 +83,44 @@ This section is non-normative, message IDs are not required to be UUIDs or have 
 
 A channel `PRIVMSG` sent by the server:
 
-    S: @draft/msgid=63E1033A051D4B41B1AB1FA3CF4B243E :nick!user@host PRIVMSG #channel :Hello!
+    S: @msgid=63E1033A051D4B41B1AB1FA3CF4B243E :nick!user@host PRIVMSG #channel :Hello!
 
 A private `PRIVMSG` sent by the server:
 
-    S: @draft/msgid=server1-1480339715754191-21 :nick!user@host PRIVMSG me :Hello!
+    S: @msgid=server1-1480339715754191-21 :nick!user@host PRIVMSG me :Hello!
 
 A channel `NOTICE` sent by the server:
 
-    S: @draft/msgid=G6PuDDBWQYmu3HmXXOAPzA :nick!user@host NOTICE #channel :Hello!
+    S: @msgid=G6PuDDBWQYmu3HmXXOAPzA :nick!user@host NOTICE #channel :Hello!
 
 A private `NOTICE` sent by the server:
 
-    S: @draft/msgid=ticketid-5 :nick!user@host NOTICE me :Hello!
+    S: @msgid=ticketid-5 :nick!user@host NOTICE me :Hello!
 
 A channel `JOIN` sent by the server:
 
-    S: @draft/msgid=msgid123 :nick!user@host JOIN #channel account :Real Name
+    S: @msgid=msgid123 :nick!user@host JOIN #channel account :Real Name
 
 A channel `PRIVMSG` sent by the server, and a possible client response. The `+example/reply` tag is a non-standard example:
 
-    S: @draft/msgid=msgid1 :nick!user@host PRIVMSG #channel :Hello!
+    S: @msgid=msgid1 :nick!user@host PRIVMSG #channel :Hello!
     C: @+example/reply=msgid1 :nick2!user2@host2 PRIVMSG #channel :Hello to you!
 
 Two channel `PRIVMSG` messages sent by the server, with possible non-standard example annotations to indicate split message concatenation:
 
-    S: @draft/msgid=msgid1;example/split :nick!user@host PRIVMSG #channel :Hello
-    S: @draft/msgid=msgid2;example/concat=msgid1 :nick!user@host PRIVMSG #channel : World
+    S: @msgid=msgid1;example/split :nick!user@host PRIVMSG #channel :Hello
+    S: @msgid=msgid2;example/concat=msgid1 :nick!user@host PRIVMSG #channel : World
 
 A client negotiating the `message-tags` capability to enable and disable messages tagged with IDs.
 
     S: :nick!user@host PRIVMSG #channel :Hello
     C: CAP REQ message-tags
     S: :irc.example.com CAP me ACK :message-tags
-    S: @draft/msgid=msgid-a :nick!user@host PRIVMSG #channel :Hello again
+    S: @msgid=msgid-a :nick!user@host PRIVMSG #channel :Hello again
     C: CAP REQ -message-tags
     S: :irc.example.com CAP me ACK :-message-tags
     S: :nick!user@host PRIVMSG #channel :Another hello
+
+## Errata
+
+Previous versions of this specification did not describe forbidden message ID bytes.
