@@ -1,7 +1,6 @@
 ---
 title: Labeled responses
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: "Alexey Sokolov"
@@ -12,15 +11,6 @@ copyrights:
     period: "2016"
     email: "james@irccloud.com"
 ---
-
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the unprefixed `label` tag or `labeled-response` CAP/batch names. Instead, implementations SHOULD use the `draft/label` tag, `draft/labeled-response-0.2` CAP and `draft/labeled-response` batch names to be interoperable with other software implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed tag name.
-
 ## Introduction
 
 This specification adds a new message tag sent by clients and repeated by servers to correlate responses with a specific request.
@@ -41,7 +31,7 @@ This specification uses the [message tags framework](../extensions/message-tags.
 
 ### Capabilities
 
-This specification adds the `draft/labeled-response-0.2` capability.
+This specification adds the `labeled-response` capability.
 
 Clients requesting this capability indicate that they are capable of handling the message tag described below from servers.
 
@@ -49,20 +39,20 @@ Servers advertising this capability indicate that they are capable of handling t
 
 ### Batch types
 
-This specification adds the `draft/labeled-response` batch type, described below.
+This specification adds the `labeled-response` batch type, described below.
 
 ### Tags
 
-This specification adds the `draft/label` message tag, which has a required value.
+This specification adds the `label` message tag, which has a required value.
 
 This tag MAY be sent by a client for any messages that need to be correlated with a response from the server.
 
 For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message where it is feasible to do so. Servers MUST include the tag in exactly one logical message.
 
-If a response consists of more than one message, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `draft/label` tag. The batch type MUST be one of:
+If a response consists of more than one message, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `label` tag. The batch type MUST be one of:
 
 * An existing type applicable to the entire response
-* `draft/labeled-response`
+* `labeled-response`
 
 When a client sends a message to itself, the server MUST NOT include the label tag, except for any acknowledgment sent with the [`echo-message`](/specs/extensions/echo-message-3.2.html) mechanism. This allows clients to differentiate between the echoed message response, and the delivered message.
 
