@@ -8,7 +8,7 @@ copyrights:
     email: "alexey-irc@asokolov.org"
   -
     name: "James Wheare"
-    period: "2016"
+    period: "2016-2020"
     email: "james@irccloud.com"
 ---
 ## Introduction
