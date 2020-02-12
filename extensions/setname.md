@@ -93,12 +93,12 @@ the reason:
 Complex realname with spaces
 
     C: SETNAME :Bruce Wayne <bruce@wayne.enterprises>
-    S: :batman@~batman!bat.cave SETNAME :Bruce Wayne <bruce@wayne.enterprises>
+    S: :batman!~batman@bat.cave SETNAME :Bruce Wayne <bruce@wayne.enterprises>
 
 Simple realname
 
     C: SETNAME Batman
-    S: :batman@~batman!bat.cave SETNAME Batman
+    S: :batman!~batman@bat.cave SETNAME Batman
 
 Example with realname rejected by the server
 
