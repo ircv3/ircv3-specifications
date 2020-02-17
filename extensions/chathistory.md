@@ -72,6 +72,8 @@ Request up to `limit` number of messages between the given `timestamp` or `msgid
 #### Returned message notes
 The order of returned messages within the batch is implementation-defined, but SHOULD be ascending time order or some approximation thereof. The `server-time` tag on each message SHOULD be the time at which the message was received by the IRC server. The `msgid` tag that identifies each individual message in a response MUST be the `msgid` tag as originally sent by the IRC server.
 
+Servers SHOULD provide clients with a consistent message order that is valid across the lifetime of a single connection, and which determinately orders any two messages (even if they share a timestamp); this will allow BEFORE, AFTER, and BETWEEN queries that use msgids for pagination to function as expected. This order SHOULD coincide with the order in which messages are returned within a response batch. It need not coincide with the delivery order of messages when they were relayed on any particular server.
+
 If the client has not negotiated the `event-playback` capability, the server MUST NOT send any lines other than `PRIVMSG` and `NOTICE` in the reply batch. If the client has negotiated `event-playback`, the server SHOULD send additional lines relevant to the chat history, including but not limited to `TAGMSG`, `JOIN`, `PART`, `QUIT`, `MODE`, `TOPIC`, and `NICK`.
 
 #### Errors and Warnings
@@ -147,9 +149,7 @@ To fill in gaps in a client without deduplication support, iterate this infinite
 
 ## Implementation Considerations
 
-In the typical IRC network, there is no well-defined global linear ordering of messages, since different linked servers may see messages in different orders. Furthermore, due to clock skew between servers and between server and client, messages may be relayed, stored, and replayed in an order that differs from the timestamp order.
-
-Servers SHOULD provide clients with a consistent pagination order that is valid across the lifetime of a single connection, and which determinately orders any two messages (even if they share a timestamp); this will allow BEFORE, AFTER, and BETWEEN queries that use msgids for pagination to function as expected. This order SHOULD coincide with the order in which messages are returned within a response batch. It need not coincide with the delivery order of messages when they were relayed on any particular server.
+In the typical IRC network, there is no well-defined global linear ordering of messages, since different linked servers may see messages in different orders. Furthermore, due to clock skew between servers and between server and client, messages may be relayed, stored, and replayed in an order that differs from the timestamp order. Within the recommended constraints on message ordering described above, implementations may want to make different tradeoffs between simplicity, consistency, and being sure of receiving all relevant history messages.
 
 ## Security Considerations
 
