@@ -1,24 +1,12 @@
 ---
 title: IRCv3 `setname` Extension
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: "Janne Mareike Koschinski"
     period: "2019"
     email: "janne@kuschku.de"
 ---
-
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `setname` capability name. Instead, implementations SHOULD use
-the `draft/setname` capability name to be interoperable with other software
-implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed capability name.
 
 ## Motivation
 
@@ -29,15 +17,15 @@ describes a standardised behaviour based on these existing implementations.
 
 ## Description
 
-The `draft/setname` client capability allows clients to change their realname
+The `setname` client capability allows clients to change their realname
 (GECOS) on an active connection. It also allows servers to directly inform
 clients about such a change.
 This avoids a client reconnect when updating this value.
 
-This capability MUST be referred to as `draft/setname` at capability
+This capability MUST be referred to as `setname` at capability
 negotiation time.
 
-Servers advertising the `draft/setname` capability MUST support usage of the
+Servers advertising the `setname` capability MUST support usage of the
 command even while the capability is not negotiated. Clients MUST NOT prevent
 users from manually using the command while the capability is not negotiated.
 
@@ -64,7 +52,7 @@ channels, as well as to the client from which it originated, to confirm the
 change has occurred.
 
 The `SETNAME` message MUST NOT be sent to clients which do not have the
-`draft/setname` capability negotiated.
+`setname` capability negotiated.
 
 The server-to-client `SETNAME` message looks as follows:
 
@@ -77,7 +65,7 @@ realname.
 In order to take full advantage of the `SETNAME` message, clients must be
 modified to support it. The proper way to do so is this:
 
-1) Enable the `draft/setname` capability at capability negotiation time during
+1) Enable the `setname` capability at capability negotiation time during
    the login handshake.
 
 2) On receipt of a server-to-client `SETNAME` message, update the realname
@@ -105,12 +93,12 @@ the reason:
 Complex realname with spaces
 
     C: SETNAME :Bruce Wayne <bruce@wayne.enterprises>
-    S: :batman@~batman!bat.cave SETNAME :Bruce Wayne <bruce@wayne.enterprises>
+    S: :batman!~batman@bat.cave SETNAME :Bruce Wayne <bruce@wayne.enterprises>
 
 Simple realname
 
     C: SETNAME Batman
-    S: :batman@~batman!bat.cave SETNAME Batman
+    S: :batman!~batman@bat.cave SETNAME Batman
 
 Example with realname rejected by the server
 
