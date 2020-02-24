@@ -12,6 +12,14 @@ copyrights:
     period: "2018-2019"
     email: "darren@kiwiirc.com"
 ---
+## Notes for implementing work-in-progress version
+
+This is a work-in-progress specification.
+
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `chathistory` or `event-playback` CAP names. Instead, implementations SHOULD use the `draft/chathistory` and `draft/event-playback` CAP names to be interoperable with other software implementing a compatible work-in-progress version. The final version of the specification will use unprefixed CAP names.
+
+The `chathistory` batch type is already ratified and SHOULD be used unprefixed.
+
 ## Description
 This document describes the format of the `chathistory` extension. This enables clients to request messages that were previously sent if they are still available on the server.
 
@@ -22,11 +30,11 @@ The `chathistory` extension uses the [chathistory][batch/chathistory] batch type
 
 To fully support this extension, clients MUST support the [`batch`][batch], [`server-time`][server-time] and [`message-tags`][message-tags] capabilities.
 
-The `chathistory` capability MUST be negotiated. This allows the server and client to act differently when delivering message history on connection.
+The `draft/chathistory` capability MUST be negotiated. This allows the server and client to act differently when delivering message history on connection.
 
 An ISUPPORT token MUST be sent to the client to state the maximum number of messages a client can request in a single command, represented by an integer. `CHATHISTORY=50`. If `0`, the client SHOULD assume that there is no maximum number of messages.
 
-The `event-playback` capability MAY be negotiated. This allows the client to signal that it is capable of receiving and correctly processing lines that would normally produce a local state change (such as `JOIN` or `MODE`) in its history batches.
+The `draft/event-playback` capability MAY be negotiated. This allows the client to signal that it is capable of receiving and correctly processing lines that would normally produce a local state change (such as `JOIN` or `MODE`) in its history batches.
 
 ### `CHATHISTORY` Command
 `CHATHISTORY` content can be requested by the client by sending the `CHATHISTORY` command to the server. A `batch` MUST be returned by the server. If no content exists to return, an empty batch SHOULD be returned to avoid the client waiting for a reply and to indicate that no content is available.
