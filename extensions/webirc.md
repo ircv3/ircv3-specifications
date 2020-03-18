@@ -24,7 +24,7 @@ The `WEBIRC` command takes four or five parameters: `password `, `gateway`, `hos
 - `password` Password authenticating the WebIRC gateway to the IRC server which must be agreed upon ahead of time
 - `gateway` WebIRC gateway service name
 - `hostname` User's resolved hostname
-- `ip` IPv4 or IPv6 address of the connecting user. If the IP address cannot be resolved to a DNS name, the IP address MUST be sent as both the `hostname` and `ip`.
+- `ip` IPv4 or IPv6 address of the connecting user. If the IP address cannot be resolved to a DNS name, the IP address MUST be sent as both the `hostname` and `ip`. If the IP address is an IPv6 address beginning with a colon, it MUST be sent with a canonically-acceptable preceding zero.
 - `options` is an optional set of space-separated arguments detailing other information about the connection.
 
 If forward and reverse DNS do not match, the IP address SHOULD be sent as the `hostname` and the unverified `hostname` SHOULD NOT be sent (see [Security Considerations](#security-considerations)). If the connection fails to the IRC server, the WebIRC gateway MUST return an `ERROR` with an appropriate message and terminate the connection.
@@ -81,3 +81,6 @@ WebIRC requires that the both WebIRC gateway and IRC server be configured to acc
 WebIRC allows anyone with a valid password to successfully connect to the IRC server and spoof any desired hostname. IRC servers SHOULD use secure passwords and SHOULD whitelist the IP addresses for the allowed WebIRC gateway servers. If the `WEBIRC` command does not originate from a whitelisted IP address or uses an incorrect password, the gateway SHOULD close any connections with an `ERROR` command.
 
 Because the possibility for hostname spoofing exists, IRC servers MAY attempt to further validate or resolve hostnames and match them to an IP address. It is the responsibility of IRC servers to verify the authenticity of connecting users and perform additional security checks as they see fit. To assist network operators and prevent abuse, IRC servers SHOULD show when a WebIRC connection is in use and SHOULD provide the original host when possible. This behavior is non-normative and implementation defined.
+
+##Errata
+A previous version of this specification did not include handling the occurrence of an IPv6 address beginning with a colon, which would break the message argument format.
