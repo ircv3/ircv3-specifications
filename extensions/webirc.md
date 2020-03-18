@@ -82,5 +82,5 @@ WebIRC allows anyone with a valid password to successfully connect to the IRC se
 
 Because the possibility for hostname spoofing exists, IRC servers MAY attempt to further validate or resolve hostnames and match them to an IP address. It is the responsibility of IRC servers to verify the authenticity of connecting users and perform additional security checks as they see fit. To assist network operators and prevent abuse, IRC servers SHOULD show when a WebIRC connection is in use and SHOULD provide the original host when possible. This behavior is non-normative and implementation defined.
 
-##Errata
+## Errata
 A previous version of this specification did not include handling the occurrence of an IPv6 address beginning with a colon, which would break the message argument format.
