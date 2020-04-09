@@ -8,11 +8,12 @@ copyrights:
     email: "nenolod@dereferenced.org"
 ---
 The account-notify client capability allows a client to be notified
-when another client's accountname changes.  This capability MUST be
+when a client's account name changes.  This capability MUST be
 referred to as 'account-notify' at capability negotiation time.
 
 When enabled, clients will get the ACCOUNT message to designate the
-accountname changes for clients on common channels with them.
+account name changes for clients on common channels with them, including
+themselves.
 
 The ACCOUNT message is one of the following:
 
@@ -31,7 +32,7 @@ or TS6 or ESVID).
 
 In order to take full advantage of the ACCOUNT message, WHOX must be
 supported by the ircd.  In this case, the appropriate strategy to ensuring
-you always have the accountname to display is to do the following:
+you always have the account name to display is to do the following:
 
  1. Enable the "account-notify" capability at capability negotiation time
     during the login handshake.
@@ -42,15 +43,15 @@ you always have the accountname to display is to do the following:
 
  3. If the extended-join capability is available, enable it at client
     capability negotiation time during the login handshake, and then set the
-    accountname based on what is sent in the extended JOIN command.
+    account name based on what is sent in the extended JOIN command.
 
     Otherwise, if extended-join is unavailable: When new users join a channel
-    that your client does not know the accountname for yet, do a WHO query
+    that your client does not know the account name for yet, do a WHO query
     against that client, again including the `a` format token in your WHOX
     token request field.  When you get a reply, do appropriate caching.
 
- 4. When the client receives an ACCOUNT message, update the accountname for the
-    client in question in your accountname cache.
+ 4. When the client receives an ACCOUNT message, update the account name for the
+    client in question in your account name cache.
 
 ## Errata
 
@@ -58,3 +59,6 @@ A previous version of this specification advised making a WHO request following 
 This advice was deemed unnecessary and was removed. See
 [issue #146](https://github.com/ircv3/ircv3-specifications/issues/146) for more information, including
 rationale for this clarification.
+
+A previous version of this specification didn't make it clear that account-notify messages are sent for
+a client's own account name changes.
