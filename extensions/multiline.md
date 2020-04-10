@@ -115,7 +115,7 @@ The recommended splitting method is to split long lines between words where poss
 In order to calculate the maximum allowed space before splitting a line, consider the following line:
 
 ```
-:nick!~user@host PRIVMSG #channel :hello \n\r
+:nick!~user@host PRIVMSG #channel :hello \r\n
 ```
 
 The parts of a message that must fit within the 512 byte limit are as follows
@@ -131,7 +131,7 @@ The parts of a message that must fit within the 512 byte limit are as follows
 | command | `PRIVMSG` | 7 |
 | channel | `#channel` | variable |
 | message separator | ` :` | 2 |
-| crlf | `\n\r` | 2 |
+| crlf | `\r\n` | 2 |
 | message | `hello ` | variable |
 
 Not all parts may appear in a message, but a safe limit should take them into account and include an extra safety buffer in case of any unexpected syntax added by a server, e.g. a statusmsg prefix.
