@@ -33,7 +33,7 @@ The JWT token (https://jwt.io/) is a base64 encoded JSON payload that is signed 
 
 When an external service is opened with this token in its URL, the external service verifies that the token has not been tampered with by one of two methods:
 1. If the external service has a shared secret for this IRC network, it can now verify the token directly.
-2. The external service can make a HTTP GET request to the URL given in the `vfy` claim, replacing `%s` with the token string. The request MUST be responded to with a HTTP 200 status if the token has been verified, or a HTTP 403 status if the token is invalid.
+2. The external service can make a HTTP GET request to the URL given in the `vfy` claim, replacing `%s` with the token string. The request MUST be responded to with a HTTP 200 status if the token has been verified, or a HTTP 401 status if the token is invalid.
 
 Once successfully verified, the external service can then use the available claims in the token to create any required user accounts and log the user in automatically.
 
