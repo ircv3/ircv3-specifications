@@ -40,9 +40,9 @@ clients, the events SHOULD include appropriate RPL_MONOFFLINE and RPL_MONONLINE
 numerics.
 
 The server MUST send a `CHGHOST` message to a client, but MUST defer doing so
-until both a successful `NICK` command a successful `USER` command are received
-by the server. The server CAN choose to defer it until after registration is
-completed.
+until both a successful `NICK` command and a successful `USER` command have
+been received by the server. The server CAN choose to defer it until after
+registration is completed.
 
 ## The `CHGHOST` message
 
