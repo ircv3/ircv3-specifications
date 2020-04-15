@@ -26,11 +26,23 @@ message to clients who have enabled the `chghost` capability and either share
 the same channel as the target client or have the client on a `MONITOR` list.
 Servers SHOULD additionally send the `CHGHOST` message to the client whose
 user and/or host has changed if the client supports the `chghost` capability.
+The server MUST defer sending CHGHOST messages to the client about successfully
+changing it's own user or host (for example, if using SASL and a virtual host
+is set) until both a successful `NICK` command and a successful `USER` command
+have been received.
 
-When the capability is not enabled for clients who share the same channel,
-servers should fall back to having the client `QUIT` the server, rejoin all
-channels, and re-establish the channel and user modes the client had before, as
-though the client had reconnected.
+When the capability is not enabled for other clients who share channels with or
+monitor the changed client, servers SHOULD send messages to simulate the client
+reconnecting. This allows clients to keep their user state up to date. For
+shared channels, the simulated events SHOULD include appropriate QUIT, JOIN and
+MODE commands, to restore membership and user channel modes. For monitored
+clients, the events SHOULD include appropriate RPL_MONOFFLINE and RPL_MONONLINE
+numerics.
+
+The server MUST send a `CHGHOST` message to a client, but MUST defer doing so
+until both a successful `NICK` command a successful `USER` command are received
+by the server. The server CAN choose to defer it until after registration is
+completed.
 
 ## The `CHGHOST` message
 
@@ -67,6 +79,9 @@ their hostname changed to `backyard`:
 * Previous versions of this specification did not include any examples, which made
 it unclear as to whether the de-facto `~` prefix should be included on CHGHOST
 messages. The new examples make clear that it should be included.
+* Previous versions of this specification did not specify that the `CHGHOST`
+command should be sent after both a valid NICK and a valid USER command have
+been received.
 * Previous versions of this specification used confusing descriptions and have
 since been rewritten to include a simpler description and example.
 * Previous versions of this specification did not specify whether or not the
