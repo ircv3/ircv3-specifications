@@ -157,6 +157,33 @@ an additional capability.
     S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
     (usual welcome messages)
 
+If the client requests a capability that is not supported, the server should
+send both a 908 and a 904 message, allowing the client to reattempt
+authentication with a different method.
+
+    C: CAP LS
+    C: NICK ryan
+    C: user ryan * * :RyanSquared
+    S: NOTICE AUTH :*** Processing connection to irc.test.hashbang.sh
+    S: NOTICE AUTH :*** Looking up your hostname...
+    S: NOTICE AUTH :*** Checking Ident
+    S: NOTICE AUTH :*** No Ident response
+    S: NOTICE AUTH :*** Found your hostname
+    S: :irc.test.hashbang.sh CAP * LS :multi-prefix sasl
+    C: CAP REQ :multi-prefix sasl
+    S: :irc.test.hashbang.sh CAP ryan ACK :multi-prefix sasl
+    C: AUTHENTICATE SCRAM-SHA-1
+    S: :irc.test.hashbang.sh 908 ryan EXTERNAL,PLAIN :are available SASL mechanisms
+    S: :irc.test.hashbang.sh 904 ryan :SASL authentication failed
+    C: AUTHENTICATE PLAIN
+    S: AUTHENTICATE +
+    C: AUTHENTICATE cnlhbnJ5YW5leGFtcGxlCg==
+    S: :irc.test.hashbang.sh 900 ryan ryan!ryan@de1.hashbang.sh lordryan :You are now logged in as lordryan
+    S: :irc.test.hashbang.sh 903 ryan :SASL authentication successful
+    C: CAP END
+    S: :irc.test.hashbang.sh 001 ryan :Welcome to the #! Testing Internet Relay Chat Network ryan
+    (usual welcome messages)
+
 ## Numerics used by this extension
 
 `900` aka `RPL_LOGGEDIN` is sent when the user's account name is set (whether by SASL or otherwise).
@@ -175,7 +202,7 @@ an additional capability.
 
     :server 903 <nick> :SASL authentication successful
 
-`904` aka `ERR_SASLFAIL` is sent when the SASL authentication fails because of invalid credentials or other errors not explicitly mentioned by other numerics.
+`904` aka `ERR_SASLFAIL` is sent when the SASL authentication fails because of invalid credentials or other errors, even if they're additionally sent by other numerics, and must be sent after all additional numerics.
 
     :server 904 <nick> :SASL authentication failed
 
