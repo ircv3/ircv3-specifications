@@ -26,10 +26,6 @@ message to clients who have enabled the `chghost` capability and either share
 the same channel as the target client or have the client on a `MONITOR` list.
 Servers SHOULD additionally send the `CHGHOST` message to the client whose
 user and/or host has changed if the client supports the `chghost` capability.
-The server MUST defer sending CHGHOST messages to the client about successfully
-changing it's own user or host (for example, if using SASL and a virtual host
-is set) until both a successful `NICK` command and a successful `USER` command
-have been received.
 
 When the capability is not enabled for other clients who share channels with or
 monitor the changed client, servers SHOULD send messages to simulate the client
@@ -42,7 +38,10 @@ numerics.
 The server MUST send a `CHGHOST` message to a client, but MUST defer doing so
 until both a successful `NICK` command and a successful `USER` command have
 been received by the server. The server CAN choose to defer it until after
-registration is completed.
+registration is completed, for example if a valid SASL authentication during
+client registration triggers an assignment of a virtual host. If the server
+does not defer it until registration is completed, and either the user or the
+host of the client changes, the server MUST send down a new `CHGHOST` message.
 
 ## The `CHGHOST` message
 
