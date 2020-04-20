@@ -65,7 +65,7 @@ Optionaly, the JWT token MAY contain the following claim to provide the external
 If the command sent by the client includes a channel name, Eg. `EXTJWT #channel`, the server MUST then reply with the channel name as its `requested_target` parameter, along with the JWT token containing the above claims and also the following claims relevant to the channel at that time:
 
 * `channel` String; The channel name this token is related to.
-* `joined` Number; Unix timestamp of the time at which the client joined the channel. 0 if not joined.
+* `joined` Number; Unix timestamp of the time at which the client joined the channel. 0 if not joined. 1 if no timestamp is available.
 * `cmodes` []String; An array of the channel modes the client has in this channel.
 
 The IRC server MUST include the above claims but MAY include any extra claims.
