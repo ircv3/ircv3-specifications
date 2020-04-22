@@ -35,19 +35,19 @@ and MODE commands, to restore membership and user channel modes. For monitored
 clients, the events SHOULD include appropriate `RPL_MONOFFLINE` and
 `RPL_MONONLINE` numerics.
 
-The server MUST send a `CHGHOST` message to a client, but defer doing so until
-both successful `NICK` and `USER` commands have been received by the server.
-The server MAY choose to defer it until after registration is completed, for
-example if a valid SASL authentication during client registration triggers an
-assignment of a virtual host. If the server does not defer it until
-registration is completed, and either the user or the host of the client
-changes, the server MUST send a new `CHGHOST` message.
+When the server sends a `CHGHOST` message to a client, it MUST defer doing so
+until both successful `NICK` and `USER` commands have been received by the
+server.  The server MAY choose to defer it until after registration is
+completed, for example if a valid SASL authentication during client
+registration triggers an assignment of a virtual host. If the server does not
+defer it until registration is completed, and either the user or the host of
+the client changes, the server MUST send a new `CHGHOST` message.
 
 ## The `CHGHOST` message
 
 The `CHGHOST` message is as follows:
 
-    :nick!old-user@old_host.local CHGHOST new-user new_host.local
+    :nick!old_user@old_host.local CHGHOST new_user new_host.local
 
 The `new-user` parameter represents the user's "username" or "ident" which may
 or may not have changed in the CHGHOST process.
@@ -55,10 +55,23 @@ or may not have changed in the CHGHOST process.
 The `new_host.local` parameter represents the new hostname for the user which
 may or may not have changed in the CHGHOST process.
 
+If the server chooses to do so, the server can prepend the user with a tilde
+(such as denoting that the user was not sent by an ident daemon). When doing
+so, the command might look like:
+
+    :nick!old_user@old_host.local CHGHOST ~new_user new_host.local
+
 ## Fallback for not supporting the `chghost` capability
 
-    :nick!user@old_host.local QUIT :Changing hostname
-    :nick!new-user@new_host.local JOIN #ircv3
+    :nick!old_user@old_host.local QUIT :Changing hostname
+    :nick!new_user@new_host.local JOIN #ircv3
+    :ircd.local MODE #ircv3 +v :nick
+
+Like above, if the server chooses to do so, the server can prepend the user
+with a tilde:
+
+    :nick!old_user@old_host.local QUIT :Changing hostname
+    :nick!~new_user@new_host.local JOIN #ircv3
     :ircd.local MODE #ircv3 +v :nick
 
 ## Examples
