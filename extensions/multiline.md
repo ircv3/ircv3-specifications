@@ -157,7 +157,11 @@ Which would leave 353 bytes for each message.
 
 This section is non-normative.
 
-In the context of flood protection, keep in mind that clients might send an entire batched multiline message all at once.
+For server implementations and operators, consider the impact of relaying a large multiline batch. In particular, the potential to exhaust client send queue budgets, which will either result in client disconnection (a denial-of-service attack) or degraded client performance.
+
+Each additional protocol line carries extra metadata beyond the message content, such as the sender's full source mask, the command, and the target. This means that the byte size of a multiline batch sent to clients will typically be a function of max-lines as well as max-bytes. Configuring max-bytes, max-lines, and the send queue length together is reommended to mitigate these issues.
+
+Additionally, in the context of flood protection and throttling of incoming messages, keep in mind that clients might send an entire batched multiline message all at once.
 
 ## Examples
 
