@@ -15,39 +15,39 @@ copyrights:
 ## Introduction
 
 The `chghost` client capability allows servers to directly inform clients about
-clients changing their host and/or user without having to simulate the client
-disconnecting. This is useful for servers implementing virtual hosts or masks
-and helps with reducing the amount of information spent on a client's UI.
+clients changing their host or user without having to simulate the client
+reconnecting. This is useful for servers implementing virtual hosts or masks
+and helps reduce clutter on the client's UI.
 
 ## The `chghost` capability
 
-When a client changes their user and/or host, servers MUST send the `CHGHOST`
+When a client changes their user or host, servers MUST send the `CHGHOST`
 message to clients who have enabled the `chghost` capability and either share
 the same channel as the target client or have the client on a `MONITOR` list.
 Servers SHOULD additionally send the `CHGHOST` message to the client whose
-user and/or host has changed if the client supports the `chghost` capability.
+user or host has changed if the client supports the `chghost` capability.
 
 When the capability is not enabled for other clients who share channels with or
 monitor the changed client, servers SHOULD send messages to simulate the client
 reconnecting. This allows clients to keep their user state up to date. For
-shared channels, the simulated events SHOULD include appropriate QUIT, JOIN and
-MODE commands, to restore membership and user channel modes. For monitored
-clients, the events SHOULD include appropriate RPL_MONOFFLINE and RPL_MONONLINE
-numerics.
+shared channels, the simulated events SHOULD include appropriate `QUIT`, `JOIN`
+and MODE commands, to restore membership and user channel modes. For monitored
+clients, the events SHOULD include appropriate `RPL_MONOFFLINE` and
+`RPL_MONONLINE` numerics.
 
-The server MUST send a `CHGHOST` message to a client, but MUST defer doing so
-until both a successful `NICK` command and a successful `USER` command have
-been received by the server. The server CAN choose to defer it until after
-registration is completed, for example if a valid SASL authentication during
-client registration triggers an assignment of a virtual host. If the server
-does not defer it until registration is completed, and either the user or the
-host of the client changes, the server MUST send down a new `CHGHOST` message.
+The server MUST send a `CHGHOST` message to a client, but defer doing so until
+both successful `NICK` and `USER` commands have been received by the server.
+The server MAY choose to defer it until after registration is completed, for
+example if a valid SASL authentication during client registration triggers an
+assignment of a virtual host. If the server does not defer it until
+registration is completed, and either the user or the host of the client
+changes, the server MUST send a new `CHGHOST` message.
 
 ## The `CHGHOST` message
 
 The `CHGHOST` message is as follows:
 
-    :nick!user@old_host.local CHGHOST new-user new_host.local
+    :nick!old-user@old_host.local CHGHOST new-user new_host.local
 
 The `new-user` parameter represents the user's "username" or "ident" which may
 or may not have changed in the CHGHOST process.
