@@ -69,7 +69,7 @@ When receiving a well-formed mulitiline message batch, implementations MUST coll
 * Servers: delivering the batch to the intended recipients
 * Clients: displaying the batched message to the user
 
-Messages in a multiline batch MUST be concatenated with a line break unless the `draft/multiline-concat` message tag is sent, in which case the message is directly concatenated with the previous message without any separation.
+Messages in a multiline batch MUST be concatenated with a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case the message is directly concatenated with the previous message without any separation.
 
 Clients MUST NOT send messages other than PRIVMSG while a multiline batch is open.
 
