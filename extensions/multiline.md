@@ -35,7 +35,7 @@ Mulitline messages allow for a more coherent experience that avoids the disconne
 
 ### Dependencies
 
-This specification uses the [batch][] capability which MUST be negotiated at the same time. It also uses the [message tags][] and [standard replies][] frameworks.
+This specification uses the [`batch`][] capability which MUST be negotiated to use multiline messages. It also uses the [message tags][] and [standard replies][] frameworks.
 
 ### Capabilities
 
