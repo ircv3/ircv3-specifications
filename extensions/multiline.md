@@ -43,7 +43,7 @@ This specification adds the `draft/multiline` capability.
 
 Implementations requesting this capability indicate that they are capable of handling the batch type and message tag described below.
 
-The capability has a REQUIRED value: a comma (`,`) (0x2C) separated list of tokens. Each token consists of a key which might have a value attached. If there is a value attached, the value is separated from the key by an equals sign (`=`) (0x3D). That is, `<key>[=<value>][,<key2>[=<value2>][,<keyN>[=<valueN>]]]`. Keys specified in this document MUST only occur at most once.
+The capability MUST be advertised by servers with a REQUIRED value: a comma (`,`) (0x2C) separated list of tokens. Each token consists of a key with an optional value attached. If there is a value attached, the value is separated from the key by an equals sign (`=`) (0x3D). That is, `<key>[=<value>][,<key2>[=<value2>][,<keyN>[=<valueN>]]]`. Keys specified in this document MUST only occur at most once.
 
 Clients MUST ignore every token with a key that they don't understand.
 
@@ -62,7 +62,7 @@ This specification adds the `draft/multiline` batch type, and introduces client 
 
 In addition to the base batch parameters (reference-tag and type) a multiline batch has one additional parameter, the target recipient.
 
-Multiline batches MUST contain one or more PRIVMSG lines whose target MUST match the batch target.
+Multiline batches MUST only contain one or more PRIVMSG lines. These lines MUST all have a target which matches the batch target.
 
 When receiving a well-formed mulitiline message batch, implementations MUST collect each PRIVMSG message content and wait until the full batch has been received before processing the message. Processing in this context refers to:
 
@@ -159,7 +159,7 @@ This section is non-normative.
 
 For server implementations and operators, consider the impact of relaying a large multiline batch. In particular, the potential to exhaust client send queue budgets, which will either result in client disconnection (a denial-of-service attack) or degraded client performance.
 
-Each additional protocol line carries extra metadata beyond the message content, such as the sender's full source mask, the command, and the target. This means that the byte size of a multiline batch sent to clients will typically be a function of max-lines as well as max-bytes. Configuring max-bytes, max-lines, and the send queue length together is reommended to mitigate these issues.
+Each additional protocol line carries extra metadata beyond the message content, such as the sender's full source mask, the command, and the target. This means that the byte size of a multiline batch sent to clients will typically be a function of max-lines as well as max-bytes. Configuring max-bytes, max-lines, and the send queue length together is recommended to mitigate these issues.
 
 Additionally, in the context of flood protection and throttling of incoming messages, keep in mind that clients might send an entire batched multiline message all at once.
 
