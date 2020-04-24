@@ -112,6 +112,8 @@ When using `draft/multiline-concat` to split longer lines, care is required to e
 
 The recommended splitting method is to split long lines between words where possible and leave the space character at the end of the line. This ensures that pairs of words spanning a line concatenation are still space separated, without adding a space to the start of any fallback lines.
 
+Take care not to split in the middle of multi-byte character sequences.
+
 In order to calculate the maximum allowed space before splitting a line, consider the following line:
 
 ```
