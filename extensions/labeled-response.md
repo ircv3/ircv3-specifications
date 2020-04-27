@@ -27,7 +27,9 @@ Additionally, labeled responses allow bouncers with multiple connected clients t
 
 ### Dependencies
 
-This specification uses the [message tags framework](../extensions/message-tags.html) and depends on the [`batch`](../extensions/batch-3.2.html) capability which MUST be negotiated to use labeled responses.
+This specification depends on the [`batch`](../extensions/batch-3.2.html) capability which MUST be negotiated to use labeled responses. The order of capability negotiation is not significant and MUST not be enforced.
+
+This specification also uses the [message tags](../extensions/message-tags.html) framework.
 
 ### Capabilities
 
