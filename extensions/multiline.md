@@ -100,7 +100,7 @@ Clients MUST NOT send tags other than `draft/multiline-concat` and `batch` on me
 
 Servers MUST only include a message ID on the first message of a batch when sending a fallback to non-supporting clients.
 
-### Labeled response ([draft][labeled response]) with echo-message ([spec][echo message])
+### Labeled response ([spec][labeled response]) with echo-message ([spec][echo message])
 
 Servers MUST only include the label tag on the opening BATCH command when replying to a client using `echo-message`.
 
