@@ -124,19 +124,19 @@ In order to calculate the maximum allowed space before splitting a line, conside
 
 The parts of a message that must fit within the 512 byte limit are as follows
 
-| part | syntax | length |
-|-|-|-|
-| leading | `:` | 1 |
-| nick | `nick` | variable |
-| nick/mask separator | `!` | 1 |
-| user | `~user` | variable |
-| user/host separator | `@` | 1 |
-| host | `host` | variable |
-| command | `PRIVMSG` | 7 |
-| channel | `#channel` | variable |
-| message separator | ` :` | 2 |
-| crlf | `\r\n` | 2 |
-| message | `hello ` | variable |
+| part                | syntax                | length   |
+|---------------------|-----------------------|----------|
+| leading             | <code>:</code>        | 1        |
+| nick                | <code>nick</code>     | variable |
+| nick/mask separator | <code>!</code>        | 1        |
+| user                | <code>~user</code>    | variable |
+| user/host separator | <code>@</code>        | 1        |
+| host                | <code>host</code>     | variable |
+| command             | <code>PRIVMSG</code>  | 7        |
+| channel             | <code>#channel</code> | variable |
+| message separator   | <code> :</code>       | 2        |
+| crlf                | <code>\r\n</code>     | 2        |
+| message             | <code>hello</code>    | variable |
 
 Not all parts may appear in a message, but a safe limit should take them into account and include an extra safety buffer in case of any unexpected syntax added by a server, e.g. a statusmsg prefix.
 
@@ -242,7 +242,7 @@ Invalid multiline batch
     Server: :irc.example.com FAIl BATCH MULTILINE_INVALID :Invalid multiline batch
 
 [message tags]: ../extensions/message-tags.html
-[batch]: ../extensions/batch-3.2.html
+[`batch`]: ../extensions/batch-3.2.html
 [standard replies]: ../extensions/standard-replies.html
 [message ids]: ../extensions/message-ids.html
 [labeled response]: ../extensions/labeled-response.html
