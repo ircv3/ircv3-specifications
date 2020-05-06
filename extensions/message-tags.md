@@ -210,13 +210,15 @@ If a server sends a message with more tag data than the allowed limit, clients M
 
 ### RPL_ISUPPORT Tokens
 
-This specification defines the `CLIENTTAGDENY` token for use in `RPL_ISUPPORT` (005) responses.
+This specification defines the optional `CLIENTTAGDENY` token for use in `RPL_ISUPPORT` (005) responses.
 
-This token allows servers to communicate to clients that certain client-only tags are blocked and cannot be used. This scenario is not a recommended default, but server administrators may wish to enable it for moderation reasons.
+This token allows servers to communicate to clients that certain client-only tags are blocked and will be silently ignored. This scenario is not a recommended default, but server administrators may wish to enable it for moderation reasons.
 
 This allows clients to selectively remove features from their user interface that rely on any client-only tag that the server has blocked.
 
 Note that blocking tags will not necessarily block the message that the tag is attached to.
+
+Clients MAY still send blocked tags to the server.
 
 The `CLIENTTAGDENY` token value is a comma `,` (0x2C) separated list of blocked client-only tags. The client-only prefix (`+`) is omitted when a tag appears in this list.
 
