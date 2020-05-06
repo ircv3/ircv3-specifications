@@ -216,6 +216,8 @@ This token allows servers to communicate to clients that certain client-only tag
 
 This allows clients to selectively remove features from their user interface that rely on any client-only tag that the server has blocked.
 
+Note that blocking tags will not necessarily block the message that the tag is attached to.
+
 The `CLIENTTAGDENY` token value is a comma `,` (0x2C) separated list of blocked client-only tags. The client-only prefix (`+`) is omitted when a tag appears in this list.
 
 An asterisk `*` (0x2A) indicates that **all** client-only tags are blocked.
