@@ -63,7 +63,7 @@ Request up to `limit` number of messages after and excluding the given `timestam
 
 #### `LATEST`
     CHATHISTORY LATEST <target> <* | timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
-Request the most recent messages that have been sent after and excluding the given `timestamp` or `msgid`. If a `*` is given instead of a timestamp or msgid, the server MUST use the current time as a timestamp. The number of messages returned MUST be equal to or less than `limit`. If a `*` is not given, only one timestamp or msgid MUST be given, not both.
+Request up to `limit` number of the most recent messages that have been sent. If a `timestamp` or `msgid` is given, the returned messages are restricted to those sent after and excluding that timestamp or msgid; if a `*` is given, no such restriction applies. If a `*` is not given, only one timestamp or msgid MUST be given, not both.
 
 This is useful for retrieving the latest conversation when first joining a channel or opening a query buffer.
 
