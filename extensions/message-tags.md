@@ -212,9 +212,9 @@ If a server sends a message with more tag data than the allowed limit, clients M
 
 This specification defines the optional `CLIENTTAGDENY` token for use in `RPL_ISUPPORT` (005) responses.
 
-This token allows servers to communicate to clients that certain client-only tags are blocked and will be silently ignored. This scenario is not a recommended default, but server administrators may wish to enable it for moderation reasons.
+Servers SHOULD use this token to communicate to clients that certain client-only tags are blocked and will be silently ignored. Blocking client-only tags is not a recommended default behaviour, but server administrators might wish to do so for moderation reasons.
 
-This allows clients to selectively remove features from their user interface that rely on any client-only tag that the server has blocked.
+This token allows clients to selectively remove features from their user interface that rely on any client-only tag that the server has blocked.
 
 Note that blocking tags will not necessarily block the message that the tag is attached to.
 
@@ -222,15 +222,15 @@ Clients MAY still send blocked tags to the server.
 
 The `CLIENTTAGDENY` token value is a comma `,` (0x2C) separated list of blocked client-only tags. The client-only prefix (`+`) is omitted when a tag appears in this list.
 
-An asterisk `*` (0x2A) indicates that **all** client-only tags are blocked.
+An asterisk `*` (0x2A) indicates that **all** client-only tags are blocked. When used, this MUST be the first item in the list.
 
 A hyphen `-` (0x2D) indicates that a block is negated, i.e. when certain client-only tags are exempt from a catch-all block.
 
-An empty or missing `CLIENTTAGDENY` indicates the default case that all client-only tags are allowed.
+An empty or missing `CLIENTTAGDENY` matches the default case and indicates that all client-only tags are allowed.
 
 #### `CLIENTTAGDENY` examples
 
-An example where all client-only tags are allowed (ommiting the token entirely is recommended)
+An example where all client-only tags are allowed (ommiting the token entirely is recommended instead)
 
     CLIENTTAGDENY=
 
