@@ -71,7 +71,13 @@ When receiving a well-formed mulitiline message batch, implementations MUST coll
 * Servers: delivering the batch to the intended recipients
 * Clients: displaying the batched message to the user
 
-Messages in a multiline batch MUST be concatenated with a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case the message is directly concatenated with the previous message without any separation.
+Messages in a multiline batch MUST be joined with a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case the message is directly joined with the previous message with no separation.
+
+The line feed joiner uses one byte from the `max-bytes` limit. No line feed is appended to the final line of a batch.
+
+Servers MUST NOT reject blank lines.
+
+Clients MUST NOT send blank lines with the `draft/multiline-concat` tag. Clients MUST NOT send messages consisting entirely of blank lines.
 
 Clients MUST NOT send messages other than PRIVMSG while a multiline batch is open.
 
@@ -79,7 +85,9 @@ Clients MUST NOT send messages other than PRIVMSG while a multiline batch is ope
 
 When delivering multiline batches to clients that have not negotiated the multiline capability, servers MUST deliver the component messages without using a multiline BATCH.
 
-Any tags that would have been added to the batch, e.g. message IDs, account tags etc MUST be included on the first message line. Tags MAY also be included on subsequent lines where it makes sense to do so.
+Servers MUST NOT send blank lines to clients that have not negotiated the multiline capability.
+
+Any tags that would have been added to the batch, e.g. message IDs, account tags etc MUST be included on the first message line to be sent. Tags MAY also be included on subsequent lines where it makes sense to do so.
 
 ### Errors
 
