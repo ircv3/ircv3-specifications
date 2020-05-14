@@ -71,9 +71,9 @@ When receiving a well-formed mulitiline message batch, implementations MUST coll
 * Servers: delivering the batch to the intended recipients
 * Clients: displaying the batched message to the user
 
-Messages in a multiline batch MUST be joined with a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case the message is directly joined with the previous message with no separation.
+The combined message value of a multiline batch is defined as the concatenation of the messages from each individual line within the batch. Line messages are joined by a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case that line's message is directly joined with the previous line's message with no separation.
 
-The line feed joiner uses one byte from the `max-bytes` limit. No line feed is appended to the final line of a batch.
+Each line feed used to join line messages contributes one byte towards the `max-bytes` limit. No line feed is appended to the final line message of a batch.
 
 Servers MUST NOT reject blank lines.
 
