@@ -129,6 +129,8 @@ if they are appropriate for more widespread adoption. See [Rules for naming mess
 
 Client-only tags are intended to replace the use of future [CTCP commands][ctcp].
 
+Servers MAY apply moderation to client-only tags using existing or newly specified modes or configuration. See the [RPL_ISUPPORT Tokens](#rpl_isupport-tokens) section for further information.
+
 ### The `TAGMSG` tag-only message
 
        Command: TAGMSG
@@ -140,8 +142,6 @@ messages. This means for example, honouring channel membership, modes,
 [`echo-message`](../extensions/echo-message-3.2.html),
 [`STATUSMSG`][statusmsg]
 prefixes, etc.
-
-Servers MAY apply moderation to this command using existing or newly specified modes or configuration.
 
 Servers MUST NOT deliver `TAGMSG` to clients that haven't negotiated the message tags capability.
 
@@ -207,6 +207,44 @@ Servers MUST reply with the `ERR_INPUTTOOLONG` (`417`) error numeric if a client
           ":Input line was too long"
 
 If a server sends a message with more tag data than the allowed limit, clients MAY ignore the message.
+
+### RPL_ISUPPORT Tokens
+
+This specification defines the optional `CLIENTTAGDENY` token for use in `RPL_ISUPPORT` (005) responses.
+
+Servers SHOULD use this token to communicate to clients that certain client-only tags are blocked and will be silently ignored. Blocking client-only tags is not a recommended default behaviour, but server administrators might wish to do so for moderation reasons.
+
+This token allows clients to selectively remove features from their user interface that rely on any client-only tag that the server has blocked.
+
+Note that blocking tags will not necessarily block the message that the tag is attached to.
+
+Clients MAY still send blocked tags to the server.
+
+The `CLIENTTAGDENY` token value is a comma `,` (0x2C) separated list of blocked client-only tags. The client-only prefix (`+`) is omitted when a tag appears in this list.
+
+An asterisk `*` (0x2A) indicates that **all** client-only tags are blocked. When used, this MUST be the first item in the list.
+
+A hyphen `-` (0x2D) indicates that a block is negated, i.e. when certain client-only tags are exempt from a catch-all block.
+
+An empty or missing `CLIENTTAGDENY` matches the default case and indicates that all client-only tags are allowed.
+
+#### `CLIENTTAGDENY` examples
+
+An example where all client-only tags are allowed (ommiting the token entirely is recommended instead)
+
+    CLIENTTAGDENY=
+
+An example where all client-only tags are blocked
+
+    CLIENTTAGDENY=*
+
+An example where the `+foo` and `+example/bar` client-only tags are allowed but all others are blocked
+
+    CLIENTTAGDENY=*,-foo,-example/bar
+
+An example where only the `+foo` and `+example/bar` client-only tags are blocked
+
+    CLIENTTAGDENY=foo,example/bar
 
 ## Security considerations
 
@@ -348,6 +386,8 @@ Previous versions of this spec did not specify the difference between empty and 
 tag values.
 
 Previous versions of this spec did not specify the UTF8 encoding for tag values
+
+Previous versions of this spec did not define the `CLIENTTAGDENY` `RPL_ISUPPORT` token and were unclear about moderation allowances for client-only tags.
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
 [privmsg]: https://tools.ietf.org/html/rfc2812#section-3.3.1
