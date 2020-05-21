@@ -33,7 +33,7 @@ A typing notification is represented by a [`TAGMSG`][tags] command sent with a `
 
 * The `typing=active` notification SHOULD be sent by clients **continuously** while the user is making updates to the text-input field and the text is not a "/slash command".
 
-* The `typing-paused` notification MAY be sent by clients **once** when the user has paused typing in the text-input field and has not cleared their text.
+* The `typing=paused` notification MAY be sent by clients **once** when the user has paused typing in the text-input field and has not cleared their text.
 
 * The `typing=done` notification MAY be sent by clients **once** when the user clears the text-input field without sending a message.
 
