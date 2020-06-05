@@ -37,7 +37,9 @@ These messages have some salient common characteristics:
 
 It is desirable to be able to advise the server not to store them and replay them to offline clients --- either because they would consume server resources unnecessarily, or because replaying them would actually risk degrading the client user experience.
 
-In contrast, some extensions involve TAGMSG that have more enduring relevance, in particular, [reactions](./react). The persist tag identifies these messages, with the intent that servers will store only those TAGMSG that carry the persist tag.
+In contrast, some extensions involve TAGMSG that have more enduring relevance, in particular, [reactions](./react). If a server offers history storage and replay functionality, then it should store and replay these messages.
+
+The question remains whether storage of TAGMSG should be "opt-in" or "opt-out". However, "opt-in" seems more resilient to client implementation issues and is a better fit for the preponderance of client-only tags that have been proposed thus far. Accordingly, the persist tag designates TAGMSG for opt-in storage, with the intent that servers will store only those TAGMSG that carry the persist tag.
 
 ## Architecture
 
