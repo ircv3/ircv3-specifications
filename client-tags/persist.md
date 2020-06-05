@@ -37,7 +37,7 @@ These messages have some salient common characteristics:
 
 It is desirable to be able to advise the server not to store them and replay them to offline clients --- either because they would consume server resources unnecessarily, or because replaying them would actually risk degrading the client user experience.
 
-In contrast, some extensions involve TAGMSG that have more enduring relevance, in particular, reactions. The persist tag identifies these messages, with the intent that servers will store only those TAGMSG that carry the persist tag.
+In contrast, some extensions involve TAGMSG that have more enduring relevance, in particular, [reactions](./react). The persist tag identifies these messages, with the intent that servers will store only those TAGMSG that carry the persist tag.
 
 ## Architecture
 
@@ -47,7 +47,7 @@ Clients wishing to use this tag MUST negotiate the [`message-tags`](../extension
 
 ### Format
 
-The persist tag is sent by a client, but without with the client-only prefix `+`. It has no value:
+The persist tag is sent by a client, but without the client-only prefix `+`. It has no value:
 
     draft/persist
 
