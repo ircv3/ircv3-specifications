@@ -13,7 +13,7 @@ copyrights:
 
 This is a work-in-progress specification.
 
-Software implementing this work-in-progress specification MUST NOT use the unprefixed `persist` tag name. Instead, implementations SHOULD use the `draft/persist` tag name to be interoperable with other software implementing a compatible work-in-progress version.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `persist` tag name. Instead, implementations SHOULD use the `+draft/persist` tag name to be interoperable with other software implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed tag name.
 
@@ -39,7 +39,7 @@ It is desirable to be able to advise the server not to store them and replay the
 
 In contrast, some extensions involve TAGMSG that have more enduring relevance, in particular, [reactions](./react). If a server offers history storage and replay functionality, then it should store and replay these messages.
 
-The question remains whether storage of TAGMSG should be "opt-in" or "opt-out". However, "opt-in" seems more resilient to client implementation issues and is a better fit for the preponderance of client-only tags that have been proposed thus far. Accordingly, the persist tag designates TAGMSG for opt-in storage, with the intent that servers will store only those TAGMSG that carry the persist tag.
+The question remains whether storage of TAGMSG should be "opt-in" or "opt-out". However, "opt-in" seems more resilient to client implementation issues and is a better fit for the preponderance of client-only tags that have been proposed thus far. Accordingly, the persist tag designates TAGMSG for opt-in storage, with the intent that servers and bouncers will store only those TAGMSG that carry the persist tag.
 
 ## Architecture
 
@@ -49,30 +49,32 @@ Clients wishing to use this tag MUST negotiate the [`message-tags`](../extension
 
 ### Format
 
-The persist tag is sent by a client, but without the client-only prefix `+`. It has no value:
+The persist tag is sent by a client with the client-only prefix `+`. It has no value:
 
-    draft/persist
+    +draft/persist
 
 ## Server implementation considerations
 
-Servers SHOULD NOT store TAGMSG that do not contain the `draft/persist` tag. If a server implements history storage and replay, it SHOULD store TAGMSG that contain the `draft/persist` tag. Servers SHOULD ignore the presence of `draft/persist` on all other message types.
+Servers SHOULD NOT store TAGMSG that do not contain the `+draft/persist` tag. If a server implements history storage and replay, it SHOULD store TAGMSG that contain the `+draft/persist` tag. Servers SHOULD ignore the presence of `+draft/persist` on all other message types.
 
 Since the specification of `+draft/react` precedes this specification, servers MAY wish to store TAGMSG that carry `+draft/react` but not `draft/persist`.
 
-Note that although `draft/persist` is sent by the client, it is not a "client-only tag" in the sense of the message tags specification and SHOULD NOT be relayed to other clients.
+## Bouncer implementation considerations
+
+The above recommendations for server handling of TAGMSG history apply to bouncers as well.
 
 ## Client implementation considerations
 
-Clients SHOULD attach `draft/persist` to any TAGMSG that they believe should be stored for replay. Future client tag specifications should recommend the use of `draft/persist` when relevant.
+Clients SHOULD attach `+draft/persist` to any TAGMSG that they believe should be stored for replay. Future client tag specifications should recommend the use of `+draft/persist` when relevant.
 
 ## Examples
 
-This is an example of a reaction with `draft/persist` attached:
+This is an example of a reaction with `+draft/persist` attached:
 
-    C: @+draft/reply=123;+draft/react=lol;draft/persist TAGMSG #channel
+    C: @+draft/reply=123;+draft/react=lol;+draft/persist TAGMSG #channel
 
 ## Other Considerations
 
 This section is non-normative.
 
-The `draft/persist` tag is not intended as a solution to abusive client behavior. Servers may wish to implement other safeguards against client attempts to exhaust server-side resources.
+The `+draft/persist` tag is not intended as a solution to abusive client behavior. Servers may wish to implement other safeguards against client attempts to exhaust server-side resources.
