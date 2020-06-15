@@ -39,7 +39,7 @@ Clients requesting this capability indicate that they are capable of handling th
 
 Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, and will use the same tag and value in their response. They will also send the batch type and `ACK` response described below where required.
 
-The value, if present, MUST be a comma (`,`) separated list of flags. The `all` flag indicates the server WILL return a labeled response for every single command (i.e. there are NO cases where the client sends a command and receives no response, even for asynchronous remote commands described non-normatively below).
+The value, if present, MUST be a comma (`,`) separated list of flags. The `all` flag is a guarantee that the server WILL return a labeled response for every single command (i.e. the _"where it's feasible to do so"_ language below doesn't apply – there are NO cases where the client can send a command and receive no response, even for asynchronous remote commands).
 
 ### Batch types
 
