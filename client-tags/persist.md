@@ -57,7 +57,7 @@ The persist tag is sent by a client with the client-only prefix `+`. It has no v
 
 Servers SHOULD NOT store TAGMSG that do not contain the `+draft/persist` tag. If a server implements history storage and replay, it SHOULD store TAGMSG that contain the `+draft/persist` tag. Servers SHOULD ignore the presence of `+draft/persist` on all other message types.
 
-Since the specification of `+draft/react` precedes this specification, servers MAY wish to store TAGMSG that carry `+draft/react` but not `draft/persist`.
+Since the specification of `+draft/react` precedes this specification, servers MAY wish to store TAGMSG that carry `+draft/react` but not `+draft/persist`.
 
 ## Bouncer implementation considerations
 
