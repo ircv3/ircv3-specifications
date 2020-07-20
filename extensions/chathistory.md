@@ -12,6 +12,14 @@ copyrights:
     period: "2018-2019"
     email: "darren@kiwiirc.com"
 ---
+## Notes for implementing work-in-progress version
+
+This is a work-in-progress specification.
+
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `chathistory` or `event-playback` CAP names. Instead, implementations SHOULD use the `draft/chathistory` and `draft/event-playback` CAP names to be interoperable with other software implementing a compatible work-in-progress version. The final version of the specification will use unprefixed CAP names.
+
+The `chathistory` batch type is already ratified and SHOULD be used unprefixed.
+
 ## Description
 This document describes the format of the `chathistory` extension. This enables clients to request messages that were previously sent if they are still available on the server.
 
@@ -20,13 +28,13 @@ The server as mentioned in this document may refer to either an IRC server or an
 ## Implementation
 The `chathistory` extension uses the [chathistory][batch/chathistory] batch type and introduces a client command, `chathistory`.
 
-To fully support this extension, clients MUST support the [`batch`][batch], [`server-time`][server-time] and [`message-tags`][message-tags] capabilities.
+Full support for this extension requires support for the [`batch`][batch], [`server-time`][server-time] and [`message-tags`][message-tags] capabilities. However, limited functionality is available without support for these CAPs. Servers SHOULD NOT enforce that clients support all related capabilities before using the `chathistory` extension.
 
-The `chathistory` capability MUST be negotiated. This allows the server and client to act differently when delivering message history on connection.
+The `draft/chathistory` capability MUST be negotiated. This allows the server and client to act differently when delivering message history on connection.
 
 An ISUPPORT token MUST be sent to the client to state the maximum number of messages a client can request in a single command, represented by an integer. `CHATHISTORY=50`. If `0`, the client SHOULD assume that there is no maximum number of messages.
 
-The `event-playback` capability MAY be negotiated. This allows the client to signal that it is capable of receiving and correctly processing lines that would normally produce a local state change (such as `JOIN` or `MODE`) in its history batches.
+The `draft/event-playback` capability MAY be negotiated. This allows the client to signal that it is capable of receiving and correctly processing lines that would normally produce a local state change (such as `JOIN` or `MODE`) in its history batches.
 
 ### `CHATHISTORY` Command
 `CHATHISTORY` content can be requested by the client by sending the `CHATHISTORY` command to the server. A `batch` MUST be returned by the server. If no content exists to return, an empty batch SHOULD be returned to avoid the client waiting for a reply and to indicate that no content is available.
@@ -55,7 +63,7 @@ Request up to `limit` number of messages after and excluding the given `timestam
 
 #### `LATEST`
     CHATHISTORY LATEST <target> <* | timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
-Request the most recent messages that have been sent after and excluding the given `timestamp` or `msgid`. If a `*` is given instead of a timestamp or msgid, the server MUST use the current time as a timestamp. The number of messages returned MUST be equal to or less than `limit`. If a `*` is not given, only one timestamp or msgid MUST be given, not both.
+Request up to `limit` number of the most recent messages that have been sent. If a `timestamp` or `msgid` is given, the returned messages are restricted to those sent after and excluding that timestamp or msgid; if a `*` is given, no such restriction applies. If a `*` is not given, only one timestamp or msgid MUST be given, not both.
 
 This is useful for retrieving the latest conversation when first joining a channel or opening a query buffer.
 
