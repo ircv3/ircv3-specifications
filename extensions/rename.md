@@ -41,7 +41,7 @@ Server implementations SHOULD NOT allow channels to be converted between types w
 
 Implementations MUST allow channels to be renamed while only changing the casing of a channel name.
 
-To help clients that weren't present in the channel during the name change, server implementations MAY prevent reuising the old channel name and implement `JOIN` redirection from the old channel to the new channel for as long as is deemed necessary.
+To help clients that weren't present in the channel during the name change, server implementations MAY prevent reusing the old channel name and implement `JOIN` redirection from the old channel to the new channel for as long as is deemed necessary.
 
 ### Errors
 
