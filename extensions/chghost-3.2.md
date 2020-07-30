@@ -27,14 +27,6 @@ the same channel as the target client or have the client on a `MONITOR` list.
 Servers SHOULD additionally send the `CHGHOST` message to the client whose
 user or host has changed if the client supports the `chghost` capability.
 
-When the capability is not enabled for other clients who share channels with or
-monitor the changed client, servers SHOULD send messages to simulate the client
-reconnecting. This allows clients to keep their user state up to date. For
-shared channels, the simulated events SHOULD include appropriate `QUIT`, `JOIN`
-and MODE commands, to restore membership and user channel modes. For monitored
-clients, the events SHOULD include appropriate `RPL_MONOFFLINE` and
-`RPL_MONONLINE` numerics.
-
 When the server sends a `CHGHOST` message to a client, it MUST defer doing so
 until both successful `NICK` and `USER` commands have been received by the
 server.  The server MAY choose to defer it until after registration is
@@ -59,7 +51,15 @@ Servers that implement ident checking might choose to prefix a username with a t
 
     :nick!~old_user@old_host.local CHGHOST ~new_user new_host.local
 
-## Fallback for not supporting the `chghost` capability
+## Fallback when the `chghost` capability has not been negotiated
+
+When the capability is not enabled for other clients who share channels with or
+monitor the changed client, servers SHOULD send fallback messages to simulate the client
+reconnecting. This allows clients to keep their user state up to date. For
+shared channels, the simulated events SHOULD include appropriate `QUIT`, `JOIN`
+and MODE commands, to restore membership and user channel modes. For monitored
+clients, the events SHOULD include appropriate `RPL_MONOFFLINE` and
+`RPL_MONONLINE` numerics.
 
     :nick!old_user@old_host.local QUIT :Changing hostname
     :nick!new_user@new_host.local JOIN #ircv3
