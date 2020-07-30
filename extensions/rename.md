@@ -4,8 +4,8 @@ layout: spec
 work-in-progress: true
 copyrights:
   -
-    name: "Peter Powell"
-    email: "petpow@saberuk.com"
+    name: "Sadie Powell"
+    email: "sadie@witchery.services"
     period: "2017-2018"
 ---
 
