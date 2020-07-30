@@ -55,11 +55,9 @@ or may not have changed in the CHGHOST process.
 The `new_host.local` parameter represents the new hostname for the user which
 may or may not have changed in the CHGHOST process.
 
-If the server chooses to do so, the server can prepend the user with a tilde
-(such as denoting that the user was not sent by an ident daemon). When doing
-so, the command might look like:
+Servers that implement ident checking might choose to prefix a username with a tilde `~` character to indicate missing confirmation from an ident server. This MUST be considered part of the username and included in any CHGHOST messages where relevant.
 
-    :nick!old_user@old_host.local CHGHOST ~new_user new_host.local
+    :nick!~old_user@old_host.local CHGHOST ~new_user new_host.local
 
 ## Fallback for not supporting the `chghost` capability
 
@@ -67,24 +65,17 @@ so, the command might look like:
     :nick!new_user@new_host.local JOIN #ircv3
     :ircd.local MODE #ircv3 +v :nick
 
-Like above, if the server chooses to do so, the server can prepend the user
-with a tilde:
-
-    :nick!old_user@old_host.local QUIT :Changing hostname
-    :nick!~new_user@new_host.local JOIN #ircv3
-    :ircd.local MODE #ircv3 +v :nick
-
 ## Examples
 
-In this example, `tim!~toolshed@backyard` gets their username changed to `b` and
+In this example, `tim!~toolshed@backyard` gets their username changed to `~b` and
 their hostname changed to `ckyard`:
 
-    :tim!~toolshed@backyard CHGHOST b ckyard
+    :tim!~toolshed@backyard CHGHOST ~b ckyard
 
-In this example, `tim!b@ckyard` gets their username changed to `~toolshed` and
+In this example, `tim!b@ckyard` gets their username changed to `toolshed` and
 their hostname changed to `backyard`:
 
-    :tim!b@ckyard CHGHOST ~toolshed backyard
+    :tim!b@ckyard CHGHOST toolshed backyard
 
 ## Errata
 
