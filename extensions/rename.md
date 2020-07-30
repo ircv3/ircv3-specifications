@@ -41,16 +41,19 @@ Server implementations SHOULD NOT allow channels to be converted between types w
 
 Implementations MUST allow channels to be renamed while only changing the casing of a channel name.
 
-To help clients that weren't present in the channel during the name change, server implementations MAY prevent reusing the old channel name and implement `JOIN` redirection from the old channel to the new channel for as long as is deemed necessary.
-
 ### Errors
 
-This specification defines `FAIL` messages using the [standard replies][] framework for notifying clients of errors with channel renaming. The fail command is `RENAME` and the following codes are defined:
+This specification defines `FAIL` messages using the [standard replies][] framework for notifying clients of errors with channel renaming. The following codes are defined:
 
-* `CHANNEL_NAME_IN_USE <old-channel> <new-channel>`: The channel name is already taken
-* `CANNOT_RENAME <old-channel> <new-channel>`: any other error
+* `FAIL RENAME CHANNEL_NAME_IN_USE <old-channel> <new-channel>: The channel name is already taken`
+* `FAIL RENAME CANNOT_RENAME <old-channel> <new-channel>: The channel cannot be renamed`
+* `FAIL JOIN CHANNEL_RENAMED <old-channel> <new-channel>: The channel has been renamed`
 
 If existing error numerics (such as `ERR_CHANOPRIVSNEEDED`, `ERR_NOTONCHANNEL`, `ERR_NEEDMOREPARAMS`) are more appropriate, they SHOULD be used instead.
+
+## Channel redirection
+
+To help clients that weren't present in the channel during the name change, server implementations MAY keep track of renames and send a `FAIL JOIN CHANNEL_RENAMED` message to clients attempting to join the old channel name, for as long as is deemed necessary by the implementation.
 
 ## Fallback
 
@@ -60,6 +63,8 @@ Server implementations MUST implement a fallback mechanism to inform clients tha
 * Send the client a `JOIN` message followed by the usual messages that would be sent if the client had joined the new channel normally (`RPL_TOPIC`, `RPL_TOPICWHOTIME`, `RPL_NAMREPLY`, `RPL_ENDOFNAMES` etc).
 
 This fallback SHOULD NOT be used if the rename only changes the case of the channel name.
+
+If a server is using channel redirection, the `470` numeric (`ERR_LINKCHANNEL`) MAY be used with descriptive free-form text to redirect clients from the old channel to the new channel. This is a more ambiguous response and SHOULD NOT be used when the capability has been negotiated.
 
 If a client sends a valid `RENAME` command without having negotiated the capability, the server SHOULD rename the channel, but use the fallback mechanism to report the name change to that client. The server MAY send `FAIL` messages to such clients when the `RENAME` command fails.
 
@@ -72,6 +77,8 @@ In server implementations that link with other servers, take measures to prevent
 Server implementations might choose to implement a per-channel cooldown system using appropriate error responses, to prevent abuse. For example flooding large channels with the fallback burst.
 
 Server implementations might choose to limit the renaming of channels to privileged individuals in order to prevent abuse, using appropriate error responses.
+
+Server implementations that allow channel registration might choose to prevent registering an old channel name while a channel redirection is in place.
 
 ### Examples
 
