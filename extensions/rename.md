@@ -69,7 +69,7 @@ This section is non-normative
 
 In server implementations that link with other servers, take measures to prevent channel name collisions. An example of such a method would be to use channel identifiers similar to how user identifiers are used to prevent nickname collisions in server-to-server protocols.
 
-Server implementations might choose to implement a cooldown system to prevent abuse, using appropriate error responses.
+Server implementations might choose to implement a per-channel cooldown system using appropriate error responses, to prevent abuse. For example flooding large channels with the fallback burst.
 
 Server implementations might choose to limit the renaming of channels to privileged individuals in order to prevent abuse, using appropriate error responses.
 
