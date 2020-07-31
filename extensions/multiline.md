@@ -87,6 +87,8 @@ When delivering multiline batches to clients that have not negotiated the multil
 
 Servers MUST NOT send blank lines to clients that have not negotiated the multiline capability.
 
+Servers SHOULD maintain the line composition sent by the client instead of combining to a normalised form before re-splitting. This ensures that steps taken to [split long lines](#splitting-long-lines) appropriately are preserved.
+
 Any tags that would have been added to the batch, e.g. message IDs, account tags etc MUST be included on the first message line to be sent. Tags MAY also be included on subsequent lines where it makes sense to do so.
 
 ### Errors
