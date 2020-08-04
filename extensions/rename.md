@@ -62,7 +62,7 @@ Server implementations MUST implement a fallback mechanism to inform clients tha
 * Send the client a `PART` message for the old channel name, with part message matching the rename reason if given
 * Send the client a `JOIN` message followed by the usual messages that would be sent if the client had joined the new channel normally (`RPL_TOPIC`, `RPL_TOPICWHOTIME`, `RPL_NAMREPLY`, `RPL_ENDOFNAMES` etc).
 
-This fallback SHOULD NOT be used if the rename only changes the case of the channel name.
+This fallback SHOULD NOT be used if the rename only changes the case of the channel name, as defined by the [casemapping] in use on the server.
 
 If a server is using channel redirection, the `470` numeric (`ERR_LINKCHANNEL`) MAY be used with descriptive free-form text to redirect clients from the old channel to the new channel. This is a more ambiguous response and SHOULD NOT be used when the capability has been negotiated.
 
@@ -125,3 +125,4 @@ Failing to rename a channel because it has been renamed recently:
     S: :irc.example.com FAIL RENAME CANNOT_RENAME #magical-girls #witches :This channel has been renamed recently
 
 [standard replies]: ../extensions/standard-replies.html
+[casemapping]: https://tools.ietf.org/html/draft-hardy-irc-isupport-00#section-4.1
