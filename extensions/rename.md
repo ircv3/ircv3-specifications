@@ -43,11 +43,11 @@ Implementations MUST allow channels to be renamed while only changing the casing
 
 ### Errors
 
-This specification defines `FAIL` messages using the [standard replies][] framework for notifying clients of errors with channel renaming. The following codes are defined:
+This specification defines `FAIL` messages using the [standard replies][] framework for notifying clients of errors with channel renaming. The following codes are defined, with sample plain text descriptions.
 
-* `FAIL RENAME CHANNEL_NAME_IN_USE <old-channel> <new-channel>: The channel name is already taken`
-* `FAIL RENAME CANNOT_RENAME <old-channel> <new-channel>: The channel cannot be renamed`
-* `FAIL JOIN CHANNEL_RENAMED <old-channel> <new-channel>: The channel has been renamed`
+* `FAIL RENAME CHANNEL_NAME_IN_USE <old-channel> <new-channel> :The channel name is already taken`
+* `FAIL RENAME CANNOT_RENAME <old-channel> <new-channel> :The channel cannot be renamed`
+* `FAIL JOIN CHANNEL_RENAMED <old-channel> <new-channel> :The channel has been renamed`
 
 If existing error numerics (such as `ERR_CHANOPRIVSNEEDED`, `ERR_NOTONCHANNEL`, `ERR_NEEDMOREPARAMS`) are more appropriate, they SHOULD be used instead.
 
