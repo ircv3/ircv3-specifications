@@ -19,9 +19,9 @@ The final version of the specification will use an unprefixed capability name.
 
 ## Introduction
 
-Currently there is no reasonable way to rename channels. All existing methods involve closing down the channel and redirecting it to the a new one. This is undesirable as access and ban lists needs to be manually copied. It also causes problems for client logging as history is split across multiple files.
+Historically there has been no reasonable way to rename a channel without closing down the channel and redirecting to a new one. This isn't ideal since properties such as access and ban lists need to be manually copied to the new channel. This also causes problems for client-side logging where history is split across multiple channel names.
 
-This specification introduces a method of natively renaming channels that does not suffer from these faults.
+This specification introduces a method of natively renaming channels that does not suffer from these drawbacks.
 
 ## Architecture
 
