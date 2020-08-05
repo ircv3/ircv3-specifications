@@ -94,7 +94,7 @@ Renaming a channel without a reason:
     C: RENAME #coding #programming
     S: :nick!user@host RENAME #coding #programming
 
-Renaming a channel when the `draft/rename` capability has not been negotiation
+Renaming a channel when the `draft/rename` capability has not been negotiated:
 
     C: RENAME #foo #bar :Changing the channel name
     S: :nick!user@host PART #foo :Changing the channel name
