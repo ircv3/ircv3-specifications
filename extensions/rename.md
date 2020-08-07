@@ -7,6 +7,10 @@ copyrights:
     name: "Sadie Powell"
     email: "sadie@witchery.services"
     period: "2017-2018"
+  -
+    name: "James Wheare"
+    email: "james@irccloud.com"
+    period: "2020"
 ---
 
 ## Notes for implementing work-in-progress version
