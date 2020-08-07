@@ -68,12 +68,12 @@ clients, the events SHOULD include appropriate `RPL_MONOFFLINE` and
 ## Examples
 
 In this example, `tim!~toolshed@backyard` gets their username changed to `~b` and
-their hostname changed to `ckyard`:
+their hostname changed to `ckyard`. Their new user mask is `tim!~b@ckyard`:
 
     :tim!~toolshed@backyard CHGHOST ~b ckyard
 
 In this example, `tim!b@ckyard` gets their username changed to `toolshed` and
-their hostname changed to `backyard`:
+their hostname changed to `backyard`. Their new user mask is `tim!toolshed@backyard`:
 
     :tim!b@ckyard CHGHOST toolshed backyard
 
