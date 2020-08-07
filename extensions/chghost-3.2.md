@@ -57,7 +57,7 @@ When the capability is not enabled for other clients who share channels with or
 monitor the changed client, servers SHOULD send fallback messages to simulate the client
 reconnecting. This allows clients to keep their user state up to date. For
 shared channels, the simulated events SHOULD include appropriate `QUIT`, `JOIN`
-and MODE commands, to restore membership and user channel modes. For monitored
+and `MODE` commands, to restore membership and user channel modes. For monitored
 clients, the events SHOULD include appropriate `RPL_MONOFFLINE` and
 `RPL_MONONLINE` numerics.
 
