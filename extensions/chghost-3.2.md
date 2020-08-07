@@ -41,7 +41,7 @@ The `CHGHOST` message is as follows:
 
     :nick!old_user@old_host.local CHGHOST new_user new_host.local
 
-The `new-user` parameter represents the user's "username" or "ident" which may
+The `new_user` parameter represents the user's "username" or "ident" which may
 or may not have changed in the CHGHOST process.
 
 The `new_host.local` parameter represents the new hostname for the user which
