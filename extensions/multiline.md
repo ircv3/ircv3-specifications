@@ -71,7 +71,14 @@ When receiving a well-formed mulitiline message batch, implementations MUST coll
 * Servers: delivering the batch to the intended recipients
 * Clients: displaying the batched message to the user
 
-Messages in a multiline batch MUST be concatenated with a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case the message is directly concatenated with the previous message without any separation.
+The combined message value of a multiline batch is defined as the concatenation of the messages from each individual line within the batch. Line messages are joined by a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case that line's message is directly joined with the previous line's message with no separation.
+
+Each line feed used to join line messages contributes one byte towards the `max-bytes` limit. No line feed is appended to the final line message of a batch.
+
+Servers MUST NOT reject blank lines other than in the following cases:
+
+* Clients MUST NOT send blank lines with the `draft/multiline-concat` tag.
+* Clients MUST NOT send messages consisting entirely of blank lines.
 
 Clients MUST NOT send messages other than PRIVMSG while a multiline batch is open.
 
@@ -79,7 +86,11 @@ Clients MUST NOT send messages other than PRIVMSG while a multiline batch is ope
 
 When delivering multiline batches to clients that have not negotiated the multiline capability, servers MUST deliver the component messages without using a multiline BATCH.
 
-Any tags that would have been added to the batch, e.g. message IDs, account tags etc MUST be included on the first message line. Tags MAY also be included on subsequent lines where it makes sense to do so.
+Servers MUST NOT send blank lines to clients that have not negotiated the multiline capability.
+
+Servers SHOULD maintain the line composition sent by the client instead of combining to a normalised form before re-splitting. This ensures that steps taken to [split long lines](#splitting-long-lines) appropriately are preserved.
+
+Any tags that would have been added to the batch, e.g. message IDs, account tags etc MUST be included on the first message line to be sent. Tags MAY also be included on subsequent lines where it makes sense to do so.
 
 ### Errors
 
@@ -177,6 +188,7 @@ Client sending a mutliline batch
 
     Client: BATCH +123 draft/multiline #channel
     Client: @batch=123 PRIVMSG #channel hello
+    Client: @batch=123 PRIVMSG #channel :
     Client: @batch=123 privmsg #channel :how is<SPACE>
     Client: @batch=123;draft/multiline-concat PRIVMSG #channel :everyone?
     Client: BATCH -123
@@ -185,6 +197,7 @@ Server sending the same batch
 
     Server: @msgid=xxx;account=account :n!u@h BATCH +123 draft/multiline #channel
     Server: @batch=123 :n!u@h PRIVMSG #channel hello
+    Server: @batch=123 :n!u@h PRIVMSG #channel :
     Server: @batch=123 :n!u@h PRIVMSG #channel :how is<SPACE>
     Server: @batch=123;draft/multiline-concat :n!u@h PRIVMSG #channel :everyone?
     Server: BATCH -123
@@ -198,6 +211,7 @@ Server sending messages to clients without multiline support
 Final concatenated message
 
     hello
+
     how is everyone?
 
 ---
@@ -208,7 +222,7 @@ Invalid multiline batch target
     Client: @batch=456 PRIVMSG #bar hello
     Client: BATCH -456
 
-    Server: :irc.example.com FAIl BATCH MULTILINE_INVALID_TARGET #foo #bar :Invalid multiline target
+    Server: :irc.example.com FAIL BATCH MULTILINE_INVALID_TARGET #foo #bar :Invalid multiline target
 
 ---
 
@@ -220,7 +234,7 @@ Invalid multiline batch target
     Client: @batch=abc PRIVMSG #channel hello
     ... lines that exceeed the max-bytes=40000 limit ...
 
-    Server: :irc.example.com FAIl BATCH MULTILINE_MAX_BYTES 40000 :Multiline batch max-bytes exceeded
+    Server: :irc.example.com FAIL BATCH MULTILINE_MAX_BYTES 40000 :Multiline batch max-bytes exceeded
 
 `max-lines` exceeded multiline batch
     
@@ -230,16 +244,39 @@ Invalid multiline batch target
     Client: @batch=abc PRIVMSG #channel hello
     ... 10 more lines ...
 
-    Server: :irc.example.com FAIl BATCH MULTILINE_MAX_LINES 10 :Multiline batch max-lines exceeded
+    Server: :irc.example.com FAIL BATCH MULTILINE_MAX_LINES 10 :Multiline batch max-lines exceeded
 
 ---
 
-Invalid multiline batch
+Invalid use of a concatenated blank line
+
+    Client: BATCH +abc123 draft/multiline #channel
+    Client: @batch=abc123 PRIVMSG #channel :hello<space>
+    Client: @batch=abc123;draft/multiline-concat PRIVMSG #channel :
+    Client: @batch=abc123 PRIVMSG #channel :there
+    Client: BATCH -abc123
+
+    Server: :irc.example.com FAIL BATCH MULTILINE_INVALID :Invalid multiline batch with concatenated blank line
+
+---
+
+Invalid entirely blank message
+
+    Client: BATCH +abc123 draft/multiline #channel
+    Client: @batch=abc123 PRIVMSG #channel :
+    Client: @batch=abc123 PRIVMSG #channel :
+    Client: BATCH -abc123
+
+    Server: :irc.example.com FAIL BATCH MULTILINE_INVALID :Invalid multiline batch with blank lines only
+
+---
+
+Other invalid multiline batch
 
     Client: BATCH +999 draft/multiline #channel
     ... invalid batch contents ...
 
-    Server: :irc.example.com FAIl BATCH MULTILINE_INVALID :Invalid multiline batch
+    Server: :irc.example.com FAIL BATCH MULTILINE_INVALID :Invalid multiline batch
 
 [message tags]: ../extensions/message-tags.html
 [`batch`]: ../extensions/batch-3.2.html
