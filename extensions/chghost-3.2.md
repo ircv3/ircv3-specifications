@@ -14,26 +14,11 @@ copyrights:
 
 ## Introduction
 
-The `chghost` client capability allows servers to directly inform clients about
-clients changing their host or user without having to simulate the client
-reconnecting. This is useful for servers implementing virtual hosts or masks
-and helps reduce clutter on the client's UI.
+The `chghost` capability allows servers to send a notification when clients change their username or host. This mechanism avoids simulating a reconnect of the client. This is useful for servers that implement virtual hosts or cloaks, and helps to reduce clutter in client UI.
 
 ## The `chghost` capability
 
-When a client changes their user or host, servers MUST send the `CHGHOST`
-message to clients who have enabled the `chghost` capability and either share
-the same channel as the target client.
-Servers SHOULD additionally send the `CHGHOST` message to the client whose
-user or host has changed if the client supports the `chghost` capability.
-
-When the server sends a `CHGHOST` message to a client, it MUST defer doing so
-until both successful `NICK` and `USER` commands have been received by the
-server.  The server MAY choose to defer it until after registration is
-completed, for example if a valid SASL authentication during client
-registration triggers an assignment of a virtual host. If the server does not
-defer it until registration is completed, and either the user or the host of
-the client changes, the server MUST send a new `CHGHOST` message.
+When a client username or host is changed, servers MUST send the `CHGHOST` message to other clients who share channels with the target client and who have enabled the `chghost` capability. Servers SHOULD also send the `CHGHOST` message to the client whose own username or host changed, if that client also supports the `chghost` capability.
 
 ## The `CHGHOST` message
 
@@ -41,11 +26,11 @@ The `CHGHOST` message is as follows:
 
     :nick!old_user@old_host.local CHGHOST new_user new_host.local
 
-The `new_user` parameter represents the user's "username" or "ident" which may
-or may not have changed in the CHGHOST process.
+The `new_user` parameter represents the user's username.
 
-The `new_host.local` parameter represents the new hostname for the user which
-may or may not have changed in the CHGHOST process.
+The `new_host.local` parameter represents the user's hostname.
+
+One or both of the username and hostname can change during the CHGHOST process.
 
 Servers that implement ident checking might choose to prefix a username with a tilde `~` character to indicate missing confirmation from an ident server. This MUST be considered part of the username and included in any CHGHOST messages where relevant.
 
@@ -53,10 +38,7 @@ Servers that implement ident checking might choose to prefix a username with a t
 
 ## Fallback when the `chghost` capability has not been negotiated
 
-When the capability is not enabled for other clients who share channels with the changed client, servers SHOULD send fallback messages to simulate the client
-reconnecting. This allows clients to keep their user state up to date. For
-shared channels, the simulated events SHOULD include appropriate `QUIT`, `JOIN`
-and `MODE` commands, to restore membership and user channel modes.
+When the capability is not enabled for other clients who share channels with the changed client, servers SHOULD send fallback messages to simulate the client reconnecting. This allows clients to keep their user state up to date. For shared channels, the simulated events SHOULD include appropriate `QUIT`, `JOIN` and `MODE` commands, to restore membership and user channel modes.
 
     :nick!old_user@old_host.local QUIT :Changing hostname
     :nick!new_user@new_host.local JOIN #ircv3
@@ -64,25 +46,15 @@ and `MODE` commands, to restore membership and user channel modes.
 
 ## Examples
 
-In this example, `tim!~toolshed@backyard` gets their username changed to `~b` and
-their hostname changed to `ckyard`. Their new user mask is `tim!~b@ckyard`:
+In this example, `tim!~toolshed@backyard` gets their username changed to `~b` and their hostname changed to `ckyard`. Their new user mask is `tim!~b@ckyard`:
 
     :tim!~toolshed@backyard CHGHOST ~b ckyard
 
-In this example, `tim!b@ckyard` gets their username changed to `toolshed` and
-their hostname changed to `backyard`. Their new user mask is `tim!toolshed@backyard`:
+In this example, `tim!b@ckyard` gets their username changed to `toolshed` and their hostname changed to `backyard`. Their new user mask is `tim!toolshed@backyard`:
 
     :tim!b@ckyard CHGHOST toolshed backyard
 
 ## Errata
 
-* Previous versions of this specification did not include any examples, which made
-it unclear as to whether the de-facto `~` prefix should be included on CHGHOST
-messages. The new examples make clear that it should be included.
-* Previous versions of this specification did not specify that the `CHGHOST`
-command should be sent after both a valid NICK and a valid USER command have
-been received.
-* Previous versions of this specification used confusing descriptions and have
-since been rewritten to include a simpler description and example.
-* Previous versions of this specification did not specify whether or not the
-client whose user or host changed should receive the message.
+* Previous versions of this specification did not include any examples, which made it unclear as to whether the de-facto `~` prefix should be included on CHGHOST messages. The new examples make clear that it should be included.
+* Previous versions of this specification did not specify whether or not the client whose own user or host changed should receive the message.
