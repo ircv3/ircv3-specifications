@@ -10,6 +10,10 @@ copyrights:
     name: "Ryan"
     period: "2016"
     email: "ryan@hashbang.sh"
+  -
+    name: "James Wheare"
+    period: "2020"
+    email: "james@irccloud.com"
 ---
 
 ## Introduction
