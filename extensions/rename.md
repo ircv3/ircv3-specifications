@@ -23,15 +23,16 @@ The final version of the specification will use an unprefixed capability name.
 
 ## Introduction
 
-Historically there has been no reasonable way to rename a channel without closing down the channel and redirecting to a new one. This isn't ideal since properties such as access and ban lists need to be manually copied to the new channel. This also causes problems for client-side logging where history is split across multiple channel names.
 
-This specification introduces a method of natively renaming channels that does not suffer from these drawbacks.
+This specification introduces a method of natively renaming a channel without closing it down and redirecting to a new one. This allows properties such as access and ban lists to be maintained, and avoids issues with client-side logging where history is split across multiple channel names.
 
 ## Architecture
 
 ### Capabilities
 
-This specification introduces the `draft/rename` capability. This capability informs the server that the client is capable of handling `RENAME` messages.
+This specification adds the `draft/rename` capability.
+
+Clients that negotiate this capability indicate that they are capable of handling the `RENAME` command.
 
 ### Messages
 
