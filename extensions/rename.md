@@ -77,7 +77,7 @@ If a client sends a valid `RENAME` command without having negotiated the capabil
 
 This section is non-normative
 
-In server implementations that link with other servers, take measures to prevent channel name collisions. An example of such a method would be to use channel identifiers similar to how user identifiers are used to prevent nickname collisions in server-to-server protocols.
+In server implementations that link with other servers, take measures to prevent channel name collisions. One aspect of such a measure might involve using channel identifiers, just as user identifiers are used to prevent nickname collisions in server linking protocols.
 
 Server implementations might choose to implement a per-channel cooldown system using appropriate error responses, to prevent abuse. For example flooding large channels with the fallback burst.
 
