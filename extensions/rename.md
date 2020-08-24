@@ -40,7 +40,7 @@ This specification adds the `RENAME` command. This command allows a client to in
 
 A channel rename preserves all channel state, such as membership, mode and topic.
 
-The `RENAME` command has between two and three parameters. The first parameter is the current channel name, the second parameter is the new channel name, and the optional third parameter is a reason for renaming the channel.
+The `RENAME` client to server command has two required parameters: the existing channel name, and the new channel name. An optional third parameter can provide a reason for renaming the channel. The server to client command MUST always include the third parameter, an empty string MAY be used if no reason is provided.
 
 Server implementations SHOULD NOT allow channels to be converted between types with the `RENAME` message. Client implementations SHOULD be able to handle renaming between channel types.
 
@@ -97,7 +97,7 @@ Renaming a channel with a reason:
 Renaming a channel without a reason:
 
     C: RENAME #coding #programming
-    S: :nick!user@host RENAME #coding #programming
+    S: :nick!user@host RENAME #coding #programming :
 
 Renaming a channel when the `draft/rename` capability has not been negotiated:
 
