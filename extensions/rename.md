@@ -109,6 +109,27 @@ Renaming a channel when the `draft/rename` capability has not been negotiated:
     S: :irc.example.com 353 nick #bar :@nick other-nick and-another
     S: :irc.example.com 366 nick #bar :End of /NAMES list
 
+Joining an old channel name that has been renamed with server redirection:
+    
+    C: JOIN #foo
+    S: FAIL JOIN CHANNEL_RENAMED #foo #bar :The channel has been renamed
+    C: JOIN #bar
+    S: :nick!user@host JOIN #bar
+    S: :irc.example.com 332 nick #bar :Topic of the renamed channel
+    S: :irc.example.com 333 nick #bar topic-setter 1487418032
+    S: :irc.example.com 353 nick #bar :@nick other-nick and-another
+    S: :irc.example.com 366 nick #bar :End of /NAMES list
+
+Joining an old channel name that has been renamed with server redirection when the `draft/rename` capability has not been negotiated:
+
+    C: JOIN #foo
+    S :irc.example.com 470 nick #foo #bar :The channel has been renamed
+    S: :nick!user@host JOIN #bar
+    S: :irc.example.com 332 nick #bar :Topic of the renamed channel
+    S: :irc.example.com 333 nick #bar topic-setter 1487418032
+    S: :irc.example.com 353 nick #bar :@nick other-nick and-another
+    S: :irc.example.com 366 nick #bar :End of /NAMES list
+
 Failing to rename a channel because the user does not have the appropriate privileges:
 
     C: RENAME #aniki #aneki
