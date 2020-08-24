@@ -42,7 +42,7 @@ A channel rename preserves all channel state, such as membership, mode and topic
 
 The `RENAME` client to server command has two required parameters: the existing channel name, and the new channel name. An optional third parameter can provide a reason for renaming the channel. The server to client command MUST always include the third parameter, an empty string MAY be used if no reason is provided.
 
-Server implementations SHOULD NOT allow channels to be converted between types with the `RENAME` message. Client implementations SHOULD be able to handle renaming between channel types.
+Server implementations MAY prevent channel renames that change the prefix type, to avoid changing channel properties other than the name.
 
 Implementations MUST allow channels to be renamed while only changing the casing of a channel name.
 
@@ -140,10 +140,10 @@ Failing to rename a channel because the new channel name already exists:
     C: RENAME #evil #good :Don't be evil
     S: :irc.example.com FAIL RENAME CHANNEL_NAME_IN_USE #evil #good :Channel already exists
 
-Failing to rename a channel because you can not convert between channel types:
+Failing to rename a channel because you the server disallows changing prefix types:
 
     C: RENAME #global %local
-    S: :irc.example.com FAIL RENAME CANNOT_RENAME #global %local :You cannot change a channel type
+    S: :irc.example.com FAIL RENAME CANNOT_RENAME #global %local :You cannot change a channel prefix type
 
 Failing to rename a channel because it has been renamed recently:
 
