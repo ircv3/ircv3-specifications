@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `rename` Extension
+title: Channel renaming
 layout: spec
 work-in-progress: true
 copyrights:
@@ -17,7 +17,7 @@ copyrights:
 
 This is a work-in-progress specification.
 
-Software implementing this work-in-progress specification MUST NOT use the unprefixed `rename` capability name. Instead, implementations SHOULD use the `draft/rename` capability name to be interoperable with other software implementing a compatible work-in-progress version.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `channel-rename` capability name. Instead, implementations SHOULD use the `draft/channel-rename` capability name to be interoperable with other software implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed capability name.
 
@@ -30,7 +30,7 @@ This specification introduces a method of natively renaming a channel without cl
 
 ### Capabilities
 
-This specification adds the `draft/rename` capability.
+This specification adds the `draft/channel-rename` capability.
 
 Clients that negotiate this capability indicate that they are capable of handling the `RENAME` command.
 
@@ -62,7 +62,7 @@ To help clients that weren't present in the channel during the name change, serv
 
 ## Fallback
 
-Server implementations MUST implement a fallback mechanism to inform clients that have not negotiated the `draft/rename` capability of a channel name change. The mechanism is as follows:
+Server implementations MUST implement a fallback mechanism to inform clients that have not negotiated the `draft/channel-rename` capability of a channel name change. The mechanism is as follows:
 
 * Send the client a `PART` message for the old channel name, with part message matching the rename reason if given
 * Send the client a `JOIN` message followed by the usual messages that would be sent if the client had joined the new channel normally (`RPL_TOPIC`, `RPL_TOPICWHOTIME`, `RPL_NAMREPLY`, `RPL_ENDOFNAMES` etc).
@@ -99,7 +99,7 @@ Renaming a channel without a reason:
     C: RENAME #coding #programming
     S: :nick!user@host RENAME #coding #programming :
 
-Renaming a channel when the `draft/rename` capability has not been negotiated:
+Renaming a channel when the `draft/channel-rename` capability has not been negotiated:
 
     C: RENAME #foo #bar :Changing the channel name
     S: :nick!user@host PART #foo :Changing the channel name
@@ -120,7 +120,7 @@ Joining an old channel name that has been renamed with server redirection:
     S: :irc.example.com 353 nick #bar :@nick other-nick and-another
     S: :irc.example.com 366 nick #bar :End of /NAMES list
 
-Joining an old channel name that has been renamed with server redirection when the `draft/rename` capability has not been negotiated:
+Joining an old channel name that has been renamed with server redirection when the `draft/channel-rename` capability has not been negotiated:
 
     C: JOIN #foo
     S :irc.example.com 470 nick #foo #bar :The channel has been renamed
