@@ -128,10 +128,13 @@ A client with full support for BATCH, message IDs, and deduplication can fill in
 
     lower_bound = <timestamp of last message relayed to the previous session>
     lower_bound -= FUZZ_INTERVAL
-    upper_bound = now() + FUZZ_INTERVAL
+    upper_bound = None
     retrieved_count = 0
     while retrieved_count < SANITY_LIMIT:
-        messages = CHATHISTORY(BEFORE, upper_bound)
+        if upper_bound is None:
+            messages = CHATHISTORY(LATEST, *)
+        else:
+            messages = CHATHISTORY(BEFORE, upper_bound)
         if len(messages) == 0:
             break
         retrieved_count += len(messages)
@@ -141,9 +144,11 @@ A client with full support for BATCH, message IDs, and deduplication can fill in
             break
         upper_bound = earliest_message.msgid
 
-A client without support for BATCH, message IDs, or deduplication can still make use of CHATHISTORY, albeit with the possibility of skipping some messages or seeing some duplicated messages. For example, on initial JOIN, the client can do the following (this implementation errs on the side of missing messages, rather than seeing duplicated messages):
+A client without support for BATCH, message IDs, or deduplication can still make use of CHATHISTORY, albeit with the possibility of skipping some messages or seeing some duplicated messages. For example, on initial JOIN, the client can do the following:
 
-    display(CHATHISTORY(BEFORE, join_message.msgid))
+    display(CHATHISTORY(LATEST, *))
+
+To avoid the possibility of seeing duplicated messages here (messages that were relayed after the channel join, but also appear in the CHATHISTORY LATEST output), a client could ignore messages relayed to the channel until the CHATHISTORY reply batch is complete.
 
 Infinite scroll can be implemented as:
 
