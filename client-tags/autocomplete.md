@@ -127,11 +127,11 @@ Other clients in the channel will receive:
 
     @msgid=123;+draft/autocomplete-request=Bot:\sdisconnect\sfreen :nick!user@host TAGMSG #channel
 
-A bot with a "!disconnect" command will reply:
+A bot with a "disconnect" command will reply:
 
     @+draft/reply=123,+draft/autocomplete-response=ode :nick!user@host TAGMSG #channel
 
-and the user agent will transform the current message to: "!disconnect freenode"
+and the user agent will transform the current message to: "disconnect freenode"
 
 ### Backspaces
 
@@ -139,6 +139,6 @@ In this example, a user started writing a command with a typo "Bot: disconnect f
 
     @+draft/autocomplete-request=Bot:\sdisconnect\sfrenod TAGMSG #channel
 
-A bot with a "!disconnect" command and understanding the user meant "freenode" but missed an "e" will reply:
+A bot with a "disconnect" command and understanding the user meant "freenode" but missed an "e" will reply:
 
     @+draft/reply=123,+draft/autocomplete-response=<BS><BS><BS>enode :nick!user@host TAGMSG #channel
