@@ -28,7 +28,7 @@ The server as mentioned in this document may refer to either an IRC server or an
 ## Implementation
 The `chathistory` extension uses the [chathistory][batch/chathistory] batch type and introduces a client command, `chathistory`.
 
-Full support for this extension requires support for the [`batch`][batch], [`server-time`][server-time] and [`message-tags`][message-tags] capabilities. However, limited functionality is available without support for these CAPs. Servers SHOULD NOT enforce that clients support all related capabilities before using the `chathistory` extension.
+Full support for this extension requires support for the [`batch`][batch], [`server-time`][server-time] and [`message-tags`][message-tags] capabilities. However, limited functionality is available to clients without support for these CAPs. Servers SHOULD NOT enforce that clients support all related capabilities before using the `chathistory` extension. Meanwhile, bouncers implementing the server side of this specification may not be able to provide message IDs (when they are mediating for a server that does not support the `message-tags` capability). Therefore, clients with full support for `message-tags` MAY wish to implement fallback logic that relies only on `server-time`.
 
 The `draft/chathistory` capability MUST be negotiated. This allows the server and client to act differently when delivering message history on connection.
 
