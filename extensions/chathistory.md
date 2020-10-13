@@ -169,7 +169,9 @@ In the typical IRC network, there is no well-defined global linear ordering of m
 
 ## Security Considerations
 
-Secure identification of users and clients MUST exist in order to ensure that users cannot obtain history they are not authorised to view. Use of account names, internal account identifiers, or certificate fingerprints SHOULD be strongly considered when matching content to users. If a client requests content for a target they are not authorised to view, e.g., a channel they are banned from, an empty batch SHOULD be returned as if no content exists.
+Servers MUST ensure that users cannot obtain history they are not authorised to view. Servers SHOULD use secure identification mechanisms such as account names, internal account identifiers, or certificate fingerprints to match content to users.
+
+Given conventional expectations around channel membership, servers MAY wish to disallow clients from querying the history of channels they are not joined to. If they do not, they SHOULD disallow clients from querying channels that they are banned from, or which are private.
 
 While an ISUPPORT token value of `0` may be used to indicate no message limit exists, servers SHOULD set and enforce a reasonable maximum and properly throttle `CHATHISTORY` commands to prevent abuse.
 
