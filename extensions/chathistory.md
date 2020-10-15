@@ -4,6 +4,9 @@ layout: spec
 work-in-progress: true
 copyrights:
   -
+    name: "MuffinMedic"
+    period: "2017-2018"
+  -
     name: "Darren Whitlen"
     period: "2018-2020"
     email: "darren@kiwiirc.com"
