@@ -3,10 +3,6 @@ title: IRCv3 typing client tag
 layout: spec
 copyrights:
   -
-    name: "Evan Magaliff"
-    period: "2017"
-    email: "evan@muffinmedic.net"
-  -
     name: "James Wheare"
     period: "2020"
     email: "james@irccloud.com"
