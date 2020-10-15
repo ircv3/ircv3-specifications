@@ -4,13 +4,13 @@ layout: spec
 work-in-progress: true
 copyrights:
   -
-    name: "Evan Magaliff"
-    period: "2017"
-    email: "evan@muffinmedic.net"
-  -
     name: "Darren Whitlen"
-    period: "2018-2019"
+    period: "2018-2020"
     email: "darren@kiwiirc.com"
+  -
+    name: "Shivaram Lingamneni"
+    period: "2020"
+    email: "slingamn@cs.stanford.edu"
 ---
 ## Notes for implementing work-in-progress version
 
