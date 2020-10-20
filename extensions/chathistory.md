@@ -40,9 +40,7 @@ An ISUPPORT token MUST be sent to the client to state the maximum number of mess
 The `draft/event-playback` capability MAY be negotiated. This allows the client to signal that it is capable of receiving and correctly processing lines that would normally produce a local state change (such as `JOIN` or `MODE`) in its history batches.
 
 ### `CHATHISTORY` Command
-Message history content can be requested by the client by sending the `CHATHISTORY` command to the server. A [`batch`][batch] MUST be returned by the server; its type SHOULD be `chathistory`. If no content exists to return, an empty batch SHOULD be returned, in order to avoid the client waiting for a reply.
-
-The `CHATHISTORY` command has the following general syntax:
+The client can request message history content by sending the `CHATHISTORY` command to the server. This command has the following general syntax:
 
     CHATHISTORY <subcommand> <target> <timestamp | msgid> <limit>
 
@@ -51,6 +49,8 @@ The `target` parameter specifies a single buffer (channel or nickname) from whic
 The special target `*` refers to all direct messages sent to or from the current user, regardless of the other party. This allows the client to retrieve conversations with users it is not yet aware of.
 
 A `timestamp` parameter MUST have the format `timestamp=YYYY-MM-DDThh:mm:ss.sssZ`, as in the [server-time][server-time] extension. A `msgid` parameter MUST have the format `msgid=foobar`, as in the [message-ids][message-ids] extension.
+
+The server MUST reply to this command using a [`batch`][batch]. The type of the batch SHOULD be `chathistory`, and it SHOULD take a single additional parameter, the canonical name of the target being queried. If no content exists to return, an empty batch SHOULD be returned, in order to avoid the client waiting for a reply.
 
 #### Subcommands
 
