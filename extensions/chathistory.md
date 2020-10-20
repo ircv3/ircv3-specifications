@@ -170,6 +170,8 @@ To fill in gaps in a client without deduplication support, iterate this infinite
 
 In the typical IRC network, there is no well-defined global linear ordering of messages, since different linked servers may see messages in different orders. Furthermore, due to clock skew between servers and between server and client, messages may be relayed, stored, and replayed in an order that differs from the timestamp order. Within the recommended constraints on message ordering described above, implementations may want to make different tradeoffs between simplicity, consistency, and correctness (i.e., neither missing nor duplicating messages).
 
+Client implementations should account for the possibility that history reply batches may contain nicknames (as sources or parameters) that have subsequently changed.
+
 ## Security Considerations
 
 Servers MUST ensure that users cannot obtain history they are not authorised to view. Servers SHOULD use secure identification mechanisms such as account names, internal account identifiers, or certificate fingerprints to match content to users.
