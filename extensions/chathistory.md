@@ -50,7 +50,9 @@ The special target `*` refers to all direct messages sent to or from the current
 
 A `timestamp` parameter MUST have the format `timestamp=YYYY-MM-DDThh:mm:ss.sssZ`, as in the [server-time][server-time] extension. A `msgid` parameter MUST have the format `msgid=foobar`, as in the [message-ids][message-ids] extension.
 
-The server MUST reply to this command using a [`batch`][batch]. The type of the batch SHOULD be `chathistory`, and it SHOULD take a single additional parameter, the canonical name of the target being queried. If no content exists to return, an empty batch SHOULD be returned, in order to avoid the client waiting for a reply.
+The server MUST reply to a successful `CHATHISTORY` command using a [`batch`][batch]. The type of the batch SHOULD be `chathistory`, and it SHOULD take a single additional parameter, the canonical name of the target being queried. If no content exists to return, the server SHOULD return an empty batch in order to avoid the client waiting for a reply.
+
+If the client has not negotiated the `draft/event-playback` capability, the server MUST NOT send any lines other than `PRIVMSG` and `NOTICE` in the reply batch. If the client has negotiated `draft/event-playback`, the server SHOULD send additional lines relevant to the chat history, including but not limited to `TAGMSG`, `JOIN`, `PART`, `QUIT`, `MODE`, `TOPIC`, and `NICK`.
 
 #### Subcommands
 
@@ -84,8 +86,6 @@ Request up to `limit` number of messages between the given `timestamp` or `msgid
 The order of returned messages within the batch is implementation-defined, but SHOULD be ascending time order or some approximation thereof, regardless of the subcommand used. The `server-time` tag on each message SHOULD be the time at which the message was received by the IRC server. The `msgid` tag that identifies each individual message in a response MUST be the `msgid` tag as originally sent by the IRC server.
 
 Servers SHOULD provide clients with a consistent message order that is valid across the lifetime of a single connection, and which determinately orders any two messages (even if they share a timestamp); this will allow BEFORE, AFTER, and BETWEEN queries that use msgids for pagination to function as expected. This order SHOULD coincide with the order in which messages are returned within a response batch. It need not coincide with the delivery order of messages when they were relayed on any particular server.
-
-If the client has not negotiated the `event-playback` capability, the server MUST NOT send any lines other than `PRIVMSG` and `NOTICE` in the reply batch. If the client has negotiated `event-playback`, the server SHOULD send additional lines relevant to the chat history, including but not limited to `TAGMSG`, `JOIN`, `PART`, `QUIT`, `MODE`, `TOPIC`, and `NICK`.
 
 #### Errors and Warnings
 Errors are returned using the standard replies syntax.
