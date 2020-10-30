@@ -1,5 +1,5 @@
 ---
-title: IRCv3 websocket support
+title: IRCv3 WebSocket support
 layout: spec
 work-in-progress: true
 copyrights:
@@ -11,21 +11,19 @@ copyrights:
 
 ## Introduction
 
-Web based IRC clients are becoming more common and they all increase the demand for websocket connectivity to IRC networks.
-
-This specification provides a common implementation for web and other websocket clients to connect to IRC networks using common and standard development tools used on web pages, with a focus on a simple client facing interface.
+This specification describes a mechanism for WebSocket-based clients (in particular, web-based IRC clients running in the browser) to connect to IRC networks, with a focus on simplicity and contemporary best practices for web development.
 
 ## WebSocket features and encoding
 
-Websockets offer different transports of communication, binary and strings. With the consideration that the IRC protocol is entirely lines of text, we make use of the message based text implementation that websockets natively provide. These are UTF8 encoded text messages where one websocket message consists of a single complete IRC message line.
+WebSocket is a message-based protocol offering both text (UTF8-encoded) and binary (8-bit clean) message types. Given that the primary purpose of IRC is text-based communication, that web browsers are pushing increasingly towards UTF8 as the default encoding for HTML5 documents and scripting languages, and that these web browsers are the primary use case for IRC-over-WebSockets, we require that all IRC messages MUST be sent as WebSocket text messages, where each message consists of a single complete IRC message line.
 
-The internal websocket protocol handles message fragmentation and termination via frames, which is out of scope for this document.
+The WebSocket protocol handles message fragmentation and termination internally. This is outside the scope of the present specification.
 
-Because web browsers are pushing more towards a UTF8 default encoding for HTML5 documents and scriptings languages, and these web browsers are the primary use case for websockets, IRC servers MUST encode messages as UTF8 before sending them to the client. Ignoring this may result in the browser closing the websocket connection on invalid UTF8 sequences.
+If an IRC server supports both WebSocket and non-WebSocket clients, it may receive non-UTF8 message content from a non-WebSocket client. Servers MUST NOT relay non-UTF8 content to WebSocket clients, since this may result in those clients being disconnected by the browser. Servers MAY replace non-UTF8 bytes with the UTF8 encoding of the Unicode replacement character `�` (`U+FFFD`), or they MAY discard such messages entirely and report an error to the client.
 
 ## Message syntax
 
-The syntax of IRC lines MUST NOT be changed. However, IRC servers and clients MUST NOT include trailing new lines in their websocket messages as these are obsolete by websockets native messages.
+The syntax of IRC lines MUST NOT be changed, except that servers and clients MUST NOT include trailing `\r` or `\n` characters in their WebSocket messages.
 
 ## Client example
 ~~~
@@ -36,3 +34,7 @@ socket.addEventListener('open', () => {
 });
 socket.addEventListener('message', event => processLine(event.data));
 ~~~
+
+## Security considerations
+
+Clients and servers SHOULD impose limits on the maximum size of messages they will accept, in order to prevent denial-of-service attacks.
