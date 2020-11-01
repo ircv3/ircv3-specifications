@@ -3,9 +3,8 @@ title: IRCv3 WebIRC extension
 layout: spec
 copyrights:
   -
-    name: "Evan Magaliff"
+    name: "MuffinMedic"
     period: "2017"
-    email: "muffinmedic@kiwiirc.com"
   -
     name: "Darren Whitlen"
     period: "2017"
