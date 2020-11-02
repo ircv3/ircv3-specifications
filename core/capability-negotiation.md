@@ -257,37 +257,22 @@ Example:
 
 #### Multiline replies to `CAP LS` and `CAP LIST`
 
-Servers MAY send multiple lines in response to `CAP LS` and `CAP LIST`.
+Servers MAY send multiple lines in response to `CAP LS` and `CAP LIST` to clients that support CAP version `302`. Clients that support CAP version `302` MUST handle the continuation format described as follows:
 
 If the reply contains multiple lines (due to IRC line length limitations), and the client
-supports CAP Version `302`, all but the last reply MUST have a parameter containing only
+supports CAP version `302`, all but the last reply MUST have a parameter containing only
 an asterisk (`*`) preceding the capability list. This lets clients know that more CAP
 lines are incoming, so that it can delay capability negotiation until it has seen all
 available server capabilities.
 
-If a multi-line response to `CAP LIST` is sent, and the client supports CAP Version `302`,
-the server MUST delimit all replies except for the last one sent as noted above.
-
-Example with a client that **does not** support CAP version `302`:
-
-    Client: CAP LS
-    Server: CAP * LS :multi-prefix extended-join account-notify batch invite-notify tls
-    Server: CAP * LS :cap-notify server-time example.org/dummy-capuserhost-in-names sasl
-
-Example with a client that supports CAP version `302`:
+Example of a multiline `LS` reply to a client that supports CAP version `302`:
 
     Client: CAP LS 302
     Server: CAP * LS * :multi-prefix extended-join account-notify batch invite-notify tls
     Server: CAP * LS * :cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
     Server: CAP * LS :userhost-in-names sasl=EXTERNAL,DH-AES,DH-BLOWFISH,ECDSA-NIST256P-CHALLENGE,PLAIN
 
-Example of a `LIST` reply with a client that **does not** support CAP version `302`:
-
-    Client: CAP LIST
-    Server: CAP oldclient LIST :example.org/example-cap example.org/second-example-cap account-notify
-    Server: CAP oldclient LIST :invite-notify batch example.org/third-example-cap
-
-Example of a `LIST` reply with a client that supports CAP version `302`:
+Example of a multiline `LIST` reply to a client that supports CAP version `302`:
 
     Client: CAP LIST
     Server: CAP modernclient LIST * :example.org/example-cap example.org/second-example-cap account-notify
@@ -554,3 +539,5 @@ appropriate features.
 
 Previous versions of this spec did not mention how servers handle clients attempting to downgrade
 their CAP LS version. It has been clarified that clients MAY NOT downgrade this.
+
+Clarify that multiline LS and LIST replies must only be used for CAP 302
