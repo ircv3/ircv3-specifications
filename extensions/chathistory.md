@@ -50,7 +50,7 @@ The special target `*` refers to all direct messages sent to or from the current
 
 A `timestamp` parameter MUST have the format `timestamp=YYYY-MM-DDThh:mm:ss.sssZ`, as in the [server-time][server-time] extension. A `msgid` parameter MUST have the format `msgid=foobar`, as in the [message-ids][message-ids] extension.
 
-The server MUST reply to a successful `CHATHISTORY` command using a [`batch`][batch]. The type of the batch SHOULD be `chathistory`, and it SHOULD take a single additional parameter, the canonical name of the target being queried. If no content exists to return, the server SHOULD return an empty batch in order to avoid the client waiting for a reply.
+The server MUST reply to a successful `CHATHISTORY` command using a [`batch`][batch]. The batch MUST have type `chathistory` and take a single additional parameter, the canonical name of the target being queried. If no content exists to return, the server SHOULD return an empty batch in order to avoid the client waiting for a reply.
 
 If the client has not negotiated the `draft/event-playback` capability, the server MUST NOT send any lines other than `PRIVMSG` and `NOTICE` in the reply batch. If the client has negotiated `draft/event-playback`, the server SHOULD send additional lines relevant to the chat history, including but not limited to `TAGMSG`, `JOIN`, `PART`, `QUIT`, `MODE`, `TOPIC`, and `NICK`.
 
