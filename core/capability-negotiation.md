@@ -204,7 +204,7 @@ for the future life of the connection. Clients that do not send any version numb
 If a client has not indicated support for `CAP LS 302` features, the server MUST NOT send
 these new features to the client.
 
-When CAP Version `302` is enabled, the client also implicitly indicates support for the
+When CAP version `302` is enabled, the client also implicitly indicates support for the
 `cap-notify` capability listed below, and support for the relevant `NEW` and `DEL`
 subcommands.
 
@@ -245,7 +245,7 @@ As an overview, these are the new features introduced with each `CAP LS` version
 
 #### Capability Values
 
-If the client supports CAP Version `302`, the server MAY specify additional data for each
+If the client supports CAP version `302`, the server MAY specify additional data for each
 capability using the `<name>=<value>` format in `CAP LS` and `CAP NEW` replies.
 
 Each capability, if it supports a value, defines what this value means in its specification.
@@ -257,37 +257,22 @@ Example:
 
 #### Multiline replies to `CAP LS` and `CAP LIST`
 
-Servers MAY send multiple lines in response to `CAP LS` and `CAP LIST`.
+If the client supports CAP version `302`, the server MAY send multiple lines in response to `CAP LS` and `CAP LIST`. Clients that support CAP version `302` MUST handle the continuation format described as follows:
 
 If the reply contains multiple lines (due to IRC line length limitations), and the client
-supports CAP Version `302`, all but the last reply MUST have a parameter containing only
+supports CAP version `302`, all but the last reply MUST have a parameter containing only
 an asterisk (`*`) preceding the capability list. This lets clients know that more CAP
 lines are incoming, so that it can delay capability negotiation until it has seen all
 available server capabilities.
 
-If a multi-line response to `CAP LIST` is sent, and the client supports CAP Version `302`,
-the server MUST delimit all replies except for the last one sent as noted above.
-
-Example with a client that **does not** support CAP version `302`:
-
-    Client: CAP LS
-    Server: CAP * LS :multi-prefix extended-join account-notify batch invite-notify tls
-    Server: CAP * LS :cap-notify server-time example.org/dummy-capuserhost-in-names sasl
-
-Example with a client that supports CAP version `302`:
+Example of a multiline `LS` reply to a client that supports CAP version `302`:
 
     Client: CAP LS 302
     Server: CAP * LS * :multi-prefix extended-join account-notify batch invite-notify tls
     Server: CAP * LS * :cap-notify server-time example.org/dummy-cap=dummyvalue example.org/second-dummy-cap
     Server: CAP * LS :userhost-in-names sasl=EXTERNAL,DH-AES,DH-BLOWFISH,ECDSA-NIST256P-CHALLENGE,PLAIN
 
-Example of a `LIST` reply with a client that **does not** support CAP version `302`:
-
-    Client: CAP LIST
-    Server: CAP oldclient LIST :example.org/example-cap example.org/second-example-cap account-notify
-    Server: CAP oldclient LIST :invite-notify batch example.org/third-example-cap
-
-Example of a `LIST` reply with a client that supports CAP version `302`:
+Example of a multiline `LIST` reply to a client that supports CAP version `302`:
 
     Client: CAP LIST
     Server: CAP modernclient LIST * :example.org/example-cap example.org/second-example-cap account-notify
@@ -374,7 +359,7 @@ command MUST be ignored by the server.
 
 ### The CAP NEW subcommand
 
-The NEW subcommand MUST ONLY be sent to clients that have negotiated CAP Version `302` or
+The NEW subcommand MUST ONLY be sent to clients that have negotiated CAP version `302` or
 enabled the `cap-notify` capability.
 
 The NEW subcommand signals that the server supports one or more new capabilities, and may be
@@ -386,7 +371,7 @@ The format of a `CAP NEW` message is:
     CAP <nick> NEW :<extension 1> [<extension 2> ... [<extension n>]]
 
 As with `LS`, the last parameter is a space-separated list of new capabilities that are now
-offered by the server. If the client supports CAP Version `302`, the capabilities SHOULD be
+offered by the server. If the client supports CAP version `302`, the capabilities SHOULD be
 listed with values, as in the `CAP LS` response.
 
 Example:
@@ -401,7 +386,7 @@ Example with following `REQ`:
 
 ### The CAP DEL subcommand
 
-The DEL subcommand MUST ONLY be sent to clients that have negotiated CAP Version `302` or
+The DEL subcommand MUST ONLY be sent to clients that have negotiated CAP version `302` or
 enabled the `cap-notify` capability.
 
 The DEL subcommand signals that the server no longer supports one or more capabilities that
@@ -441,7 +426,7 @@ in `CAP LS` and `CAP LIST` responses. Clients MAY also request the capability wi
 This lets clients blindly enable this capability, regardless of it being implicitly
 enabled by the server.
 
-Clients that do not support CAP Version 302 MAY request the `cap-notify` capability
+Clients that do not support CAP version 302 MAY request the `cap-notify` capability
 explicitly. Such clients MAY explicitly disable the capability, and servers MUST allow
 these clients to do so. This to ease the adaptation of new features.
 
@@ -517,7 +502,7 @@ Previous versions of this spec did not specify when the `<name>=<value>` format 
 was clarified to limit capability values to the `LS` and `NEW` subcommands.
 
 Previous versions of this spec did not link to the `cap-notify` specification (nor note the fact
-that it is automatically enabled for clients that enable CAP Version 302). The specification now
+that it is automatically enabled for clients that enable CAP version 302). The specification now
 includes the `cap-notify` spec and lets authors know about the implicit enabling of this capability.
 
 Previous versions of this spec mistakenly missed `<nick>` between `CAP` and `NEW`/`DEL` subcommands,
@@ -526,7 +511,7 @@ but had it in the examples anyway.
 Previous versions of this spec did not mention whether `NEW` and `DEL` can have values or not.
 
 Previous versions of this spec were missing clarification of client and server behaviour when the
-capability is implicitly enabled with CAP Version `302` or newer.
+capability is implicitly enabled with CAP version `302` or newer.
 
 Previous versions of this spec listed that `CAP ACK` could be sent from the client to server, for
 capabilities that required extra client acknowledgement. This was removed since cap modifiers have
@@ -554,3 +539,5 @@ appropriate features.
 
 Previous versions of this spec did not mention how servers handle clients attempting to downgrade
 their CAP LS version. It has been clarified that clients MAY NOT downgrade this.
+
+Clarify that multiline LS and LIST replies must only be used for CAP 302
