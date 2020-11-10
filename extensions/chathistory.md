@@ -33,7 +33,7 @@ The `chathistory` extension uses the [chathistory][batch/chathistory] batch type
 
 Full support for this extension requires support for the [`batch`][batch], [`server-time`][server-time] and [`message-tags`][message-tags] capabilities. However, limited functionality is available to clients without support for these CAPs. Servers SHOULD NOT enforce that clients support all related capabilities before using the `chathistory` extension. Meanwhile, bouncers implementing the server side of this specification may not be able to provide message IDs (when they are mediating for a server that does not support the `message-tags` capability). Therefore, clients with full support for `message-tags` MAY wish to implement fallback logic that relies only on `server-time`.
 
-The `draft/chathistory` capability MUST be negotiated. This allows the server and client to behave differently when message history is available.
+The `draft/chathistory` capability MUST be negotiated. This allows the server and client to behave differently when history is available and can be queried. In particular, if a client requests this capability, the server (or bouncer) SHOULD NOT play back any history that would otherwise be sent automatically.
 
 An ISUPPORT token MUST be sent to the client to state the maximum number of messages a client can request in a single command, e.g., `CHATHISTORY=50`. If `0`, the client SHOULD assume that there is no maximum number of messages.
 
