@@ -30,7 +30,7 @@ The `relaymsg` extension allows bots to send channel messages using spoofed nick
 
 ### The `draft/relaymsg` capability
 
-The `draft/relaymsg` capability lets clients use the `RELAYMSG` command and receive `relaymsg` tags.
+The `draft/relaymsg` capability lets clients use the `RELAYMSG` command and receive `draft/relaymsg` tags.
 
 If this capability has a value, the given characters are 'nickname separators'. These characters aren't allowed in normal nicknames, and if given one MUST be present in spoofed nicknames. For example, with `draft/relaymsg=/` the spoofed nickname MUST include the character `"/"`.
 
@@ -45,10 +45,10 @@ RELAYMSG <channel> <spoofed nick> :<message>
 Upon receiving this command, the IRCd will translate the message to a `PRIVMSG`:
 
 ```
-@relaymsg=<botnick> :spoofednick!<ident>@<host> PRIVMSG <channel> :<message>
+@draft/relaymsg=<botnick> :spoofednick!<ident>@<host> PRIVMSG <channel> :<message>
 ```
 
-Clients MUST request the `draft/relaymsg` capability before using this command. The capability also lets clients receive the `relaymsg` message tag, which is set to the nick of the sender. This allows the sender to distinguish relayed messages from those sent by other clients, preventing forwarding loops in the case of relay bots.
+Clients MUST request the `draft/relaymsg` capability before using this command. The capability also lets clients receive the `draft/relaymsg` message tag, which is set to the nick of the sender. This allows the sender to distinguish relayed messages from those sent by other clients, preventing forwarding loops in the case of relay bots.
 
 The `ident` and `host` fields are defined by the server implementation and may be configurable.
 
@@ -67,12 +67,11 @@ Servers may choose to filter spoofed nicks further, or pass them through as is. 
 
 ## Example implementations
 
-Note: These examples use a prefixed version of this extension (`overdrivenetworks.com/relaymsg`), which is functionally identical.
-
 ### Server side
 
 - InspIRCd 3.x via custom module: https://github.com/overdrivenetworks/inspircd-contrib/blob/relaymsg/3.0/m_relaymsg.cpp
+- Oragono 2.4.0+
 
 ### Client side
 
-- matterbridge fork: https://github.com/overdrivenetworks/matterbridge/blob/overdrive/bridge/irc/irc.go#L198-L246
+- matterbridge fork: https://github.com/overdrivenetworks/matterbridge/blob/for-upstream/relaymsg/bridge/irc/irc.go
