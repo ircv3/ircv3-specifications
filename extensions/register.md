@@ -44,6 +44,7 @@ The `VERIFY` command completes a registration that required email verification.
 ### Responses
 
     REGISTER SUCCESS <account> <message>
+    VERIFY SUCCESS <account> <message>
     
 TBC
 
@@ -57,6 +58,12 @@ TBC
     FAIL REGISTER INVALID_EMAIL <account> <message>
     FAIL REGISTER UNACCEPTABLE_EMAIL <account> <message>
     FAIL REGISTER COMPLETE_CONNECTION_REQUIRED
+    FAIL VERIFY USERNAME_EXISTS <account> <message>
+    FAIL VERIFY ALREADY_REGISTERED <account> <message>
+    FAIL VERIFY WEAK_PASSWORD <account> <message>
+    FAIL VERIFY INVALID_EMAIL <account> <message>
+    FAIL VERIFY UNACCEPTABLE_EMAIL <account> <message>
+    FAIL VERIFY COMPLETE_CONNECTION_REQUIRED
 
 TBC
 
