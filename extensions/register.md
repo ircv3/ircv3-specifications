@@ -60,30 +60,42 @@ to complete registration of the `<account>`, as explain in the human-readable `<
 
     FAIL REGISTER USERNAME_EXISTS <account> <message>
 
-TBC
+Sent by the server as a response to `REGISTER` when the client tried to register
+while using a nick that is not available as a new account's name
+(for example, because someone already registered it).
+
+The server MUST NOT send this response before the client sent a `NICK` command.
+
+The client MAY try registering again later.
+Clients should not automatically retry immediately without changing their nickname
+or waiting.
 
     FAIL REGISTER ALREADY_REGISTERED <account> <message>
     FAIL VERIFY ALREADY_REGISTERED <account> <message>
 
-TBC
+Sent by the server is the client is already authenticated.
 
     FAIL REGISTER WEAK_PASSWORD <account> <message>
 
-TBC
+Sent by the server if the password is considered too weak.
+
+The client MAY try registering again.
 
     FAIL REGISTER INVALID_EMAIL <account> <message>
 
-TBC
+Sent by the server if it cannot send emails to the provided address.
+Server implementations should be careful not to accidentally send this as a response
+to a valid address.
 
     FAIL REGISTER UNACCEPTABLE_EMAIL <account> <message>
 
-TBC
+Sent by the server if the email address is valid, but not available for account registration.
 
     FAIL REGISTER COMPLETE_CONNECTION_REQUIRED
     FAIL VERIFY COMPLETE_CONNECTION_REQUIRED
 
-TBC
-
-
+Sent by the server if the client sent a `REGISTER` command before connection registration.
+The server MUST NOT sent these replies if it advertizes the `before-connect` key of the
+`draft/register` capability.
 
 [multiline]: https://github.com/ircv3/ircv3-specifications/pull/398/
