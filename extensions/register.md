@@ -48,11 +48,15 @@ The `VERIFY` command completes a registration that required email verification.
     REGISTER SUCCESS <account> <message>
     VERIFY SUCCESS <account> <message>
     
-TBC
+Sent by the server when the `REGISTER` or `VERIFY` fully succeeded, and no
+further action is needed.
+Afterward, the client is assumed to be authenticated to the `<account>`
+as if it used SASL.
 
     REGISTER VERIFICATION_REQUIRED <account> <message>
     
-TBC
+Sent by the server as a response to `REGISTER` when further action is required
+to complete registration of the `<account>`, as explain in the human-readable `<message>`.
 
     FAIL REGISTER USERNAME_EXISTS <account> <message>
     FAIL REGISTER ALREADY_REGISTERED <account> <message>
