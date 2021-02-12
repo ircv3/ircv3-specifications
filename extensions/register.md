@@ -1,4 +1,18 @@
-# /register
+---
+title: The REGISTER command
+layout: spec
+work-in-progress: true
+copyrights:
+  -
+    name: "Ed Kellett"
+    period: "2020"
+    email: "e@kellett.im"
+  -
+    name: "Val Lorentz"
+    period: "2021"
+    email: "progval+ircv3@progval.net"
+---
+
 
 ## Motivation
 
@@ -97,5 +111,6 @@ Sent by the server if the email address is valid, but not available for account 
 Sent by the server if the client sent a `REGISTER` command before connection registration.
 The server MUST NOT sent these replies if it advertizes the `before-connect` key of the
 `draft/register` capability.
+
 
 [multiline]: https://github.com/ircv3/ircv3-specifications/pull/398/
