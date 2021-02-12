@@ -59,16 +59,27 @@ Sent by the server as a response to `REGISTER` when further action is required
 to complete registration of the `<account>`, as explain in the human-readable `<message>`.
 
     FAIL REGISTER USERNAME_EXISTS <account> <message>
+
+TBC
+
     FAIL REGISTER ALREADY_REGISTERED <account> <message>
-    FAIL REGISTER WEAK_PASSWORD <account> <message>
-    FAIL REGISTER INVALID_EMAIL <account> <message>
-    FAIL REGISTER UNACCEPTABLE_EMAIL <account> <message>
-    FAIL REGISTER COMPLETE_CONNECTION_REQUIRED
-    FAIL VERIFY USERNAME_EXISTS <account> <message>
     FAIL VERIFY ALREADY_REGISTERED <account> <message>
-    FAIL VERIFY WEAK_PASSWORD <account> <message>
-    FAIL VERIFY INVALID_EMAIL <account> <message>
-    FAIL VERIFY UNACCEPTABLE_EMAIL <account> <message>
+
+TBC
+
+    FAIL REGISTER WEAK_PASSWORD <account> <message>
+
+TBC
+
+    FAIL REGISTER INVALID_EMAIL <account> <message>
+
+TBC
+
+    FAIL REGISTER UNACCEPTABLE_EMAIL <account> <message>
+
+TBC
+
+    FAIL REGISTER COMPLETE_CONNECTION_REQUIRED
     FAIL VERIFY COMPLETE_CONNECTION_REQUIRED
 
 TBC
