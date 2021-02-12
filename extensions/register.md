@@ -23,7 +23,8 @@ The `draft/register` capability SHOULD NOT be requested. Servers MAY `NAK` any s
 
 The defined keys are:
 
- * `before-connect` - if present, clients may register before completing connection registration
+ * `before-connect` - if present, indicates the server supports early registration, so it
+   MUST NOT use `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`
  * `email-required` - if present, registrations require a valid email address to process
 
 ### Commands
