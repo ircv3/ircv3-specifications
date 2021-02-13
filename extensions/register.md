@@ -112,5 +112,16 @@ Sent by the server if the client sent a `REGISTER` command before connection reg
 The server MUST NOT sent these replies if it advertizes the `before-connect` key of the
 `draft/register` capability.
 
+    FAIL VERIFY INVALID_CODE <account> <message>
+
+Sent by the server if the `<code>` in the `VERIFY` command is invalid or expired.
+
+    FAIL REGISTER TEMPORARILY_UNAVAILABLE <account> <message>
+    FAIL VERIFY TEMPORARILY_UNAVAILABLE <account> <message>
+
+Sent by the server if the `REGISTER`/`VERIFY` commands are temporarily unavailable.
+
+
+
 
 [multiline]: https://github.com/ircv3/ircv3-specifications/pull/398/
