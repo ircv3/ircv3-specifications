@@ -38,6 +38,8 @@ The defined keys are:
    MUST NOT use `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`
  * `email-required` - if present, registrations require a valid email address to process
 
+Clients MUST ignore any value assigned to these keys, and MUST ignore any unknown key.
+
 ### Commands
 
     REGISTER {<email> | "*"} <password>
