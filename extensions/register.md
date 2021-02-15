@@ -32,9 +32,6 @@ accepts the `REGISTER` command.
 The capability has an optional value, a comma-separated list of key-value pairs; the format is intended
 to follow the precedent set by [the multiline draft][multiline].
 
-The `draft/register` capability SHOULD NOT be requested. Servers MAY `NAK` any such request. The
-`REGISTER` command MUST be accepted regardless of any attempt to negotiate or disable the capability.
-
 The defined keys are:
 
  * `before-connect` - if present, indicates the server supports early registration, so it
