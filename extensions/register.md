@@ -94,11 +94,15 @@ Sent by the server if the password is considered too weak.
 
 The client MAY try registering again.
 
+    FAIL REGISTER UNACCEPTABLE_PASSWORD <account> <message>
+
+Sent by the server if the password is invalid for any reason other than weakness.
+
+The client MAY try registering again.
+
     FAIL REGISTER INVALID_EMAIL <account> <message>
 
 Sent by the server if it cannot send emails to the provided address.
-Server implementations should be careful not to accidentally send this as a response
-to a valid address.
 
     FAIL REGISTER UNACCEPTABLE_EMAIL <account> <message>
 
@@ -120,6 +124,23 @@ Sent by the server if the `<code>` in the `VERIFY` command is invalid or expired
 
 Sent by the server if the `REGISTER`/`VERIFY` commands are temporarily unavailable.
 
+
+# Client considerations
+
+This section is non-normative.
+
+Passwords are opaque byte strings.
+It is recommended for them to be valid UTF-8 with no null character;
+otherwise authentication may be impossible later (eg. with SASL PLAIN).
+Servers may also choose to reject any non-UTF-8 password with `UNACCEPTABLE_PASSWORD`.
+
+
+# Server considerations
+
+This section is non-normative.
+
+Server implementations should be careful not to accidentally send `INVALID_EMAIL`
+as a response to a valid address.
 
 
 
