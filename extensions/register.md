@@ -130,8 +130,8 @@ Sent by the server if the `REGISTER`/`VERIFY` commands are temporarily unavailab
 This section is non-normative.
 
 Passwords are opaque byte strings.
-It is recommended for them to be valid UTF-8 with no null character;
-otherwise authentication may be impossible later (eg. with SASL PLAIN).
+It is recommended for them to be valid UTF-8;
+or authentication may be impossible later (eg. with SASL PLAIN).
 Servers may also choose to reject any non-UTF-8 password with `UNACCEPTABLE_PASSWORD`.
 
 
