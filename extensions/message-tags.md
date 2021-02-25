@@ -52,7 +52,7 @@ The ordering of tags is not meaningful.
 
 Individual tag keys MUST only be used a maximum of once per message. Implementations receiving messages with more than one occurrence of a tag key name SHOULD disregard all but the final occurrence.
 
-Implementations MUST treat tag key names as opaque identifiers and MUST NOT perform any validation that would reject the message if an invalid tag key name is used. This allows future modifications to the tag key name format.
+Implementations MUST treat tag key names as case-sensitive opaque identifiers and MUST NOT perform any validation that would reject the message if an invalid tag key name is used. This allows future modifications to the tag key name format.
 
 Tag values MUST be encoded as UTF8. This ensures a shared interoperable baseline for data exchange. If tag values are encountered that cannot be decoded as UTF8, implementations MAY drop the value entirely but SHOULD NOT substitute replacement bytes in place of invalid data, which can result in collisions.
 
@@ -372,6 +372,8 @@ A `TAGMSG` sent by a client with an un-prefixed tag that has no specified behavi
     S: :nick!user@example.com TAGMSG #channel
 
 ## Errata
+
+Previous versions of this spec did not explicitly state that tag names are case-sensitive, though it was implied by their "opacity" 
 
 Previous versions of this spec did not specify that the full tag name MUST be parsed as
 an opaque identifier. This was added to improve client resiliency.
