@@ -55,7 +55,7 @@ The persist tag is sent by a client with the client-only prefix `+`. It has no v
 
 ## Server implementation considerations
 
-Servers SHOULD NOT store TAGMSG that do not contain the `+draft/persist` tag. If a server implements history storage and replay, it SHOULD store TAGMSG that contain the `+draft/persist` tag. Servers SHOULD ignore the presence of `+draft/persist` on all other message types.
+Servers implementing history storage and replay should take the presence of `+draft/persist` on a TAGMSG as a recommendation that they store it. Servers MAY decline to store TAGMSG on which it is absent. Servers SHOULD ignore the presence or absence of `+draft/persist` on all other message types.
 
 Since the specification of `+draft/react` precedes this specification, servers MAY wish to store TAGMSG that carry `+draft/react` but not `+draft/persist`.
 
@@ -77,4 +77,4 @@ This is an example of a reaction with `+draft/persist` attached:
 
 This section is non-normative.
 
-The `+draft/persist` tag is not intended as a solution to abusive client behavior. Servers may wish to implement other safeguards against client attempts to exhaust server-side resources.
+The `+draft/persist` tag is not intended as a solution to abusive client behavior. Servers may wish to implement other safeguards against client attempts to exhaust server-side resources. Similarly, clients should not rely on the omission of `+draft/persist` to protect sensitive messages from being stored and replayed.
