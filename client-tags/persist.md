@@ -53,6 +53,8 @@ The persist tag is sent by a client with the client-only prefix `+`. It has no v
 
     +draft/persist
 
+Servers should ignore any tag value that is sent, to preserve compatibility with future extensions.
+
 ## Server implementation considerations
 
 Servers implementing history storage and replay should take the presence of `+draft/persist` on a TAGMSG as a recommendation that they store it. Servers MAY decline to store TAGMSG on which it is absent. Servers SHOULD ignore the presence or absence of `+draft/persist` on all other message types.
