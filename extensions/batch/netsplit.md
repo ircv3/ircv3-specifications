@@ -9,8 +9,6 @@ copyrights:
     period: "2014"
     email: "http://github.com/aji"
 ---
-## `netsplit` and `netjoin` Batch Types
-
 This document describes the format of the `netsplit` and `netjoin` batch
 types.
 

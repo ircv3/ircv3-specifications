@@ -14,8 +14,6 @@ copyrights:
     period: "2014"
     email: "attilamolnar@hush.com"
 ---
-## The tls Client Capability
-
 The tls client capability indicates that the server supports the STARTTLS command.
 
 It is worth noting here that a client may request the tls capability with CAP REQ,

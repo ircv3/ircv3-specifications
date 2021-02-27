@@ -9,8 +9,6 @@ copyrights:
     period: "2012"
     email: "nenolod@dereferenced.org"
 ---
-## The multi-prefix Client Capability
-
 When requested, the multi-prefix client capability will cause the IRC server to send
 all possible prefixes which apply to a user in NAMES and WHO output.
 

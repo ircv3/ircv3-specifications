@@ -9,8 +9,6 @@ copyrights:
     period: "2015"
     email: "sadie@witchery.services"
 ---
-## `chathistory` Batch Type
-
 This document describes the format of the `chathistory` batch type.
 
 The `chathistory` batch type takes one parameter. This parameter contains the
