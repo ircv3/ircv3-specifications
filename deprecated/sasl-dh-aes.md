@@ -1,5 +1,5 @@
 ---
-title: IRCv3 SASL DH-AES Authentication Mechanism
+title: SASL DH-AES Authentication Mechanism
 layout: spec
 redirect_from:
   - /specs/documentation/sasl-dh-aes.html

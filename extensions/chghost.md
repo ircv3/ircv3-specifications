@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `chghost` Extension
+title: "`chghost` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/chghost-3.2.html

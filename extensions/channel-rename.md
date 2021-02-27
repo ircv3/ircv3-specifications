@@ -1,5 +1,5 @@
 ---
-title: IRCv3 Channel Renaming
+title: Channel Renaming
 layout: spec
 work-in-progress: true
 copyrights:

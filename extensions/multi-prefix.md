@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `multi-prefix` Extension
+title: "`multi-prefix` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/multi-prefix-3.1.html

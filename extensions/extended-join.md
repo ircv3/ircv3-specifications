@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `extended-join` Extension
+title: "`extended-join` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/extended-join-3.1.html

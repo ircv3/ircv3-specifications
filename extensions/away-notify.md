@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `away-notify` Extension
+title: "`away-notify` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/away-notify-3.1.html

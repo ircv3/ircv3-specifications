@@ -1,5 +1,5 @@
 ---
-title: IRCv3 Message IDs
+title: Message IDs
 layout: spec
 copyrights:
   -

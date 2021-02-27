@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `account-notify` Extension
+title: "`account-notify` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/account-notify-3.1.html

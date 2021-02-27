@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `echo-message` Extension
+title: "`echo-message` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/echo-message-3.2.html

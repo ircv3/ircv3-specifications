@@ -1,5 +1,5 @@
 ---
-title: IRCv3 Standard Replies
+title: Standard Replies
 layout: spec
 copyrights:
   -

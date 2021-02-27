@@ -1,5 +1,5 @@
 ---
-title: IRCv3 Monitor
+title: Monitor
 layout: spec
 redirect_from:
   - /specs/core/monitor-3.2.html

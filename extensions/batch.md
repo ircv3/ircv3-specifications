@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `batch` Extension
+title: "`batch` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/batch-3.2.html

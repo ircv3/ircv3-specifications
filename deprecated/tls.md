@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `tls` Extension
+title: "`tls` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/tls-3.1.html

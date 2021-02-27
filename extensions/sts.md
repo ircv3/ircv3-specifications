@@ -1,5 +1,5 @@
 ---
-title: IRCv3 Strict Transport Security
+title: Strict Transport Security
 layout: spec
 redirect_from:
   - /specs/core/sts-3.3.html

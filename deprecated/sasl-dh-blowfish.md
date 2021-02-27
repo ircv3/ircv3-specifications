@@ -1,5 +1,5 @@
 ---
-title: IRCv3 SASL DH-BLOWFISH Authentication Mechanism
+title: SASL DH-BLOWFISH Authentication Mechanism
 layout: spec
 redirect_from:
   - /specs/documentation/sasl-dh-blowfish.html

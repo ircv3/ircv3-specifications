@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `invite-notify` Extension
+title: "`invite-notify` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/invite-notify-3.2.html

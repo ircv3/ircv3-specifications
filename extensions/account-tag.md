@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `account-tag` Extension
+title: "`account-tag` Extension"
 layout: spec
 redirect_from:
   - /specs/extensions/account-tag-3.2.html

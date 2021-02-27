@@ -1,5 +1,5 @@
 ---
-title: IRCv3 Client Capability Negotiation
+title: Client Capability Negotiation
 layout: spec
 redirect_from:
   - /specs/core/capability-negotiation.html
