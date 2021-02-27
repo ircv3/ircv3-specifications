@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 `userhost-in-names` Extension
+title: IRCv3 `userhost-in-names` Extension
 layout: spec
+redirect_from:
+  - /specs/extensions/userhost-in-names-3.2.html
 copyrights:
   -
     name: "Mantas Mikulėnas"

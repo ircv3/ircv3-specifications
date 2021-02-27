@@ -1,6 +1,8 @@
 ---
-title: IRCv3.1 `tls` Extension
+title: IRCv3 `tls` Extension
 layout: spec
+redirect_from:
+  - /specs/extensions/tls-3.1.html
 deprecated: true
 copyrights:
   -

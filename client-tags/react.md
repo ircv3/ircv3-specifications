@@ -1,5 +1,5 @@
 ---
-title: React client tag
+title: IRCv3 `react` client tag
 layout: spec
 work-in-progress: true
 copyrights:

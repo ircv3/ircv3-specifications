@@ -1,5 +1,5 @@
 ---
-title: IRCv3 chathistory extension
+title: IRCv3 `chathistory` Extension
 layout: spec
 work-in-progress: true
 copyrights:

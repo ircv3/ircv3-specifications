@@ -1,5 +1,5 @@
 ---
-title: Labeled responses
+title: IRCv3 Labeled Responses
 layout: spec
 copyrights:
   -

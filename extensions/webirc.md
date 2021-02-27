@@ -1,5 +1,5 @@
 ---
-title: IRCv3 WebIRC extension
+title: WebIRC Extension
 layout: spec
 copyrights:
   -

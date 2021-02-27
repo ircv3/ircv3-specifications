@@ -1,6 +1,8 @@
 ---
-title: IRCv3.1 `extended-join` Extension
+title: IRCv3 `extended-join` Extension
 layout: spec
+redirect_from:
+  - /specs/extensions/extended-join-3.1.html
 copyrights:
   -
     name: "Kiyoshi Aman"

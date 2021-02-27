@@ -1,6 +1,8 @@
 ---
-title: IRCv3 chathistory Batch Type
+title: IRCv3 `chathistory` Batch Type
 layout: spec
+redirect_from:
+  - /specs/extensions/batch/chathistory-3.3.html
 copyrights:
   -
     name: "Sadie Powell"

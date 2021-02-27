@@ -1,6 +1,8 @@
 ---
-title: IRCv3.1 `account-notify` Extension
+title: IRCv3 `account-notify` Extension
 layout: spec
+redirect_from:
+  - /specs/extensions/account-notify-3.1.html
 copyrights:
   -
     name: "William Pitcock"

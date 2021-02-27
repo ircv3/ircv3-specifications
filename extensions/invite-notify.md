@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 `invite-notify` Extension
+title: IRCv3 `invite-notify` Extension
 layout: spec
+redirect_from:
+  - /specs/extensions/invite-notify-3.2.html
 copyrights:
   -
     name: "Adam"

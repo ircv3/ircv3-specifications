@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 `batch` Extension
+title: IRCv3 `batch` Extension
 layout: spec
+redirect_from:
+  - /specs/extensions/batch-3.2.html
 copyrights:
   -
     name: "William Pitcock"

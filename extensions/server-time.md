@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 `server-time` Extension
+title: IRCv3 `server-time` Extension
 layout: spec
+redirect_from:
+  - /specs/extensions/server-time-3.2.html
 copyrights:
   -
     name: "Stéphan Kochen"

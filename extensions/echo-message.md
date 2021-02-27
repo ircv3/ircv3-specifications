@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 `echo-message` Extension
+title: IRCv3 `echo-message` Extension
 layout: spec
+redirect_from:
+  - /specs/extensions/echo-message-3.2.html
 copyrights:
   -
     name: "Attila Molnar"

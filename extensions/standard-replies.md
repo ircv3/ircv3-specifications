@@ -1,5 +1,5 @@
 ---
-title: "Standard Replies Extension"
+title: IRCv3 Standard Replies
 layout: spec
 copyrights:
   -

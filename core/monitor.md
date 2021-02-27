@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 Monitor
+title: IRCv3 Monitor
 layout: spec
+redirect_from:
+  - /specs/core/monitor-3.2.html
 copyrights:
   -
     name: "Lee Hardy"

@@ -1,5 +1,5 @@
 ---
-title: Multiline messages
+title: IRCv3 Multiline Messages
 layout: spec
 work-in-progress: true
 copyrights:
