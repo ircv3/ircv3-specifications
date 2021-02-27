@@ -2,6 +2,7 @@
 title: IRCv3 Client Capability Negotiation
 layout: spec
 redirect_from:
+  - /specs/core/capability-negotiation.html
   - /specs/core/capability-negotiation-3.1.html
   - /specs/core/capability-negotiation-3.2.html
   - /specs/extensions/cap-notify-3.2.html
