@@ -13,15 +13,15 @@ copyrights:
 This is a standardised mode that lets clients mark themselves as bots, and lets other clients see them as bots.
 
 ## The `BOT` ISUPPORT token
-Servers publishing the `BOT` [ISUPPORT](https://modern.ircdocs.horse/#feature-advertisement) token let clients mark themselves as bots by setting a user mode. The value of the `BOT` token is the mode character which is used to enable bot mode (e.g. `BOT=B` or `BOT=b`).
+Servers publishing the `BOT` [ISUPPORT](https://modern.ircdocs.horse/#feature-advertisement) token let clients mark themselves as bots by setting a user mode. The value of the `BOT` token is the mode character which is used to enable bot mode and is also the flag used in `WHO` responses of bots (e.g. `BOT=B` or `BOT=b`).
 
 When a client is marked as a bot, they are given a special numeric as part of their `WHOIS` response, it is indicated in their `WHO` flags, and servers may include the `bot` tag on that client's outgoing messages.
 
 ## The `RPL_WHOISBOT` `(335)` numeric
 This numeric is returned as part of a bot's `WHOIS` reply.
 
-## The `B` `WHO` flag
-When a `RPL_WHOREPLY` `(352)` numeric is returned for a bot, the `"B"` character is returned in the flags (alongside `H|G`).
+## The `WHO` bot flag
+When a `RPL_WHOREPLY` `(352)` numeric is returned for a bot, the character used as the value of the ISUPPORT `BOT` token is returned in the flags (alongside `H|G`).
 
 ## The `bot` tag
 The `bot` tag indicates that the given user is a bot. This tag SHOULD be added by the server to all commands sent by a bot (e.g. `PRIVMSG`, `JOIN`, `MODE`, `NOTICE`, and all others). The tag SHOULD also be added by the ircd to all numerics directly caused by the bot. This tag MUST only be sent to users who have requested the `message-tags` capability.
@@ -45,7 +45,7 @@ Server: :irc.ircv3.net 335 robodan robodan :is a Bot on IRCv3
 Server: :irc.ircv3.net 317 robodan robodan 24 1614290357 :seconds idle, signon time
 Server: :irc.ircv3.net 318 robodan robodan :End of /WHOIS list
 Bot:    WHO robodan
-Server: :irc.ircv3.net 352 robodan * ~u 203.0.113.22 irc.ircv3.net robodan HB :0 Hi, I'm a bot!
+Server: :irc.ircv3.net 352 robodan * ~u 203.0.113.22 irc.ircv3.net robodan Hb :0 Hi, I'm a bot!
 Server: :irc.ircv3.net 315 robodan robodan!*@* :End of WHO list
 
 
@@ -57,8 +57,9 @@ Server: :irc.ircv3.net 317 alice robodan 258 1614290467 :seconds idle, signon ti
 Server: :irc.ircv3.net 318 alice robodan :End of /WHOIS list
 Alice:  who #chat
 Server: :irc.ircv3.net 352 alice #chat ~u 198.51.100.103 irc.ircv3.net alice H :0 I'm a human!
-Server: :irc.ircv3.net 352 alice #chat ~u 203.0.113.22 irc.ircv3.net robodan HB :0 Hi, I'm a bot!
+Server: :irc.ircv3.net 352 alice #chat ~u 203.0.113.22 irc.ircv3.net robodan Hb :0 Hi, I'm a bot!
 Server: :irc.ircv3.net 315 alice #chat :End of WHO list
 [ ... ]
 Server: @bot :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
 ```
+The conventional `BOT` ISUPPORT value is `"B"`, but this example uses `"b"` to demonstrate where the value's used.
