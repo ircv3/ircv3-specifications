@@ -39,6 +39,7 @@ The `draft/bot` tag indicates that the given user is a bot. This tag SHOULD be a
 
 ## Examples
 
+The conventional `BOT` ISUPPORT value is `"B"`, but this example uses `"b"` to demonstrate where the value's used:
 ```
 Bot:    NICK robodan
 Bot:    USER u * * :Hi, I'm a bot!
@@ -73,9 +74,8 @@ Server: :irc.ircv3.net 315 alice #chat :End of WHO list
 [ ... ]
 Server: @draft/bot :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
 ```
-The conventional `BOT` ISUPPORT value is `"B"`, but this example uses `"b"` to demonstrate where the value's used.
 
+Example of some future value being sent, which the receiving client will ignore and process as a bare `@draft/bot` tag:
 ```
 Server: @draft/bot=someFutureValueHere=2343 :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
 ```
-Example of some future value being sent, which the receiving client will ignore and process as a bare `@draft/bot` tag.
