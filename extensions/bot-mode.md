@@ -35,7 +35,7 @@ This numeric is returned as part of a bot's `WHOIS` reply.
 When a `RPL_WHOREPLY` `(352)` numeric is returned for a bot, the character used as the value of the ISUPPORT `BOT` token is returned in the flags (alongside `H|G`).
 
 ## The `draft/bot` tag
-The `draft/bot` tag indicates that the given user is a bot. This tag SHOULD be added by the server to all commands sent by a bot (e.g. `PRIVMSG`, `JOIN`, `MODE`, `NOTICE`, and all others). The tag SHOULD also be added by the ircd to all numerics directly caused by the bot. This tag MUST only be sent to users who have requested the `message-tags` capability.
+The `draft/bot` tag indicates that the given user is a bot. This tag SHOULD be added by the server to all commands sent by a bot (e.g. `PRIVMSG`, `JOIN`, `MODE`, `NOTICE`, and all others). The tag SHOULD also be added by the ircd to all numerics directly caused by the bot. This tag MUST only be sent to users who have requested the `message-tags` capability. Servers MUST NOT send this tag with a value, and clients MUST ignore any value if it exists.
 
 ## Examples
 
@@ -74,3 +74,8 @@ Server: :irc.ircv3.net 315 alice #chat :End of WHO list
 Server: @draft/bot :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
 ```
 The conventional `BOT` ISUPPORT value is `"B"`, but this example uses `"b"` to demonstrate where the value's used.
+
+```
+Server: @draft/bot=someFutureValueHere=2343 :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
+```
+Example of some future value being sent, which the receiving client will ignore and process as a bare `@draft/bot` tag.
