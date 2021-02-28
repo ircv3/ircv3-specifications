@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `netsplit` and `netjoin` Batch Types
+title: "`netsplit` and `netjoin` Batch Types"
 layout: spec
 redirect_from:
   - /specs/extensions/batch/netsplit-3.2.html
