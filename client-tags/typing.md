@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `typing` client tag
+title: "`typing` client tag"
 layout: spec
 copyrights:
   -

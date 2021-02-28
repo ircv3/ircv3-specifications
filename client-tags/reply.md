@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `reply` client tag
+title: "`reply` client tag"
 layout: spec
 work-in-progress: true
 copyrights:

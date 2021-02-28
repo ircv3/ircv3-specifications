@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `react` client tag
+title: "`react` client tag"
 layout: spec
 work-in-progress: true
 copyrights:
