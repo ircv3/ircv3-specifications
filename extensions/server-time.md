@@ -21,6 +21,9 @@ copyrights:
     period: "2016"
     email: "james@irccloud.com"
 ---
+
+## Description
+
 Clients indicate support for the extension by requesting a capability server-time as per the [IRC Client Capabilities Extension][cap].
 
 	CAP REQ :server-time

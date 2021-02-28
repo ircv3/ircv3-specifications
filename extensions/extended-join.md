@@ -9,6 +9,9 @@ copyrights:
     period: "2011"
     email: "kiyoshi.aman@gmail.com"
 ---
+
+## Description
+
 The extended-join capability extends the JOIN message to include the
 account name, or a placeholder if the user hasn't identified with
 services. This capability MUST be referred to as 'extended-join' at

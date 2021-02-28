@@ -23,7 +23,6 @@ The final version of the specification will use an unprefixed capability name.
 
 ## Introduction
 
-
 This specification introduces a method of natively renaming a channel without closing it down and redirecting to a new one. This allows properties such as access and ban lists to be maintained, and avoids issues with client-side logging where history is split across multiple channel names.
 
 ## Architecture

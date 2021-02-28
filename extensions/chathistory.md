@@ -15,6 +15,7 @@ copyrights:
     period: "2020"
     email: "slingamn@cs.stanford.edu"
 ---
+
 ## Notes for implementing work-in-progress version
 
 This is a work-in-progress specification.
@@ -23,7 +24,7 @@ Software implementing this work-in-progress specification MUST NOT use the unpre
 
 The `chathistory` batch type is already ratified and SHOULD be used unprefixed.
 
-## Description
+## Introduction
 This document describes the format of the `chathistory` extension. This enables clients to request messages that were previously sent if they are still available on the server.
 
 The server as mentioned in this document may refer to either an IRC server or an IRC bouncer.

@@ -9,6 +9,9 @@ copyrights:
     period: "2010"
     email: "nenolod@dereferenced.org"
 ---
+
+## Description
+
 The account-notify client capability allows a client to be notified
 when a client's account name changes.  This capability MUST be
 referred to as 'account-notify' at capability negotiation time.

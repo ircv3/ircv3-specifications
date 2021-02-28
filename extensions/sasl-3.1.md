@@ -13,6 +13,9 @@ copyrights:
     period: "2009-2012"
     email: "nenolod@dereferenced.org"
 ---
+
+## Introduction
+
 This document describes the client protocol for SASL authentication, as
 implemented in Charybdis and Atheme.
 

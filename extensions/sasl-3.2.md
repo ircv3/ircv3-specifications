@@ -13,7 +13,8 @@ copyrights:
     period: "2015"
     email: "nenolod@dereferenced.org"
 ---
-## Description
+
+## Introduction
 
 This document describes how [SASL authentication](sasl-3.1.html)
 makes use of the

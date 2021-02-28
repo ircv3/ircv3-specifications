@@ -10,6 +10,9 @@ copyrights:
     period: "2013-2015"
     email: "grawity@gmail.com"
 ---
+
+## Description
+
 This specification documents the `DH-BLOWFISH` SASL mechanism currently
 implemented by various IRC clients and services.
 

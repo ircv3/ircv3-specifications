@@ -13,6 +13,7 @@ copyrights:
     period: "2014"
     email: "attilamolnar@hush.com"
 ---
+
 ## Description
 
 The `invite-notify` client capability allows a client to specify that it

@@ -9,6 +9,9 @@ copyrights:
     period: "2013"
     email: "grawity@gmail.com"
 ---
+
+## Description
+
 The `userhost-in-names` capability extends the NAMES reply messages
 (`RPL_NAMREPLY`) to contain the full hostmask (nick!user@host) of every user
 listed.

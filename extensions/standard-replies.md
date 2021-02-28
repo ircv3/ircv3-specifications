@@ -8,6 +8,8 @@ copyrights:
     email: "daniel@danieloaks.net"
 ---
 
+## Introduction
+
 This document specifies the standard `FAIL`, `WARN`, and `NOTE` messages, intended to provide a clean, consistent interface for sending general errors, warnings, and informational messages to clients. Implementers should not need to reserve new numerics for error, warning, or general informational messages, especially as numerics themselves and the mapping of numerics to names can be unclear or conflicting.
 
 The `FAIL` message indicates a complete failure to process a given command/function, or simply some error about the current session that clients should be aware of.

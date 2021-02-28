@@ -9,6 +9,9 @@ copyrights:
     period: "2013-2015"
     email: "grawity@gmail.com"
 ---
+
+## Description
+
 The `account-tag` capability causes the server to add a [message tag][] containing
 the command sender's services account to commands sent to the client that has
 requested this capability. It supersedes the `identify-msg` extension.

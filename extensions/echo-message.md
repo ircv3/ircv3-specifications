@@ -13,6 +13,7 @@ copyrights:
     period: "2014"
     email: "jpnurmi@gmail.com"
 ---
+
 ## Description
 
 This client capability MUST be named `echo-message`.

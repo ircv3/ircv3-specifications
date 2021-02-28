@@ -36,6 +36,7 @@ copyrights:
     period: "2017-2019"
     email: "james@irccloud.com"
 ---
+
 ## What Client Capability Negotiation attempts to solve
 
 Client Capability Negotiation allows IRC clients and servers to negotiate new features
