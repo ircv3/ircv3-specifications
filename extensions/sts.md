@@ -36,9 +36,13 @@ Clients MUST ignore every token with a key that they don't understand.
 
 An STS policy has several parts:
 
-* An **upgrade policy**, expressed via the [`port` key](#the-port-key) over an insecure connection. *REQUIRED*
-* A **persistence policy**, expressed via the [`duration` key](#the-duration-key) over a secure connection. *REQUIRED*
-* A **preload policy**, expressed via the [`preload` key](#the-preload-key) over a secure connection. *OPTIONAL*
+* An **upgrade policy**, expressed via the [`port` key](#the-port-key). *REQUIRED* on an insecure connection.
+* A **persistence policy**, expressed via the [`duration` key](#the-duration-key) *REQUIRED* on a secure connection.
+* A **preload policy**, expressed via the [`preload` key](#the-preload-key) *OPTIONAL* on a secure connection.
+
+If any required part is missing from the STS policy, clients MUST continue as if no STS policy was advertised.
+
+Servers MAY advertise all STS policy parts together on both secure and insecure connections. Clients MUST only respect each policy part on the appropriate connection type.
 
 See the [capability negotiation](../core/capability-negotiation.html) specification for more information about capabilities with values.
 
