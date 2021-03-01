@@ -171,6 +171,10 @@ If a client sends an `ADDNETWORK` subcommand without a mandatory attribute:
 
     FAIL BOUNCER NEED_ATTRIBUTE ADDNETWORK <attribute> :Missing required attribute
 
+If a client sends an unknown subcommand:
+
+    FAIL BOUNCER UNKNOWN_COMMAND <subcommand> :Unknown subcommand
+
 TODO: more errors
 
 ### Standard network attributes
