@@ -71,7 +71,7 @@ The server replies with:
 
 And then ends the list (even if empty) with:
 
-    BOUNCER LISTNETWORKS RPL_OK
+    BOUNCER LISTNETWORKS *
 
 ### Errors
 
@@ -119,4 +119,4 @@ Listing networks:
     C: BOUNCER LISTNETWORKS
     S: BOUNCER LISTNETWORKS 42 name=Freenode;state=connected
     S: BOUNCER LISTNETWORKS 43 name=My\sAwesome\sNetwork;state=disconnected
-    S: BOUNCER LISTNETWORKS RPL_OK
+    S: BOUNCER LISTNETWORKS *
