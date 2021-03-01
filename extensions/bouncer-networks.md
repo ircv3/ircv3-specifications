@@ -139,41 +139,67 @@ Errors are returned using the standard replies syntax. The general syntax is:
 
     FAIL BOUNCER <code> <subcommand> [context...] <description>
 
-If a client sends a `BIND` subcommand before authentication:
+If a client sends an unknown subcommand, the server MUST reply with:
+
+    FAIL BOUNCER UNKNOWN_COMMAND <subcommand> :Unknown subcommand
+
+#### `ACCOUNT_REQUIRED` error
+
+If a client sends a `BIND` subcommand before authentication, the server MAY
+reply with:
 
     FAIL BOUNCER ACCOUNT_REQUIRED BIND :Authentication required
 
-If a client sends a `BIND` subcommand after registration:
+#### `REGISTRATION_IS_COMPLETED` error
+
+If a client sends a `BIND` subcommand after registration, the server MAY reply
+with:
 
     FAIL BOUNCER REGISTRATION_IS_COMPLETED BIND :Cannot bind to a network after registration
 
-If a client sends a `BIND` subcommand with an invalid network ID:
+#### `INVALID_NETID` error
 
-    FAIL BOUNCER INVALID_NETID BIND <netid> :Network not found
+If a client sends a subcommand with an invalid network ID, the server MUST
+reply with:
 
-If a client sends an `ADDNETWORK` subcommand with an invalid attribute:
+    FAIL BOUNCER INVALID_NETID <subcommand> <netid> :Network not found
 
-    FAIL BOUNCER INVALID_ATTRIBUTE ADDNETWORK * <attribute> :Invalid attribute value
+#### `INVALID_ATTRIBUTE` error
 
-If a client sends a `CHANGENETWORK` subcommand with an invalid attribute:
+If a client sends an `ADDNETWORK` or a `CHANGENETWORK` subcommand with an
+invalid attribute, the server MUST reply with:
 
-    FAIL BOUNCER INVALID_ATTRIBUTE CHANGENETWORK <netid> <attribute> :Invalid attribute value
+    FAIL BOUNCER INVALID_ATTRIBUTE <subcommand> <netid> <attribute> :Invalid attribute value
 
-If a client attempts to change a read-only network attribute:
+If the `subcommand` is `ADDNETWORK`, `netid` MUST be set to the special `*`
+value.
 
-    FAIL BOUNCER READ_ONLY_ATTRIBUTE CHANGENETWORK <netid> <attribute> :Read-only attribute
+#### `READ_ONLY_ATTRIBUTE` error
 
-If a client sends an `ADDNETWORK` subcommand with an unknown attribute:
+If a client attempts to change a read-only network attribute using the
+`ADDNETWORK` or `CHANGENETWORK` subcommand, the server MUST reply with:
 
-    FAIL BOUNCER UNKNOWN_ATTRIBUTE ADDNETWORK * <attribute> :Unknown attribute
+    FAIL BOUNCER READ_ONLY_ATTRIBUTE <subcommand> <netid> <attribute> :Read-only attribute
 
-If a client sends an `ADDNETWORK` subcommand without a mandatory attribute:
+If the `subcommand` is `ADDNETWORK`, `netid` MUST be set to the special `*`
+value.
+
+#### `UNKNOWN_ATTRIBUTE` error
+
+If a client sends an `ADDNETWORK` or a `CHANGENETWORK` subcommand with an
+unknown attribute, the server MUST reply with:
+
+    FAIL BOUNCER UNKNOWN_ATTRIBUTE <subcommand> <netid> <attribute> :Unknown attribute
+
+If the `subcommand` is `ADDNETWORK`, `netid` MUST be set to the special `*`
+value.
+
+#### `NEED_ATTRIBUTE` error
+
+If a client sends an `ADDNETWORK` subcommand without a mandatory attribute, the
+server MUST reply with:
 
     FAIL BOUNCER NEED_ATTRIBUTE ADDNETWORK <attribute> :Missing required attribute
-
-If a client sends an unknown subcommand:
-
-    FAIL BOUNCER UNKNOWN_COMMAND <subcommand> :Unknown subcommand
 
 TODO: more errors
 
