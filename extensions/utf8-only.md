@@ -46,3 +46,6 @@ Server: ERROR :Your IRC software MUST use UTF-8 encoding on this network
 Client: PRIVMSG #ircv3 :<non-utf-8 message>
 Server: WARN PRIVMSG INVALID_UTF8 :Your message was not correctly encoded as UTF-8 and had to be modified
 ```
+
+## Implementation considerations
+Implementations MUST ensure that if they truncate messages to meet a length limit, they do not do so in the middle of a UTF-8 codepoint.
