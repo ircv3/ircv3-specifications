@@ -48,4 +48,6 @@ Server: WARN PRIVMSG INVALID_UTF8 :Your message was not correctly encoded as UTF
 ```
 
 ## Implementation considerations
-Implementations MUST ensure that if they truncate messages to meet a length limit, they do not do so in the middle of a UTF-8 codepoint.
+This section is non-normative.
+
+Implementations must ensure that if they truncate messages to meet a length limit, they do not do so in the middle of a UTF-8-encoded codepoint.
