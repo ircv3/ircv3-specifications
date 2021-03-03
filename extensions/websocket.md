@@ -7,27 +7,31 @@ copyrights:
     name: Darren Whitlen
     period: 2018
     email: darren@kiwiirc.com
+  -
+    name: Shivaram Lingamneni
+    period: 2021
+    email: slingamn@cs.stanford.edu
+
 ---
 
 ## Introduction
 
-This specification describes a mechanism for WebSocket-based clients (in particular, web-based IRC clients running in the browser) to connect to IRC networks, with a focus on simplicity and contemporary best practices for web development.
+This specification describes a mechanism for WebSocket-based clients (in particular, web-based IRC clients running in the browser) to connect to IRC networks.
 
 ## WebSocket features and encoding
 
-WebSocket is a message-based protocol offering both text (UTF8-encoded) and binary (8-bit clean) message types. Given that the primary purpose of IRC is text-based communication, that web browsers are pushing increasingly towards UTF8 as the default encoding for HTML5 documents and scripting languages, and that these web browsers are the primary use case for IRC-over-WebSockets, we require that all IRC messages MUST be sent as WebSocket text messages, where each message consists of a single complete IRC message line.
+WebSocket is a message-based protocol, i.e., it handles message fragmentation and termination internally. It offers both text (UTF-8 encoded) and binary (8-bit clean) message types; each has advantages and disadvantages as a transport for IRC. Binary messages can transport any valid IRC line, while text messages can only transport lines that are entirely UTF-8. Consequently, binary frames are necessary to fully support IRC communities that use encodings other than UTF-8. On the other hand, given that web browsers are pushing increasingly towards UTF-8 as the default encoding for HTML5 documents and scripting languages, text messages make it simpler to achieve a correct implementation on the client side.
 
-The WebSocket protocol handles message fragmentation and termination internally. This is outside the scope of the present specification.
+We define two [subprotocols](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#subprotocols): `binary.ircv3.net` and `text.ircv3.net`. Servers MUST support `binary.ircv3.net` and SHOULD support `text.ircv3.net`. Clients connecting to a server providing IRC-over-WebSockets MUST initially request one or both of these subprotocols, in order of preference (most preferred first). The server MUST accept any subprotocol it supports, respecting the client's order of preference. If `binary.ircv3.net` is negotiated, then client and server will exchange binary messages; if `text.ircv3.net` is negotiated, then they will exchange text messages. In both cases, the message format is the same: each message MUST consist of a single IRC line, except that servers and clients MUST NOT include trailing `\r` or `\n` characters in the message.
 
-If an IRC server supports both WebSocket and non-WebSocket clients, it may receive non-UTF8 message content from a non-WebSocket client. Servers MUST NOT relay non-UTF8 content to WebSocket clients, since this may result in those clients being disconnected by the browser. Servers MAY replace non-UTF8 bytes with the UTF8 encoding of the Unicode replacement character `�` (`U+FFFD`), or they MAY discard such messages entirely and report an error to the client.
+Servers MAY support legacy clients that use text messages exclusively and do not negotiate a subprotocol. For example, servers MAY default to text when no subprotocol is negotiated, or they MAY autodetect text or binary based on the type of the first message sent by the client.
 
-## Message syntax
+Servers MUST NOT relay non-UTF-8 content to clients using text messages, since this may result in those clients being disconnected by the browser. Servers MAY replace non-UTF-8 bytes with the UTF-8 encoding of the Unicode replacement character `�` (`U+FFFD`).
 
-The syntax of IRC lines MUST NOT be changed, except that servers and clients MUST NOT include trailing `\r` or `\n` characters in their WebSocket messages.
 
 ## Client example
 ~~~
-let socket = new WebSocket('wss://ws.example.org');
+let socket = new WebSocket('wss://ws.example.org', ['text.ircv3.net']);
 socket.addEventListener('open', () => {
 	socket.send('USER 0 0 0 0');
 	socket.send('NICK bob');
@@ -37,4 +41,12 @@ socket.addEventListener('message', event => processLine(event.data));
 
 ## Security considerations
 
-Clients and servers SHOULD impose limits on the maximum size of messages they will accept, in order to prevent denial-of-service attacks.
+Clients and servers SHOULD impose limits on the maximum size of messages they will accept, in order to prevent denial-of-service attacks. The limits SHOULD reflect the increased total line lengths allowed by the [`message-tags`](./message-tags) specification.
+
+## Other implementation considerations
+
+This section is non-normative.
+
+Given the numerous implementations in the wild predating this specification, servers and clients should strive for maximum compatibility.
+
+In addition to the compatibility considerations previously noted, clients may wish to support legacy servers that are unaware of subprotocols. The standard JavaScript API for WebSockets will [reject the connection](https://fetch.spec.whatwg.org/#concept-websocket-establish) if none of the client's desired subprotocols could be negotiated. In this case, the client could attempt another connection without subprotocol negotiation.
