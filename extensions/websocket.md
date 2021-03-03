@@ -24,10 +24,7 @@ WebSocket is a message-based protocol, i.e., it handles message fragmentation an
 
 We define two [subprotocols](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#subprotocols): `binary.ircv3.net` and `text.ircv3.net`. Servers MUST support `binary.ircv3.net` and SHOULD support `text.ircv3.net`. Clients connecting to a server providing IRC-over-WebSockets MUST initially request one or both of these subprotocols, in order of preference (most preferred first). The server MUST accept any subprotocol it supports, respecting the client's order of preference. If `binary.ircv3.net` is negotiated, then client and server will exchange binary messages; if `text.ircv3.net` is negotiated, then they will exchange text messages. In both cases, the message format is the same: each message MUST consist of a single IRC line, except that servers and clients MUST NOT include trailing `\r` or `\n` characters in the message.
 
-Servers MAY support legacy clients that use text messages exclusively and do not negotiate a subprotocol. For example, servers MAY default to text when no subprotocol is negotiated, or they MAY autodetect text or binary based on the type of the first message sent by the client.
-
 Servers MUST NOT relay non-UTF-8 content to clients using text messages, since this may result in those clients being disconnected by the browser. Servers MAY replace non-UTF-8 bytes with the UTF-8 encoding of the Unicode replacement character `�` (`U+FFFD`).
-
 
 ## Client example
 ~~~
@@ -49,4 +46,6 @@ This section is non-normative.
 
 Given the numerous implementations in the wild predating this specification, servers and clients should strive for maximum compatibility.
 
-In addition to the compatibility considerations previously noted, clients may wish to support legacy servers that are unaware of subprotocols. The standard JavaScript API for WebSockets will [reject the connection](https://fetch.spec.whatwg.org/#concept-websocket-establish) if none of the client's desired subprotocols could be negotiated. In this case, the client could attempt another connection without subprotocol negotiation.
+Servers may wish to support legacy clients that do not negotiate a subprotocol. For example, when no subprotocol is negotiated, servers could accept either incoming message type, while using a fixed (or operator-configurable) message type for outgoing messages. Alternatively, they could autodetect the outgoing message type based on the type of the first incoming message sent by the client.
+
+Similarly, clients may wish to support legacy servers that are unaware of subprotocols. The standard JavaScript API for WebSockets will [reject the connection](https://fetch.spec.whatwg.org/#concept-websocket-establish) if none of the client's desired subprotocols could be negotiated. In this case, the client could attempt another connection without subprotocol negotiation.
