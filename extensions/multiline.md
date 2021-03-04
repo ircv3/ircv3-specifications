@@ -66,7 +66,7 @@ In addition to the base batch parameters (reference-tag and type) a multiline ba
 
 Multiline batches MUST only contain one or more PRIVMSG lines. These lines MUST all have a target which matches the batch target.
 
-When receiving a well-formed mulitiline message batch, implementations MUST collect each PRIVMSG message content and wait until the full batch has been received before processing the message. Processing in this context refers to:
+When receiving a well-formed multiline message batch, implementations MUST collect each PRIVMSG message content and wait until the full batch has been received before processing the message. Processing in this context refers to:
 
 * Servers: delivering the batch to the intended recipients
 * Clients: displaying the batched message to the user
