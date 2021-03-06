@@ -80,8 +80,6 @@ Servers MUST NOT reject blank lines other than in the following cases:
 * Clients MUST NOT send blank lines with the `draft/multiline-concat` tag.
 * Clients MUST NOT send messages consisting entirely of blank lines.
 
-Clients MUST NOT send messages other than PRIVMSG while a multiline batch is open.
-
 ### Fallback
 
 When delivering multiline batches to clients that have not negotiated the multiline capability, servers MUST deliver the component messages without using a multiline BATCH.
