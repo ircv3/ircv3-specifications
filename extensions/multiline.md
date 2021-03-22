@@ -80,7 +80,7 @@ Servers MUST NOT reject blank lines other than in the following cases:
 * Clients MUST NOT send blank lines with the `draft/multiline-concat` tag.
 * Clients MUST NOT send messages consisting entirely of blank lines.
 
-Once the client has opened a multiline batch, it MUST NOT send any messages that are not part of the batch, i.e., it may only send PRIVMSG or NOTICE with the appropriate `batch` tag, or the closing `BATCH` command.
+Once the client has opened a multiline batch, it MUST NOT send any messages that are not part of the batch, i.e. it may only send PRIVMSG or NOTICE with the appropriate `batch` tag, or the closing `BATCH` command.
 
 ### Fallback
 
