@@ -64,9 +64,9 @@ This specification adds the `draft/multiline` batch type, and introduces client 
 
 In addition to the base batch parameters (reference-tag and type) a multiline batch has one additional parameter, the target recipient.
 
-Multiline batches MUST only contain one or more PRIVMSG lines. These lines MUST all have a target which matches the batch target.
+Multiline batches MUST only contain one or more PRIVMSG lines, or one or more NOTICE lines. These lines MUST all have a target which matches the batch target.
 
-When receiving a well-formed multiline message batch, implementations MUST collect each PRIVMSG message content and wait until the full batch has been received before processing the message. Processing in this context refers to:
+When receiving a well-formed multiline message batch, implementations MUST collect the message content from each line in the batch and wait until the full batch has been received before processing the message. Processing in this context refers to:
 
 * Servers: delivering the batch to the intended recipients
 * Clients: displaying the batched message to the user
@@ -80,7 +80,7 @@ Servers MUST NOT reject blank lines other than in the following cases:
 * Clients MUST NOT send blank lines with the `draft/multiline-concat` tag.
 * Clients MUST NOT send messages consisting entirely of blank lines.
 
-Clients MUST NOT send messages other than PRIVMSG while a multiline batch is open.
+Once the client has opened a multiline batch, it MUST NOT send any messages that are not part of the batch, i.e. it may only send PRIVMSG or NOTICE with the appropriate `batch` tag, or the closing `BATCH` command.
 
 ### Fallback
 
@@ -214,6 +214,8 @@ Final concatenated message
 
     how is everyone?
 
+This example is also valid if every instance of PRIVMSG is replaced with NOTICE.
+
 ---
 
 Invalid multiline batch target
@@ -268,6 +270,17 @@ Invalid entirely blank message
     Client: BATCH -abc123
 
     Server: :irc.example.com FAIL BATCH MULTILINE_INVALID :Invalid multiline batch with blank lines only
+
+---
+
+Mixing PRIVMSG and NOTICE
+
+    Client: BATCH +792da7 draft/multiline #channel
+    Client: @batch=792da7 PRIVMSG #channel :this starts with a PRIVMSG
+    Client: @batch=792da7 NOTICE #channel :but ends with a NOTICE
+    Client: BATCH -792da7
+
+    Server: :irc.example.com FAIL BATCH MULTILINE_INVALID :Invalid multiline batch
 
 ---
 
