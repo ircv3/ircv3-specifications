@@ -49,7 +49,7 @@ And uses the following tags:
 * `draft/target-msgid=<msgid>` to indicate the [`msgid`] of the message to be edited
 * `draft/edit-text=<new-text>` to indicate the new text of the message
 
-If the client is authorised to edit the message, the server MUST forward this `EDIT` to the target recipients with an appropriate source.
+If the client is authorised to edit the message, the server MUST forward this `EDIT` to the target recipients with an appropriate prefix.
 
 ### Deleting messages
 
@@ -61,7 +61,7 @@ And uses the following:
 
 * `draft/target-msgid=<msgid>` to indicate the [`msgid`] of the message to be deleted
 
-If the client is authorised to delete the message, the server MUST forward this `DELETE` to the target recipients with an appropriate source.
+If the client is authorised to delete the message, the server MUST forward this `DELETE` to the target recipients with an appropriate prefix.
 
 ### Errors
 
