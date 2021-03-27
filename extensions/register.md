@@ -108,8 +108,8 @@ Sent by the server if it cannot send emails to the provided address.
 
 Sent by the server if the email address is valid, but not available for account registration.
 
-    FAIL REGISTER COMPLETE_CONNECTION_REQUIRED
-    FAIL VERIFY COMPLETE_CONNECTION_REQUIRED
+    FAIL REGISTER COMPLETE_CONNECTION_REQUIRED <message>
+    FAIL VERIFY COMPLETE_CONNECTION_REQUIRED <message>
 
 Sent by the server if the client sent a `REGISTER` command before connection registration.
 The server MUST NOT sent these replies if it advertizes the `before-connect` key of the
