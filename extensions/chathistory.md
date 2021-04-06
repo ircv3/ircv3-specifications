@@ -42,21 +42,20 @@ The `draft/event-playback` capability MAY be negotiated. This allows the client 
 ### `CHATHISTORY` Command
 The client can request message history content by sending the `CHATHISTORY` command to the server. This command has the following general syntax:
 
-    CHATHISTORY <subcommand> <target> <timestamp | msgid> <limit>
+    CHATHISTORY <subcommand> <target> <timestamp | msgid> [<timestamp | msgid>] <limit>
+    CHATHISTORY LISTCORRESPONDENTS <timestamp> <timestamp> <limit>
 
 The `target` parameter specifies a single buffer (channel or nickname) from which history is to be retrieved. If a nickname is given as the `target` then the server SHOULD include history sent between the current user and the target nickname, including outgoing messages ("self messages"). The server SHOULD attempt to include history involving other nicknames if either the current user or the target nickname has changed during the requested timeframe.
 
-The special target `*` refers to all direct messages sent to or from the current user, regardless of the other party. This allows the client to retrieve conversations with users it is not yet aware of.
-
 A `timestamp` parameter MUST have the format `timestamp=YYYY-MM-DDThh:mm:ss.sssZ`, as in the [server-time][server-time] extension. A `msgid` parameter MUST have the format `msgid=foobar`, as in the [message-ids][message-ids] extension.
 
-If the `batch` capability was negotiated, the server MUST reply to a successful `CHATHISTORY` command using a [`batch`][batch]. The batch MUST have type `chathistory` and take a single additional parameter, the canonical name of the target being queried. If no content exists to return, the server SHOULD return an empty batch in order to avoid the client waiting for a reply.
+If the `batch` capability was negotiated, the server MUST reply to a successful `CHATHISTORY` command using a [`batch`][batch]. For subcommands that return message history (i.e. all subcommands other than `LISTCORRESPONDENTS`), the batch MUST have type `chathistory` and take a single additional parameter, the canonical name of the target being queried. For `LISTCORRESPONDENTS`, the batch MUST have type `draft/chathistory-listcorrespondents`. If no content exists to return, the server SHOULD return an empty batch in order to avoid the client waiting for a reply.
 
 If the client has not negotiated the `draft/event-playback` capability, the server MUST NOT send any lines other than `PRIVMSG` and `NOTICE` in the reply batch. If the client has negotiated `draft/event-playback`, the server SHOULD send additional lines relevant to the chat history, including but not limited to `TAGMSG`, `JOIN`, `PART`, `QUIT`, `MODE`, `TOPIC`, and `NICK`.
 
 #### Subcommands
 
-The following subcommands are used to describe how the server should return messages relative to the `timestamp` or `msgid` given.
+The following subcommands are used to return message history relative to `timestamp` or `msgid` selection parameter(s).
 
 #### `BEFORE`
 
@@ -91,6 +90,18 @@ This is useful for retrieving conversation context around a single message.
     CHATHISTORY BETWEEN <target> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
 
 Request up to `limit` number of messages between the given `timestamp` or `msgid` values. With respect to the limit, the returned messages MUST be counted starting from and excluding the first message selector, while finishing on and excluding the second. This may be forwards or backwards in time.
+
+#### `LISTCORRESPONDENTS`
+
+Unlike the other subcommands, `LISTCORRESPONDENTS` does not return message history; instead, it lists users with which the user has exchanged direct messages, ordered by the time of the latest message sent either from or to the other user. This allows the client to discover missed direct message conversations with users it is not currently aware of.
+
+    CHATHISTORY LISTCORRESPONDENTS <timestamp=YYYY-MM-DDThh:mm:ss.sssZ> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ> <limit>
+
+The parameters have the same semantics as `BETWEEN`, except that they MUST be timestamps and not msgids. Returned messages have the syntax:
+
+    CHATHISTORY CORRESPONDENT <nickname> <YYYY-MM-DDThh:mm:ss.sssZ>
+
+where the timestamp is the time of the latest message sent from or to the other user.
 
 #### Returned message notes
 The order of returned messages within the batch is implementation-defined, but SHOULD be ascending time order or some approximation thereof, regardless of the subcommand used. The `server-time` tag on each message SHOULD be the time at which the message was received by the IRC server. The `msgid` tag that identifies each individual message in a response MUST be the `msgid` tag as originally sent by the IRC server.
@@ -180,6 +191,17 @@ Infinite scroll can be implemented as:
     upper_bound_msg = messages[0]
 
 To fill in gaps in a client without deduplication support, iterate this infinite scrolling operation until the BETWEEN query returns no results (or until a sane limit of retrieved messages is reached).
+
+To use `LISTCORRESPONDENTS` to retrieve missed direct messages on reconnection:
+
+    upper_bound = now()
+    upper_bound += FUZZ_INTERVAL
+    lower_bound = <timestamp of last message relayed to the previous session>
+    lower_bound -= FUZZ_INTERVAL
+    correspondents = CHATHISTORY(LISTCORRESPONDENTS, upper_bound, lower_bound, limit)
+    for correspondent in correspondents:
+        correspondent_lower_bound = <timestamp of last message exchanged with correspondent>
+        CHATHISTORY(LATEST, correspondent.nickname, correspondent_lower_bound, limit)
 
 ## Implementation Considerations
 
