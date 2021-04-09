@@ -22,7 +22,7 @@ channel when they try to join, by setting a channel mode.
 The value of the `FORWARD` token is the mode character which is used to enable
 this (e.g. `FORWARD=f` or `FORWARD=L`).
 
-IF the server does not support a forward mode, it MAY include the
+If the server does not support a forward mode, it MAY include the
 token with no value (`FORWARD=`).
 
 ## The FORWARD mode
