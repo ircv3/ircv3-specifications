@@ -1,6 +1,8 @@
 ---
-title: IRCv3 SASL DH-BLOWFISH Authentication Mechanism
+title: SASL DH-BLOWFISH Authentication Mechanism
 layout: spec
+redirect_from:
+  - /specs/documentation/sasl-dh-blowfish.html
 deprecated: "This mechanism has been deemed unsafe and has been deprecated. Please refer to the [SASL Mechanisms](http://ircv3.net/docs/sasl-mechs.html) page for mechanisms that the IRCv3 WG now recommends."
 copyrights:
   -
@@ -8,6 +10,9 @@ copyrights:
     period: "2013-2015"
     email: "grawity@gmail.com"
 ---
+
+## Description
+
 This specification documents the `DH-BLOWFISH` SASL mechanism currently
 implemented by various IRC clients and services.
 

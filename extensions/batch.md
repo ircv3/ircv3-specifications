@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 `batch` Extension
+title: "`batch` Extension"
 layout: spec
+redirect_from:
+  - /specs/extensions/batch-3.2.html
 copyrights:
   -
     name: "William Pitcock"
@@ -15,7 +17,8 @@ copyrights:
     period: "2014"
     email: "alexey-irc@asokolov.org"
 ---
-## The `batch` client capability
+
+## Introduction
 
 This extension describes a capability which causes a new verb to be sent to
 clients when the IRC server wishes to designate that a series of events are

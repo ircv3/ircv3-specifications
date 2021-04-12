@@ -1,12 +1,17 @@
 ---
-title: IRCv3.1 `extended-join` Extension
+title: "`extended-join` Extension"
 layout: spec
+redirect_from:
+  - /specs/extensions/extended-join-3.1.html
 copyrights:
   -
     name: "Kiyoshi Aman"
     period: "2011"
     email: "kiyoshi.aman@gmail.com"
 ---
+
+## Description
+
 The extended-join capability extends the JOIN message to include the
 account name, or a placeholder if the user hasn't identified with
 services. This capability MUST be referred to as 'extended-join' at

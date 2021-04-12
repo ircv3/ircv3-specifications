@@ -1,5 +1,5 @@
 ---
-title: IRCv3 `setname` Extension
+title: "`setname` Extension"
 layout: spec
 copyrights:
   -

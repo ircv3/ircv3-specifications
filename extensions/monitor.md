@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 Monitor
+title: Monitor
 layout: spec
+redirect_from:
+  - /specs/core/monitor-3.2.html
 copyrights:
   -
     name: "Lee Hardy"
@@ -15,6 +17,7 @@ copyrights:
     period: "2015"
     email: "nenolod@dereferenced.org"
 ---
+
 A protocol for notification of when clients become online/offline
 
 ## Introduction

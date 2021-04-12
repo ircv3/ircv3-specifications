@@ -1,5 +1,5 @@
 ---
-title: IRCv3 typing client tag
+title: "`typing` client tag"
 layout: spec
 copyrights:
   -
@@ -10,6 +10,7 @@ copyrights:
     period: "2020"
     email: "james@irccloud.com"
 ---
+
 ## Introduction
 
 This specification defines a client-only message tag to indicate the current typing status of users in channels and private messages.

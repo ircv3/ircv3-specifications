@@ -1,5 +1,5 @@
 ---
-title: IRCv3.2 Metadata
+title: Metadata
 layout: spec
 deprecated: true
 copyrights:

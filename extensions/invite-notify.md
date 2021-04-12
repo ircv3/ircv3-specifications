@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 `invite-notify` Extension
+title: "`invite-notify` Extension"
 layout: spec
+redirect_from:
+  - /specs/extensions/invite-notify-3.2.html
 copyrights:
   -
     name: "Adam"
@@ -11,6 +13,7 @@ copyrights:
     period: "2014"
     email: "attilamolnar@hush.com"
 ---
+
 ## Description
 
 The `invite-notify` client capability allows a client to specify that it

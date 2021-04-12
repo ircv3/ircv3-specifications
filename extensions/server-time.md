@@ -1,6 +1,8 @@
 ---
-title: IRCv3.2 `server-time` Extension
+title: "`server-time` Extension"
 layout: spec
+redirect_from:
+  - /specs/extensions/server-time-3.2.html
 copyrights:
   -
     name: "Stéphan Kochen"
@@ -19,6 +21,9 @@ copyrights:
     period: "2016"
     email: "james@irccloud.com"
 ---
+
+## Description
+
 Clients indicate support for the extension by requesting a capability server-time as per the [IRC Client Capabilities Extension][cap].
 
 	CAP REQ :server-time

@@ -1,12 +1,17 @@
 ---
-title: IRCv3.2 `account-tag` Extension
+title: "`account-tag` Extension"
 layout: spec
+redirect_from:
+  - /specs/extensions/account-tag-3.2.html
 copyrights:
   -
     name: "Mantas Mikulėnas"
     period: "2013-2015"
     email: "grawity@gmail.com"
 ---
+
+## Description
+
 The `account-tag` capability causes the server to add a [message tag][] containing
 the command sender's services account to commands sent to the client that has
 requested this capability. It supersedes the `identify-msg` extension.

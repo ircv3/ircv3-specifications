@@ -1,5 +1,5 @@
 ---
-title: IRCv3 Message Tags
+title: Message Tags
 layout: spec
 redirect_from:
   - /specs/core/message-tags-3.3.html

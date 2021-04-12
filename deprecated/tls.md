@@ -1,6 +1,8 @@
 ---
-title: IRCv3.1 `tls` Extension
+title: "`tls` Extension"
 layout: spec
+redirect_from:
+  - /specs/extensions/tls-3.1.html
 deprecated: true
 copyrights:
   -
@@ -12,7 +14,8 @@ copyrights:
     period: "2014"
     email: "attilamolnar@hush.com"
 ---
-## The tls Client Capability
+
+## Description
 
 The tls client capability indicates that the server supports the STARTTLS command.
 

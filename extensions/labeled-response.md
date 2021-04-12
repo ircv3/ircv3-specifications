@@ -1,5 +1,5 @@
 ---
-title: Labeled responses
+title: Labeled Responses
 layout: spec
 copyrights:
   -
@@ -11,6 +11,7 @@ copyrights:
     period: "2016-2020"
     email: "james@irccloud.com"
 ---
+
 ## Introduction
 
 This specification adds a new message tag sent by clients and repeated by servers to correlate responses with a specific request.

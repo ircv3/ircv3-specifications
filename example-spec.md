@@ -67,6 +67,9 @@ If this spec is intended for a certain audience (say, mostly bouncers or private
 rather than normal public networks), feel free to mention it here. This gives spec readers
 an opportunity to think about whether this feature is right for their software and networks.
 
+If there is only a single section in your spec, this should be named "Description" instead of "Introduction".
+You may also choose to separate out your 'motivation' and 'introduction/description' into two separate sections.
+
 
 ## Architecture
 

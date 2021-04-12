@@ -1,13 +1,16 @@
 ---
-title: IRCv3 chathistory Batch Type
+title: "`chathistory` Batch Type"
 layout: spec
+redirect_from:
+  - /specs/extensions/batch/chathistory-3.3.html
 copyrights:
   -
     name: "Sadie Powell"
     period: "2015"
     email: "sadie@witchery.services"
 ---
-## `chathistory` Batch Type
+
+## Description
 
 This document describes the format of the `chathistory` batch type.
 

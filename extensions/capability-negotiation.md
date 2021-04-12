@@ -1,7 +1,8 @@
 ---
-title: IRCv3 Client Capability Negotiation
+title: Client Capability Negotiation
 layout: spec
 redirect_from:
+  - /specs/core/capability-negotiation.html
   - /specs/core/capability-negotiation-3.1.html
   - /specs/core/capability-negotiation-3.2.html
   - /specs/extensions/cap-notify-3.2.html
@@ -35,6 +36,7 @@ copyrights:
     period: "2017-2019"
     email: "james@irccloud.com"
 ---
+
 ## What Client Capability Negotiation attempts to solve
 
 Client Capability Negotiation allows IRC clients and servers to negotiate new features
