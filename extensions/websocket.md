@@ -4,10 +4,6 @@ layout: spec
 work-in-progress: true
 copyrights:
   -
-    name: Darren Whitlen
-    period: 2018
-    email: darren@kiwiirc.com
-  -
     name: Shivaram Lingamneni
     period: 2021
     email: slingamn@cs.stanford.edu
