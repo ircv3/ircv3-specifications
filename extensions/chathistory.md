@@ -93,7 +93,7 @@ Request up to `limit` number of messages between the given `timestamp` or `msgid
 
 #### `TARGETS`
 
-Unlike the other subcommands, `TARGETS` does not return message history. Instead, it lists channels and users with which the user has exchanged direct messages, ordered by the time of the latest message in the channel history or direct message conversation (i.e., sent from or to the other user). This allows the client to discover missed direct message conversations with users it is not currently aware of.
+Unlike the other subcommands, `TARGETS` does not return message history. Instead, it lists channels the user has visible history in, together with users with which the user has exchanged direct messages, ordered by the time of the latest message in the channel history or direct message conversation (i.e. sent from or to the other user). This allows the client to discover missed direct message conversations with users it is not currently aware of.
 
     CHATHISTORY TARGETS <timestamp=YYYY-MM-DDThh:mm:ss.sssZ> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ> <limit>
 
@@ -101,7 +101,7 @@ The parameters have the same semantics as `BETWEEN`, except that they MUST be ti
 
     CHATHISTORY TARGETS <nickname | channel name> <YYYY-MM-DDThh:mm:ss.sssZ>
 
-where the timestamp is the time of the latest message sent from or to the other user.
+where the timestamp is the time of the latest message in the channel history or direct message conversation.
 
 #### Returned message notes
 The order of returned messages within the batch is implementation-defined, but SHOULD be ascending time order or some approximation thereof, regardless of the subcommand used. The `server-time` tag on each message SHOULD be the time at which the message was received by the IRC server. The `msgid` tag that identifies each individual message in a response MUST be the `msgid` tag as originally sent by the IRC server.
