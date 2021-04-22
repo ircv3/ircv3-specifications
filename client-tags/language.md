@@ -35,11 +35,11 @@ Clients wishing to use this tag MUST negotiate the
 ### Format
 
 The language tag is sent by a client with the client-only prefix `+` and
-its value must be a a ISO 639-3 code.
+its value must be a [BCP 47 language tag](https://tools.ietf.org/html/bcp47).
 
-    +draft/language=<language-code>
+    +draft/language=<language-tag>
 
-In case the value is not a valid language code, clients SHOULD ignore it.
+In case the value is not a valid language tag, clients SHOULD ignore it.
 
 ### Guessing languages
 
@@ -73,8 +73,8 @@ This section is non-normative.
 
 ### Simple message
 
-    C: @+draft/language=eng PRIVMSG #channel :Hello to you!
-    C: @+draft/language=fra PRIVMSG #channel :Je parle aussi français.
+    C: @+draft/language=en PRIVMSG #channel :Hello to you!
+    C: @+draft/language=fr-FR PRIVMSG #channel :Je parle aussi français.
 
 ### Multiline message
 
@@ -82,6 +82,6 @@ NOTE: In this examples, `<SPACE>` indicates a space character which would
 otherwise not be clearly visible.
 
     C: BATCH +123 draft/multiline #channel
-    C: @batch=123 +draft/language=eng PRIVMSG #channel :The French word for "cat" is<SPACE>
-    C: @batch=123;draft/multiline-concat;+draft/language=fra PRIVMSG #channel :"chat"
+    C: @batch=123 +draft/language=en PRIVMSG #channel :The French word for "cat" is<SPACE>
+    C: @batch=123;draft/multiline-concat;+draft/language=fr-FR PRIVMSG #channel :"chat"
     C: BATCH -123
