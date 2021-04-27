@@ -152,6 +152,11 @@ like a `privmsg` to nickserv), which are limited in length, servers may want to
 prevent or discourage users from setting passwords so long they may not fit
 in these messages. 300 bytes should be a safe reasonable limit.
 
+Servers should ensure that if they allow REGISTER before connection registration,
+this functionality cannot be used to bypass any authentication restrictions
+defined in the server configuration, e.g. requirements that clients send
+a server password with PASS.
+
 
 
 [multiline]: https://github.com/ircv3/ircv3-specifications/pull/398/
