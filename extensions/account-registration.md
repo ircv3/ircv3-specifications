@@ -83,6 +83,11 @@ The client MAY try registering again later.
 Clients should not automatically retry immediately without changing their nickname
 or waiting.
 
+    FAIL REGISTER NEED_NICK * <message>
+
+Sent by the server if the client sends `REGISTER` before sending a NICK command.
+This is only possible in setups that advertise the `before-connect` key.
+
     FAIL REGISTER ALREADY_REGISTERED <account> <message>
     FAIL VERIFY ALREADY_REGISTERED <account> <message>
 
