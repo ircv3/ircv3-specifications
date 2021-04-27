@@ -16,29 +16,35 @@ copyrights:
 
 ## Motivation
 
-The lack of a standardized way to register an account has been a source of frustration for many participants
-for several years.
+The lack of a standardized way to register an account has been a source
+of frustration for many participants for several years.
 
-This isn't the first attempt to fix it. Unlike the withdrawn `ACC` proposal, this effort aims to be more
-appealing to implementors by being severely restricted in scope. The only register-verify flows supported
-are those already in use in the wild. The authors hope that this stripped-down solution will serve as the
-basis for future organic expansion.
+This isn't the first attempt to fix it. Unlike the withdrawn `ACC` proposal,
+this effort aims to be more appealing to implementors by being severely
+restricted in scope.
+The only register-verify flows supported are those already in use in the wild.
+The authors hope that this stripped-down solution will serve as the basis
+for future organic expansion.
 
 ### Capability
 
-This specification adds the `draft/register` capability, whose presence signifies that the server
-accepts the `REGISTER` command.
+This specification adds the `draft/register` capability, whose presence
+signifies that the server accepts the `REGISTER` command.
 
-The capability has an optional value, a comma-separated list of key-value pairs; the format is intended
-to follow the precedent set by [the multiline draft][multiline].
+The capability has an optional value, a comma-separated list of key-value
+pairs; the format is intended to follow the precedent set by
+[the multiline draft][multiline].
 
 The defined keys are:
 
- * `before-connect` - if present, indicates the server supports early registration, so it
-   MUST NOT use `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`
- * `email-required` - if present, registrations require a valid email address to process
+ * `before-connect` - if present, indicates the server supports early
+   registration, so it MUST NOT use
+   `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`
+ * `email-required` - if present, registrations require a valid email address
+   to process
 
-Clients MUST ignore any value assigned to these keys, and MUST ignore any unknown key.
+Clients MUST ignore any value assigned to these keys, and MUST ignore
+any unknown key.
 
 Software implementing this work-in-progress specification MUST NOT use
 the unprefixed `register` or `account-registration` capability names.
@@ -50,13 +56,14 @@ a compatible work-in-progress version.
 
     REGISTER {<email> | "*"} <password>
     
-The `REGISTER` command informs the server of a request to register an account named for the current
-nick of the requestor.
+The `REGISTER` command informs the server of a request to register
+an account named for the current nick of the requestor.
 
-The `REGISTER` command MAY be sent at any point during the connection that the client has a valid
-nickname. If the client sends `REGISTER` before completing connection registration, and receives a
-`FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`, it SHOULD make a second attempt after it receives the
-welcome message.
+The `REGISTER` command MAY be sent at any point during the connection
+that the client has a valid nickname.
+If the client sends `REGISTER` before completing connection registration,
+and receives a `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`, it SHOULD make
+a second attempt after it receives the welcome message.
 
     VERIFY <account> <code>
     
@@ -75,7 +82,8 @@ as if it used SASL.
     REGISTER VERIFICATION_REQUIRED <account> <message>
     
 Sent by the server as a response to `REGISTER` when further action is required
-to complete registration of the `<account>`, as explain in the human-readable `<message>`.
+to complete registration of the `<account>`, as explain in the human-readable
+`<message>`.
 
     FAIL REGISTER ACCOUNT_EXISTS <account> <message>
 
@@ -86,8 +94,8 @@ while using a nick that is not available as a new account's name
 The server MUST NOT send this response before the client sent a `NICK` command.
 
 The client MAY try registering again later.
-Clients should not automatically retry immediately without changing their nickname
-or waiting.
+Clients should not automatically retry immediately without changing
+their nickname or waiting.
 
     FAIL REGISTER NEED_NICK * <message>
 
@@ -107,7 +115,8 @@ The client MAY try registering again.
 
     FAIL REGISTER UNACCEPTABLE_PASSWORD <account> <message>
 
-Sent by the server if the password is invalid for any reason other than weakness.
+Sent by the server if the password is invalid for any reason other than
+weakness.
 
 The client MAY try registering again.
 
@@ -117,23 +126,27 @@ Sent by the server if it cannot send emails to the provided address.
 
     FAIL REGISTER UNACCEPTABLE_EMAIL <account> <message>
 
-Sent by the server if the email address is valid, but not available for account registration.
+Sent by the server if the email address is valid, but not available for
+account registration.
 
     FAIL REGISTER COMPLETE_CONNECTION_REQUIRED <message>
     FAIL VERIFY COMPLETE_CONNECTION_REQUIRED <message>
 
-Sent by the server if the client sent a `REGISTER` command before connection registration.
-The server MUST NOT sent these replies if it advertizes the `before-connect` key of the
-`draft/register` capability.
+Sent by the server if the client sent a `REGISTER` command before connection
+registration.
+The server MUST NOT sent these replies if it advertizes the `before-connect`
+key of the `draft/register` capability.
 
     FAIL VERIFY INVALID_CODE <account> <message>
 
-Sent by the server if the `<code>` in the `VERIFY` command is invalid or expired.
+Sent by the server if the `<code>` in the `VERIFY` command is invalid
+or expired.
 
     FAIL REGISTER TEMPORARILY_UNAVAILABLE <account> <message>
     FAIL VERIFY TEMPORARILY_UNAVAILABLE <account> <message>
 
-Sent by the server if the `REGISTER`/`VERIFY` commands are temporarily unavailable.
+Sent by the server if the `REGISTER`/`VERIFY` commands are temporarily
+unavailable.
 
 
 # Client considerations
@@ -143,7 +156,8 @@ This section is non-normative.
 Passwords are opaque byte strings.
 It is recommended for them to be valid UTF-8;
 or authentication may be impossible later (eg. with SASL PLAIN).
-Servers may also choose to reject any non-UTF-8 password with `UNACCEPTABLE_PASSWORD`.
+Servers may also choose to reject any non-UTF-8 password with
+`UNACCEPTABLE_PASSWORD`.
 
 As passwords may need to be sent in non-`authenticate` messages,
 like a `privmsg` to nickserv), which are limited in length, clients may want to
