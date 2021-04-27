@@ -71,7 +71,7 @@ as if it used SASL.
 Sent by the server as a response to `REGISTER` when further action is required
 to complete registration of the `<account>`, as explain in the human-readable `<message>`.
 
-    FAIL REGISTER USERNAME_EXISTS <account> <message>
+    FAIL REGISTER ACCOUNT_EXISTS <account> <message>
 
 Sent by the server as a response to `REGISTER` when the client tried to register
 while using a nick that is not available as a new account's name
