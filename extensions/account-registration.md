@@ -40,6 +40,12 @@ The defined keys are:
 
 Clients MUST ignore any value assigned to these keys, and MUST ignore any unknown key.
 
+Software implementing this work-in-progress specification MUST NOT use
+the unprefixed `register` or `account-registration` capability names.
+Instead, implementations SHOULD use the `draft/register`
+capability name to be interoperable with other software implementing
+a compatible work-in-progress version.
+
 ### Commands
 
     REGISTER {<email> | "*"} <password>
