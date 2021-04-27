@@ -91,7 +91,7 @@ This is only possible in setups that advertise the `before-connect` key.
     FAIL REGISTER ALREADY_REGISTERED <account> <message>
     FAIL VERIFY ALREADY_REGISTERED <account> <message>
 
-Sent by the server is the client is already authenticated.
+Sent by the server if the client is already authenticated.
 
     FAIL REGISTER WEAK_PASSWORD <account> <message>
 
