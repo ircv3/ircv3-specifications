@@ -1,5 +1,5 @@
 ---
-title: The REGISTER command
+title: `account-registration` Extension
 layout: spec
 work-in-progress: true
 copyrights:
@@ -26,7 +26,7 @@ basis for future organic expansion.
 
 ### Capability
 
-This specification adds the `draft/register` capability, whose presence signifies that the server
+This specification adds the `draft/account-registration` capability, whose presence signifies that the server
 accepts the `REGISTER` command.
 
 The capability has an optional value, a comma-separated list of key-value pairs; the format is intended
@@ -113,7 +113,7 @@ Sent by the server if the email address is valid, but not available for account 
 
 Sent by the server if the client sent a `REGISTER` command before connection registration.
 The server MUST NOT sent these replies if it advertizes the `before-connect` key of the
-`draft/register` capability.
+`draft/account-registration` capability.
 
     FAIL VERIFY INVALID_CODE <account> <message>
 
