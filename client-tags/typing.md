@@ -75,5 +75,5 @@ Client begins typing then clears the text-input field without sending the messag
 
     Client: @+typing=done :nick!ident@host TAGMSG target
 
-[batch]: ../extensions/batch-3.2.html
+[batch]: ../extensions/batch.html
 [tags]: ../extensions/message-tags.html

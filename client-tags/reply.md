@@ -28,7 +28,7 @@ This specification defines a client-only message tag to indicate replies to othe
 
 ### Dependencies
 
-Clients wishing to use this tag MUST negotiate the [`message-tags`](../extensions/message-tags.html) capability with the server. Additionally, this tag relies on messages being sent with the [`msgid`](../extensions/message-ids.html) tag. Clients SHOULD negotiate the [`echo-message`](../extensions/echo-message-3.2.html) capability in order to receive message IDs for their own messages, and therefore understand any replies.
+Clients wishing to use this tag MUST negotiate the [`message-tags`](../extensions/message-tags.html) capability with the server. Additionally, this tag relies on messages being sent with the [`msgid`](../extensions/message-ids.html) tag. Clients SHOULD negotiate the [`echo-message`](../extensions/echo-message.html) capability in order to receive message IDs for their own messages, and therefore understand any replies.
 
 ### Format
 

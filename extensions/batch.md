@@ -83,8 +83,8 @@ For example, that happens if the type is unknown to the client.
 To submit a new batch type please follow the extension submission procedure
 [found here](/participation.html).
 
- * [IRC Version 3.2: `netsplit` and `netjoin`](batch/netsplit-3.2.html)
- * [IRC Version 3.3: `chathistory`](batch/chathistory-3.3.html)
+ * [`netsplit` and `netjoin`](batch/netsplit.html)
+ * [`chathistory`](batch/chathistory.html)
 
 ## Examples
 
