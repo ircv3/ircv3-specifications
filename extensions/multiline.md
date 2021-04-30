@@ -292,8 +292,8 @@ Other invalid multiline batch
     Server: :irc.example.com FAIL BATCH MULTILINE_INVALID :Invalid multiline batch
 
 [message tags]: ../extensions/message-tags.html
-[`batch`]: ../extensions/batch-3.2.html
+[`batch`]: ../extensions/batch.html
 [standard replies]: ../extensions/standard-replies.html
 [message ids]: ../extensions/message-ids.html
 [labeled response]: ../extensions/labeled-response.html
-[echo message]: ../extensions/echo-message-3.2.html
+[echo message]: ../extensions/echo-message.html

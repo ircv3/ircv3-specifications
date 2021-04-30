@@ -43,5 +43,5 @@ be tagged with the time at which they were originally sent.
     @batch=sxtUfAeXBgNoD;time=2015-06-26T19:43:53.410Z :local!bar@example.com PRIVMSG remote :Tortoises are better.
     :irc.host BATCH -sxtUfAeXBgNoD
 
-[batch]: ../batch-3.2.html
-[server-time]: ../server-time-3.2.html
+[batch]: ../extensions/batch.html
+[server-time]: ../extensions/server-time.html

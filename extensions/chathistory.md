@@ -196,8 +196,8 @@ Given conventional expectations around channel membership, servers MAY wish to d
 
 While an ISUPPORT token value of `0` may be used to indicate no message limit exists, servers SHOULD set and enforce a reasonable maximum and properly throttle `CHATHISTORY` commands to prevent abuse.
 
-[batch/chathistory]: ../extensions/batch/chathistory-3.3
-[batch]: ../extensions/batch-3.2
-[server-time]: ../extensions/server-time-3.2
-[message-tags]: ../extensions/message-tags
-[message-ids]: ../extensions/message-ids
+[batch/chathistory]: ../batches/chathistory.html
+[batch]: ../extensions/batch.html
+[server-time]: ../extensions/server-time.html
+[message-tags]: ../extensions/message-tags.html
+[message-ids]: ../extensions/message-ids.html

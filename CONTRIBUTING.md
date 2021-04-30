@@ -28,7 +28,7 @@ Contributing to the [ircv3-ideas](https://github.com/ircv3/ircv3-ideas) reposito
 
 ## Feature Proposals
 
-A new feature proposal includes things like [`account-tag`](http://ircv3.net/specs/extensions/account-tag-3.2.html), [`cap-notify`](http://ircv3.net/specs/core/capability-negotiation.html) and [`echo-message`](http://ircv3.net/specs/extensions/echo-message-3.2.html).
+A new feature proposal includes things like [`account-tag`](http://ircv3.net/specs/extensions/account-tag.html), [`cap-notify`](http://ircv3.net/specs/core/capability-negotiation.html) and [`echo-message`](http://ircv3.net/specs/extensions/echo-message.html).
 
 Contributing a proposal to the IRCv3-Specifications repo requires a few things. These include:
 
@@ -50,7 +50,7 @@ If your proposal is accepted, in the course of drafting an IRCv3 release it will
 
 ### Existing Implementations
 
-If a feature specifies capabilities that already exist in the IRC ecosystem, such as [`monitor`](http://ircv3.net/specs/core/monitor-3.2.html), it should be ensured that any proposal of this type is backwards-compatible with existing implementations.
+If a feature specifies capabilities that already exist in the IRC ecosystem, such as [`monitor`](http://ircv3.net/specs/core/monitor.html), it should be ensured that any proposal of this type is backwards-compatible with existing implementations.
 
 ## Ratifying Feature Proposals
 
