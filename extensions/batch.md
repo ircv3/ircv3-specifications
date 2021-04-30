@@ -83,8 +83,8 @@ For example, that happens if the type is unknown to the client.
 To submit a new batch type please follow the extension submission procedure
 [found here](/participation.html).
 
- * [`netsplit` and `netjoin`](batch/netsplit.html)
- * [`chathistory`](batch/chathistory.html)
+ * [`netsplit` and `netjoin`](../batches/netsplit.html)
+ * [`chathistory`](../batches/chathistory.html)
 
 ## Examples
 

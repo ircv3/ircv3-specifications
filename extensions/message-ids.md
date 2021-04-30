@@ -36,13 +36,13 @@ The tag value MUST be a unique ID chosen by the originating server. Uniqueness i
 
 To allow their use outside the tag space, e.g. as command parameters, message IDs MUST NOT start with a colon (`:`) and MUST NOT contain any of `SPACE`, `CR`, `LF`.
 
-However, if a message is re-transmitted as-is, for example with the [`chathistory`](./batch/chathistory.html) batch type, the ID SHOULD be reused. As a result, clients MUST accept shared IDs.
+However, if a message is re-transmitted as-is, for example with the [`chathistory`](../batches/chathistory.html) batch type, the ID SHOULD be reused. As a result, clients MUST accept shared IDs.
 
 Clients MUST treat the ID as a case sensitive opaque identifier. Clients MUST NOT use case folding or normalization when comparing IDs.
 
 ### Relationships with other specifications
 
-In order to treat messages that refer to IDs consistently, clients need to know the IDs for their own messages as well. Servers that provide message IDs SHOULD also provide the [`echo-message`](./echo-message.html) capability.
+In order to treat messages that refer to IDs consistently, clients need to know the IDs for their own messages as well. Servers that provide message IDs SHOULD also provide the [`echo-message`](../extensions/echo-message.html) capability.
 
 ## Server implementation considerations
 
