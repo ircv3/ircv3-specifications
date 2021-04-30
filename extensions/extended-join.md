@@ -36,5 +36,5 @@ prior to channel ingress. As the penultimate parameter is an asterisk,
 this means that an asterisk is not a valid account name (which it is
 not in P10 or TS6 or ESVID).
 
-Please see [`account-notify`](account-notify-3.1.html) for information
+Please see [`account-notify`](account-notify.html) for information
 on how to take advantage of this capability.
