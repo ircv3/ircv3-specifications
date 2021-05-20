@@ -81,7 +81,7 @@ Example display from a client that supports the display name tag and performs fa
     <NoPrefixUser (bot)> I'm not sending a fallback prefix
                    <bot> Bot message
                  <alice> Hi from me!
-             <Colourful> My fallback nick is in green
+       <Colourful (bot)> My fallback nick is in green
 ```
 
 Example display from a client without support for the display name tag
