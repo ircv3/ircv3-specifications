@@ -40,19 +40,11 @@ Clients wishing to use this tag MUST negotiate the [`message-tags`][tags] capabi
 
 Display names are indicated by a message with a `+draft/display-name` tag using the client-only prefix with the value being the desired name.
 
-## Client implementation considerations
+### Fallback string
 
-This section is non-normative.
+Sending clients SHOULD send messages that begin with a usable fallback to cater to clients that don't understand the display name tag. A common existing method of indicating a display name is to include the desired name at the start of a message, surrounded by angle brackets, backticks, or other forms of parenthesis.
 
-This client tag is not meant as a method of impersonating other IRC users. Take care to make it clear to users when a display name is being used. Consider formatting display names differently to nicknames and making the original nickname visible to the user.
-
-This client tag is also not meant to be used as a persistent display name for users. The [metadata framework][metadata] would be more suitable for such a use case.
-
-### Fallback string removal
-
-Clients might wish to send messages that begin with a usable fallback for other clients that don't understand the display name tag. A common existing method of indicating a display name is be to include the desired name at the start of a message, surrounded by angle brackets, or other forms of parenthesis.
-
-To support this elegantly, receiving clients that support the display name might wish to remove such a prefix if it matches the display name tag.
+To support this elegantly, receiving clients that support the display name SHOULD remove such a prefix if it matches the display name tag.
 
 For instance, the following message has a display name tag with the value `charles` and the message begins with the fallback string `<charles> `.
 
@@ -67,6 +59,16 @@ A receiving client could detect this and remove the fallback string before displ
 ```
 
 Where `DISPLAYNAME` is substituted for the display name of the message, appropriately escaped for use in a regular expression. This would match angle brackets or backticks
+
+Receiving clients SHOULD check for the presence of formatting codes in the fallback string as well as the U+200B ZERO WIDTH SPACE character, and ignore them when comparing against the display name. These are often used to visually separate the relayed name from the message, and to avoid triggering highlights on users present on both sides of a relay.
+
+## Client implementation considerations
+
+This section is non-normative.
+
+This client tag is not meant as a method of impersonating other IRC users. Take care to make it clear to users when a display name is being used. Consider formatting display names differently to nicknames and making the original nickname visible to the user.
+
+This client tag is also not meant to be used as a persistent display name for users. The [metadata framework][metadata] would be more suitable for such a use case.
 
 ## Examples
 
