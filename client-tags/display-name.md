@@ -42,9 +42,7 @@ Display names are indicated by a message with a `+draft/display-name` tag using 
 
 ### Fallback string
 
-Sending clients SHOULD send messages that begin with a usable fallback to cater to clients that don't understand the display name tag. A common existing method of indicating a display name is to include the desired name at the start of a message, surrounded by angle brackets, backticks, or other forms of parenthesis.
-
-To support this elegantly, receiving clients that support the display name SHOULD remove such a prefix if it matches the display name tag.
+Sending clients SHOULD begin their messages with a usable fallback to cater to clients that don't support the display name tag. A common existing method of indicating a display name is to include the desired name at the start of a message, surrounded by angle brackets, backticks, or other forms of parenthesis.
 
 For instance, the following message has a display name tag with the value `charles` and the message begins with the fallback string `<charles> `.
 
@@ -52,13 +50,7 @@ For instance, the following message has a display name tag with the value `charl
 @+draft/display-name=charles :bot!bot@bot PRIVMSG #channel :<charles> Hello from outside IRC
 ```
 
-A receiving client could detect this and remove the fallback string before displaying the message to the user. An example regular expression for detecting such a fallback might be:
-
-```
-^[<`]DISPLAYNAME[>`]\s
-```
-
-Where `DISPLAYNAME` is substituted for the display name of the message, appropriately escaped for use in a regular expression. This would match angle brackets or backticks
+To support this fallback, receiving clients that support the display name tag SHOULD hide such a prefix if it matches the tag value.
 
 Receiving clients SHOULD check for the presence of formatting codes in the fallback string as well as the U+200B ZERO WIDTH SPACE character, and ignore them when comparing against the display name. These are often used to visually separate the relayed name from the message, and to avoid triggering highlights on users present on both sides of a relay.
 
@@ -79,6 +71,7 @@ This section is non-normative.
     Client: @+draft/display-name=NoPrefixUser :bot!bot@bot PRIVMSG #channel :I'm not sending a fallback prefix
     Client: :bot!bot@bot PRIVMSG #channel :Bot message
     Client: :alice!alice@alice PRIVMSG #channel :Hi from me!
+    Client: @+draft/display-name=Colourful :bot!bot@bot PRIVMSG #channel :<[U+0003]03C[U+200B]olourful[U+0003]> My fallback nick is in green
 
 Example display from a client that supports the display name tag and performs fallback string removal
 
@@ -88,6 +81,7 @@ Example display from a client that supports the display name tag and performs fa
     <NoPrefixUser (bot)> I'm not sending a fallback prefix
                    <bot> Bot message
                  <alice> Hi from me!
+             <Colourful> My fallback nick is in green
 ```
 
 Example display from a client without support for the display name tag
@@ -98,6 +92,7 @@ Example display from a client without support for the display name tag
                    <bot> I'm not sending a fallback prefix
                    <bot> Bot message
                  <alice> Hi from me!
+                   <bot> <Colourful> My fallback nick is in green
 ```
 
 
