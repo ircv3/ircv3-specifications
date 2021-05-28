@@ -33,7 +33,7 @@ servers, for instance [`draft/multiline`][]
 ### Dependencies
 
 This specification does not depend on the [`batch`][] capability,
-as it is only used for server-initiated batches.
+which is used for server-initiated batches only.
 
 This specification uses the [standard replies][] framework.
 
