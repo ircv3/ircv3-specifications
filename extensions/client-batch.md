@@ -40,7 +40,7 @@ a capability that allows them to do so.
 This specification introduces client initiated batches.
 These use the same syntax as server initiated batches.
 
-Once a client has opened a multiline batch, it MUST NOT send any messages
+Once a client has opened a batch, it MUST NOT send any messages
 that are not part of the batch, i.e. it may only send PRIVMSG or NOTICE
 with the appropriate `batch` tag, or the closing `BATCH` command.
 
