@@ -28,14 +28,23 @@ batch type, but is designed as a framework for other specifications.
 Certain specifications call for clients to be able to send batched messages to
 servers, for instance [`draft/multiline`][]
 
-## Capabilities
+## Architecture
+
+### Dependencies
+
+This specification does not depends on the [`batch`][] capability,
+as it is only used for server-initiated batches.
+
+This specification uses the [standard replies][] framework.
+
+### Capabilities
 
 This specification does not introduce any capability.
 
 Clients SHOULD NOT send `BATCH` commands to servers, unless they negotiated
 a capability that allows them to do so.
 
-## The client-to-server `BATCH` verb
+### The client-to-server `BATCH` verb
 
 This specification introduces client initiated batches.
 These use the same syntax as server initiated batches.
@@ -46,6 +55,15 @@ that are not part of the batch, until it is closed
 
 Clients MUST NOT send nested batches, i.e. clients may not send `BATCH`
 commands with a `batch` tag.
+
+### Errors
+
+Servers MUST use `FAIL` messages from the [standard replies][] framework
+to notify clients of errors with multiline batches.
+The command is `BATCH` and the following codes are defined:
+
+* `TIMEOUT`: the batch was left open for too long, all future messages
+  in this batch will be ignored.
 
 ## Implementation considerations
 
