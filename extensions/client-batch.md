@@ -32,7 +32,7 @@ servers, for instance [`draft/multiline`][]
 
 ### Dependencies
 
-This specification does not depends on the [`batch`][] capability,
+This specification does not depend on the [`batch`][] capability,
 as it is only used for server-initiated batches.
 
 This specification uses the [standard replies][] framework.
@@ -59,7 +59,7 @@ commands with a `batch` tag.
 ### Errors
 
 Servers MUST use `FAIL` messages from the [standard replies][] framework
-to notify clients of errors with multiline batches.
+to notify clients of errors with client-initiated batches.
 The command is `BATCH` and the following codes are defined:
 
 * `TIMEOUT`: the batch was left open for too long, all future messages
