@@ -25,8 +25,8 @@ batch type, but is designed as a framework for other specifications.
 
 ## Motivation
 
-The current [`draft/multiline`][] specification relies on client-initiated
-BATCH commands, introduced by this specification.
+Certain specifications call for clients to be able to send batched messages to
+servers, for instance [`draft/multiline`][]
 
 ## Capabilities
 
