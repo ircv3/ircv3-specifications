@@ -1,6 +1,7 @@
 ---
 title: "client-initiated batch Extension"
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Val Lorentz"
