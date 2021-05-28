@@ -44,6 +44,18 @@ Once a client has opened a batch, it MUST NOT send any messages
 that are not part of the batch, until it is closed
 (with `BATCH -reference-tag`).
 
+Clients MUST NOT send nested batches, i.e. clients may not send `BATCH`
+commands with a `batch` tag.
+
+## Implementation considerations
+
+This section is non-normative.
+
+While this version of the client-initated batch framework does not allow
+nested batches, future extensions may allow them.
+Client and server implementations may want to take this into account
+while designing their internal APIs.
+
 
 [`batch`]: ../extensions/batch.html
 [`draft/multiline`]: ../extensions/multiline.html
