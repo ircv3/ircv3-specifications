@@ -39,7 +39,7 @@ A typing notification is represented by a [`TAGMSG`][tags] command sent with a `
 
 Input event handlers MUST be throttled so that any `typing` notification is not sent within 3 seconds of another one for a given target.
 
-After receiving a typing notification, clients SHOULD assume the sender is still typing until any of the following conditions is met:
+After receiving a typing notification, clients SHOULD assume the sender is still typing until any of the following conditions is met on the same target (channel or private message):
 
 * A message is received from the sender
 * The sender leaves the channel or quits the server
