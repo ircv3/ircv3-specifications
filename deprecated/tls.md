@@ -63,4 +63,4 @@ between implementations and translations.)_
 
 ## Errata
 
-* This extension has been [deprecated](https://github.com/ircv3/ircv3.github.io/pull/211) in favour of encouraging IRC networks to use implicit TLS and deploy [Strict Transport Security](sts.html) instead. This is in alignment with the recommendations given in [RFC 8314](https://tools.ietf.org/html/rfc8314).
+* This extension has been [deprecated](https://github.com/ircv3/ircv3.github.io/pull/211) in favour of encouraging IRC networks to use implicit TLS and deploy [Strict Transport Security](../extensions/sts.html) instead. This is in alignment with the recommendations given in [RFC 8314](https://tools.ietf.org/html/rfc8314).
