@@ -230,7 +230,7 @@ An empty or missing `CLIENTTAGDENY` matches the default case and indicates that 
 
 #### `CLIENTTAGDENY` examples
 
-An example where all client-only tags are allowed (ommiting the token entirely is recommended instead)
+An example where all client-only tags are allowed (omitting the token entirely is recommended instead)
 
     CLIENTTAGDENY=
 

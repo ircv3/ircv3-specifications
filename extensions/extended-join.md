@@ -25,7 +25,7 @@ The JOIN message is one of the following:
     :nick!user@host JOIN #channelname accountname :Real Name
 
 This message represents that the user identified by nick!user@host has
-logged in to an acount prior to channel ingress. The penultimate
+logged in to an account prior to channel ingress. The penultimate
 parameter is the display name of that account. The last parameter is
 the user's GECOS.
 

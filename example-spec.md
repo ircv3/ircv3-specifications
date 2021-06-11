@@ -36,7 +36,7 @@ Each of these links to other specifications, written as such:
     obsoletes:
         - metadata-3.2
 
-The spec names to use here are those specified in the site [speification registry file](https://github.com/ircv3/ircv3.github.io/blob/master/_data/specs.yml).
+The spec names to use here are those specified in the site [specification registry file](https://github.com/ircv3/ircv3.github.io/blob/master/_data/specs.yml).
 
 ---
 
