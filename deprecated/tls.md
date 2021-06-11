@@ -54,7 +54,7 @@ expected to go away.
 
     :server 670 <nick> :STARTTLS successful, proceed with TLS handshake
 
-`691` aka `ERR_STARTTLS` to indicate that a server-side error has occured.
+`691` aka `ERR_STARTTLS` to indicate that a server-side error has occurred.
 
     :server 691 <nick> :STARTTLS failed (Wrong moon phase)
 

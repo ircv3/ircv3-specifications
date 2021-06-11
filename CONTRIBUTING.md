@@ -44,7 +44,7 @@ The protocol syntax specified in your proposal may, of course, be changed after 
 
 ### Reference Implementation
 
-Before being merged into the repository, your proposal must be implemented by at least one piece of IRC software. This is an IRC client, server, bouncer, or preferrably one of each. This implementation *must* be either downloadable or accessible online (so it can be tested by other interested members).
+Before being merged into the repository, your proposal must be implemented by at least one piece of IRC software. This is an IRC client, server, bouncer, or preferably one of each. This implementation *must* be either downloadable or accessible online (so it can be tested by other interested members).
 
 If your proposal is accepted, in the course of drafting an IRCv3 release it will require wider implementation.
 

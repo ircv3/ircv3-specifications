@@ -50,7 +50,7 @@ When reactions are sent as empty messages, they may not be visible to clients th
 
 However, reactions might also create their own context, sparking further conversation, so it might make sense to display them as a full message body.
 
-Clients might wish to enable a preference to allow their users to choose wheter they want to send reactions as tag-only or duplicated in the message body.
+Clients might wish to enable a preference to allow their users to choose whether they want to send reactions as tag-only or duplicated in the message body.
 
 Other reasons for users not to see a reaction might include:
 
