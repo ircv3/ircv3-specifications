@@ -67,7 +67,8 @@ a second attempt after it receives the welcome message.
 
     VERIFY <account> <code>
     
-The `VERIFY` command completes a registration that required email verification.
+The `VERIFY` command completes a registration that required verification
+(eg. via email or CAPTCHA).
 
 ### Responses
 
