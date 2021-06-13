@@ -120,8 +120,8 @@ the user's current nick, when it must match.
 Sent by the server if the client sends `REGISTER` before sending a NICK command.
 This is only possible in setups that advertise the `before-connect` key.
 
-    FAIL REGISTER ALREADY_REGISTERED <account> <message>
-    FAIL VERIFY ALREADY_REGISTERED <account> <message>
+    FAIL REGISTER ALREADY_AUTHENTICATED <account> <message>
+    FAIL VERIFY ALREADY_AUTHENTICATED <account> <message>
 
 Sent by the server if the client is already authenticated.
 
