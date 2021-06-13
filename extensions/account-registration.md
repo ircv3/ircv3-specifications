@@ -42,7 +42,7 @@ The defined keys are:
    `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`
  * `email-required` - if present, registrations require a valid email address
    to process
- * `custom-accountname` - if present, the account name can be different
+ * `custom-account-name` - if present, the account name can be different
    from the user's current nickname
 
 Clients MUST ignore any value assigned to these keys, and MUST ignore
@@ -56,13 +56,13 @@ a compatible work-in-progress version.
 
 ### Commands
 
-    REGISTER <accountname> {<email> | "*"} <password>
+    REGISTER <account> {<email> | "*"} <password>
     
 The `REGISTER` command informs the server of a request to register
 an account named for the current nick of the requestor.
 
-If `<accountname>` is `*`, then this value is the user's current nickname.
-If the server advertises the `custom-accountname` key, then this desired
+If `<account>` is `*`, then this value is the user's current nickname.
+If the server advertises the `custom-account-name` key, then this desired
 account name can be different from the user's current nickname.
 
 The `REGISTER` command MAY be sent at any point during the connection
@@ -106,13 +106,13 @@ their nickname or waiting.
 
     FAIL REGISTER BAD_ACCOUNTNAME <account> <message>
 
-Sent by the server to indicate that the desired accountname is invalid or
+Sent by the server to indicate that the desired account name is invalid or
 otherwise restricted/disallowed. The message should tell the user how or why
 the desired name has been rejected.
 
     FAIL REGISTER ACCOUNTNAME_MUST_BE_NICK <account> <message>
 
-Sent by the server to indicate that the desired accountname does not match
+Sent by the server to indicate that the desired account name does not match
 the user's current nick, when it must match.
 
     FAIL REGISTER NEED_NICK * <message>
