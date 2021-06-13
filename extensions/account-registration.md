@@ -104,13 +104,13 @@ The client MAY try registering again later.
 Clients should not automatically retry immediately without changing
 their nickname or waiting.
 
-    FAIL REGISTER BAD_ACCOUNTNAME <account> <message>
+    FAIL REGISTER BAD_ACCOUNT_NAME <account> <message>
 
 Sent by the server to indicate that the desired account name is invalid or
 otherwise restricted/disallowed. The message should tell the user how or why
 the desired name has been rejected.
 
-    FAIL REGISTER ACCOUNTNAME_MUST_BE_NICK <account> <message>
+    FAIL REGISTER ACCOUNT_NAME_MUST_BE_NICK <account> <message>
 
 Sent by the server to indicate that the desired account name does not match
 the user's current nick, when it must match.
