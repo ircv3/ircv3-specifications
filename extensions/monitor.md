@@ -112,7 +112,7 @@ online.
 
 The server MAY send a hostmask with the target.
 
-The server may send "*" instead of the target nick (`<nick>`). (This makes it
+The server may send "*" instead of the nick (`<nick>`). (This makes it
 possible to send the exact same message to all clients monitoring a certain
 target.)
 
@@ -126,7 +126,7 @@ list is offline.
 
 The argument is a chained list of targets that are offline.
 
-As with 730, the server may send "*" instead of the target nick.
+As with 730, the server may send "*" instead of the nick.
 
 ### 732 - `RPL_MONLIST`
 
