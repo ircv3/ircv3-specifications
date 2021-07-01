@@ -34,7 +34,7 @@ When a client is marked as a bot, they are given a special numeric as part of th
 
 This numeric is returned as part of a bot's `WHOIS` reply.
 
-Like other WHOIS reply numerics, `<nick>>` is the nick of the sender, and
+Like other WHOIS reply numerics, `<nick>` is the nick of the sender, and
 `<message>` is arbitrary human-readable text.
 
 ## The `WHO` bot flag
