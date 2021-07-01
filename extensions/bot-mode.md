@@ -30,12 +30,11 @@ When a client is marked as a bot, they are given a special numeric as part of th
 
 ## The `RPL_WHOISBOT` `(335)` numeric
 
-    :<server> 335 <nick> <target> :<message>
+    :<server> 335 <nick> :<message>
 
 This numeric is returned as part of a bot's `WHOIS` reply.
 
-Like other WHOIS reply numerics, `<nick>>` is the nick of the sender,
-`<target>` the nick of the client being whoised (the bot), and
+Like other WHOIS reply numerics, `<nick>>` is the nick of the sender, and
 `<message>` is arbitrary human-readable text.
 
 ## The `WHO` bot flag
