@@ -118,6 +118,21 @@ If no message history can be returned due to an error, the `MESSAGE_ERROR` error
 
     FAIL CHATHISTORY MESSAGE_ERROR the_given_command the_given_target [extra_context] :Messages could not be retrieved
 
+### RPL_ISUPPORT Token
+
+This specification defines the `CHATHISTORY_TARGETS` token for use in `RPL_ISUPPORT` (005) responses.
+
+Servers SHOULD use this token to communicate to clients restrictions on what targets are valid.
+
+The `CHATHISTORY_TARGETS` token value is a (possibly empty) comma `,` (0x2C) separated list of the following values:
+
+* `no-channels`, if `CHATHISTORY` cannot be used with channel targets
+* `no-nick`, if `CHATHISTORY` cannot be used with nickname/private targets
+
+Clients MUST ignore any unknown value. Servers SHOULD not send any value other than the ones defined above.
+
+The token may be missing if the server implements an earlier version of this draft.
+
 ### Examples
 
 Requesting the latest conversation upon joining a channel
