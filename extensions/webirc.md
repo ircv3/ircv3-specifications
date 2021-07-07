@@ -45,8 +45,10 @@ These options are defined and may be sent by clients while connecting:
 - `secure`: This flag indicates that the client has a TLS-secured connection to the gateway. Servers MUST ONLY treat the connection as secure if this flag is sent and the connection from the gateway to the server is also secure with TLS.
 - `remote-port=<port>`: This flag indicates the remote port the client has connected to the gateway from.
 - `local-port=<port>`: This flag indicates the port the gateway accepted the client connection on (e.g. `6697`, `6667`).
-- `certfp=<fingerprint>`: This flag indicates the tls client certificate fingerprint supplied to the WebIRC gateway by the user's actual client application.
-- `spkifp=<fingerprint>`: This flag indicates the public key fingerprint for the tls client certificate supplied to the WebIRC gateway by the user's actual client application.
+- `certfp-<algo>=<fingerprint>`: This flag indicates the tls client certificate fingerprint supplied to the WebIRC gateway by the user's actual client application.
+- `spkifp-<algo>=<fingerprint>`: This flag indicates the public key fingerprint for the tls client certificate supplied to the WebIRC gateway by the user's actual client application.
+
+`<algo>` should be the hash algorithm used to produce the fingerprint supplied such as sha256.
 
 Servers MUST be able to handle options that don't currently have defined values gaining values in the future. For example, they MUST treat the options `secure` and `secure=examplevalue123` in exactly the same way.
 
