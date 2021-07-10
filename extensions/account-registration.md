@@ -153,7 +153,7 @@ account registration.
 Sent by the server if the client sent a `REGISTER` command before connection
 registration.
 The server MUST NOT sent these replies if it advertizes the `before-connect`
-key of the `draft/register` capability.
+key of the `draft/account-registration` capability.
 
     FAIL VERIFY INVALID_CODE <account> <message>
 
