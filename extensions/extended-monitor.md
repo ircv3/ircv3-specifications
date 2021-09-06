@@ -51,3 +51,23 @@ such extended notifcations for monitored nicks. When enabled by the client:
   monitored nicks.
 - If `setname` is also enabled, the client will get SETNAME notifications for
   monitored nicks.
+
+## Privacy considerations
+
+This extension allows users to monitor personal information of other users.
+Since the IRC protocol doesn't provide any way to atomically change this
+personal information (nick, host, realname all at the same time), it may be
+possible for an outside observer to track nick changes:
+
+- Observer monitors nick A and nick B.
+- User with nick A changes their nick to nick B, then changes their host and
+  realname.
+- Observer receives `RPL_MONOFFLINE` for nick A, `RPL_MONONLINE` for nick B,
+  and then receives notifications for host and realname changes.
+
+In this scenario, it's possible for the observer to figure out that nick A and
+nick B are owned by the same user by comparing the host and realname.
+
+For this reason, privacy conscious clients are advised to disconnect and
+re-connect to the IRC server as a way to atomically update personal
+information.
