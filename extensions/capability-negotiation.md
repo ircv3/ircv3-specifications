@@ -398,7 +398,8 @@ messages to cancel the capabilities in `CAP DEL`, as they have already been canc
 the server.
 
 Servers MUST cancel any capability-specific behavior for a client after sending the
-`CAP DEL` message to the client.
+`CAP DEL` message to the client. Servers MUST NOT send values with any capabilities sent
+via `CAP DEL`.
 
 Clients MUST gracefully handle situations when the server removes support for any
 capability.
