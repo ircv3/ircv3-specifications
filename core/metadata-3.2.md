@@ -15,6 +15,10 @@ copyrights:
     name: "James Wheare"
     period: "2018"
     email: "james@irccloud.com"
+  -
+    name: "Daniel Oaks"
+    period: "2021"
+    email: "daniel@danieloaks.net"
 ---
 
 ## Notes for implementing work-in-progress version
@@ -30,30 +34,29 @@ The final version of the specification will use an unprefixed capability name.
 
 ## Introduction
 
-It is generally useful to associate metadata with one's IRC presence, e.g. to
+It is useful to associate metadata with one's IRC presence, e.g. to
 make one's homepage or non-IRC contact details more discoverable. There are
-several mechanisms for doing this, but they typically rely on the presence of
-services and aren't really suitable for transient metadata such as a user's
+several mechanisms for doing this, but they normally rely on the presence of
+services and aren't really suitable for transient metadata like a user's
 current location.
 
-This proposal aims to codify one mechanism for working with metadata: metadata
-may be configured through a client-to-server event created specifically for
-this purpose.
+This feature lays out a command that can be used to set metadata, and a
+message that can be used to receive metadata updates from the server.
 
 ## Mechanisms
 
 This document defines the following new protocol features:
 
 * Capability: `metadata`
-* Server notification: `METADATA`
+* Server message: `METADATA`
 * Client command: `METADATA`
 * Server reply and error numerics
 
 ### Capability
 
-The `metadata` capability and value indicates that a server supports metadata, and communicates any configuration value keys that may affect the level of support.
+The `metadata` capability indicates that a server supports metadata, and provides any limits and information about the system that clients must be aware of.
 
-The ABNF format of the `metadata` capability and value is:
+The ABNF format of the `metadata` capability is:
 
     capability ::= 'metadata' ['=' tokens]
     tokens     ::= token [',' token]*
@@ -61,44 +64,37 @@ The ABNF format of the `metadata` capability and value is:
     key        ::= <sequence of a-zA-Z0-9_.:- >
     value      ::= <utf8>
 
-The value keys are defined as follows:
+These are the defined tokens:
 
 * `maxsub`: the maximum number of keys a client is allowed in its subscripion list. See the [Metadata subscriptions](#todo) section for more details.
 * `maxkey`: the maximum number of keys a client is allowed to set on its own nickname.
 
-
-TODO is this still required? include it for back compat?
-If `METADATA` is supported, it MUST be specified in `RPL_ISUPPORT` using the
-`METADATA` key. Servers MAY specify a limit on the number of explicitly-set
-keys per-user; the format in that case MUST be `METADATA=<integer>`, where
-`<integer>` is the limit.
+Clients MUST silently ignore any unknown tokens.
 
 
-### Server notification
+### Server message
 
-Clients that request the `metadata` capability MUST be able to handle the `METADATA` server notification. After negotiating this capability, servers MAY send these notifications to clients at any time.
+Clients that request the `metadata` capability MUST be able to handle incoming `METADATA` messages. After negotiating this capability, servers MAY send this message to clients at any time.
 
-The format of the `METADATA` server notication is:
+The format of the `METADATA` server message is:
 
     METADATA <Target> <Key> <Visibility> <Value>
 
-`Target` MUST be a valid nickname or channel name.
+`Target` is a valid nickname or channel name.
 
-`Key` MUST be a valid key name
+`Key` is a valid key name
 
-`Visibility` MUST be an asterisk (`*`) for keys visible to everyone, or an implementation-defined value which describes the key's visibility status; for instance, it MAY be a permission level or flag. (TODO should we define a prefix like STATUSMSG for this value?)
+`Visibility` is an asterisk (`*`) for keys visible to everyone, or an implementation-defined value which describes the key's visibility status; for instance, it MAY be a permission level or flag. (TODO should we define a prefix like STATUSMSG for this value?)
 
-`Value` MUST be a UTF-8 encoded value.
+`Value` is a UTF-8 encoded value.
 
 ### Client command
 
-The format of the `METADATA` client command is:
-
     METADATA <Target> <Subcommand> [<Param 1> ... [<Param n>]]
 
-`Target` MUST be a valid nickname or channel name. Clients MAY use the asterisk symbol (`*`) when targeting their own nickname.
+`Target` is a valid nickname or channel name. Clients SHOULD use the asterisk symbol (`*`) when targeting their own nickname.
 
-`Subcommand` MUST be one of the following, described in detail along with any `Param` further in the document:
+`Subcommand` is one of the following, described in detail (including any required params) further in the document:
 
 * [GET](#todo)
 * [LIST](#todo)
@@ -131,10 +127,10 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
 | 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
 
-Reference table of numerics and the subcommands of `METADATA` or any other commands that produce them:
+Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
 
 | Label                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
-| ------------------------- | --- | ---- | --- | ----- | --- | ----- | ---- | ---- | ------- |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | `RPL_WHOISKEYVALUE`       |     |      |     |       |     |       |      |      | `WHOIS` |
 | `RPL_KEYVALUE`            | *   | *    | *   | *     |     |       |      |      |         |
 | `RPL_METADATAEND`         |     | *    | *   | *     | *   | *     | *    |      |         |
@@ -151,216 +147,145 @@ Reference table of numerics and the subcommands of `METADATA` or any other comma
 | `ERR_METADATASYNCLATER`   |     |      |     |       |     |       |      | *    | `JOIN`  |
 | `ERR_METADATARATELIMIT`   |     |      | *   |       |     |       |      |      |         |
 
-Each subcommand documentation describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple commands:
+Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
 
 Replies:
 
-* `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined as specified in the [server notification](#todo) format.
+* `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined in the [server message](#todo) section.
 * `RPL_METADATAEND` delimits the end of a sequence of metadata replies.
 
 Errors:
 
 * `ERR_TARGETINVALID` when a client refers to an invalid target.
 * `ERR_KEYINVALID` when a client refers to an invalid key.
-* `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target without sufficient permission.
+* `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target when they lack sufficient permission.
 
 ### Keys and values
 
-Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Key names MUST not start with a colon (`:`).
+Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
 
-Values are unrestricted, except that they MUST be encoded using UTF-8.
+Values may take any form, but MUST be encoded using UTF-8.
 
 The expected client behaviour of individual metadata keys SHOULD be defined in separate specifications and listed in the IRCv3 extension registry.
 
-Servers MAY impose a limit on the number of keys a client is allowed to set via the `maxkey` capability value.
+Servers MAY impose a limit on the number of keys a client is allowed to set with the `maxkey` capability value.
 
-Servers MAY impose a limit on the number of keys a client is allowed in its subscripion list via the `maxsub` capability value.
+Servers MAY impose a limit on the number of keys a client is allowed in its subscripion list with the `maxsub` capability value.
 
 ## Subcommands
 
 ### METADATA GET
 
-This command allows lookup of some keys. The format MUST be as follows:
-
     METADATA <Target> GET key1 key2 ...
+
+This subcommand lets clients lookup keys on the given target.
 
 Multiple keys may be given.
 The response will be either `RPL_KEYVALUE`, `ERR_KEYINVALID`
 or `ERR_NOMATCHINGKEY` for every key in order.
 
-Servers MAY replace certain metadata, which is considered not visible for the
-requesting user, with `ERR_NOMATCHINGKEY` or with `ERR_KEYNOPERMISSION`.
+Servers MAY replace metadata which is considered not visible for the requesting user, with `ERR_NOMATCHINGKEY` or with `ERR_KEYNOPERMISSION`.
 
 *Errors*: `ERR_NOMATCHINGKEY`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`.
 
 ### METADATA LIST
 
-The format MUST be as follows:
-
     METADATA <Target> LIST
 
-This subcommand MUST list all currently-set metadata keys along with their
-values. The response will be zero or more `RPL_KEYVALUE` events,
-followed by a `RPL_METADATAEND` event.
+This subcommand lists all of the target's currently-set metadata keys along with their values.
 
-Servers MAY omit certain metadata, which is considered not visible for
-the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
+If the target is valid, the response is zero or more `RPL_KEYVALUE` events, followed by a `RPL_METADATAEND` event.
+If the target is not valid, ONLY the `ERR_TARGETINVALID` numeric is sent.
 
-In case of invalid target `RPL_METADATAEND` MUST NOT be sent.
+Servers MAY omit metadata which is considered not visible for the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
 
 *Errors*: `ERR_KEYNOPERMISSION`.
 
 ### METADATA SET
 
-This subcommand is used to set a required key to an optional value. If no value
-is given, the key is removed; otherwise, the value is assigned to the key. The
-format of `METADATA SET` MUST be as follows:
-
     METADATA <Target> SET <Key> [:Value]
 
-Servers MUST respond to requests to set or remove a key whose name is invalid
-with only an `ERR_KEYINVALID` event and fail the request.
+This subcommand sets the key on the target to the given value. If no value is given, the key is removed.
 
-Servers MUST respond to requests to remove a key that has a valid name but is
-not set with only an `ERR_KEYNOTSET` event and fail the request.
+If the key is invalid, the server responsds with `ERR_KEYINVALID` and fails the request.
 
-Servers MAY respond to certain keys, considered not settable by the requesting
-user, or otherwise disallowed by the server, with `ERR_KEYNOPERMISSION`.
+If the key is valid, but not set, and the client tries to remove the key, the server responds with `ERR_KEYNOTSET` and fails the request.
 
-It is an error for users to set keys on targets for which they lack
-authorization from the server, and the server MUST respond with
-`ERR_KEYNOPERMISSION` and fail the request.
+If the user cannot set keys on the given target, the server responds with `ERR_KEYNOPERMISSION` and fails the request.
 
-Servers MAY respond with only an `ERR_METADATARATELIMIT` event and fail the
-request. When a client receives an `ERR_METADATARATELIMIT` event, it SHOULD
-retry the `METADATA SET` request at a later time. If the
-`ERR_METADATARATELIMIT` event contains the OPTIONAL `<RetryAfter>` parameter,
-the parameter value MUST be a positive integer indicating the minimum number
-of seconds the client SHOULD wait before retrying the request.
+Servers MAY respond to certain keys considered not settable by the requesting user, or otherwise disallowed by the server, with `ERR_KEYNOPERMISSION` and fail the request.
 
-If the request is successful the server MUST carry out the requested change and
-the response MUST be one `RPL_KEYVALUE` event, representing what was actually
-stored by the server, and one `RPL_METADATAEND` event.
+Servers MAY respond with `ERR_METADATARATELIMIT` and fail the request. When a client receives `ERR_METADATARATELIMIT`, it SHOULD retry the `METADATA SET` request at a later time. If the `ERR_METADATARATELIMIT` event contains the OPTIONAL `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
+
+If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one), and one `RPL_METADATAEND` event.
 
 *Errors*: `ERR_METADATALIMIT`, `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`, `ERR_METADATARATELIMIT`
 
 ### METADATA CLEAR
 
-This subcommand MUST remove all metadata, equivalently to using `METADATA SET`
-on all currently-set keys with an empty value. The format of `METADATA CLEAR`
-MUST be as follows:
-
     METADATA <Target> CLEAR
 
-The server MUST respond with one `RPL_KEYVALUE` event per cleared key and one
-`RPL_METADATAEND` event.
+This subcommand removes all metadata from the target, equivalently to using `METADATA SET` on all currently-set keys with an empty value.
 
-Servers MAY omit certain metadata, which is considered not settable by
-the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
+If the user cannot clear keys on the given target, the server responds with `ERR_KEYNOPERMISSION` with an asterisk (`*`) in the `<Key>` field and fails the request.
 
-It is an error for users to use this subcommand on targets for which they lack
-authorization from the server. Servers MAY reject this subcommand for channels,
-using `ERR_KEYNOPERMISSION` with an asterisk (`*`) in the `<Key>` field.
+Servers MAY omit certain keys which are considered not settable by the requesting user, or respond with `ERR_KEYNOPERMISSION` for each of those keys.
+
+If the request is successful, the server responds with one `RPL_KEYVALUE` event per cleared key and then one `RPL_METADATAEND` event.
 
 *Errors*: `ERR_KEYNOPERMISSION`
 
 ### METADATA SUB
 
-This subcommand is used to subscribe to metadata keys.
-
-Syntax:
-
     METADATA * SUB <key1> [<key2> ...]
 
-The server MUST reply with zero or more numerics of the following types in any
-order: `RPL_METADATASUBOK`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION` and zero or
-one `ERR_METADATATOOMANYSUBS` numeric.
-The server MUST end the reply with one `RPL_METADATAEND` numeric.
+Clients use this subcommand to subscribe to updates for the given keys.
 
-The server MUST process the keys in the given order. This is critical when
-determining which keys the client gets subscribed to in case the server limits
-the number of keys the client can subscribe to.
+The server MUST process each key in order, as the client uses this order to determine which keys they were and were not able to subscribe to. Clients SHOULD send keys in order of preference.
 
-If the client is subscribed to too many keys then the server MUST include a
-`ERR_METADATATOOMANYSUBS` numeric in its reply and not process any further keys
-in the command.
+The server processes each key in order, and:
 
-The `<key>` parameter of this numeric is the first key that the client was not
-subscribed to.
+> If the client has subscribed to too many keys, the server does not process any further keys in the subcommand. The `<key>` parameter of the `ERR_METADATATOOMANYSUBS` numeric MUST be this first key that the client could not subscribe to (so the client knows all keys sent after that one were not processed).
+>
+> If the client successfully subscribes to a key, or is already subscribed to a requested key, that key MUST appear in a `RPL_METADATASUBOK` reply numeric.
+>
+> If the key's name is invalid, the server sends a `ERR_KEYINVALID` numeric to the client and continues processing keys.
+>
+> If the client does not have permission to view a given key, the server sends a `ERR_KEYNOPERMISSION` numeric to the client and continues processing keys. However, the subscription MUST still be successful, and that key MUST appear in a `RPL_METADATASUBOK` reply numeric. In this case, the `ERR_KEYNOPERMISSION` numeric serves as a warning indicating that the client will not receive `METADATA` messages about this key unless it gains the necessary (implementation defined) privileges later.
 
-If the client successfully subscribes to a key it is not subscribed to then the
-key MUST appear in a `RPL_METADATASUBOK` reply numeric.
-
-If the client tries to subscribe to a key it is already subscribed to then the
-client remains subscribed to the key. In case such a key is processed in a
-request the key MUST appear at least once in a `RPL_METADATASUBOK` numeric in
-the reply.
-
-Servers MUST respond to requests to subscribe to a key whose name is invalid
-with a `ERR_KEYINVALID` numeric.
-
-Servers MAY additionally respond to requests to subscribe to a key that the
-client has no privilege to access with a `ERR_KEYNOPERMISSION` numeric.
-Even if a server does that, the subscription MUST still be successful.
-This is because in this case the `ERR_KEYNOPERMISSION` numeric only serves as a
-warning, indicating that the client will not receive METADATA events about this
-key unless it acquires the necessary (implementation defined) privileges later.
+Once the server is finished processing keys, it responds with zero or more of these numerics in any order: `RPL_METADATASUBOK`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`, and MAY respond with one `ERR_METADATATOOMANYSUBS` numeric. Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
 
 ### METADATA UNSUB
 
-This subcommand is used to unsubscribe from metadata keys.
-
-Syntax:
-
     METADATA * UNSUB <key1> [<key2> ...]
 
-The reply of the server MUST be zero or more numerics of the following types
-in any order: `RPL_METADATAUNSUBOK`, `ERR_KEYINVALID`.
-Then the server MUST end the reply with one `RPL_METADATAEND` numeric.
+Clients use this subcommand to unsubscribe from updates for the given keys.
 
-If a client successfully unsubscribes from a key it is subscribed to then the
-key MUST appear in a `RPL_METADATAUNSUBOK` reply numeric.
+Servers process the given keys, and:
 
-If a client tries to unsubscribe from a key that it is not subscribed to then
-the client remains not subscribed to the key and the key MUST appear at least
-once in a `RPL_METADATAUNSUBOK` numeric in the reply.
+> If the client successfully unsubscribes from a key, or is not subscribed to a requested key, that key MUST appear in a `RPL_METADATAUNSUBOK` reply numeric.
+>
+> If the key's name is invalid, the server sends a `ERR_KEYINVALID` numeric to the client and continues processing keys.
 
-Servers MUST respond to requests to subscribe to a key whose name is invalid
-with a `ERR_KEYINVALID` numeric.
+Once the server is finished processing keys, it responds with zero or more of these numerics in any order: `RPL_METADATAUNSUBOK`, `ERR_KEYINVALID`. Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
 
 ### METADATA SUBS
 
-This subcommand can be used to get a list of keys which the client is
-subscribed to.
-
-Syntax:
-
     METADATA * SUBS
 
-The server MUST reply with zero or more `RPL_METADATASUBS` numerics and then
-one `RPL_METADATAEND` numeric.
+This subcommand returns which keys the client is currently subscribed to.
 
-The replied `RPL_METADATASUBS` numerics, collectively, MUST contain all keys
-the client is subscribed to exactly once and MUST NOT contain keys the client
-is not subscribed to.
-
-The order of the keys is undefined.
+The server responds with zero or more `RPL_METADATASUBS` numerics and then one `RPL_METADATAEND` numeric. The server MAY return the keys in any order. The server MUST NOT list the same key multiple times in a response to this subcommand.
 
 ### METADATA SYNC
 
-This subcommand requests the full synchronization of metadata associated with
-the given target.
-
-Syntax:
-
     METADATA <Target> SYNC
 
-The result of this subcommand is either zero or more METADATA events on
-success, or a `ERR_METADATASYNCLATER` numeric if the synchronization cannot be
-performed at this time.
+Clients use this subcommand to receive all subscribed metadata from the given target.
 
-For details, please see the Postponed synchronization subsection of the
-Metadata notifications section.
+If the sync cannot be performed at this time (due to load or other implementation-defined details), the server responds with a `ERR_METADATASYNCLATER` numeric. If the sync can be performed, the server responds with zero or more METADATA events.
+
+For details, please see the [postponed synchronization](#postponed-synchronization) section.
 
 ## Notification Mechanics (TODO merge with Metadata Notifications)
 
