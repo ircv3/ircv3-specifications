@@ -97,7 +97,7 @@ Values may take any form, but MUST be encoded using UTF-8.
 
 The expected handling of individual metadata keys SHOULD be defined and listed in the IRCv3 extension registry.
 
-## `METADATA` server message
+## METADATA server message
 
 Clients that request the `metadata` capability MUST be able to handle incoming `METADATA` messages. After negotiating this capability, servers MAY send this message to clients at any time.
 
@@ -113,24 +113,13 @@ The format of the `METADATA` server message is:
 
 `Value` is a UTF-8 encoded value.
 
-## `METADATA` client command
+## METADATA client command
 
     METADATA <Target> <Subcommand> [<Param 1> ... [<Param n>]]
 
 `Target` is a valid nickname or channel name. Clients SHOULD use the asterisk symbol (`*`) when targeting their own nickname.
 
-`Subcommand` is one of the following, described in detail (including any required params) further in the document:
-
-* [GET](#todo)
-* [LIST](#todo)
-* [SET](#todo)
-* [CLEAR](#todo)
-* [SUB](#todo)
-* [UNSUB](#todo)
-* [SUBS](#todo)
-* [SYNC](#todo)
-
-## `METADATA` Subcommands
+`Subcommand` is one of the subcommands listed below. The allowed params are described in each subcommand description.
 
 ### METADATA GET
 
