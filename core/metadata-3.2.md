@@ -40,19 +40,37 @@ several mechanisms for doing this, but they normally rely on the presence of
 services and aren't really suitable for transient metadata like a user's
 current location.
 
-This feature lays out a command that can be used to set metadata, and a
-message that can be used to receive metadata updates from the server.
+This feature lays out a command that can be used to set metadata, and a message that can be used to receive metadata updates from the server.
 
-## Mechanisms
+Clients can set metadata on themselves and on channels. Privileged users (for example, network admins) may be able to set certain metadata on other users as well, or set special keys on themselves or channels.
 
-This document defines the following new protocol features:
+## Metadata Notifications
 
-* Capability: `metadata`
-* Server message: `METADATA`
-* Client command: `METADATA`
-* Server reply and error numerics
+Clients can either be subscribed to a key, or not subscribed to it. By default, clients are not subscribed to any keys. They can subscribe and unsubscribe from keys using the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands. As noted in the `SUB` section, the server MUST allow clients to subscribe to any valid keys, including privileged keys the client cannot access at the time of subscription.
 
-### Capability
+The client will receive `METADATA` messages about the keys they are subscribed to. They can also use the [`GET`](#metadata-get) and [`LIST`](#metadata-list) subcommands to receive information about keys they are not subscribed to.
+
+Clients automatically receive metadata updates for themselves (excluding changes they make themselves), channels they are joined to, and other clients in the channels they are joined to. If the `metadata-notify` capability is requested, clients also receive metadata updates for the users they are currently monitoring.
+
+-----
+
+If a channel/user they are receiving updates for changes one of the keys the client is subscribed to, they will receive a [`METADATA` message](server-message) notifying them of the change. Clients MAY also receive metadata notifications for keys they have not subscribed to, or even when they have not subscribed to any keys.
+
+Here are additional cases where clients will receive `METADATA` messages:
+
+- Upon connecting to the server, clients receive their non-transient metadata (for example, metadata stored by the server or by services). If none exists, the server MUST send a `RPL_METADATAEND` message instead.
+- When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
+- If `metadata-notify` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user.
+
+## Postponed synchronization
+
+If the client joins a large channel, or the client is already on some channels and enables the `metadata` capability, the server may not be able to send the client all current metadata for their targets.
+
+In this case, the server MAY choose to respond with a `ERR_METADATASYNCLATER` numeric instead of propogating the current metadata of the targets. This numeric indicates that the specified target has some metadata set that the client SHOULD request synchronization of at a later time.
+
+The client can use the [`SYNC`](#metadata-sync) subcommand to request the sync of metadata for the given target. If the `[<RetryAfter>]` is given, the client SHOULD wait at least that many seconds before sending the `SYNC` request.
+
+## `metadata` Capability
 
 The `metadata` capability indicates that a server supports metadata, and provides any limits and information about the system that clients must be aware of.
 
@@ -72,7 +90,7 @@ These are the defined tokens:
 Clients MUST silently ignore any unknown tokens.
 
 
-### Server message
+## `METADATA` server message
 
 Clients that request the `metadata` capability MUST be able to handle incoming `METADATA` messages. After negotiating this capability, servers MAY send this message to clients at any time.
 
@@ -88,7 +106,7 @@ The format of the `METADATA` server message is:
 
 `Value` is a UTF-8 encoded value.
 
-### Client command
+## `METADATA` client command
 
     METADATA <Target> <Subcommand> [<Param 1> ... [<Param n>]]
 
@@ -105,7 +123,7 @@ The format of the `METADATA` server message is:
 * [SUBS](#todo)
 * [SYNC](#todo)
 
-### Numerics
+## Numerics
 
 The following numerics 760 through 775 are reserved for metadata, with these labels and parameters:
 
@@ -160,7 +178,7 @@ Errors:
 * `ERR_KEYINVALID` when a client refers to an invalid key.
 * `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target when they lack sufficient permission.
 
-### Keys and values
+## Keys and values
 
 Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
 
@@ -172,7 +190,7 @@ Servers MAY impose a limit on the number of keys a client is allowed to set with
 
 Servers MAY impose a limit on the number of keys a client is allowed in its subscripion list with the `maxsub` capability value.
 
-## Subcommands
+## `METADATA` Subcommands
 
 ### METADATA GET
 
@@ -286,104 +304,6 @@ Clients use this subcommand to receive all subscribed metadata from the given ta
 If the sync cannot be performed at this time (due to load or other implementation-defined details), the server responds with a `ERR_METADATASYNCLATER` numeric. If the sync can be performed, the server responds with zero or more METADATA events.
 
 For details, please see the [postponed synchronization](#postponed-synchronization) section.
-
-## Notification Mechanics (TODO merge with Metadata Notifications)
-
-A client can either be subscribed to a key, or not subscribed to it.
-
-The server MUST allow a client to subscribe to any valid keys, even to
-privileged keys when the client has no privilege to access that key at
-the time of subscription.
-
-If a client is subscribed to a metadata key and has adequate privileges to get
-notifications about that key then it gets METADATA events about the key as
-described [here](http://ircv3.net/specs/core/metadata-3.2.html#metadata-notifications).
-
-If a client is not subscribed to a metadata key then it will not get METADATA
-events about it, however the client can use `METADATA GET`, `METADATA LIST` or
-other means available to obtain the value of the key.
-
-By default, the client is not subscribed to any keys.
-
-Managing subscriptions are possible with the protocol described below.
-
-Clients MUST handle the case where a metadata notification is sent even if they
-haven't subscribed to any key.
-
-## Compatibility with `metadata-notify`
-
-It is pointless to use the new metadata notify cap described in this document
-and `metadata-notify` (as described in the [metadata v3.2 specification](http://ircv3.net/specs/core/metadata-3.2.html))
-together.
-
-This is because `metadata-notify` implicitly subscribes the client to all keys,
-while metadata notify v2 requires the client to tell the keys it wants to
-subscribe to.
-
-Servers and clients MAY support both of the mentioned extensions, but MUST NOT
-negotiate both of them at the same time in the same connection.
-
-If both are available, the new metadata notify cap SHOULD be used.
-
-## Metadata Notifications
-
-Metadata notifications are enabled by requesting the OPTIONAL `metadata-notify`
-capability during capability negotiation. When negotiated, this capability
-extends `MONITOR` behaviour to include subscribing users to notifications for
-those users they are currently monitoring. Clients are also subscribed to
-notifications for channels they join. Clients may discontinue notifications
-for users by issuing a disabling `MONITOR` command, and for channels by
-parting the channel. Clients are automatically subscribed to notifications for
-their own metadata, excluding changes made by the clients themselves.
-
-Client subscriptions to a channel includes notifications for other users in
-the channel, regardless of `MONITOR` state.
-
-Notifications use the `METADATA` event, the format of which is as follows:
-
-    METADATA <Target> <Key> <Visibility>[ :<Value>]
-
-`<Target>` refers to the entity which had its metadata changed. `<Visibility>`
-MUST be `*` for keys visible to everyone, or a token which describes the
-key's visibility status in an implementation-defined way; for instance, it may
-be a permission level or flag.
-
-Clients MUST handle all metadata notifications, whether they explicitly
-requested them or not.
-
-Metadata propagates to clients automatically under certain conditions:
-
-1. Upon authentication and successful negotiation of `metadata-notify`, clients
-   MUST have their non-transient metadata propagated to them. If none exists,
-   servers MUST send `RPL_METADATAEND`.
-2. Clients SHOULD have current metadata of targets propagated to them upon
-   subscription.
-3. Clients who enable `metadata-notify` after issuing `MONITOR` commands to
-   subscribe to users SHOULD have current metadata propagated to them for those
-   users.
-
-### Postponed synchronization
-
-It can happen that a server needs to send a large number of `METADATA` events
-to a client due to the client subscribing to many targets at once.
-For example, this can happen if the client joins a large channel or when the
-client is already on some channels and turns on the `metadata`
-capability. In this case the server MAY choose to not propagate the metadata
-of the newly subscribed targets to the client when the join or when the
-`CAP REQ` happens, but send a `ERR_METADATASYNCLATER` numeric instead.
-
-#### Handling `ERR_METADATASYNCLATER`
-
-`ERR_METADATASYNCLATER` signals that the target specified in the numeric has
-some metadata set that the client SHOULD request synchronization of at a later
-time.
-
-The client can then use the `METADATA SYNC` subcommand to request the
-synchronization of the metadata of the target.
-
-The `[<RetryAfter>]` parameter, if present, indicates the number of seconds
-the client SHOULD wait before sending the `METADATA SYNC` request for the
-`<Target>`.
 
 ## WHOIS
 
@@ -751,6 +671,7 @@ Notification for a user becoming an operator:
 
 ## Errata
 
+* In older, deprecated versions of the Metadata specification, the `metadata-notify` key subscribed you to all keys. Since we have now added the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, the capability no longer acts in this way.
 * Earlier version of this spec specified ERR_NOMATCHINGKEY with no `<Target>`.
   This did not match examples and being specific with this numeric was desired.
 * Earlier version of this spec specified that the `<Value>` parameter of
