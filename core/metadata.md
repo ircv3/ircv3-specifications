@@ -228,7 +228,7 @@ The server responds with zero or more `RPL_METADATASUBS` numerics and then one `
 
     METADATA <Target> SYNC
 
-Clients use this subcommand to receive all subscribed metadata from the given target.
+Clients use this subcommand to receive all subscribed metadata from the given target. If the target is a channel, it also syncs the metadata for all other users in that channel.
 
 If the sync cannot be performed at this time (due to load or other implementation-defined details), the server responds with a `ERR_METADATASYNCLATER` numeric. If the sync can be performed, the server responds with zero or more METADATA events.
 
@@ -295,76 +295,108 @@ When a user runs `WHOIS` on a user with metadata, a subset of that metadata MAY 
 
 ## Examples
 
-Setting metadata for self:
+These examples show the labels of the numerics (e.g. `RPL_METADATASUBOK`) instead of their number (e.g. `775`) in order to aid understanding. In a real implementation, messages always contain the number of the numeric.
 
-    METADATA * SET url :http://www.example.com
-    :irc.example.com RPL_KEYVALUE * url * :http://www.example.com
-    :irc.example.com RPL_METADATAEND :end of metadata
+All examples begin with the client not being subscribed to any keys.
 
-Setting metadata for channel:
+-----
 
-    METADATA #example SET url :http://www.example.com
-    :irc.example.com RPL_KEYVALUE #example url * :http://www.example.com
-    :irc.example.com RPL_METADATAEND :end of metadata
+### Capability Examples
 
-Setting metadata for another user, no permission:
+#### Capability value in `CAP LS` 1 
 
-    METADATA user1 SET url :http://www.example.com
-    :irc.example.com ERR_KEYNOPERMISSION user1 url :permission denied
+    C: CAP LS 302
+    S: CAP * LS :userhost-in-names draft/metadata=foo,maxsub=50,bar multi-prefix
 
-Setting metadata for self, limit reached:
+#### Capability value in `CAP LS` 2
 
-    METADATA * SET url :http://www.example.com
-    :irc.example.com ERR_METADATALIMIT * :metadata limit reached
+    C: CAP LS 302
+    S: CAP * LS :draft/metadata=maxsub=25 multi-prefix invite-notify
 
-Setting metadata for an invalid target:
+-----
 
-    METADATA $a:user SET url :http://www.example.com
-    :irc.example.com ERR_TARGETINVALID $a:user :invalid metadata target
+### METADATA command examples
 
-Setting metadata with an invalid key:
+#### Setting metadata on self
 
-    METADATA user1 SET $url$ :http://www.example.com
-    :irc.example.com ERR_KEYINVALID $url$
+    C: METADATA * SET url :http://www.example.com
+    S: :irc.example.com RPL_KEYVALUE * url * :http://www.example.com
+    S: :irc.example.com RPL_METADATAEND :end of metadata
 
-Listing metadata, with an implementation-defined visibility field:
+#### Setting metadata on self, but the limit has been reached
 
-    METADATA user1 LIST
-    :irc.example.com RPL_KEYVALUE user1 url * :http://www.example.com
-    :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
-    :irc.example.com RPL_KEYVALUE user1 bot-likeliness-score visible-only-for-admin :42
-    :irc.example.com RPL_METADATAEND :end of metadata
+    C: METADATA * SET url :http://www.example.com
+    S: :irc.example.com ERR_METADATALIMIT * :metadata limit reached
 
-Getting several keys of metadata of the same user:
+#### Setting metadata on another user, without permission
 
-    METADATA user1 GET blargh splot im.xmpp
-    :irc.example.com ERR_NOMATCHINGKEY user1 blargh :no matching key
-    :irc.example.com ERR_NOMATCHINGKEY user1 splot :no matching key
-    :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
+    C: METADATA user1 SET url :http://www.example.com
+    S: :irc.example.com ERR_KEYNOPERMISSION user1 url :permission denied
 
-User sets metadata on a channel:
+#### Setting metadata on channel
 
-    :user1!~user@somewhere.example.com METADATA #example url * :http://www.example.com
+    C: METADATA #example SET url :http://www.example.com
+    S: :irc.example.com RPL_KEYVALUE #example url * :http://www.example.com
+    S: :irc.example.com RPL_METADATAEND :end of metadata
 
-External server updates metadata on a channel:
+#### Setting metadata on an invalid target
 
-    :irc.example.com METADATA #example url * :http://wiki.example.com
+    C: METADATA $a:user SET url :http://www.example.com
+    S: :irc.example.com ERR_TARGETINVALID $a:user :invalid metadata target
 
-External server sets metadata on a user:
+#### Setting metadata with an invalid key
 
-    :irc.example.com METADATA user1 account * :user1
+    C: METADATA user1 SET $url$ :http://www.example.com
+    S: :irc.example.com ERR_KEYINVALID $url$
 
-Server rate limits setting metadata with a RetryAfter value
+#### Server rate-limits setting metadata and provides a RetryAfter value
 
-    METADATA * SET url :http://www.example.com
-    :irc.example.com ERR_METADATARATELIMIT * url 5 :http://www.example.com
+    C: METADATA * SET url :http://www.example.com
+    S: :irc.example.com ERR_METADATARATELIMIT * url 5 :http://www.example.com
 
-Server rate limits setting metadata with no RetryAfter value
+#### Server rate-limits setting metadata with no RetryAfter value
 
-    METADATA * SET url :http://www.example.com
-    :irc.example.com ERR_METADATARATELIMIT * url * :http://www.example.com
+    C: METADATA * SET url :http://www.example.com
+    S: :irc.example.com ERR_METADATARATELIMIT * url 5 :http://www.example.com
 
-Client joins a channel, gets `ERR_METADATASYNCLATER` and requests a sync later
+-----
+
+### METADATA message examples
+
+#### External server sets metadata on a user
+
+    S: :irc.example.com METADATA user1 account * :user1
+
+#### User sets metadata on a channel
+
+    S: :user1!~user@somewhere.example.com METADATA #example url * :http://www.example.com
+
+### External server updates metadata on a channel
+
+    S: :irc.example.com METADATA #example wiki-url * :http://wiki.example.com
+
+-----
+
+### Listing and Viewing Metadata Examples
+
+#### Listing metadata, with an implementation-defined visibility field
+
+    C: METADATA user1 LIST
+    S: :irc.example.com RPL_KEYVALUE user1 url * :http://www.example.com
+    S: :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
+    S: :irc.example.com RPL_KEYVALUE user1 bot-likeliness-score visible-only-for-admin :42
+    S: :irc.example.com RPL_METADATAEND :end of metadata
+
+#### Getting several metadata keys from a user
+
+    C: METADATA user1 GET blargh splot im.xmpp
+    S: :irc.example.com ERR_NOMATCHINGKEY user1 blargh :no matching key
+    S: :irc.example.com ERR_NOMATCHINGKEY user1 splot :no matching key
+    S: :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
+
+#### Client joins a channel and but needs to sync metadata later
+
+Client joins channel:
 
     C: JOIN #bigchan
     S: modernclient!modernclient@example.com JOIN #bigchan
@@ -374,14 +406,14 @@ Client joins a channel, gets `ERR_METADATASYNCLATER` and requests a sync later
     S: :irc.example.com 353 modernclient @ #bigchan :user151 user152 user153 user154 ...
     S: :irc.example.com 366 modernclient #bigchan :End of /NAMES list.
     S: :irc.example.com ERR_METADATASYNCLATER modernclient #bigchan 4
-    
-    client waits 4 seconds
-    
+
+Client waits 4 seconds:
+
     C: METADATA #bigchan SYNC
     S: :irc.example.com ERR_METADATASYNCLATER modernclient #bigchan 6
-    
-    client waits 6 seconds
-    
+
+Client waits 6 more seconds:
+
     C: METADATA #bigchan SYNC
     S: :irc.example.com METADATA user52 foo * :example value 1
     S: :irc.example.com METADATA user2 bar * :second example value 
@@ -391,19 +423,13 @@ Client joins a channel, gets `ERR_METADATASYNCLATER` and requests a sync later
     S: :irc.example.com METADATA user3 website * :www.example.com
     S: :irc.example.com METADATA user152 bar * :dolor sit amet
 
-    ...and many more metadata messages   
+    ...and many more metadata messages
 
+-----
 
-## More Examples (TODO merge with previous)
+### Subscription Examples
 
-These examples show the labels of the numerics (e.g. `RPL_METADATASUBOK`)
-instead of their number (e.g. `775`) in order to aid understanding.
-In a real implementation, the messages always contain the number of numerics,
-not a label.
-
-All examples begin with the client not being subscribed to any keys.
-
-### Basic subscriping and unsubscribing
+#### Basic subscriping and unsubscribing
 
     C: METADATA * SUB avatar website foo bar
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website foo bar
@@ -412,7 +438,7 @@ All examples begin with the client not being subscribed to any keys.
     S: :irc.example.com RPL_METADATAUNSUBOK modernclient :bar foo
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Multiple `RPL_METADATASUBOK` numerics in reply to `METADATA SUB`
+#### Multiple `RPL_METADATASUBOK` numerics in reply to `METADATA SUB`
 
     C: METADATA * SUB avatar website foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website
@@ -420,14 +446,14 @@ All examples begin with the client not being subscribed to any keys.
     S: :irc.example.com RPL_METADATASUBOK modernclient :bar baz
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Invalid key name in reply to subscription
+#### Invalid key name in reply to subscription
 
     C: METADATA * SUB foo $url bar
     S: :irc.example.com RPL_METADATASUBOK modernclient :foo bar
     S: :irc.example.com ERR_KEYINVALID modernclient $url :invalid metadata key
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### "Subscribed to too many keys" error in reply to subscription 1
+#### "Subscribed to too many keys" error in reply to subscription 1
 
 The client first successfully subscribes to some keys and later it tries to
 subscribe to some more keys, unsuccessfully.
@@ -442,7 +468,7 @@ subscribe to some more keys, unsuccessfully.
     S: :irc.example.com RPL_METADATASUBS modernclient :website avatar foo bar baz
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### "Subscribed to too many keys" error in reply to subscription 2
+#### "Subscribed to too many keys" error in reply to subscription 2
 
 This is like the previous case, except when the second METADATA SUB happens
 the server accepts the first 2 keys (`email`, `city`) but not the rest
@@ -459,7 +485,7 @@ the server accepts the first 2 keys (`email`, `city`) but not the rest
     S: :irc.example.com RPL_METADATASUBS modernclient :website avatar city foo email
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### "Subscribed to too many keys" error in reply to subscription 3
+#### "Subscribed to too many keys" error in reply to subscription 3
 
 In this case, the client is trying to subscribe to a key that it is already
 subscribed to (`website`), but the key is not processed because the limit
@@ -479,7 +505,7 @@ appeared before the `website` key.
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar foo website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Querying the list of subscribed keys 1
+#### Querying the list of subscribed keys 1
 
 The server replies with a single `RPL_METADATASUBS` numeric.
 
@@ -490,7 +516,7 @@ The server replies with a single `RPL_METADATASUBS` numeric.
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Querying the list of subscribed keys 2
+#### Querying the list of subscribed keys 2
 
 The server replies with multiple `RPL_METADATASUBS` numerics.
 
@@ -503,14 +529,14 @@ The server replies with multiple `RPL_METADATASUBS` numerics.
     S: :irc.example.com RPL_METADATASUBS modernclient :foo website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Empty list of subscribed keys
+#### Empty list of subscribed keys
 
 In this case, there are no `RPL_METADATASUB` numerics sent.
 
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Unsubscribing
+#### Unsubscribing
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
@@ -525,7 +551,7 @@ In this case, there are no `RPL_METADATASUB` numerics sent.
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Subscribing to the same key multiple times 1
+#### Subscribing to the same key multiple times 1
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
@@ -540,7 +566,7 @@ In this case, there are no `RPL_METADATASUB` numerics sent.
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Subscribing to the same key multiple times 2
+#### Subscribing to the same key multiple times 2
 
 The client (erroneously) subscribes to the same key twice in the same command.
 The server is free to include the key being subscribed to in the
@@ -567,7 +593,7 @@ Twice:
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Unsubscribing from a non-subscribed key 1
+#### Unsubscribing from a non-subscribed key 1
 
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
@@ -583,7 +609,7 @@ Twice:
     S: :irc.example.com RPL_METADATASUBS modernclient :website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Unsubscribing from a non-subscribed key 2
+#### Unsubscribing from a non-subscribed key 2
 
 The client (erroneously) unsubscribes from the same key twice in the same
 command. The server is free to include the key being unsubscribed from in the
@@ -607,7 +633,7 @@ Twice:
     S: :irc.example.com RPL_METADATAUNSUBOK modernclient :website website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Subscribing to a key which requires privileges but without privileges
+#### Subscribing to a key which requires privileges but without privileges
 
     C: METADATA * SUB avatar secretkey website
     S: :irc.example.com ERR_KEYNOPERMISSION modernclient modernclient secretkey :permission denied
@@ -617,7 +643,7 @@ Twice:
     S: :irc.example.com RPL_METADATASUBS modernclient :secretkey website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Subscribing to invalid keys and a key which requires privileges but without privileges
+#### Subscribing to invalid keys and a key which requires privileges but without privileges
 
     C: METADATA * SUB $invalid1 secretkey1 $invalid2 secretkey2 website
     S: :irc.example.com ERR_KEYNOPERMISSION modernclient modernclient secretkey1 :permission denied
@@ -630,24 +656,14 @@ Twice:
     S: :irc.example.com RPL_METADATASUBS modernclient :secretkey1 secretkey2 website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
-### Capability value in `CAP LS` 1 
-
-    C: CAP LS 302
-    S: CAP * LS :userhost-in-names draft/metadata=foo,maxsub=50,bar multi-prefix
-
-### Capability value in `CAP LS` 2
-
-    C: CAP LS 302
-    S: CAP * LS :draft/metadata=maxsub=25 multi-prefix invite-notify
-
+-----
 
 ### Non-normative
 
-The following examples describe how an implementation might use certain
-features. Unlike previous examples, they are in no way intended to guide
+The following examples describe how an implementation might use certain features. Unlike previous examples, they are in no way intended to guide
 implementations' behaviour.
 
-Notification for a user becoming an operator:
+#### Notification for a user becoming an operator:
 
     :OperServ!OperServ@services.int METADATA user1 services.operclass oper:auspex :services-root
 
