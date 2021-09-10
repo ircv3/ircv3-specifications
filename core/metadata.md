@@ -197,7 +197,7 @@ If the request is successful, the server responds with one `RPL_KEYVALUE` event 
 
     METADATA * SUB <key1> [<key2> ...]
 
-Clients use this subcommand to subscribe to updates for the given keys.
+This subcommand lets clients subscribe to updates for the given keys.
 
 The server MUST process each key in order, as the client uses this order to determine which keys they were and were not able to subscribe to. Clients SHOULD send keys in order of preference.
 
@@ -217,7 +217,7 @@ Once the server is finished processing keys, it responds with zero or more of th
 
     METADATA * UNSUB <key1> [<key2> ...]
 
-Clients use this subcommand to unsubscribe from updates for the given keys.
+This subcommand lets clients unsubscribe from updates for the given keys.
 
 Servers process the given keys, and:
 
