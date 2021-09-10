@@ -42,7 +42,7 @@ current location.
 
 This feature lays out a command that can be used to set metadata, and a message that can be used to receive metadata updates from the server.
 
-Clients can set metadata on themselves and on channels. Privileged users (for example, network admins) may be able to set certain metadata on other users as well, or set special keys on themselves or channels.
+Clients can set metadata on themselves and on channels. Privileged users (for example, network admins) may be able to set certain metadata on other users as well, and set special keys on themselves or channels.
 
 ## Notifications
 
@@ -54,7 +54,7 @@ Clients automatically receive metadata updates for themselves (excluding changes
 
 -----
 
-If a channel/user they are receiving updates for changes one of the keys the client is subscribed to, they will receive a [`METADATA` message](server-message) notifying them of the change. Clients MAY also receive metadata notifications for keys they have not subscribed to, or even when they have not subscribed to any keys.
+If a channel/user they are receiving updates for changes one of the keys the client is subscribed to, they will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. Clients MAY also receive metadata notifications for keys they have not subscribed to, or even when they have not subscribed to any keys.
 
 Here are additional cases where clients will receive `METADATA` messages:
 
@@ -84,7 +84,7 @@ The ABNF format of the `metadata` capability is:
 
 These are the defined tokens:
 
-* `maxsub`: the maximum number of keys a client is allowed in its subscripion list. See the [Metadata subscriptions](#todo) section for more details.
+* `maxsub`: the maximum number of keys a client is allowed in its subscripion list. See the [`SUB`](#metadata-sub) subcommand for more details.
 * `maxkey`: the maximum number of keys a client is allowed to set on its own nickname.
 
 Clients MUST silently ignore any unknown tokens.
