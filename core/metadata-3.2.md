@@ -44,11 +44,11 @@ This feature lays out a command that can be used to set metadata, and a message 
 
 Clients can set metadata on themselves and on channels. Privileged users (for example, network admins) may be able to set certain metadata on other users as well, or set special keys on themselves or channels.
 
-## Metadata Notifications
+## Notifications
 
-Clients can either be subscribed to a key, or not subscribed to it. By default, clients are not subscribed to any keys. They can subscribe and unsubscribe from keys using the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands. As noted in the `SUB` section, the server MUST allow clients to subscribe to any valid keys, including privileged keys the client cannot access at the time of subscription.
+Clients can either be subscribed to a key, or not subscribed to it. By default, clients are not subscribed to any keys. They can subscribe and unsubscribe from keys using the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands. The server MUST allow clients to subscribe to any valid keys, including privileged keys the client cannot access at the time of subscription.
 
-The client will receive `METADATA` messages about the keys they are subscribed to. They can also use the [`GET`](#metadata-get) and [`LIST`](#metadata-list) subcommands to receive information about keys they are not subscribed to.
+The client will receive [`METADATA` messages](#metadata-server-message) about the keys they are subscribed to. They can also use the [`GET`](#metadata-get) and [`LIST`](#metadata-list) subcommands to receive information about keys they are not subscribed to.
 
 Clients automatically receive metadata updates for themselves (excluding changes they make themselves), channels they are joined to, and other clients in the channels they are joined to. If the `metadata-notify` capability is requested, clients also receive metadata updates for the users they are currently monitoring.
 
@@ -68,7 +68,7 @@ If the client joins a large channel, or the client is already on some channels a
 
 In this case, the server MAY choose to respond with a `ERR_METADATASYNCLATER` numeric instead of propogating the current metadata of the targets. This numeric indicates that the specified target has some metadata set that the client SHOULD request synchronization of at a later time.
 
-The client can use the [`SYNC`](#metadata-sync) subcommand to request the sync of metadata for the given target. If the `[<RetryAfter>]` is given, the client SHOULD wait at least that many seconds before sending the `SYNC` request.
+The client can use the [`SYNC`](#metadata-sync) subcommand to request the sync of metadata for the given target. If the `[<RetryAfter>]` is given, the client SHOULD wait at least that many seconds before sending the sync request.
 
 ## `metadata` Capability
 
@@ -88,7 +88,6 @@ These are the defined tokens:
 * `maxkey`: the maximum number of keys a client is allowed to set on its own nickname.
 
 Clients MUST silently ignore any unknown tokens.
-
 
 ## `METADATA` server message
 
