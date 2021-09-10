@@ -89,6 +89,14 @@ These are the defined tokens:
 
 Clients MUST silently ignore any unknown tokens.
 
+## Keys and Values
+
+Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
+
+Values may take any form, but MUST be encoded using UTF-8.
+
+The expected handling of individual metadata keys SHOULD be defined and listed in the IRCv3 extension registry.
+
 ## `METADATA` server message
 
 Clients that request the `metadata` capability MUST be able to handle incoming `METADATA` messages. After negotiating this capability, servers MAY send this message to clients at any time.
@@ -121,73 +129,6 @@ The format of the `METADATA` server message is:
 * [UNSUB](#todo)
 * [SUBS](#todo)
 * [SYNC](#todo)
-
-## Numerics
-
-The following numerics 760 through 775 are reserved for metadata, with these labels and parameters:
-
-| No. | Label                     | Parameters                               |
-| --- | ------------------------- | ---------------------------------------- |
-| 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
-| 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
-| 762 | `RPL_METADATAEND`         | `:end of metadata`                       |
-| 764 | `ERR_METADATALIMIT`       | `<Target> :metadata limit reached`       |
-| 765 | `ERR_TARGETINVALID`       | `<Target> :invalid metadata target`      |
-| 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
-| 767 | `ERR_KEYINVALID`          | `:<InvalidKey>`                          |
-| 768 | `ERR_KEYNOTSET`           | `<Target> <Key> :key not set`            |
-| 769 | `ERR_KEYNOPERMISSION`     | `<Target> <Key> :permission denied`      |
-| 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
-| 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
-| 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
-| 773 | `ERR_METADATATOOMANYSUBS` | `<Key>`                                  |
-| 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
-| 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
-
-Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
-
-| Label                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
-| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| `RPL_WHOISKEYVALUE`       |     |      |     |       |     |       |      |      | `WHOIS` |
-| `RPL_KEYVALUE`            | *   | *    | *   | *     |     |       |      |      |         |
-| `RPL_METADATAEND`         |     | *    | *   | *     | *   | *     | *    |      |         |
-| `ERR_METADATALIMIT`       |     |      | *   |       |     |       |      |      |         |
-| `ERR_TARGETINVALID`       | *   | *    | *   | *     | *   | *     | *    | *    |         |
-| `ERR_NOMATCHINGKEY`       | *   |      |     |       |     |       |      |      |         |
-| `ERR_KEYINVALID`          | *   |      | *   |       | *   | *     |      |      |         |
-| `ERR_KEYNOTSET`           |     |      | *   |       |     |       |      |      |         |
-| `ERR_KEYNOPERMISSION`     | *   | *    | *   |       | *   | *     |      |      |         |
-| `RPL_METADATASUBOK`       |     |      |     |       | *   |       |      |      |         |
-| `RPL_METADATAUNSUBOK`     |     |      |     |       |     | *     |      |      |         |
-| `RPL_METADATASUBS`        |     |      |     |       |     |       | *    |      |         |
-| `ERR_METADATATOOMANYSUBS` |     |      |     |       | *   |       |      |      |         |
-| `ERR_METADATASYNCLATER`   |     |      |     |       |     |       |      | *    | `JOIN`  |
-| `ERR_METADATARATELIMIT`   |     |      | *   |       |     |       |      |      |         |
-
-Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
-
-Replies:
-
-* `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined in the [server message](#todo) section.
-* `RPL_METADATAEND` delimits the end of a sequence of metadata replies.
-
-Errors:
-
-* `ERR_TARGETINVALID` when a client refers to an invalid target.
-* `ERR_KEYINVALID` when a client refers to an invalid key.
-* `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target when they lack sufficient permission.
-
-## Keys and values
-
-Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
-
-Values may take any form, but MUST be encoded using UTF-8.
-
-The expected client behaviour of individual metadata keys SHOULD be defined in separate specifications and listed in the IRCv3 extension registry.
-
-Servers MAY impose a limit on the number of keys a client is allowed to set with the `maxkey` capability value.
-
-Servers MAY impose a limit on the number of keys a client is allowed in its subscripion list with the `maxsub` capability value.
 
 ## `METADATA` Subcommands
 
@@ -304,11 +245,64 @@ If the sync cannot be performed at this time (due to load or other implementatio
 
 For details, please see the [postponed synchronization](#postponed-synchronization) section.
 
-## WHOIS
+## Numerics
 
-A subset of metadata MAY be sent via the `RPL_WHOISKEYVALUE` event; this
-subset SHALL be set explicitly, rather than informatively or as a side-effect
-of other events. For a complete view of user metadata, see `METADATA LIST`.
+The following numerics 760 through 775 are reserved for metadata, with these labels and parameters:
+
+| No. | Label                     | Parameters                               |
+| --- | ------------------------- | ---------------------------------------- |
+| 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
+| 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
+| 762 | `RPL_METADATAEND`         | `:end of metadata`                       |
+| 764 | `ERR_METADATALIMIT`       | `<Target> :metadata limit reached`       |
+| 765 | `ERR_TARGETINVALID`       | `<Target> :invalid metadata target`      |
+| 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
+| 767 | `ERR_KEYINVALID`          | `:<InvalidKey>`                          |
+| 768 | `ERR_KEYNOTSET`           | `<Target> <Key> :key not set`            |
+| 769 | `ERR_KEYNOPERMISSION`     | `<Target> <Key> :permission denied`      |
+| 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
+| 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
+| 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
+| 773 | `ERR_METADATATOOMANYSUBS` | `<Key>`                                  |
+| 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
+| 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
+
+Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
+
+| Label                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| `RPL_WHOISKEYVALUE`       |     |      |     |       |     |       |      |      | `WHOIS` |
+| `RPL_KEYVALUE`            | *   | *    | *   | *     |     |       |      |      |         |
+| `RPL_METADATAEND`         |     | *    | *   | *     | *   | *     | *    |      |         |
+| `ERR_METADATALIMIT`       |     |      | *   |       |     |       |      |      |         |
+| `ERR_TARGETINVALID`       | *   | *    | *   | *     | *   | *     | *    | *    |         |
+| `ERR_NOMATCHINGKEY`       | *   |      |     |       |     |       |      |      |         |
+| `ERR_KEYINVALID`          | *   |      | *   |       | *   | *     |      |      |         |
+| `ERR_KEYNOTSET`           |     |      | *   |       |     |       |      |      |         |
+| `ERR_KEYNOPERMISSION`     | *   | *    | *   |       | *   | *     |      |      |         |
+| `RPL_METADATASUBOK`       |     |      |     |       | *   |       |      |      |         |
+| `RPL_METADATAUNSUBOK`     |     |      |     |       |     | *     |      |      |         |
+| `RPL_METADATASUBS`        |     |      |     |       |     |       | *    |      |         |
+| `ERR_METADATATOOMANYSUBS` |     |      |     |       | *   |       |      |      |         |
+| `ERR_METADATASYNCLATER`   |     |      |     |       |     |       |      | *    | `JOIN`  |
+| `ERR_METADATARATELIMIT`   |     |      | *   |       |     |       |      |      |         |
+
+Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
+
+Replies:
+
+* `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined in the [server message](#todo) section.
+* `RPL_METADATAEND` delimits the end of a sequence of metadata replies.
+
+Errors:
+
+* `ERR_TARGETINVALID` when a client refers to an invalid target.
+* `ERR_KEYINVALID` when a client refers to an invalid key.
+* `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target when they lack sufficient permission.
+
+### `RPL_WHOISKEYVALUE` numeric
+
+When a user runs `WHOIS` on a user with metadata, a subset of that metadata MAY be sent with `RPL_WHOISKEYVALUE` numerics. This subset MUST be chosen explicitly, and optimised for keys that can be easily read by users. For a complete view of user metadata, see the [`LIST`](#metadata-list) subcommand.
 
 ## Examples
 
