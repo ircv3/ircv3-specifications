@@ -162,7 +162,7 @@ If the user cannot set keys on the given target, the server responds with `ERR_K
 
 Servers MAY respond to certain keys considered not settable by the requesting user, or otherwise disallowed by the server, with `ERR_KEYNOPERMISSION` and fail the request.
 
-Servers MAY respond with `ERR_METADATARATELIMIT` and fail the request. When a client receives `ERR_METADATARATELIMIT`, it SHOULD retry the `METADATA SET` request at a later time. If the `ERR_METADATARATELIMIT` event contains the OPTIONAL `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
+Servers MAY respond with `ERR_METADATARATELIMIT` and fail the request. When a client receives `ERR_METADATARATELIMIT`, it SHOULD retry the `METADATA SET` request at a later time. If the `ERR_METADATARATELIMIT` event contains the `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
 
 If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one), and one `RPL_METADATAEND` event.
 
