@@ -42,33 +42,19 @@ current location.
 
 This feature lays out a command that can be used to set metadata, and a message that can be used to receive metadata updates from the server.
 
-Clients can set metadata on themselves and on channels. Privileged users (for example, network admins) may be able to set certain metadata on other users as well, and set special keys on themselves or channels.
+## Concepts
 
-## Notifications
+Clients and channels can both contain metadata. Metadata acts as a key:value store (for example, the `display-name` key on a user, or the `url` key on a channel).
 
-Clients can either be subscribed to a key, or not subscribed to it. By default, clients are not subscribed to any keys. They can subscribe and unsubscribe from keys using the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands. The server MUST allow clients to subscribe to any valid keys, including privileged keys the client cannot access at the time of subscription.
+Clients can [set/delete](#metadata-set) metadata on themselves, and on channels they administer. Privileged users (e.g. network admins) may be able to set certain metadata on other users, and set special keys on themselves or channels.
 
-The client will receive [`METADATA` messages](#metadata-server-message) about the keys they are subscribed to. They can also use the [`GET`](#metadata-get) and [`LIST`](#metadata-list) subcommands to receive information about keys they are not subscribed to.
+Server administrators can setup lists of allowed or blocked keys, and may also restrict the setting/viewing of keys depending on whether the user is an admin, what kind of admin they are, etc (see the `Visibility` field).
 
-Clients automatically receive metadata updates for themselves (excluding changes they make themselves), channels they are joined to, and other clients in the channels they are joined to. If the `metadata-notify` capability is requested, clients also receive metadata updates for the users they are currently monitoring.
+On joining a server, clients have to configure their 'metadata key [subscriptions](#metadata-sub)'. This is a list of which keys the client understands and wants to get updates about (for example, they may subscribe to a `status` key if they support user-set statuses). By default, this subscription list is empty.
 
------
+When a channel's metadata is updated, all users in that channel who are subscribed to the changed key will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. When a user's metadata is updated, all users sharing a channel with that user (and all users who have [`metadata-notify` requested](#notifications) and are [Monitoring](https://ircv3.net/specs/extensions/monitor.html#monitor-command) that user) will receive a `METADATA` message notifying them of the change.
 
-If a channel/user they are receiving updates for changes one of the keys the client is subscribed to, they will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. Clients MAY also receive metadata notifications for keys they have not subscribed to, or even when they have not subscribed to any keys.
-
-Here are additional cases where clients will receive `METADATA` messages:
-
-- Upon connecting to the server, clients receive their non-transient metadata (for example, metadata stored by the server or by services). If none exists, the server MUST send a `RPL_METADATAEND` message instead.
-- When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
-- If `metadata-notify` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user.
-
-## Postponed synchronization
-
-If the client joins a large channel, or the client is already on some channels and enables the `metadata` capability, the server may not be able to send the client all current metadata for their targets.
-
-In this case, the server MAY choose to respond with a `ERR_METADATASYNCLATER` numeric instead of propogating the current metadata of the targets. This numeric indicates that the specified target has some metadata set that the client SHOULD request synchronization of at a later time.
-
-The client can use the [`SYNC`](#metadata-sync) subcommand to request the sync of metadata for the given target. If the `[<RetryAfter>]` is given, the client SHOULD wait at least that many seconds before sending the sync request.
+On joining a channel, users will get the channel's current metadata sent to them with `METADATA` messages, and get the same information for all users who are in the channel. Specifically, they get that information for the keys they are subscribed to. The server may also tell them to request that information [at a later time](#metadata-sync).
 
 ## `metadata` Capability
 
@@ -96,6 +82,32 @@ Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and a
 Values may take any form, but MUST be encoded using UTF-8.
 
 The expected handling of individual metadata keys SHOULD be defined and listed in the IRCv3 extension registry.
+
+## Notifications
+
+Clients can either be subscribed to a key, or not subscribed to it. By default, clients are not subscribed to any keys. They can subscribe and unsubscribe from keys using the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands. The server MUST allow clients to subscribe to any valid keys, including privileged keys the client cannot access at the time of subscription.
+
+The client will receive [`METADATA` messages](#metadata-server-message) about the keys they are subscribed to. They can also use the [`GET`](#metadata-get) and [`LIST`](#metadata-list) subcommands to receive information about keys they are not subscribed to.
+
+Clients automatically receive metadata updates for themselves (excluding changes they make themselves), channels they are joined to, and other clients in the channels they are joined to. If the `metadata-notify` capability is requested, clients also receive metadata updates for the users they are currently monitoring.
+
+-----
+
+If a channel/user the client is receiving updates for changes one of the keys the client is subscribed to, they will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. Clients MAY also receive metadata notifications for keys they have not subscribed to, or even when they have not subscribed to any keys.
+
+Here are additional cases where clients will receive `METADATA` messages:
+
+- Upon connecting to the server, clients receive their non-transient metadata (for example, metadata stored by the server or by services). If none exists, the server MUST send a `RPL_METADATAEND` message instead.
+- When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
+- If `metadata-notify` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user.
+
+## Postponed synchronization
+
+If the client joins a large channel, or the client is already on some channels and enables the `metadata` capability, the server may not be able to send the client all current metadata for their targets.
+
+In this case, the server MAY choose to respond with a `ERR_METADATASYNCLATER` numeric instead of propogating the current metadata of the targets. This numeric indicates that the specified target has some metadata set that the client SHOULD request synchronization of at a later time.
+
+The client can use the [`SYNC`](#metadata-sync) subcommand to request the sync of metadata for the given target. If the `[<RetryAfter>]` is given, the client SHOULD wait at least that many seconds before sending the sync request.
 
 ## METADATA server message
 
