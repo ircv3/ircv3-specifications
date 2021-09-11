@@ -292,7 +292,7 @@ Each subcommand section describes the reply and error numerics it expects from t
 
 Replies:
 
-* `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined in the [server message](#todo) section.
+* `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined in the [server message](#metadata-server-message) section.
 * `RPL_METADATAEND` delimits the end of a sequence of metadata replies.
 
 Errors:
