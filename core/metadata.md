@@ -58,7 +58,7 @@ On joining a channel, users will get the channel's current metadata sent to them
 
 ## `metadata` Capability
 
-The `metadata` capability indicates that a server supports metadata, and provides any limits and information about the system that clients must be aware of.
+The `metadata` capability indicates that a server supports metadata, and provides any limits and information about the system that clients must be aware of. Clients MUST request this capability in order to receive [`METADATA` notifications](#notifications).
 
 The ABNF format of the `metadata` capability is:
 
@@ -79,7 +79,7 @@ Clients MUST silently ignore any unknown tokens.
 
 Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
 
-Values may take any form, but MUST be encoded using UTF-8.
+Values can take any form, but MUST be encoded using UTF-8.
 
 The expected handling of individual metadata keys SHOULD be defined and listed in the IRCv3 extension registry.
 
