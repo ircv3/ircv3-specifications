@@ -97,9 +97,9 @@ If a channel/user the client is receiving updates for changes one of the keys th
 
 Here are additional cases where clients will receive `METADATA` messages:
 
-- Upon connecting to the server, clients receive their non-transient metadata (for example, metadata stored by the server or by services). If none exists, the server MUST send a `RPL_METADATAEND` message instead.
+- Upon requesting the `metadata` capability, clients receive their non-transient metadata (for example, metadata stored by the server or by services). If none exists, the server MUST send a `RPL_METADATAEND` message instead.
 - When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
-- If `metadata-notify` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user.
+- If `metadata-notify` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user, or when one of their monitored users comes online.
 
 ## Postponed synchronization
 
@@ -267,6 +267,7 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 773 | `ERR_METADATATOOMANYSUBS` | `<Key>`                                  |
 | 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
 | 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
+| 776 | `ERR_METADATAINVALIDSUBCOMMAND` | `<Subcommand> :invalid metadata subcommand` |
 
 Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
 
@@ -285,7 +286,7 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 | `RPL_METADATAUNSUBOK`     |     |      |     |       |     | *     |      |      |         |
 | `RPL_METADATASUBS`        |     |      |     |       |     |       | *    |      |         |
 | `ERR_METADATATOOMANYSUBS` |     |      |     |       | *   |       |      |      |         |
-| `ERR_METADATASYNCLATER`   |     |      |     |       |     |       |      | *    | `JOIN`  |
+| `ERR_METADATASYNCLATER`   |     |      |     |       | *   |       |      | *    | `JOIN`  |
 | `ERR_METADATARATELIMIT`   |     |      | *   |       |     |       |      |      |         |
 
 Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
@@ -300,6 +301,7 @@ Errors:
 * `ERR_TARGETINVALID` when a client refers to an invalid target.
 * `ERR_KEYINVALID` when a client refers to an invalid key.
 * `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target when they lack sufficient permission.
+* `ERR_METADATAINVALIDSUBCOMMAND` when a client calls a `METADATA` subcommand which is not defined.
 
 ### `RPL_WHOISKEYVALUE` numeric
 
