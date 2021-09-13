@@ -29,7 +29,12 @@ Servers publishing the `BOT` [ISUPPORT](https://modern.ircdocs.horse/#feature-ad
 When a client is marked as a bot, they are given a special numeric as part of their `WHOIS` response, it is indicated in their `WHO` flags, and servers may include the `bot` tag on that client's outgoing messages.
 
 ## The `RPL_WHOISBOT` `(335)` numeric
+
+    :<server> 335 <nick> <target> :<message>
+
 This numeric is returned as part of a bot's `WHOIS` reply.
+
+Like other WHOIS reply numerics, `<nick>` is the nick of the sender, `<target>` the nick of the client being whoised (the bot), and `<message>` is arbitrary human-readable text.
 
 ## The `WHO` bot flag
 When a `RPL_WHOREPLY` `(352)` numeric is returned for a bot, the character used as the value of the ISUPPORT `BOT` token is returned in the flags (alongside `H|G`).
