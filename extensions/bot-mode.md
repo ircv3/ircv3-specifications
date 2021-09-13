@@ -34,9 +34,7 @@ When a client is marked as a bot, they are given a special numeric as part of th
 
 This numeric is returned as part of a bot's `WHOIS` reply.
 
-Like other WHOIS reply numerics, `<nick>` is the nick of the sender,
-`<target>` the nick of the client being whoised (the bot), and
-`<message>` is arbitrary human-readable text.
+Like other WHOIS reply numerics, `<nick>` is the nick of the sender, `<target>` the nick of the client being whoised (the bot), and `<message>` is arbitrary human-readable text.
 
 ## The `WHO` bot flag
 When a `RPL_WHOREPLY` `(352)` numeric is returned for a bot, the character used as the value of the ISUPPORT `BOT` token is returned in the flags (alongside `H|G`).
