@@ -3,7 +3,7 @@ title: "Web Push Extension"
 layout: spec
 copyrights:
   - name: "Simon Ser"
-    period: "2020"
+    period: "2021"
     email: "contact@emersion.fr"
 ---
 
