@@ -36,7 +36,7 @@ socket.addEventListener('message', event => processLine(event.data));
 
 ## Security considerations
 
-Clients and servers SHOULD impose limits on the maximum size of messages they will accept, in order to prevent denial-of-service attacks. The limits SHOULD reflect the increased total line lengths allowed by the [`message-tags`](./message-tags) specification.
+Clients and servers SHOULD impose limits on the maximum size of messages they will accept, in order to prevent denial-of-service attacks. The limits SHOULD reflect the increased total line lengths allowed by the [`message-tags`](../extensions/message-tags.html) specification.
 
 ## Other implementation considerations
 
