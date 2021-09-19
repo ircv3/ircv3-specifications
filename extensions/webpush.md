@@ -55,6 +55,9 @@ Once a client has subscribed, the server will send push notifications for a
 server-defined subset of IRC messages. Each push notification MUST contain
 exactly one IRC message as the payload, without the final CRLF.
 
+The messages follow the same capabilities and the same `RPL_ISUPPORT` as when
+the client registered for Web Push notifications.
+
 ## `WEBPUSH` Command
 
 A new `WEBPUSH` command is introduced. It has a case-insensitive subcommand:
