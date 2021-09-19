@@ -88,7 +88,9 @@ The `<endpoint>` is an URL pointing to a push server, which can be used to send 
 
 ### `UNREGISTER` Subcommand
 
-TODO
+The `UNREGISTER` subcommand removes an existing Web Push subscription.
+
+    WEBPUSH UNREGISTER <endpoint>
 
 [RFC 8030]: https://datatracker.ietf.org/doc/html/rfc8030
 [RFC 8291]: https://datatracker.ietf.org/doc/html/rfc8291
