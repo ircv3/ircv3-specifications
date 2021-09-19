@@ -58,6 +58,10 @@ exactly one IRC message as the payload, without the final CRLF.
 The messages follow the same capabilities and the same `RPL_ISUPPORT` as when
 the client registered for Web Push notifications.
 
+Because of size limits on the payload of push notifications, servers MAY drop
+some or all message tags from the original message. Servers MUST NOT drop the
+`msgid` tag if present.
+
 ## `WEBPUSH` Command
 
 A new `WEBPUSH` command is introduced. It has a case-insensitive subcommand:
