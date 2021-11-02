@@ -248,7 +248,7 @@ As an overview, these are the new features introduced with each `CAP LS` version
 #### Capability Values
 
 If the client supports CAP version `302`, the server MAY specify additional data for each
-capability using the `<name>=<value>` format in `CAP LS` and `CAP NEW` replies.
+capability using the `<name>=<value>` format in `CAP LS` and `CAP NEW` replies, but MUST NOT specify additional data for any other CAP subcommands.
 
 Each capability, if it supports a value, defines what this value means in its specification.
 
