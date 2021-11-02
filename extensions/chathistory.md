@@ -137,7 +137,7 @@ Requesting the latest conversation upon joining a channel
 [s] :irc.host BATCH +ID chathistory #channel
 [s] @batch=ID;msgid=1234;time=2019-01-04T14:33:26.123Z :nick!ident@host PRIVMSG #channel :message
 [s] @batch=ID;msgid=1235;time=2019-01-04T14:33:38.123Z :nick!ident@host NOTICE #channel :message
-[s] @batch=ID;msgid=1238;time=2019-01-04T14:34:17.123Z;+client_tag=val :nick!ident@host PRIVMSG #channel :ACTION message
+[s] @batch=ID;msgid=1238;time=2019-01-04T14:34:17.123Z;+client-tag=val :nick!ident@host PRIVMSG #channel :ACTION message
 [s] :irc.host BATCH -ID
 ~~~~
 
