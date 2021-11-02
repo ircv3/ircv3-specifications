@@ -50,6 +50,8 @@ These options are defined and may be sent by clients while connecting:
 
 `<algo>` should be the hash algorithm used to produce the fingerprint supplied such as sha256.
 
+`<fingerprint>` should be the hash of the certificate (certfp) or public key (spkifp) encoded in hexadecimal without colon (:) sepertators. Servers should accept either upper case or lower case hexadecimal characters.
+
 Servers MUST be able to handle options that don't currently have defined values gaining values in the future. For example, they MUST treat the options `secure` and `secure=examplevalue123` in exactly the same way.
 
 ### Examples
