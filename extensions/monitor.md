@@ -126,7 +126,7 @@ list is offline.
 
 The argument is a chained list of targets that are offline.
 
-As with 730, the server may send "*" instead of the nick.
+As with 730, the server may send "*" instead of the nick (`<nick>`).
 
 ### 732 - `RPL_MONLIST`
 
