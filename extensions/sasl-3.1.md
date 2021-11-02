@@ -138,6 +138,30 @@ The client is using the SCRAM-SHA-1 mechanism.
     S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
     (usual welcome messages)
 
+Servers may also add a source to their AUTHENTICATE messages, just like any message.
+
+    C: CAP REQ :sasl
+    C: NICK jilles
+    C: USER jilles cheetah.stack.nl 1 :Jilles Tjoelker
+    S: NOTICE AUTH :*** Processing connection to jaguar.test
+    S: NOTICE AUTH :*** Looking up your hostname...
+    S: NOTICE AUTH :*** Checking Ident
+    S: NOTICE AUTH :*** No Ident response
+    S: NOTICE AUTH :*** Found your hostname
+    S: :jaguar.test CAP jilles ACK :sasl
+    C: AUTHENTICATE SCRAM-SHA-1
+    S: :jaguar2.test AUTHENTICATE +
+    C: AUTHENTICATE bixhPWppbGxlcyxuPWppbGxlcyxyPWM1UnFMQ1p5MEw0ZkdrS0FaMGh1akZCcw==
+    S: :jaguar2.test AUTHENTICATE cj1jNVJxTENaeTBMNGZHa0tBWjBodWpGQnNYUW9LY2l2cUN3OWlEWlBTcGIscz01bUpPNmQ0cmpDbnNCVTFYLGk9NDA5Ng==
+    C: AUTHENTICATE Yz1iaXhoUFdwcGJHeGxjeXc9LHI9YzVScUxDWnkwTDRmR2tLQVowaHVqRkJzWFFvS2NpdnFDdzlpRFpQU3BiLHA9T1ZVaGdQdTh3RW0yY0RvVkxmYUh6VlVZUFdVPQ==
+    S: :jaguar2.test AUTHENTICATE dj1aV1IyM2M5TUppcjBaZ2ZHZjVqRXRMT242Tmc9
+    C: AUTHENTICATE +
+    S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles
+    S: :jaguar.test 903 jilles :SASL authentication successful
+    C: CAP END
+    S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
+    (usual welcome messages)
+
 Alternatively the client could request the list of capabilities and enable
 an additional capability.
 
