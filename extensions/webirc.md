@@ -48,7 +48,7 @@ These options are defined and may be sent by clients while connecting:
 - `certfp-<algo>=<fingerprint>`: This flag indicates the tls client certificate fingerprint supplied to the WebIRC gateway by the user's actual client application.
 - `spkifp-<algo>=<fingerprint>`: This flag indicates the public key fingerprint for the tls client certificate supplied to the WebIRC gateway by the user's actual client application.
 
-`<algo>` should be the hash algorithm used to produce the fingerprint supplied such as sha256.
+`<algo>` should be the hash algorithm used to produce the fingerprint supplied such as `sha-256`. Its value should be taken from IANA's [Hash Function Textual Names](https://www.iana.org/assignments/hash-function-text-names/hash-function-text-names.xhtml) registry, or if using an algorithm not listed should use a name consisting of only lower case letters, numbers or hyphens.
 
 `<fingerprint>` should be the hash of the certificate (certfp) or public key (spkifp) encoded in hexadecimal without colon (:) sepertators. Servers should accept either upper case or lower case hexadecimal characters.
 
@@ -75,6 +75,10 @@ Secure connection.
 Secure connection with ports passed through.
 
     WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure=examplevalue local-port=6697 remote-port=21726
+
+Secure connection including a client certificate fingerprint using the sha-256 hash algorithm.
+
+    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure local-port=6697 remote-port=21726 certfp-sha-256=22e88c7d6da9b73fbb515ed6a8f6d133c680527a799e3069ca7ce346d90649b2
 
 Error from invalid password.
 
