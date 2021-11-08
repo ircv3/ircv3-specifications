@@ -37,7 +37,7 @@ Mulitline messages allow for a more coherent experience that avoids the disconne
 
 This specification depends on the [`batch`][] capability which MUST be negotiated to use multiline messages. The order of capability negotiation is not significant and MUST not be enforced.
 
-This specification also uses the [message tags][] and [standard replies][] frameworks.
+This specification also uses the [client batch][], [message tags][], and [standard replies][] frameworks.
 
 ### Capabilities
 
@@ -60,7 +60,7 @@ This specification adds the `draft/multiline-concat` message tag, which has no v
 
 ### Batch types
 
-This specification adds the `draft/multiline` batch type, and introduces client initiated batches. These use the same syntax as server initiated batches.
+This specification adds the `draft/multiline` batch type.
 
 In addition to the base batch parameters (reference-tag and type) a multiline batch has one additional parameter, the target recipient.
 
@@ -79,8 +79,6 @@ Servers MUST NOT reject blank lines other than in the following cases:
 
 * Clients MUST NOT send blank lines with the `draft/multiline-concat` tag.
 * Clients MUST NOT send messages consisting entirely of blank lines.
-
-Once the client has opened a multiline batch, it MUST NOT send any messages that are not part of the batch, i.e. it may only send PRIVMSG or NOTICE with the appropriate `batch` tag, or the closing `BATCH` command.
 
 ### Fallback
 
@@ -291,6 +289,7 @@ Other invalid multiline batch
 
     Server: :irc.example.com FAIL BATCH MULTILINE_INVALID :Invalid multiline batch
 
+[client batch]: ../extensions/client-batch.html
 [message tags]: ../extensions/message-tags.html
 [`batch`]: ../extensions/batch.html
 [standard replies]: ../extensions/standard-replies.html

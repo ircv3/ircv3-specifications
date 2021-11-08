@@ -50,7 +50,7 @@ a set of regular AUTHENTICATE messages with the initial server response.
 If the chosen mechanism is client-first, the server sends an empty response
 (`AUTHENTICATE +`, as described below).
 
-    initial-authenticate = "AUTHENTICATE" SP mechanism CRLF
+    AUTHENTICATE <mechanism>
 
 A set of regular AUTHENTICATE messages transmits a response from client to
 server or vice versa. The server MAY intersperse other IRC protocol messages
@@ -63,7 +63,8 @@ exactly 400 bytes long, it must also be followed by `AUTHENTICATE +` to signal
 end of response.
 The server MAY place a limit on the total length of a response.
 
-    regular-authenticate-set = *("AUTHENTICATE" SP 400BASE64 CRLF) "AUTHENTICATE" SP (1*399BASE64 / "+") CRLF
+    *(AUTHENTICATE <400BASE64>)
+    AUTHENTICATE <399BASE64 | '+'>
 
 If the mechanism finishes with the server sending a non-empty challenge (such
 as in SCRAM), clients MUST still send an empty response.
@@ -71,7 +72,7 @@ as in SCRAM), clients MUST still send an empty response.
 The client can abort an authentication by sending an asterisk as the data.
 The server will send a 906 numeric.
 
-    authenticate-abort = "AUTHENTICATE" SP "*" CRLF
+    AUTHENTICATE '*'
 
 If authentication fails, a 904 or 905 numeric will be sent and the
 client MAY retry from the `AUTHENTICATE <mechanism>` command.
@@ -130,6 +131,30 @@ The client is using the SCRAM-SHA-1 mechanism.
     S: AUTHENTICATE cj1jNVJxTENaeTBMNGZHa0tBWjBodWpGQnNYUW9LY2l2cUN3OWlEWlBTcGIscz01bUpPNmQ0cmpDbnNCVTFYLGk9NDA5Ng==
     C: AUTHENTICATE Yz1iaXhoUFdwcGJHeGxjeXc9LHI9YzVScUxDWnkwTDRmR2tLQVowaHVqRkJzWFFvS2NpdnFDdzlpRFpQU3BiLHA9T1ZVaGdQdTh3RW0yY0RvVkxmYUh6VlVZUFdVPQ==
     S: AUTHENTICATE dj1aV1IyM2M5TUppcjBaZ2ZHZjVqRXRMT242Tmc9
+    C: AUTHENTICATE +
+    S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles
+    S: :jaguar.test 903 jilles :SASL authentication successful
+    C: CAP END
+    S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
+    (usual welcome messages)
+
+Servers may also add a source to their AUTHENTICATE messages, just like any message.
+
+    C: CAP REQ :sasl
+    C: NICK jilles
+    C: USER jilles cheetah.stack.nl 1 :Jilles Tjoelker
+    S: NOTICE AUTH :*** Processing connection to jaguar.test
+    S: NOTICE AUTH :*** Looking up your hostname...
+    S: NOTICE AUTH :*** Checking Ident
+    S: NOTICE AUTH :*** No Ident response
+    S: NOTICE AUTH :*** Found your hostname
+    S: :jaguar.test CAP jilles ACK :sasl
+    C: AUTHENTICATE SCRAM-SHA-1
+    S: :jaguar2.test AUTHENTICATE +
+    C: AUTHENTICATE bixhPWppbGxlcyxuPWppbGxlcyxyPWM1UnFMQ1p5MEw0ZkdrS0FaMGh1akZCcw==
+    S: :jaguar2.test AUTHENTICATE cj1jNVJxTENaeTBMNGZHa0tBWjBodWpGQnNYUW9LY2l2cUN3OWlEWlBTcGIscz01bUpPNmQ0cmpDbnNCVTFYLGk9NDA5Ng==
+    C: AUTHENTICATE Yz1iaXhoUFdwcGJHeGxjeXc9LHI9YzVScUxDWnkwTDRmR2tLQVowaHVqRkJzWFFvS2NpdnFDdzlpRFpQU3BiLHA9T1ZVaGdQdTh3RW0yY0RvVkxmYUh6VlVZUFdVPQ==
+    S: :jaguar2.test AUTHENTICATE dj1aV1IyM2M5TUppcjBaZ2ZHZjVqRXRMT242Tmc9
     C: AUTHENTICATE +
     S: :jaguar.test 900 jilles jilles!jilles@localhost.stack.nl jilles :You are now logged in as jilles
     S: :jaguar.test 903 jilles :SASL authentication successful
@@ -211,3 +236,8 @@ is RPL_SASLMECHS being sent.
 * Clarified the language how responses are transmitted.
 * Added empty initial server response for client-first mechanisms. This had happened de-facto already.
 * Added empty final client response for certain mechanisms. This had happened de-facto already.
+* Previous versions of this specification precisely specified the serialization,
+  de-jure making it stricter than regular IRC command (disallowing colons).
+  It now uses a higher-level grammar similar to other IRCv3 specifications,
+  which assumes messages are parsed using RFC1459-like deserialisation,
+  as this is how it is was already implemented and understood in practice.

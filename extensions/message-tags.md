@@ -39,7 +39,7 @@ Tagged messages can be sent by both servers and clients. The usage of individual
 
 The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is extended as follows:
 
-    <message>       ::= ['@' <tags> <SPACE>] [':' <prefix> <SPACE> ] <command> <params> <crlf>
+    <message>       ::= ['@' <tags> <SPACE>] [':' <prefix> <SPACE> ] <command> [params] <crlf>
     <tags>          ::= <tag> [';' <tag>]*
     <tag>           ::= <key> ['=' <escaped_value>]
     <key>           ::= [ <client_prefix> ] [ <vendor> '/' ] <key_name>
