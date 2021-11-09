@@ -42,11 +42,17 @@ for future organic expansion.
 This specification adds the `draft/account-registration` capability, whose
 presence signifies that the server accepts the `REGISTER` command.
 
-The capability has an optional value, a comma-separated list of key-value
-pairs; the format is intended to follow the precedent set by
-[the multiline draft][multiline].
+The capability MAY be advertised by servers with an OPTIONAL value:
+a comma (`,`) (0x2C) separated list of tokens. Each token consists of a key
+with an optional value attached. If there is a value attached, the value
+is separated from the key by an equals sign (`=`) (0x3D).
+That is, `<key>[=<value>][,<key2>[=<value2>][,<keyN>[=<valueN>]]]`.
+Keys specified in this document MUST only occur at most once.
 
-The defined keys are:
+Clients MUST ignore every token with a key that they don't understand,
+and MUST ignore any value in these tokens.
+
+The only defined capability keys so far are:
 
  * `before-connect` - if present, indicates the server supports early
    registration, so it MUST NOT use
@@ -55,9 +61,6 @@ The defined keys are:
    to process
  * `custom-account-name` - if present, the account name can be different
    from the user's current nickname
-
-Clients MUST ignore any value assigned to these keys, and MUST ignore
-any unknown key.
 
 ### Commands
 
@@ -202,7 +205,3 @@ Servers should ensure that if they allow REGISTER before connection registration
 this functionality cannot be used to bypass any authentication restrictions
 defined in the server configuration, e.g. requirements that clients send
 a server password with PASS.
-
-
-
-[multiline]: https://github.com/ircv3/ircv3-specifications/pull/398/
