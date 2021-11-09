@@ -30,12 +30,9 @@ The final version of the specification will use an unprefixed capability name.
 The lack of a standardized way to register an account has been a source
 of frustration for many participants for several years.
 
-This isn't the first attempt to fix it. Unlike the withdrawn `ACC` proposal,
-this effort aims to be more appealing to implementors by being severely
-restricted in scope.
-The only register-verify flows supported are those already in use in the wild.
-The authors hope that this stripped-down solution will serve as the basis
-for future organic expansion.
+This specification is intentionally restricted in scope to be appealing
+to implementors by being severely. The authors hope that this solution
+will serve as the basis for future organic expansion.
 
 ### Capability
 
