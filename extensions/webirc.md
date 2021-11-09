@@ -45,6 +45,12 @@ These options are defined and may be sent by clients while connecting:
 - `secure`: This flag indicates that the client has a TLS-secured connection to the gateway. Servers MUST ONLY treat the connection as secure if this flag is sent and the connection from the gateway to the server is also secure with TLS.
 - `remote-port=<port>`: This flag indicates the remote port the client has connected to the gateway from.
 - `local-port=<port>`: This flag indicates the port the gateway accepted the client connection on (e.g. `6697`, `6667`).
+- `certfp-<algo>=<fingerprint>`: This flag indicates the tls client certificate fingerprint supplied to the WebIRC gateway by the user's actual client application.
+- `spkifp-<algo>=<fingerprint>`: This flag indicates the public key fingerprint for the tls client certificate supplied to the WebIRC gateway by the user's actual client application.
+
+`<algo>` should be the hash algorithm used to produce the fingerprint supplied such as `sha-256`. Its value should be taken from IANA's [Hash Function Textual Names](https://www.iana.org/assignments/hash-function-text-names/hash-function-text-names.xhtml) registry, or if using an algorithm not listed should use a name consisting of only lower case letters, numbers or hyphens.
+
+`<fingerprint>` should be the hash of the certificate (certfp) or public key (spkifp) encoded in hexadecimal without colon (:) sepertators. Servers should accept either upper case or lower case hexadecimal characters.
 
 Servers MUST be able to handle options that don't currently have defined values gaining values in the future. For example, they MUST treat the options `secure` and `secure=examplevalue123` in exactly the same way.
 
@@ -69,6 +75,10 @@ Secure connection.
 Secure connection with ports passed through.
 
     WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure=examplevalue local-port=6697 remote-port=21726
+
+Secure connection including a client certificate fingerprint using the sha-256 hash algorithm.
+
+    WEBIRC hunter2 ExampleGateway 198.51.100.3 198.51.100.3 :secure local-port=6697 remote-port=21726 certfp-sha-256=22e88c7d6da9b73fbb515ed6a8f6d133c680527a799e3069ca7ce346d90649b2
 
 Error from invalid password.
 
