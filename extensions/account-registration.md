@@ -176,11 +176,9 @@ unavailable.
 
 This section is non-normative.
 
-Passwords are opaque byte strings.
-It is recommended for them to be valid UTF-8;
+Passwords are opaque byte strings. It is recommended for them to be valid UTF-8;
 or authentication may be impossible later (eg. with SASL PLAIN).
-Servers may also choose to reject any non-UTF-8 password with
-`UNACCEPTABLE_PASSWORD`.
+Servers may also choose to reject any non-UTF-8 password with `UNACCEPTABLE_PASSWORD`.
 
 As passwords may need to be sent in non-`authenticate` messages,
 like a `PRIVMSG` to NickServ), which are limited in length, clients may want to
