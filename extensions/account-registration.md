@@ -13,6 +13,17 @@ copyrights:
     email: "progval+ircv3@progval.net"
 ---
 
+## Notes for implementing work-in-progress version
+
+This is a work-in-progress specification.
+
+Software implementing this work-in-progress specification MUST NOT use
+the unprefixed `account-registration` capability name.
+Instead, implementations SHOULD use the `draft/account-registration`
+capability name to be interoperable with other software implementing
+a compatible work-in-progress version.
+
+The final version of the specification will use an unprefixed capability name.
 
 ## Motivation
 
@@ -47,12 +58,6 @@ The defined keys are:
 
 Clients MUST ignore any value assigned to these keys, and MUST ignore
 any unknown key.
-
-Software implementing this work-in-progress specification MUST NOT use
-the unprefixed `register` or `account-registration` capability names.
-Instead, implementations SHOULD use the `draft/account-registration`
-capability name to be interoperable with other software implementing
-a compatible work-in-progress version.
 
 ### Commands
 
