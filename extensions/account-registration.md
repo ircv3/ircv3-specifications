@@ -178,6 +178,71 @@ Sent by the server if the `REGISTER`/`VERIFY` commands are temporarily
 unavailable.
 
 
+# Examples
+
+## While connected
+
+A client with nick `tester` requests registration of an account named `test`:
+
+    C: CAP LS 302
+    S: CAP * LS :draft/account-registration=before-connect,email-required
+    C: CAP REQ :draft/account-registration
+    C: CAP END
+    ...
+    C: REGISTER test tester@example.org hunter2
+    S: REGISTER VERIFICATION_REQUIRED test :Account created, pending verification; verification code has been sent to tester@example.org
+
+The client then inputs the code sent by the server:
+
+    C: VERIFY test 39gvcdg4myvnmdcfhvd6exsv4n
+    S: VERIFY SUCCESS test :Account successfully registered
+
+## `before-connect`
+
+A client connects and asks to register an account named after its current nick:
+
+    C: CAP LS 302
+    C: NICK tester
+    C: USER tester * * :Tester
+    S: CAP * LS :draft/account-registration=before-connect,email-required
+    C: CAP REQ :draft/account-registration
+    S: CAP * ACK draft/account-registration
+    C: REGISTER * tester@example.org hunter2
+    S: REGISTER VERIFICATION_REQUIRED tester :Account created, pending verification; verification code has been sent to tester@example.org
+
+The client then inputs the code sent by the server, and the server
+immediately authenticates it:
+
+    C: VERIFY tester 39gvcdg4myvnmdcfhvd6exsv4n
+    S: VERIFY SUCCESS tester :Account successfully registered
+    S: 900 * * tester :You are now logged in as tester
+
+The client can then proceed with the connection:
+
+    C: CAP END
+    S: 001 tester :Welcome to the IRC network
+    ...
+
+## With no email or verification
+
+    C: CAP LS 302
+    S: CAP * LS :draft/account-registration=before-connect
+    C: CAP REQ :draft/account-registration
+    C: CAP END
+    ...
+    C: REGISTER * * hunter2
+    S: REGISTER SUCCESS tester :Account successfully registered
+
+## With `email-required`, but not verified
+
+    C: CAP LS 302
+    S: CAP * LS :draft/account-registration=before-connect,email-required
+    C: CAP REQ :draft/account-registration
+    C: CAP END
+    ...
+    C: REGISTER * tester@example.org hunter2
+    S: REGISTER SUCCESS tester :Account successfully registered
+
 # Client considerations
 
 This section is non-normative.
