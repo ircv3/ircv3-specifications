@@ -27,12 +27,18 @@ The final version of the specification will use an unprefixed capability name.
 
 ## Motivation
 
-The lack of a standardized way to register an account has been a source
-of frustration for many participants for several years.
+A standard method of registering a user account has historically been missing
+from IRC. Instead various methods such as sending messages to services bots
+(e.g. NickServ) have been employed.
 
-This specification is intentionally restricted in scope to be appealing
-to implementors by being severely. The authors hope that this solution
-will serve as the basis for future organic expansion.
+This specification aims to provide a standard baseline for account
+registration that allows client developers to build more reliable and
+integrated user experiences around account registration.
+
+It does not aim to cover all registration-related use cases that may currently
+be in use by server implementations to varying degrees. However, future
+extensions to the specification might be proposed given a broad enough
+consensus.
 
 ### Capability
 
