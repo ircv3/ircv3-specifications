@@ -1,5 +1,5 @@
 ---
-title: `account-registration` Extension
+title: "`account-registration` Extension"
 layout: spec
 work-in-progress: true
 copyrights:
