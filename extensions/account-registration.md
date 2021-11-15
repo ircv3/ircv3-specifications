@@ -233,6 +233,16 @@ The client can then proceed with the connection:
     C: REGISTER * * hunter2
     S: REGISTER SUCCESS tester :Account successfully registered
 
+## With `email-required`, but not verified
+
+    C: CAP LS 302
+    S: CAP * LS :draft/account-registration=before-connect,email-required
+    C: CAP REQ :draft/account-registration
+    C: CAP END
+    ...
+    C: REGISTER * tester@example.org hunter2
+    S: REGISTER SUCCESS tester :Account successfully registered
+
 # Client considerations
 
 This section is non-normative.
