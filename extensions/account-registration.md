@@ -233,8 +233,6 @@ The client can then proceed with the connection:
     C: REGISTER * * hunter2
     S: REGISTER SUCCESS tester :Account successfully registered
 
-Note that email addresses may be required by the server, but not verified.
-
 # Client considerations
 
 This section is non-normative.
