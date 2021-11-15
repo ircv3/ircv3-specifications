@@ -184,6 +184,11 @@ unavailable.
 
 A client with nick `tester` requests registration of an account named `test`:
 
+    C: CAP LS 302
+    S: CAP * LS :draft/account-registration=before-connect,email-required
+    C: CAP REQ :draft/account-registration
+    C: CAP END
+    ...
     C: REGISTER test tester@example.org hunter2
     S: REGISTER VERIFICATION_REQUIRED test :Account created, pending verification; verification code has been sent to tester@example.org
 
@@ -217,6 +222,18 @@ The client can then proceed with the connection:
     C: CAP END
     S: 001 tester :Welcome to the IRC network
     ...
+
+## With no email or verification
+
+    C: CAP LS 302
+    S: CAP * LS :draft/account-registration=before-connect
+    C: CAP REQ :draft/account-registration
+    C: CAP END
+    ...
+    C: REGISTER * * hunter2
+    S: REGISTER SUCCESS tester :Account successfully registered
+
+Note that email addresses may be required by the server, but not verified.
 
 # Client considerations
 
