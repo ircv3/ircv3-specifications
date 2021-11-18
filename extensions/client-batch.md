@@ -1,5 +1,5 @@
 ---
-title: "client-initiated batch Extension"
+title: "Client initiated batch Extension"
 layout: spec
 work-in-progress: true
 copyrights:
