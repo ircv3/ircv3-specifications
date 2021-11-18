@@ -1,5 +1,5 @@
 ---
-title: IRCv3 WebSocket support
+title: WebSocket support
 layout: spec
 work-in-progress: true
 copyrights:
