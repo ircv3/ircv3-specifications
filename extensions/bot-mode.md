@@ -1,6 +1,7 @@
 ---
 title: Bot Mode
 layout: spec
+work-in-progress: true
 meta-description: A user mode that indicates a user is a bot.
 copyrights:
   -
