@@ -240,7 +240,7 @@ Bouncers MUST recognise the following standard network attributes:
 * `realname`: the realname to use during registration.
 * `pass`: the server password (PASS) to use during registration.
 
-Some networks MAY not have all attributes defined, this `LISTNETWORKS` replies
+Some networks MAY have some attributes undefined, thus `LISTNETWORKS` replies
 and network notifications MAY only use a subset of these standard attributes.
 Clients MUST handle networks with missing attributes.
 
