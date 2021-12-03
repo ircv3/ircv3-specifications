@@ -85,6 +85,8 @@ number of `BOUNCER NETWORK` messages:
 
     BOUNCER NETWORK <netid> <attributes>
 
+The reply MUST contain all of the network attributes.
+
 #### `ADDNETWORK` subcommand
 
 The `ADDNETWORK` subcommand registers a new upstream network in the bouncer.
@@ -137,8 +139,8 @@ On success, the server replies with:
 
 If the client has negotiated the `draft/bouncer-networks-notify` capability,
 the server MUST send an initial batch of `BOUNCER NETWORK` messages with the
-current list of network, and MUST send notification messages whenever a network
-is added, updated or removed.
+current list of networks and all their attributes, and MUST send notification
+messages whenever a network is added, updated or removed.
 
 If the client has not negotiated the `draft/bouncer-networks-notify`
 capability, the server MUST NOT send implicit `BOUNCER NETWORK` messages.
@@ -225,11 +227,9 @@ server MUST reply with:
 
     FAIL BOUNCER NEED_ATTRIBUTE ADDNETWORK <attribute> :Missing required attribute
 
-TODO: more errors
-
 ### Standard network attributes
 
-Bouncers MUST recognise the following network attributes:
+Bouncers MUST recognise the following standard network attributes:
 
 * `name`: the human-readable name for the network.
 * `state` (read-only): one of `connected`, `connecting` or `disconnected`.
@@ -242,7 +242,9 @@ Bouncers MUST recognise the following network attributes:
 * `realname`: the realname to use during registration.
 * `pass`: the server password (PASS) to use during registration.
 
-TODO: more attributes
+Some networks MAY not have all attributes defined, this `LISTNETWORKS` replies
+and network notifications MAY only use a subset of these standard attributes.
+Clients MUST handle networks with missing attributes.
 
 ### Examples
 
@@ -262,7 +264,7 @@ Listing networks:
     C: BOUNCER LISTNETWORKS
     S: BATCH +asdf draft/bouncer-networks
     S: @batch=asdf BOUNCER NETWORK b33f name=Libera.Chat;state=connected;host=irc.libera.chat
-    S: @batch=asdf BOUNCER NETWORK f7edfs name=My\sAwesome\sNetwork;state=disconnected;host=irc.example.org
+    S: @batch=asdf BOUNCER NETWORK f7edfs name=My\sAwesome\sNetwork;state=disconnected
     S: BATCH -asdf
 
 Adding a new network:
