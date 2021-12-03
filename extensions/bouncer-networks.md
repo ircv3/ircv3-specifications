@@ -254,32 +254,32 @@ Binding to a network:
     S: CAP * LS :sasl=PLAIN draft/bouncer-networks draft/bouncer-networks-notify
     C: CAP REQ :sasl draft/bouncer-networks
     [SASL authentication]
-    C: BOUNCER BIND 42
+    C: BOUNCER BIND b33f
     C: CAP END
 
 Listing networks:
 
     C: BOUNCER LISTNETWORKS
     S: BATCH +asdf draft/bouncer-networks
-    S: @batch=asdf BOUNCER NETWORK 42 name=Freenode;state=connected
-    S: @batch=asdf BOUNCER NETWORK 43 name=My\sAwesome\sNetwork;state=disconnected
+    S: @batch=asdf BOUNCER NETWORK b33f name=Libera.Chat;state=connected;host=irc.libera.chat
+    S: @batch=asdf BOUNCER NETWORK f7edfs name=My\sAwesome\sNetwork;state=disconnected;host=irc.example.org
     S: BATCH -asdf
 
 Adding a new network:
 
     C: BOUNCER ADDNETWORK name=OFTC;host=irc.oftc.net
-    S: BOUNCER NETWORK 44 name=OFTC;host=irc.oftc.net;status=connecting
-    S: BOUNCER ADDNETWORK 44
-    S: BOUNCER NETWORK 44 status=connected
+    S: BOUNCER NETWORK 7dwsw name=OFTC;host=irc.oftc.net;state=connecting
+    S: BOUNCER ADDNETWORK 7dwsw
+    S: BOUNCER NETWORK 7dwsw status=connected
 
 Changing an existing network:
 
-    C: BOUNCER CHANGENETWORK 44 realname=Simon
-    S: BOUNCER NETWORK 44 realname=Simon
-    S: BOUNCER CHANGENETWORK 44
+    C: BOUNCER CHANGENETWORK 7dwsw realname=Simon
+    S: BOUNCER NETWORK 7dwsw realname=Simon
+    S: BOUNCER CHANGENETWORK 7dwsw
 
 Removing an existing network:
 
-    C: BOUNCER DELNETWORK 44
-    S: BOUNCER NETWORK 44 *
-    S: BOUNCER DELNETWORK 44
+    C: BOUNCER DELNETWORK 7dwsw
+    S: BOUNCER NETWORK 7dwsw *
+    S: BOUNCER DELNETWORK 7dwsw
