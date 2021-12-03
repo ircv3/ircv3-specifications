@@ -85,8 +85,6 @@ number of `BOUNCER NETWORK` messages:
 
     BOUNCER NETWORK <netid> <attributes>
 
-The reply MUST contain all of the network attributes.
-
 #### `ADDNETWORK` subcommand
 
 The `ADDNETWORK` subcommand registers a new upstream network in the bouncer.
@@ -139,7 +137,7 @@ On success, the server replies with:
 
 If the client has negotiated the `draft/bouncer-networks-notify` capability,
 the server MUST send an initial batch of `BOUNCER NETWORK` messages with the
-current list of networks and all their attributes, and MUST send notification
+current list of networks and their attributes, and MUST send notification
 messages whenever a network is added, updated or removed.
 
 If the client has not negotiated the `draft/bouncer-networks-notify`
