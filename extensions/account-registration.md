@@ -181,7 +181,7 @@ unavailable.
 
 Sent by the server in response to the end of connection registration (e.g.
 to `USER`, `NICK`, or `CAP END`) if connection registration cannot proceed
-unless the user logs into an account.
+unless the user logs into an account with SASL.
 
 # Examples
 
