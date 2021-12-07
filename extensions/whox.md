@@ -77,7 +77,7 @@ are used:
 - `n/a` is used for `[oplevel]` when the server doesn't support op levels
 
 Clients SHOULD ignore the values of the hop count (`d`) and the channel op
-level (`o`), because these fields are ill-defined and unreliable.
+level (`o`) fields, because they are ill-defined and unreliable.
 
 ## Examples
 
