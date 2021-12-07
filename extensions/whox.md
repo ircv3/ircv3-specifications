@@ -47,9 +47,6 @@ fields are:
 Servers MAY support additional non-standard fields. Servers MUST NOT rely on
 the ordering of the fields.
 
-Clients SHOULD avoid requesting the hop count (`d`) and the channel op
-level (`o`), because they are ill-defined and unreliable.
-
 Clients can also specify a token which will be returned by the server in the
 replies. The token MUST contain only digit characters and MUST contain at most
 3 characters. Clients MUST NOT include 't' in `<fields>` without specifying a
@@ -78,6 +75,9 @@ are used:
   IP address
 - `0` is used for `[account]` when the user is logged out
 - `n/a` is used for `[oplevel]` when the server doesn't support op levels
+
+Clients SHOULD ignore the values of the hop count (`d`) and the channel op
+level (`o`), because these fields are ill-defined and unreliable.
 
 ## Examples
 
