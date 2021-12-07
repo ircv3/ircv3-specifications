@@ -30,20 +30,25 @@ The second argument contains a percent character followed by a list of fields
 requested by the client. Each field is represented by a letter. The standard
 fields are:
 
-- 't': return the `<token>` specified by the client
-- 'c': return an arbitrary channel the client is joined to
-- 'u': return the username
-- 'i': return the IP address
-- 'h': return the hostname
-- 's': return the server name
-- 'n': return the nickname
-- 'f': return the `WHO` flags (away, server operator, etc)
-- 'l': return the number of seconds the user has been idle for
-- 'a': return the account name
-- 'r': return the realname
+- `t`: return the `<token>` specified by the client
+- `c`: return an arbitrary channel the client is joined to
+- `u`: return the username
+- `i`: return the IP address
+- `h`: return the hostname
+- `s`: return the server name
+- `n`: return the nickname
+- `f`: return the `WHO` flags (away, server operator, etc)
+- `d`: return the hop count (distance)
+- `l`: return the number of seconds the user has been idle for
+- `a`: return the account name
+- `o`: return the channel op level
+- `r`: return the realname
 
 Servers MAY support additional non-standard fields. Servers MUST NOT rely on
 the ordering of the fields.
+
+Clients SHOULD avoid requesting the hop count (`d`) and the channel op
+level (`o`), because they are ill-defined and unreliable.
 
 Clients can also specify a token which will be returned by the server in the
 replies. The token MUST contain only digit characters and MUST contain at most
@@ -57,7 +62,7 @@ by a final `RPL_ENDOFWHO` reply. Servers MUST NOT send `RPL_WHOREPLY` replies.
 
 ## `RPL_WHOSPCRPL` (354) numeric reply
 
-    :<server> 354 <client> [token] [channel] [user] [ip] [host] [server] [nick] [flags] [idle] [account] [:realname]
+    :<server> 354 <client> [token] [channel] [user] [ip] [host] [server] [nick] [flags] [hopcount] [idle] [account] [oplevel] [:realname]
 
 Servers MUST send the fields in the order specified above. Servers MUST include
 in their reply all of the standard fields requested by the client, and MUST NOT
@@ -72,6 +77,7 @@ are used:
 - `255.255.255.255` is used for `[ip]` when the server refuses to disclose the
   IP address
 - `0` is used for `[account]` when the user is logged out
+- `n/a` is used for `[oplevel]` when the server doesn't support op levels
 
 ## Examples
 
