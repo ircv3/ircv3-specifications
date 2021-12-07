@@ -42,7 +42,8 @@ fields are:
 - 'a': return the account name
 - 'r': return the realname
 
-Servers MAY support additional non-standard fields.
+Servers MAY support additional non-standard fields. Servers MUST NOT rely on
+the ordering of the fields.
 
 Clients can also specify a token which will be returned by the server in the
 replies. The token MUST contain only digit characters and MUST contain at most
@@ -57,6 +58,11 @@ by a final `RPL_ENDOFWHO` reply. Servers MUST NOT send `RPL_WHOREPLY` replies.
 ## `RPL_WHOSPCRPL` (354) numeric reply
 
     :<server> 354 <client> [token] [channel] [user] [ip] [host] [server] [nick] [flags] [idle] [account] [:realname]
+
+Servers MUST send the fields in the order specified above. Servers MUST include
+in their reply all of the standard fields requested by the client, and MUST NOT
+add any additional field not requested by the client. Servers MUST ignore any
+non-standard field they don't support.
 
 Exactly the fields requested by the client MUST be returned by the server. When
 the server omits a field the client has requested, the following placeholders
@@ -77,7 +83,7 @@ are used:
 
 ### With a token
 
-    WHO #ircv3 %tnfa,42
+    WHO #ircv3 %afnt,42
     :irc.example.org 354 mynick #ircv3 42 cooluser H coolaccount
     :irc.example.org 354 mynick #ircv3 42 cooloper H* cooloper
     :irc.example.org 315 mynick #ircv3 :End of WHO list
