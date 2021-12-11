@@ -276,7 +276,9 @@ The first two messages are, as usual, equivalent to:
 They follow [the same rules as message tag names](../extensions/message-tags.html#rules-for-naming-message-tags).
 The following sections define names for existing standard modes.
 
-### RFC 1459 channel modes
+### Channel modes
+
+From RFC 1459:
 
 | Letter | Name         | Type       | Notes |
 | ------ | ------------ | ---------- | ----- |
@@ -291,14 +293,50 @@ The following sections define names for existing standard modes.
 |  `p`   | `private`    | 4 (flag)   |       |
 |  `s`   | `secret`     | 4 (flag)   |       |
 
-### RFC 1459 user modes
+From RFC 2812:
+
+| Letter | Name         | Type       | Notes |
+| ------ | ------------ | ---------- | ----- |
+| `e`    | `banex`      | 1 (list)   | Ban exception |
+| `I`    | `invex`      | 1 (list)   | invitation exception (aka. invitation mask) |
+
+In widespread use across implementations:
+
+| Typical letter(s) | Name          | Type       | Definition |
+| ----------------- | ------------- | ---------- | ---------- |
+| `a`               | `admin`       | 5 (prefix) | An implementation-defined power level, that usually cannot be kicked by ops and may or may not have power over them. Also known as "protected". |
+| `h`               | `halfop`      | 5 (prefix) | A power level between voice and op, with implementation-defined privileges |
+| `C`               | `noctcp`      | 4 (flag)   | Blocks CTCP messages other than ACTION |
+| `q`               | `owner`       | 5 (prefix) | A power level above admin and op. Also known as "founder" |
+| `P`               | `permanent`   | 4 (flag)   | Channel does not disappear when empty. |
+| `R` or `r`        | `regonly`     | 4 (flag)   | Prevents users from joining unless they are authenticated with a network account. |
+| `z` or `S`        | `secureonly`  | 4 (flag)   | Prevents users connected through insecure connections from joining. Also known as "sslonly" or "TLS-only". |
+
+New modes:
+
+| Name          | Type      | Definition | Notes |
+| ------------- | --------- | ---------- | ----- |
+| `mute`        | 1 (list)  | Like `ban`, but allows users to join but not to sending messages. Other privileges are implementation-defined. | aka quiet. Often implemented as an extban instead of a first-class mode. |
+
+### User modes
+
+From RFC 1459:
 
 | Letter | Name         | Type       |
 | ------ | ------------ | ---------- |
 |  `i`   | `invisible`  | 4 (flag)   |
 |  `o`   | `oper`       | 4 (flag)   |
-|  `w`   | `wallops`    | 4 (flag)   |
 |  `s`   | `snomask`    | 3 (param)  |
+|  `w`   | `wallops`    | 4 (flag)   |
+
+In widespread use across implementations:
+
+| Typical letter(s) | Name         | Type       | Definition |
+| ----------------- | ------------ | ---------- | ---------- |
+| `B`               | `bot`        | 4 (flag)   | Marks the user as [a bot](../extensions/bot-mode.html)
+| `l` or `p`        | `hidechans`  | 4 (flag)   | Hides the channel list from WHOIS. |
+| `x`               | `cloak`      | 4 (flag)   | Gives the user a hidden/cloaked hostname |
+
 
 ### Numerics
 
