@@ -38,6 +38,10 @@ Example:
 
     _ircs._tcp SRV 0 1 6697 irc.example.org.
 
+After discovering an IRC server via SRV records, the client MUST check that the
+TLS server certificate is valid for the original hostname (`example.org` in the
+example above).
+
 There is no defined service label for unencrypted connections.
 
 [RFC 2782]: https://datatracker.ietf.org/doc/html/rfc2782
