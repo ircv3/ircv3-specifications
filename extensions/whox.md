@@ -68,13 +68,14 @@ non-standard field they don't support.
 
 Exactly the fields requested by the client MUST be returned by the server. When
 the server omits a field the client has requested, the following placeholders
-are used:
+MUST be used:
 
-- `*` is used for `[channel]` when no channel is returned
+- `*` is used for `[channel]` when no channel is returned.
 - `255.255.255.255` is used for `[ip]` when the server refuses to disclose the
-  IP address
-- `0` is used for `[account]` when the user is logged out
-- `n/a` is used for `[oplevel]` when the server doesn't support op levels
+  IP address.
+- `0` is used for `[account]` when the user is logged out.
+- Any syntactically correct placeholder can be used for `[oplevel]` when the
+  server doesn't support op levels, for instance `n/a`.
 
 Clients SHOULD ignore the values of the hop count (`d`) and the channel op
 level (`o`) fields, because they are ill-defined and unreliable.
