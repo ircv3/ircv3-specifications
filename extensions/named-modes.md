@@ -1,6 +1,7 @@
 ---
 title: IRCv3 Named Modes Extension
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Attila Molnar"
@@ -93,7 +94,7 @@ Example 1: client connects and requests the named-modes capability
     Server: :server.example 001 tester :Welcome to an IRC network, nick!user@example.com!
     Server: :server.example 002 tester :Your host is server.example, running version 0.0
     Server: :server.example 003 tester :This server was created ...
-    Server: :server.example 004 tester :server.example
+    Server: :server.example 004 tester server.example GreatIRCd-1.0.0 iosw :beIhiklmnotvPZ
     Server: :server.example 005 tester :EXCEPTS=e NICKLEN=30 INVEX=I MAP MODES=4 NETWORK=Example
     Server: :server.example XXX tester 5:op=o 5:voice=v 4:private=p 4:secret=s 4:inviteonly=i 4:topiclock=t 4:noextmsg=n 4:moderated=m 3:limit=l 1:ban=b 2:key=k
     Server: :server.example YYY tester 4:oper=o 4:invisible=i 1:snomask=s 4:wallops=w
@@ -117,7 +118,7 @@ Query syntax:
 
 Reply syntax:
 
-    RPL_PROPLIST <nick> <channel> :[<modename>[=<param>]] [<modename 2>[=<param 2>]] ... [<modename n>[=<param n>]]]
+    RPL_PROPLIST <nick> <channel> [<modename>[=<param>]] [<modename 2>[=<param 2>]] ... [<modename n>[=<param n>]]]
     RPL_ENDOFPROPLIST <nick> <channel> <modename> :End of list
 
 Servers MAY send multiple `RPL_PROPLIST` replies before `RPL_ENDOFPROPLIST`.
@@ -130,7 +131,7 @@ Clients MUST gracefully handle unexpected parameters, and SHOULD ignore them.
 Example:
 
     Client: PROP #example
-    Server: :server.example 961 modernclient #example :topiclock noextmsg limit=5
+    Server: :server.example 961 modernclient #example topiclock noextmsg :limit=5
     Server: :server.example 960 modernclient #example :End of mode list
 
 ## Getting the list of a listmode on a channel
