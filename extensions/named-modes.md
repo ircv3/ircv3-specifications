@@ -17,18 +17,26 @@ copyrights:
 
 ---
 
-## Intro
+## Notes for implementing work-in-progress version
 
-The name of this client capability MUST be named `draft/named-modes`.
+This is a work-in-progress specification.
 
-This capability enables receiving PROP messages instead of MODE messages as well as introducing the `RPL_CHMODELIST` and `RPL_UMODELIST` numerics to replace the user and channel mode parameters of the `RPL_MYINFO` numeric.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `named-modes` capability name. Instead, implementations SHOULD use the `draft/named-modes` capability name to be interoperable with other software implementing a compatible work-in-progress version. The final version of the specification will use an unprefixed name.
+
+## Introduction
+
+This specification describes a mechanism to advertise and manipulate additional modes (channel and user configuration settings) beyond those specified in the original IRC RFCs.
 
 ## Motivation
 
 The IRC protocol originally had a `MODE` command to configure channels, using single character as configuration keys.
-Implementation extend the base protocol with their own modes, causing some of them to exhaust the namespace available. Additionally, independent implementations can accidentally implement the same feature with different characters, or use the same characters for different features.
+Implementations extend the base protocol with their own modes, causing some of them to exhaust the namespace available. Additionally, independent implementations can accidentally implement the same feature with different characters, or use the same characters for different features.
 
 This specification aims to resolve both these issues, by introducing a virtually infinite namespace for new configuration keys, and by offering a way for implementations to define their own sub-namespaces via vendor prefixes to avoid clashes.
+
+## Capability
+
+The `draft/named-modes` capability allows clients to indicate support for receiving the new commands and numerics defined in this specification. Clients MUST negotiate this capability before using this functionality.
 
 ## New numerics on connection
 
@@ -41,11 +49,11 @@ These numerics MAY occur more than once. If the reply consists of multiple lines
 where `<type>` is one of the following that tells the client about the nature
 of the mode:
 
-* 1 - mode is a list mode, requires a parameter when setting and unsetting (group 1 in 005 CHANMODES).
-* 2 - mode is a parameter mode, requires a parameter when setting and unsetting (group 2 in 005 CHANMODES).
-* 3 - mode is a parameter mode, requires a parameter when setting, requires no parameter when unsetting (group 3 in 005 CHANMODES).
-* 4 - mode is a flag, i.e. no parameter (group 4 in 005 CHANMODES).
-* 5 - mode is a prefix mode, requires a parameter when setting and unsetting, target is always a user on the channel.
+* 1 - mode is a list mode, i.e. requires a parameter when setting and unsetting (group 1 in 005 CHANMODES).
+* 2 - mode is a parameter mode, i.e. requires a parameter when setting and unsetting (group 2 in 005 CHANMODES).
+* 3 - mode is a parameter mode, i.e. requires a parameter when setting and no parameter when unsetting (group 3 in 005 CHANMODES).
+* 4 - mode is a flag, i.e. requires no parameter (group 4 in 005 CHANMODES).
+* 5 - mode is a prefix mode, i.e. requires a parameter when setting and unsetting, target is always a user on the channel.
 
 and `<letter>` is an equivalent mode name for the `MODE` command.
 
@@ -56,8 +64,8 @@ Clients MUST ignore unknown types, even with multiple digits.
     :<server name> YYY <nick> [*] {<type>:<modename>[=<letter>]}+
 
 where type is
-* 3 - mode requires a parameter when setting, requires no parameter when unsetting.
-* 4 - mode is a flag, it never has a parameter.
+* 3 - mode requires a parameter when setting and no parameter when unsetting.
+* 4 - mode is a flag, i.e. requires no parameter.
 
 and `<letter>` is an equivalent mode name for the `MODE` command.
 Clients MUST ignore unknown types, even with multiple digits.
@@ -66,12 +74,10 @@ The list given by these two numerics are in two separate namespaces; it is
 possible to have the same mode name for a user mode and a channel mode,
 because the target of a mode change is always unambiguous.
 
-When this capability is negotiated, the mode lists in RPL_MYINFO
-(004) MUST be considered undefined, server implementations MAY
-omit the last 3 parameters for that numeric entirely and clients MUST
-handle this.
-Servers MAY send no RPL_MYINFO numeric at all, clients
-MUST handle this case as well.
+When this capability is negotiated, clients MUST consider the mode lists in
+RPL_MYINFO (004) to be undefined. Server implementations MAY send undefined,
+syntactically valid placeholder parameters as the final three parameters
+of RPL_MYINFO.
 
 ### Examples
 
@@ -116,7 +122,7 @@ Reply syntax:
 
 Servers MAY send multiple `RPL_PROPLIST` replies before `RPL_ENDOFPROPLIST`.
 
-Servers SHOULD not include modes of type 1 (list) or 5 (prefix) in this list as there may be too many; just like with the `MODE` command.
+Servers SHOULD not include modes of type 1 (list) or 5 (prefix) in this list as there may be too many (as with the `MODE` command).
 
 Servers MAY omit the `<param>` for any mode, and they SHOULD NOT add one for mode of type 4 (flag).
 Clients MUST gracefully handle unexpected parameters, and SHOULD ignore them.
@@ -191,53 +197,42 @@ Query syntax:
 Add (+) or remove (-) the mode called `<modename>`, using `<parameter>` as
 the parameter, if required for the mode.
 
-Client implementations MUST NOT send parameters for modes that do not require
-one.
-Server implementations MUST remove the meaningless parameter (and the
-accompanying `=` sign) before propagating the mode change to other clients.
+Client and server implementations MUST NOT send parameters for modes that
+do not require them.
 
 A mode change is a "no-op mode change" if after being processed the server,
 the server ends up not changing anything.
-
 If the mode change is not a no-op mode change it MUST be echoed back to the
 client doing the change after being processed.
 Servers SHOULD normally send the change to all other clients if the target
-is a channel, in a similiar way to how they behave with a RFC 1459 `MODE`
+is a channel, in a similar way to how they behave with a RFC 1459 `MODE`
 command.
 
-If a server implementation ecounters an item in the mode change with a
-parameter which is invalid according to it, it is allowed to change (fix)
-the parameter instead of rejecting that item in the mode change.
-Clients MUST be prepared to handle a mode change echoed back to them
-which has an item whose parameter is slightly or entirely different than
-what was requested by the client.
+If a server implementation encounters an item in the mode change with a
+parameter which is invalid according to the server, it is allowed to change
+(fix) the parameter instead of rejecting that item in the mode change.
+Clients MUST accept mode changes echoed back to them where one or more
+parameters differ from the ones they requested.
 
 A mode change from the client to the server SHOULD have at most MAXMODES
-(from RPL_ISUPPORT) items. The surplus items SHOULD be treated the same way
-by the server as it treats surplus modes in a RFC 1459 `MODE` command.
-Usually this means that the surplus items are ignored silently and the `PROP`
-and `MODE` messages generated by this mode change won't contain the surplus
-items.
-This behavior not required, meaning servers can choose to process
-more items if they wish, for example, if the mode change comes from a
-priviliged client the server is free to be more lax and process all items.
+(from RPL_ISUPPORT) items. Servers MAY silently drop mode changes beyond
+the MAXMODES limit.
 
 A mode change from the server to the client MAY contain an arbitrary
-number of items. However it still MUST honor other limitations imposed
-by the protocol such as the line length limit.
-Note that this is different than how the traditional `MODE` command behaves,
-which usually only contains up to MAXMODES changed modes.
+number of items (within the syntactic limits imposed by the IRC protocol).
+(Note that this differs from the behavior of the `MODE` command,
+which usually only contains up to MAXMODES changed modes.)
 
 ## Translation between `PROP` and `MODE`
 
-When a client send a `PROP` message that should be relayed to other clients,
-servers MAY translate it to a `MODE` command using an equivalent
-mode letter (as defined in `RPL_CHMODELIST`) to clients that did not
-negotiate this capability, but MUST NOT send them a `PROP`.
+When relaying a `PROP` message, servers MAY translate it to a `MODE` message
+using an equivalent mode letter (as defined in `RPL_CHMODELIST`) for clients
+that did not negotiate this capability. Similarly, servers MAY translate
+`MODE` messages to `PROP` messages for clients that did negotiate the
+capability.
 
-When a client sends either `PROP` or `MODE`, servers SHOULD send them as
-a `PROP` to clients who negotiated this capability.
-Clients MUST accept `MODE` messages.
+Servers MUST NOT send `PROP` to clients that have not negotiated the
+capability. Clients MUST accept `MODE` messages.
 
 ### Examples
 
@@ -305,9 +300,9 @@ In widespread use across implementations:
 | Typical letter(s) | Name          | Type       | Definition |
 | ----------------- | ------------- | ---------- | ---------- |
 | `a`               | `admin`       | 5 (prefix) | An implementation-defined power level, that usually cannot be kicked by ops and may or may not have power over them. Also known as "protected". |
-| `h`               | `halfop`      | 5 (prefix) | A power level between voice and op, with implementation-defined privileges |
-| `C`               | `noctcp`      | 4 (flag)   | Blocks CTCP messages other than ACTION |
-| `q`               | `owner`       | 5 (prefix) | A power level above admin and op. Also known as "founder" |
+| `h`               | `halfop`      | 5 (prefix) | A power level between voice and op, with implementation-defined privileges. |
+| `C`               | `noctcp`      | 4 (flag)   | Blocks CTCP messages other than ACTION. |
+| `q`               | `owner`       | 5 (prefix) | A power level above admin and op. Also known as "founder". |
 | `P`               | `permanent`   | 4 (flag)   | Channel does not disappear when empty. |
 | `R` or `r`        | `regonly`     | 4 (flag)   | Prevents users from joining unless they are authenticated with a network account. |
 | `z` or `S`        | `secureonly`  | 4 (flag)   | Prevents users connected through insecure connections from joining. Also known as "sslonly" or "TLS-only". |
@@ -333,7 +328,7 @@ In widespread use across implementations:
 
 | Typical letter(s) | Name         | Type       | Definition |
 | ----------------- | ------------ | ---------- | ---------- |
-| `B`               | `bot`        | 4 (flag)   | Marks the user as [a bot](../extensions/bot-mode.html)
+| `B`               | `bot`        | 4 (flag)   | Marks the user as [a bot](../extensions/bot-mode.html). |
 | `l` or `p`        | `hidechans`  | 4 (flag)   | Hides the channel list from WHOIS. |
 | `x`               | `cloak`      | 4 (flag)   | Gives the user a hidden/cloaked hostname |
 
