@@ -50,11 +50,11 @@ These numerics MAY occur more than once. If the reply consists of multiple lines
 where `<type>` is one of the following that tells the client about the nature
 of the mode:
 
-* 1 - mode is a list mode, i.e. requires a parameter when setting and unsetting (group 1 in 005 CHANMODES).
-* 2 - mode is a parameter mode, i.e. requires a parameter when setting and unsetting (group 2 in 005 CHANMODES).
-* 3 - mode is a parameter mode, i.e. requires a parameter when setting and no parameter when unsetting (group 3 in 005 CHANMODES).
-* 4 - mode is a flag, i.e. requires no parameter (group 4 in 005 CHANMODES).
-* 5 - mode is a prefix mode, i.e. requires a parameter when setting and unsetting, target is always a user on the channel.
+* 1 - mode is a list mode that requires a parameter when setting and unsetting (group 1 in 005 CHANMODES).
+* 2 - mode is a parameter mode that requires a parameter when setting and unsetting (group 2 in 005 CHANMODES).
+* 3 - mode is a parameter mode that requires a parameter when setting and no parameter when unsetting (group 3 in 005 CHANMODES).
+* 4 - mode is a flag mode that requires no parameter (group 4 in 005 CHANMODES).
+* 5 - mode is a prefix mode that requires a parameter when setting and unsetting, target is always a user on the channel (any mode from 005 PREFIX).
 
 and `<letter>` is an equivalent mode name for the `MODE` command.
 
