@@ -232,12 +232,12 @@ which usually only contains up to MAXMODES changed modes.)
 
 When relaying a `PROP` message, servers MAY translate it to a `MODE` message
 using an equivalent mode letter (as defined in `RPL_CHMODELIST`) for clients
-that did not negotiate this capability. Similarly, servers MAY translate
+that did not negotiate this capability. However, servers MUST translate
 `MODE` messages to `PROP` messages for clients that did negotiate the
 capability.
 
 Servers MUST NOT send `PROP` to clients that have not negotiated the
-capability. Clients MUST accept `MODE` messages.
+capability. Clients who have MAY accept `MODE` messages.
 
 ### Examples
 
