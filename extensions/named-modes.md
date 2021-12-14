@@ -94,7 +94,7 @@ Example 1: client connects and requests the named-modes capability
     Server: :server.example 001 tester :Welcome to an IRC network, nick!user@example.com!
     Server: :server.example 002 tester :Your host is server.example, running version 0.0
     Server: :server.example 003 tester :This server was created ...
-    Server: :server.example 004 tester server.example GreatIRCd-1.0.0 iosw :beIhiklmnotvPZ
+    Server: :server.example 004 tester server.example ExampleIRCd-1.0.0 iosw :beIhiklmnotvPZ
     Server: :server.example 005 tester :EXCEPTS=e NICKLEN=30 INVEX=I MAP MODES=4 NETWORK=Example
     Server: :server.example XXX tester 5:op=o 5:voice=v 4:private=p 4:secret=s 4:inviteonly=i 4:topiclock=t 4:noextmsg=n 4:moderated=m 3:limit=l 1:ban=b 2:key=k
     Server: :server.example YYY tester 4:oper=o 4:invisible=i 1:snomask=s 4:wallops=w
@@ -109,6 +109,10 @@ Example 2: the last line is equivalent to
 Example 3: like any IRC message, the colon is optional when the trailing parameter contains no space and does not start with an other colon, so it is also equivalent to:
 
     Server: :server.example YYY tester 4:oper=o 4:invisible=i 1:snomask=s :4:wallops=w
+
+Example 4: The IRCd provides a custom mode to control chat history availability:
+
+    Server: :server.example XXX tester 3:example.org/history
 
 ## Listing modes on a channel
 
@@ -239,7 +243,7 @@ capability. Clients MUST accept `MODE` messages.
 
 *This section is not normative*
 
-Changing channel modes
+Example 1: Changing channel modes
 
     Client: PROP #egypt +key=pyramids -topiclock +ban=*!*@example.com +ban=example!*@*
 
@@ -253,10 +257,15 @@ equivalent) mode change:
 
     Server: :nick!user@host MODE #egypt +kbb-t pyramids *!*@example.com example!*@*
 
-The first two messages are, as usual, equivalent to:
+Example 2: The first two messages are, as usual, equivalent to:
 
     Client: PROP #egypt +key=pyramids -topiclock +ban=*!*@example.com :+ban=example!*@*
     Server: :nick!user@host PROP #egypt :key=pyramids -topiclock +ban=*!*@example.com :+ban=example!*@*
+
+Example 2: The client changes a mode with a vendor prefix:
+
+    Client: PROP #egypt +example.org/history=10:20m
+    Server: :nick!user@host PROP #egypt :+example.org/history=10:20m
 
 
 ## Mode names
