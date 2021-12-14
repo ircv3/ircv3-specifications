@@ -297,6 +297,7 @@ From RFC 1459:
 |  `k`   | `key`        | 2 or 3 (param) |   |
 |  `p`   | `private`    | 4 (flag)   |       |
 |  `s`   | `secret`     | 4 (flag)   |       |
+|  `t`   | `topiclock`  | 4 (flag)   |       |
 
 From RFC 2812:
 
