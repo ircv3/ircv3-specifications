@@ -50,7 +50,7 @@ This specification adds the `label` message tag, which has a required value.
 
 This tag MAY be sent by a client for any messages that need to be correlated with a response from the server.
 
-For any message received from a client that includes this tag, the server MUST include the same tag and value in any response produced from this message, in the absence of exceptional conditions that prevent it from doing so. Servers MUST include the tag in exactly one logical message.
+For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message where it is feasible to do so. Servers MUST include the tag in exactly one logical message.
 
 If a response consists of more than one message, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `label` tag. The batch type MUST be one of:
 
@@ -80,7 +80,7 @@ There are some cases where a server might not produce a labeled response, or eve
 * the local server has already begun responding when the netsplit occurs, so the batched response ends early.
 * the local server receives a response from the remote server after the netsplit resolves, and sends a `WHOIS` response to the client, potentially without any label.
 
-Typical clients should handle these cases as they would normally for a server without support for labeled responses. Other clients that require a server supporting `labeled-response` may wish to process only labeled responses, discarding unlabeled ones. In either case, clients should be resilient to failure conditions on the server side; for example, in the event that a labeled response never arrives, they should not leak resources.
+Clients should handle these cases as they would normally for a server without support for labeled responses.
 
 In the case of `echo-message` (see example below), a client can use labeled responses to correlate a server's acknowledgment of their own messages with a temporary message displayed locally. The temporary message can be displayed to the user immediately in a pending state to reduce perceived lag, and then removed once a labeled response from the server is received.
 
@@ -135,7 +135,3 @@ A server replying with `ACK` where no response is required
 ## Alternatives
 
 For the use case of bouncers directing query responses to the appropriate client, there exists prior art in the form of the znc module [route_replies](http://wiki.znc.in/Route_replies). The complexities and limitations of that module were a primary motivation for the standardised approach described in this specification.
-
-## Errata
-
-Previous versions of the specification imposed a weaker guarantee of labeling on servers.
