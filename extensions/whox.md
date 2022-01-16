@@ -10,9 +10,9 @@ copyrights:
 
 ## Introduction
 
-The `WHO` command allows clients to obtain information about other clients.
-However, `WHO` doesn't allow clients to request extra data (e.g. account names)
-nor a subset of the data (e.g. omit user and host).
+The WHOX extension allows clients to request additional fields in the `WHO`
+response (e.g. account name) or omit default fields (e.g. username and
+hostname).
 
 ## `ISUPPORT` token
 
