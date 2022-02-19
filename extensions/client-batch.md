@@ -78,3 +78,4 @@ while designing their internal APIs.
 
 [`batch`]: ../extensions/batch.html
 [`draft/multiline`]: ../extensions/multiline.html
+[standard replies]: ../extensions/standard-replies.html
