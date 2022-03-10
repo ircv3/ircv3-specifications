@@ -64,7 +64,7 @@ A new `WEBPUSH` command is introduced. It has a case-insensitive subcommand:
 
 ### `VAPIDPUBKEY` Subcommand
 
-The `VAPIDPUBKEY` subcommand allows clients to query the [Voluntary Application Server Identification (VAPID)][RFC 8292] public key of the server. This can be used to decrypt notifications upon reception.
+The `VAPIDPUBKEY` subcommand allows clients to query the [Voluntary Application Server Identification (VAPID)][RFC 8292] public key of the server. This can be used to verify notifications upon reception by the Web Push server.
 
 The client can query the VAPID public key by sending the command:
 
