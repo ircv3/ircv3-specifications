@@ -101,6 +101,22 @@ The `UNREGISTER` subcommand removes an existing Web Push subscription.
 
 Servers MUST silently ignore `UNREGISTER` commands for non-existing subscriptions.
 
+### Errors
+
+Errors are returned using the standard replies syntax.
+
+If the server receives a syntactically invalid `WEBPUSH` command, e.g., an unknown subcommand, missing parameters, excess parameters, or parameters that cannot be parsed, the `INVALID_PARAMS` error code SHOULD be returned:
+
+```
+FAIL WEBPUSH INVALID_PARAMS <command> <endpoint> <message>
+```
+
+If the server cannot fullfill a client command due to an internal error, the `INTERNAL_ERROR` error code SHOULD be returned:
+
+```
+FAIL WEBPUSH INTERNAL_ERROR <command> <endpoint> <message>
+```
+
 [RFC 8030]: https://datatracker.ietf.org/doc/html/rfc8030
 [RFC 8291]: https://datatracker.ietf.org/doc/html/rfc8291
 [RFC 8292]: https://datatracker.ietf.org/doc/html/rfc8292
