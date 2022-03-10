@@ -91,6 +91,8 @@ The `<endpoint>` is an URL pointing to a push server, which can be used to send 
 
 The server MUST use the VAPID public key sent as a reply to the `VAPIDPUBKEY` subcommand when sending push notifications. Servers MUST replace any previous subscription with the same `<endpoint>`.
 
+Servers MAY expire a subscription at any time.
+
 ### `UNREGISTER` Subcommand
 
 The `UNREGISTER` subcommand removes an existing Web Push subscription.
