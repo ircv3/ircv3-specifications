@@ -95,7 +95,7 @@ The `<endpoint>` is an URL pointing to a push server, which can be used to send 
 - One public key with the name `p256dh` set to the client's P-256 ECDH Diffie-Hellman public key.
 - One shared key with the name `auth` set to a client-generated authentication secret.
 
-The server MUST use the VAPID public key sent as a reply to the `VAPIDPUBKEY` subcommand when sending push notifications.
+The server MUST use the VAPID public key sent as a reply to the `VAPIDPUBKEY` subcommand when sending push notifications. Servers MUST replace any previous subscription with the same `<endpoint>`.
 
 ### `UNREGISTER` Subcommand
 
