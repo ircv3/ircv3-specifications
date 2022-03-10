@@ -48,19 +48,13 @@ Although Web Push has been designed for the Web, it can be used on other platfor
 
 ## Implementation
 
-The `webpush` capability allows clients to subscribe to Web Push and receive
-notifications for messages of interest.
+The `webpush` capability allows clients to subscribe to Web Push and receive notifications for messages of interest.
 
-Once a client has subscribed, the server will send push notifications for a
-server-defined subset of IRC messages. Each push notification MUST contain
-exactly one IRC message as the payload, without the final CRLF.
+Once a client has subscribed, the server will send push notifications for a server-defined subset of IRC messages. Each push notification MUST contain exactly one IRC message as the payload, without the final CRLF.
 
-The messages follow the same capabilities and the same `RPL_ISUPPORT` as when
-the client registered for Web Push notifications.
+The messages follow the same capabilities and the same `RPL_ISUPPORT` as when the client registered for Web Push notifications.
 
-Because of size limits on the payload of push notifications, servers MAY drop
-some or all message tags from the original message. Servers MUST NOT drop the
-`msgid` tag if present.
+Because of size limits on the payload of push notifications, servers MAY drop some or all message tags from the original message. Servers MUST NOT drop the `msgid` tag if present.
 
 ## `WEBPUSH` Command
 
