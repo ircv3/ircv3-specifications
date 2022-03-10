@@ -103,6 +103,8 @@ The `UNREGISTER` subcommand removes an existing Web Push subscription.
 
     WEBPUSH UNREGISTER <endpoint>
 
+Servers MUST silently ignore `UNREGISTER` commands for non-existing subscriptions.
+
 [RFC 8030]: https://datatracker.ietf.org/doc/html/rfc8030
 [RFC 8291]: https://datatracker.ietf.org/doc/html/rfc8291
 [RFC 8292]: https://datatracker.ietf.org/doc/html/rfc8292
