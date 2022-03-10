@@ -80,6 +80,8 @@ The server will reply with a [URL-safe base64-encoded][RFC 4648 section 5] publi
 
     WEBPUSH VAPIDPUBKEY <key>
 
+The VAPID public key sent by the server MUST remain constant over the lifetime of the connection.
+
 ### `REGISTER` Subcommand
 
 The `REGISTER` subcommand creates a new Web Push subscription.
@@ -92,6 +94,8 @@ The `<endpoint>` is an URL pointing to a push server, which can be used to send 
 
 - One public key with the name `p256dh` set to the client's P-256 ECDH Diffie-Hellman public key.
 - One shared key with the name `auth` set to a client-generated authentication secret.
+
+The server MUST use the VAPID public key sent as a reply to the `VAPIDPUBKEY` subcommand when sending push notifications.
 
 ### `UNREGISTER` Subcommand
 
