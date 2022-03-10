@@ -84,10 +84,10 @@ The `REGISTER` subcommand creates a new Web Push subscription.
 
 The `<endpoint>` is an URL pointing to a push server, which can be used to send push messages for this particular subscription.
 
-`<keys>` is a string encoded in the message-tag format. The values are [URL-safe base64-encoded][RFC 4648 section 5]. It MUST contain at least:
+`<keys>` is a string encoded in the message-tag format. The values are [URL-safe base64-encoded][RFC 4648 section 5]. For the `aes128gcm` encryption algorithm, it MUST contain at least:
 
-- One public key with the name `p256dh` set to the client's P-256 ECDH Diffie-Hellman public key.
-- One shared key with the name `auth` set to a client-generated authentication secret.
+- One public key with the name `p256dh` set to the client's P-256 ECDH public key.
+- One shared key with the name `auth` set to a 16-byte client-generated authentication secret.
 
 The server MUST use the VAPID public key sent as a reply to the `VAPIDPUBKEY` subcommand when sending push notifications. Servers MUST replace any previous subscription with the same `<endpoint>`.
 
