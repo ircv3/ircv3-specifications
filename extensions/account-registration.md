@@ -64,6 +64,9 @@ The only defined capability keys so far are:
    to process
  * `custom-account-name` - if present, the account name can be different
    from the user's current nickname
+ * `account-required` - if present, indicates that the connection to the
+    server cannot be completed unless the client logs into an account with
+    SASL.
 
 ### Commands
 
@@ -261,6 +264,13 @@ like a `PRIVMSG` to NickServ), which are limited in length, clients may want to
 prevent or discourage users from setting passwords so long they may not fit
 in these messages. 300 bytes should be a safe reasonable limit.
 
+The capability value `account-required` indicates that all connections require
+SASL to proceed. The absence of this value does not indicate that connection
+registration can necessarily proceed in the absence of SASL; it may be
+disallowed due to specific properties of the connection (e.g. an untrustworthy
+IP address), which will be indicated instead by `FAIL * ACCOUNT_REQUIRED`.
+If the capability value `before-connect` is advertised, clients should respond
+to both of these conditions by suggesting that the user register an account.
 
 # Server considerations
 
