@@ -66,7 +66,7 @@ The only defined capability keys so far are:
    from the user's current nickname
  * `account-required` - if present, indicates that the connection to the
     server cannot be completed unless the client logs into an account with
-    SASL.
+    SASL
 
 ### Commands
 
