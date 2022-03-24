@@ -40,6 +40,12 @@ be in use by server implementations to varying degrees. However, future
 extensions to the specification might be proposed given a broad enough
 consensus.
 
+## Architecture
+
+### Dependencies
+
+This specification uses [standard replies][] framework.
+
 ### Capability
 
 This specification adds the `draft/account-registration` capability, whose
@@ -183,9 +189,9 @@ Sent by the server in response to the end of connection registration (e.g.
 to `USER`, `NICK`, or `CAP END`) if connection registration cannot proceed
 unless the user logs into an account with SASL.
 
-# Examples
+## Examples
 
-## While connected
+### While connected
 
 A client with nick `tester` requests registration of an account named `test`:
 
@@ -202,7 +208,7 @@ The client then inputs the code sent by the server:
     C: VERIFY test 39gvcdg4myvnmdcfhvd6exsv4n
     S: VERIFY SUCCESS test :Account successfully registered
 
-## `before-connect`
+### `before-connect`
 
 A client connects and asks to register an account named after its current nick:
 
@@ -228,7 +234,7 @@ The client can then proceed with the connection:
     S: 001 tester :Welcome to the IRC network
     ...
 
-## With no email or verification
+### With no email or verification
 
     C: CAP LS 302
     S: CAP * LS :draft/account-registration=before-connect
@@ -238,7 +244,7 @@ The client can then proceed with the connection:
     C: REGISTER * * hunter2
     S: REGISTER SUCCESS tester :Account successfully registered
 
-## With `email-required`, but not verified
+### With `email-required`, but not verified
 
     C: CAP LS 302
     S: CAP * LS :draft/account-registration=before-connect,email-required
@@ -248,7 +254,7 @@ The client can then proceed with the connection:
     C: REGISTER * tester@example.org hunter2
     S: REGISTER SUCCESS tester :Account successfully registered
 
-# Client considerations
+## Client considerations
 
 This section is non-normative.
 
@@ -262,7 +268,7 @@ prevent or discourage users from setting passwords so long they may not fit
 in these messages. 300 bytes should be a safe reasonable limit.
 
 
-# Server considerations
+## Server considerations
 
 This section is non-normative.
 
@@ -278,3 +284,5 @@ Servers should ensure that if they allow REGISTER before connection registration
 this functionality cannot be used to bypass any authentication restrictions
 defined in the server configuration, e.g. requirements that clients send
 a server password with PASS.
+
+[standard replies]: ../extensions/standard-replies.html
