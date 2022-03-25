@@ -46,7 +46,7 @@ consensus.
 
 This specification uses [standard replies][] framework.
 
-### Capability
+### Capabilities
 
 This specification adds the `draft/account-registration` capability, whose
 presence signifies that the server accepts the `REGISTER` command.
@@ -70,6 +70,18 @@ The only defined capability keys so far are:
    to process
  * `custom-account-name` - if present, the account name can be different
    from the user's current nickname
+
+This specification also defines the informational `draft/account-required`
+capability. If present, it indicates that the connection to the server cannot
+be completed unless the clients authenticates, typically via SASL. Note, the
+absence of this capability does not indicate that connection registration can
+be completed without authentication; it may be disallowed due to specific
+properties of the connection (e.g. an untrustworthy IP address), which will be
+indicated instead by `FAIL * ACCOUNT_REQUIRED`. If the capability value
+`draft/account-registration=before-connect` is advertised, clients should
+respond to both of these conditions by suggesting that the user register an
+account. Clients MUST NOT request `draft/account-required`, servers MUST reject
+any `CAP REQ` command including this capability.
 
 ### Commands
 
