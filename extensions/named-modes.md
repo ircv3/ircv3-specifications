@@ -13,7 +13,7 @@ copyrights:
     email: "sadie@witchery.services"
   -
     name: "Val Lorentz"
-    period: "2021"
+    period: "2021-2022"
     email: "progval+ircv3@progval.net"
 
 ---
@@ -365,3 +365,16 @@ This token MUST have an integer value greater than 0.
 Servers should use this token to communicate to clients the maximum numbers of modes changes in a single PROP request. In the absence of this token or its value, they should assume it is 1.
 
 Clients MUST support receiving PROP updates with more changes than the value of `MAXMODES`.
+
+
+## Implementation considerations
+
+*This section is not normative*
+
+Servers implementing non-standard modes may allow clients to send them both with
+and without their vendor prefix.
+This allows users to avoid long names when typing commands.
+
+To avoid clashes with other implementations and future IRCv3 extensions, they
+should however avoid advertising (via `RPL_CHMODELIST`/`RPL_UMODELIST`) or
+sending them without the vendor prefix.
