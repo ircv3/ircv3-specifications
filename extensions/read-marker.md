@@ -71,9 +71,7 @@ The server MUST reply to a successful `MARKREAD` get command using a `MARKREAD` 
 
 When sent from a server, the `MARKREAD` command signals to the client that the last message read by the user, to the best knowledge of the server, has the specified timestamp. In that case, the command has the following syntax:
 
-    <prefix> MARKREAD <target> <timestamp>
-
-The `prefix` is the prefix of the client the message is sent to.
+    MARKREAD <target> <timestamp>
 
 If there is no known last message read timestamp, the `timestamp` parameter is a literal `*`. Otherwise, it is the formatted timestamp of the last read message.
 
