@@ -57,7 +57,7 @@ The `timestamp` parameter, if specified, MUST be a literal `*`, or have the form
 
 When sent from a client, this command signals to the server that the last message read by the user, to the best knowledge of the client, has the specified timestamp. The timestamp MUST correspond to a previous message `time` tag. The timestamp MUST NOT be a literal `*`.
 
-The server MUST reply to a successful `MARKREAD` client set command using a `MARKREAD` server command, or using an error message.
+The server MUST reply to a successful `MARKREAD` client set command using a `MARKREAD` server command, or using an error message. If the provided timestamp is older than the server's stored value, the server MUST reply to the client with a `MARKREAD` command carrying the server's stored value.
 
 #### `MARKREAD` client get command
 
