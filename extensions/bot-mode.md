@@ -1,7 +1,6 @@
 ---
 title: Bot Mode
 layout: spec
-work-in-progress: true
 meta-description: A user mode that indicates a user is a bot.
 copyrights:
   -
@@ -9,17 +8,6 @@ copyrights:
     period: "2021"
     email: "daniel@danieloaks.net"
 ---
-
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `bot` tag name. Instead, implementations SHOULD use the
-`draft/bot` tag name to be interoperable with other software
-implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed tag name.
 
 ## Introduction
 This is a standardised mode that lets clients mark themselves as bots, and lets other clients see them as bots.
@@ -40,8 +28,8 @@ Like other WHOIS reply numerics, `<nick>` is the nick of the sender, `<target>` 
 ## The `WHO` bot flag
 When a `RPL_WHOREPLY` `(352)` numeric is returned for a bot, the character used as the value of the ISUPPORT `BOT` token is returned in the flags (alongside `H|G`).
 
-## The `draft/bot` tag
-The `draft/bot` tag indicates that the given user is a bot. This tag SHOULD be added by the server to all commands sent by a bot (e.g. `PRIVMSG`, `JOIN`, `MODE`, `NOTICE`, and all others). The tag SHOULD also be added by the ircd to all numerics directly caused by the bot. This tag MUST only be sent to users who have requested the `message-tags` capability. Servers MUST NOT send this tag with a value, and clients MUST ignore any value if it exists.
+## The `bot` tag
+The `bot` tag indicates that the given user is a bot. This tag SHOULD be added by the server to all commands sent by a bot (e.g. `PRIVMSG`, `JOIN`, `MODE`, `NOTICE`, and all others). The tag SHOULD also be added by the ircd to all numerics directly caused by the bot. This tag MUST only be sent to users who have requested the `message-tags` capability. Servers MUST NOT send this tag with a value, and clients MUST ignore any value if it exists.
 
 ## Examples
 
@@ -78,10 +66,10 @@ Server: :irc.ircv3.net 352 alice #chat ~u 198.51.100.103 irc.ircv3.net alice H :
 Server: :irc.ircv3.net 352 alice #chat ~u 203.0.113.22 irc.ircv3.net robodan Hb :0 Hi, I'm a bot!
 Server: :irc.ircv3.net 315 alice #chat :End of WHO list
 [ ... ]
-Server: @draft/bot :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
+Server: @bot :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
 ```
 
-Example of some future value being sent, which the receiving client will ignore and process as a bare `@draft/bot` tag:
+Example of some future value being sent, which the receiving client will ignore and process as a bare `@bot` tag:
 ```
-Server: @draft/bot=someFutureValueHere=2343 :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
+Server: @bot=someFutureValueHere=2343 :robodan!~u@203.0.113.22 PRIVMSG #chat :Hello! Try typing .help to see my commands!
 ```
