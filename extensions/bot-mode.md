@@ -10,7 +10,10 @@ copyrights:
 ---
 
 ## Introduction
-This is a standardised mode that lets clients mark themselves as bots, and lets other clients see them as bots.
+This specification defines a standardised mechanism to allow clients to mark themselves as bots.
+
+## Motivation
+This functionality was previously implemented by several IRC servers in independent ways using fixed mode letters and conflicting WHOIS numerics. This specification seeks to standardise the functionality, adding a message tag for increased visibility of bot status and an ISUPPORT token to allow for more flexible implementations.
 
 ## The `BOT` ISUPPORT token
 Servers publishing the `BOT` [ISUPPORT](https://modern.ircdocs.horse/#feature-advertisement) token let clients mark themselves as bots by setting a user mode. The value of the `BOT` token is the mode character which is used to enable bot mode and is also the flag used in `WHO` responses of bots (e.g. `BOT=B` or `BOT=b`).
