@@ -80,7 +80,7 @@ properties of the connection (e.g. an untrustworthy IP address), which will be
 indicated instead by `FAIL * ACCOUNT_REQUIRED`. If the capability value
 `draft/account-registration=before-connect` is advertised, clients should
 respond to both of these conditions by suggesting that the user register an
-account. Clients MUST NOT request `draft/account-required`, servers MUST reject
+account. Clients MUST NOT request `draft/account-required`; servers MUST reject
 any `CAP REQ` command including this capability.
 
 ### Commands
