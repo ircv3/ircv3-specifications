@@ -198,9 +198,9 @@ Servers MAY respond with `FAIL METADATA RATE_LIMITED` and fail the request. When
 
 If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one), and one `RPL_METADATAEND` event.
 
-*Errors*: `ERR_METADATALIMIT`, `ERR_KEYNOTSET`
+*Errors*: `ERR_KEYNOTSET`
 
-*Failures*: `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`
+*Failures*: `FAIL METADATA LIMIT_REACHED`, `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`
 
 ### METADATA CLEAR
 
@@ -283,6 +283,7 @@ The following Standard Replies codes are defined with these parameters:
 | `INVALID_TARGET`        | `<Target> :invalid metadata target`      |
 | `INVALID_KEY`           | `<InvalidKey> :invalid key`              |
 | `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
+| `LIMIT_REACHED`         | `<Target> :metadata limit reached`       |
 | `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
 | `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> <Value> :too many changes`  |
 | `TOO_MANY_SUBS`         | `<Key> :too many subscriptions`          |
@@ -295,6 +296,7 @@ Reference table of Standard Replies codes and the `METADATA` subcommands or any 
 | `TARGETINVALID`          | *   | *    | *   | *     | *   | *     | *    | *    |         |
 | `KEYINVALID`             | *   |      | *   |       | *   | *     |      |      |         |
 | `KEYNOPERMISSION`        | *   | *    | *   |       | *   | *     |      |      |         |
+| `LIMIT_REACHED`          |     |      | *   |       |     |       |      |      |         |
 | `INVALID_SUBCOMMAND      |     |      |     |       |     |       |      |      | *       |
 | `RATE_LIMITED`           |     |      | *   |       |     |       |      |      |         |
 | `TOO_MANY_SUBS`          |     |      |     |       | *   |       |      |      |         |
@@ -317,7 +319,6 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
 | 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
 | 762 | `RPL_METADATAEND`         | `:end of metadata`                       |
-| 764 | `ERR_METADATALIMIT`       | `<Target> :metadata limit reached`       |
 | 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
 | 768 | `ERR_KEYNOTSET`           | `<Target> <Key> :key not set`            |
 | 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
@@ -332,7 +333,6 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 | `RPL_WHOISKEYVALUE`                |     |      |     |       |     |       |      |      | `WHOIS` |
 | `RPL_KEYVALUE`                     | *   | *    | *   | *     |     |       |      |      |         |
 | `RPL_METADATAEND`                  |     | *    | *   | *     | *   | *     | *    |      |         |
-| `ERR_METADATALIMIT`                |     |      | *   |       |     |       |      |      |         |
 | `ERR_NOMATCHINGKEY`                | *   |      |     |       |     |       |      |      |         |
 | `ERR_KEYNOTSET`                    |     |      | *   |       |     |       |      |      |         |
 | `RPL_METADATASUBOK`                |     |      |     |       | *   |       |      |      |         |
