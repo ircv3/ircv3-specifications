@@ -226,7 +226,7 @@ The server MUST process each key in order, as the client uses this order to dete
 
 The server processes each key in order, and:
 
-> If the client has subscribed to too many keys, the server does not process any further keys in the subcommand. The `<key>` parameter of the `ERR_METADATATOOMANYSUBS` numeric MUST be this first key that the client could not subscribe to (so the client knows all keys sent after that one were not processed).
+> If the client has subscribed to too many keys, the server does not process any further keys in the subcommand. The `<key>` parameter of the `FAIL METADATA TOO_MANY_SUBS` reply MUST be this first key that the client could not subscribe to (so the client knows all keys sent after that one were not processed).
 >
 > If the client successfully subscribes to a key, or is already subscribed to a requested key, that key MUST appear in a `RPL_METADATASUBOK` reply numeric.
 >
@@ -237,7 +237,7 @@ The server processes each key in order, and:
 Once the server is finished processing keys, it responds with:
 * zero or more of this numeric in any order: `RPL_METADATASUBOK`,
 * zero or more of these standard reply codes: `FAIL METADATA INVALID_KEY`, `FAIL METADATA KEY_NO_PERMISSION`
-* and MAY respond with one `ERR_METADATATOOMANYSUBS` numeric. Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
+* and MAY respond with one `FAIL METADATA TOO_MANY_SUBS` reply. Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
 
 ### METADATA UNSUB
 
@@ -284,17 +284,20 @@ The following Standard Replies codes are defined with these parameters:
 | `INVALID_KEY`           | `<InvalidKey> :invalid key`              |
 | `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
 | `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
-| `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> :<Value>`   |
+| `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> <Value> :too many changes`  |
+| `TOO_MANY_SUBS`         | `<Key> :too many subscriptions`          |
+
 
 Reference table of Standard Replies codes and the `METADATA` subcommands or any other commands that produce them:
 
-| Code                               | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
+| Code                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| `TARGETINVALID`                    | *   | *    | *   | *     | *   | *     | *    | *    |         |
-| `KEYINVALID`                       | *   |      | *   |       | *   | *     |      |      |         |
-| `KEYNOPERMISSION`                  | *   | *    | *   |       | *   | *     |      |      |         |
-| `INVALID_SUBCOMMAND                |     |      |     |       |     |       |      |      | *       |
-| `RATE_LIMITED`                     |     |      | *   |       |     |       |      |      |         |
+| `TARGETINVALID`          | *   | *    | *   | *     | *   | *     | *    | *    |         |
+| `KEYINVALID`             | *   |      | *   |       | *   | *     |      |      |         |
+| `KEYNOPERMISSION`        | *   | *    | *   |       | *   | *     |      |      |         |
+| `INVALID_SUBCOMMAND      |     |      |     |       |     |       |      |      | *       |
+| `RATE_LIMITED`           |     |      | *   |       |     |       |      |      |         |
+| `TOO_MANY_SUBS`          |     |      |     |       | *   |       |      |      |         |
 
 Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
 
@@ -320,7 +323,6 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
 | 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
 | 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
-| 773 | `ERR_METADATATOOMANYSUBS` | `<Key>`                                  |
 | 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
 
 Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
@@ -336,7 +338,6 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 | `RPL_METADATASUBOK`                |     |      |     |       | *   |       |      |      |         |
 | `RPL_METADATAUNSUBOK`              |     |      |     |       |     | *     |      |      |         |
 | `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
-| `ERR_METADATATOOMANYSUBS`          |     |      |     |       | *   |       |      |      |         |
 | `ERR_METADATASYNCLATER`            |     |      |     |       | *   |       |      | *    | `JOIN`  |
 | `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
 
