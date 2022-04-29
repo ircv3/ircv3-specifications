@@ -23,6 +23,10 @@ copyrights:
     name: "Valerie Pond"
     period: "2022"
     email: "v.a.pond@outlook.com"
+  -
+    name: "Val Lorentz"
+    period: "2022"
+    email: "progval+ircv3@progval.net"
 ---
 
 ## Notes for implementing work-in-progress version
@@ -156,9 +160,11 @@ The response will be either:
 
 for every key in order.
 
-Servers MAY replace metadata which is considered not visible for the requesting user, with `ERR_NOMATCHINGKEY` or with `ERR_KEYNOPERMISSION`.
+Servers MAY replace metadata which is considered not visible for the requesting user, with `ERR_NOMATCHINGKEY` or with `FAIL METADATA KEY_NO_PERMISSION`.
 
-*Errors*: `ERR_NOMATCHINGKEY`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`.
+*Errors*: `ERR_NOMATCHINGKEY`
+
+*Failures*: `INVALID_KEY`, `KEY_NO_PERMISSION`
 
 ### METADATA LIST
 
@@ -167,11 +173,11 @@ Servers MAY replace metadata which is considered not visible for the requesting 
 This subcommand lists all of the target's currently-set metadata keys along with their values.
 
 If the target is valid, the response is zero or more `RPL_KEYVALUE` events, followed by a `RPL_METADATAEND` event.
-If the target is not valid, ONLY the `ERR_TARGETINVALID` numeric is sent.
+If the target is not valid, ONLY a `FAIL METADATA INVALID_TARGET` reply is sent.
 
-Servers MAY omit metadata which is considered not visible for the requesting user, or replace it with `ERR_KEYNOPERMISSION`.
+Servers MAY omit metadata which is considered not visible for the requesting user, or replace it with `FAIL METADATA KEY_NO_PERMISSION`.
 
-*Errors*: `ERR_KEYNOPERMISSION`.
+*Failures*: `FAIL METADATA KEY_NO_PERMISSION`.
 
 ### METADATA SET
 
@@ -179,19 +185,21 @@ Servers MAY omit metadata which is considered not visible for the requesting use
 
 This subcommand sets the key on the target to the given value. If no value is given, the key is removed.
 
-If the key is invalid, the server responsds with `ERR_KEYINVALID` and fails the request.
+If the key is invalid, the server responsds with `FAIL METADATA KEY_INVALID` and fails the request.
 
 If the key is valid, but not set, and the client tries to remove the key, the server responds with `ERR_KEYNOTSET` and fails the request.
 
-If the user cannot set keys on the given target, the server responds with `ERR_KEYNOPERMISSION` and fails the request.
+If the user cannot set keys on the given target, the server responds with `FAIL METADATA KEY_NO_PERMISSION` and fails the request.
 
-Servers MAY respond to certain keys considered not settable by the requesting user, or otherwise disallowed by the server, with `ERR_KEYNOPERMISSION` and fail the request.
+Servers MAY respond to certain keys considered not settable by the requesting user, or otherwise disallowed by the server, with `FAIL METADATA KEY_NO_PERMISSION` and fail the request.
 
 Servers MAY respond with `ERR_METADATARATELIMIT` and fail the request. When a client receives `ERR_METADATARATELIMIT`, it SHOULD retry the `METADATA SET` request at a later time. If the `ERR_METADATARATELIMIT` event contains the `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
 
 If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one), and one `RPL_METADATAEND` event.
 
-*Errors*: `ERR_METADATALIMIT`, `ERR_KEYINVALID`, `ERR_KEYNOTSET`, `ERR_KEYNOPERMISSION`, `ERR_METADATARATELIMIT`
+*Errors*: `ERR_METADATALIMIT`, `ERR_KEYNOTSET`, `ERR_METADATARATELIMIT`
+
+*Failures*: `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`
 
 ### METADATA CLEAR
 
@@ -199,13 +207,13 @@ If the request is successful, the server carries out the requested change and re
 
 This subcommand removes all metadata from the target, equivalently to using `METADATA SET` on all currently-set keys with an empty value.
 
-If the user cannot clear keys on the given target, the server responds with `ERR_KEYNOPERMISSION` with an asterisk (`*`) in the `<Key>` field and fails the request.
+If the user cannot clear keys on the given target, the server responds with `FAIL METADATA KEY_NO_PERMISSION` with an asterisk (`*`) in the `<Key>` field and fails the request.
 
-Servers MAY omit certain keys which are considered not settable by the requesting user, or respond with `ERR_KEYNOPERMISSION` for each of those keys.
+Servers MAY omit certain keys which are considered not settable by the requesting user, or respond with `FAIL METADATA KEY_NO_PERMISSION` for each of those keys.
 
 If the request is successful, the server responds with one `RPL_KEYVALUE` event per cleared key and then one `RPL_METADATAEND` event.
 
-*Errors*: `ERR_KEYNOPERMISSION`
+*Failures*: `FAIL METADATA KEY_NO_PERMISSION`
 
 ### METADATA SUB
 
@@ -221,11 +229,14 @@ The server processes each key in order, and:
 >
 > If the client successfully subscribes to a key, or is already subscribed to a requested key, that key MUST appear in a `RPL_METADATASUBOK` reply numeric.
 >
-> If the key's name is invalid, the server sends a `ERR_KEYINVALID` numeric to the client and continues processing keys.
+> If the key's name is invalid, the server sends a `FAIL METADATA INVALID_KEY` reply to the client and continues processing keys.
 >
-> If the client does not have permission to view a given key, the server sends a `ERR_KEYNOPERMISSION` numeric to the client and continues processing keys. However, the subscription MUST still be successful, and that key MUST appear in a `RPL_METADATASUBOK` reply numeric. In this case, the `ERR_KEYNOPERMISSION` numeric serves as a warning indicating that the client will not receive `METADATA` messages about this key unless it gains the necessary (implementation defined) privileges later.
+> If the client does not have permission to view a given key, the server sends a `FAIL METADATA KEY_NO_PERMISSION` reply to the client and continues processing keys. However, the subscription MUST still be successful, and that key MUST appear in a `RPL_METADATASUBOK` reply numeric. In this case, the `FAIL METADATA KEY_NO_PERMISSION` reply serves as a warning indicating that the client will not receive `METADATA` messages about this key unless it gains the necessary (implementation defined) privileges later.
 
-Once the server is finished processing keys, it responds with zero or more of these numerics in any order: `RPL_METADATASUBOK`, `ERR_KEYINVALID`, `ERR_KEYNOPERMISSION`, and MAY respond with one `ERR_METADATATOOMANYSUBS` numeric. Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
+Once the server is finished processing keys, it responds with:
+* zero or more of this numeric in any order: `RPL_METADATASUBOK`,
+* zero or more of these standard reply codes: `FAIL METADATA INVALID_KEY`, `FAIL METADATA KEY_NO_PERMISSION`
+* and MAY respond with one `ERR_METADATATOOMANYSUBS` numeric. Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
 
 ### METADATA UNSUB
 
@@ -237,9 +248,12 @@ Servers process the given keys, and:
 
 > If the client successfully unsubscribes from a key, or is not subscribed to a requested key, that key MUST appear in a `RPL_METADATAUNSUBOK` reply numeric.
 >
-> If the key's name is invalid, the server sends a `ERR_KEYINVALID` numeric to the client and continues processing keys.
+> If the key's name is invalid, the server sends a `FAIL METADATA INVALID_KEY` reply to the client and continues processing keys.
 
-Once the server is finished processing keys, it responds with zero or more of these numerics in any order: `RPL_METADATAUNSUBOK`, `ERR_KEYINVALID`. Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
+Once the server is finished processing keys, it responds with:
+* zero or more of this numeric in any order: `RPL_METADATAUNSUBOK`
+* zero of more of this standard reply: `FAIL METADATA INVALID_KEY`
+* Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
 
 ### METADATA SUBS
 
@@ -258,6 +272,35 @@ Clients use this subcommand to receive all subscribed metadata from the given ta
 If the sync cannot be performed at this time (due to load or other implementation-defined details), the server responds with a `ERR_METADATASYNCLATER` numeric. If the sync can be performed, the server responds with zero or more METADATA events.
 
 For details, please see the [postponed synchronization](#postponed-synchronization) section.
+
+## Standard Replies
+
+The following Standard Replies codes are defined with these parameters:
+
+| Code                    | Parameters                               |
+| ----------------------- | ---------------------------------------- |
+| `INVALID_TARGET`        | `<Target> :invalid metadata target`      |
+| `INVALID_KEY`           | `<InvalidKey> :invalid key`              |
+| `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
+| `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
+
+Reference table of Standard Replies codes and the `METADATA` subcommands or any other commands that produce them:
+
+| Code                               | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
+| ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| `FAIL METADATA TARGETINVALID`      | *   | *    | *   | *     | *   | *     | *    | *    |         |
+| `FAIL METADATA KEYINVALID`         | *   |      | *   |       | *   | *     |      |      |         |
+| `FAIL METADATA KEYNOPERMISSION`    | *   | *    | *   |       | *   | *     |      |      |         |
+| `FAIL METADATA INVALID_SUBCOMMAND  |     |      |     |       |     |       |      |      | *       |
+
+Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
+
+### Examples
+
+* `FAIL METADATA TARGET_INVALID ExampleUser!lol :Invalid target.` when a client refers to an invalid target.
+* `FAIL METADATA KEY_INVALID %key% %target% :That is not a valid key.` when a client refers to an invalid key.
+* `FAIL METADATA KEY_NO_PERMISSION %key% %target% :You do not have permission to set %key% on %target%` when a client attempts to access or set a key on a target when they lack sufficient permission.
+* `FAIL METADATA INVALID_SUBCOMMAND destr0y :Invalid subcommand.` when a client calls a `METADATA` subcommand which is not defined.
 
 ## Numerics
 
