@@ -34,8 +34,9 @@ copyrights:
 This is a work-in-progress specification.
 
 Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `metadata` capability name. Instead, implementations SHOULD
-use the `draft/metadata` capability name to be interoperable with other
+unprefixed `metadata-2` or `metadata-notify-2` capability names.
+Instead, implementations SHOULD use the `draft/metadata-2` and
+`draft/metadata-notify-2` capability name to be interoperable with other
 software implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed capability name.
@@ -60,13 +61,13 @@ Server administrators can setup lists of allowed or blocked keys, and may also r
 
 On joining a server, clients have to configure their 'metadata key [subscriptions](#metadata-sub)'. This is a list of which keys the client understands and wants to get updates about (for example, they may subscribe to a `status` key if they support user-set statuses). By default, this subscription list is empty.
 
-When a channel's metadata is updated, all users in that channel who are subscribed to the changed key will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. When a user's metadata is updated, all users sharing a channel with that user (and all users who have [`metadata-notify` requested](#notifications) and are [Monitoring](https://ircv3.net/specs/extensions/monitor.html#monitor-command) that user) will receive a `METADATA` message notifying them of the change.
+When a channel's metadata is updated, all users in that channel who are subscribed to the changed key will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. When a user's metadata is updated, all users sharing a channel with that user (and all users who have [`draft/metadata-notify-2` requested](#notifications) and are [Monitoring](https://ircv3.net/specs/extensions/monitor.html#monitor-command) that user) will receive a `METADATA` message notifying them of the change.
 
 On joining a channel, users will get the channel's current metadata sent to them with `METADATA` messages, and get the same information for all users who are in the channel. Specifically, they get that information for the keys they are subscribed to. The server may also tell them to request that information [at a later time](#metadata-sync).
 
-## `metadata` Capability
+## `draft/metadata-2` Capability
 
-The `metadata` capability indicates that a server supports metadata, and provides any limits and information about the system that clients must be aware of. Clients MUST request this capability in order to receive [`METADATA` notifications](#notifications).
+The `draft/metadata-2` capability indicates that a server supports metadata, and provides any limits and information about the system that clients must be aware of. Clients MUST request this capability in order to receive [`METADATA` notifications](#notifications).
 
 The ABNF format of the `metadata` capability is:
 
@@ -97,7 +98,7 @@ Clients can either be subscribed to a key, or not subscribed to it. By default, 
 
 The client will receive [`METADATA` messages](#metadata-server-message) about the keys they are subscribed to. They can also use the [`GET`](#metadata-get) and [`LIST`](#metadata-list) subcommands to receive information about keys they are not subscribed to.
 
-Clients automatically receive metadata updates for themselves (excluding changes they make themselves), channels they are joined to, and other clients in the channels they are joined to. If the `metadata-notify` capability is requested, clients also receive metadata updates for the users they are currently monitoring.
+Clients automatically receive metadata updates for themselves (excluding changes they make themselves), channels they are joined to, and other clients in the channels they are joined to. If the `draft/metadata-notify-2` capability is requested, clients also receive metadata updates for the users they are currently monitoring.
 
 Servers MUST reply to erroneous requests using [Standard Replies](https://ircv3.net/specs/extensions/standard-replies)
 
@@ -109,7 +110,7 @@ Here are additional cases where clients will receive `METADATA` messages:
 
 - Upon requesting the `metadata` capability, clients receive their non-transient metadata (for example, metadata stored by the server or by services). If none exists, the server MUST send a `RPL_METADATAEND` message instead.
 - When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
-- If `metadata-notify` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user, or when one of their monitored users comes online.
+- If `draft/metadata-notify-2` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user, or when one of their monitored users comes online.
 
 ## Postponed synchronization
 
@@ -304,7 +305,7 @@ Each subcommand section describes the reply and error numerics it expects from t
 
 ## Numerics
 
-The following numerics 760 through 775 are reserved for metadata, with these labels and parameters, but are here for reference after for METADATA 3.2 (deprecated) after a proposal to switch to Standard Replies (as mentioned above):
+The following numerics 760 through 775 are reserved for metadata, with these labels and parameters:
 
 | No. | Label                     | Parameters                               |
 | --- | ------------------------- | ---------------------------------------- |
@@ -312,63 +313,37 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
 | 762 | `RPL_METADATAEND`         | `:end of metadata`                       |
 | 764 | `ERR_METADATALIMIT`       | `<Target> :metadata limit reached`       |
-| 765 | `ERR_TARGETINVALID`       | `<Target> :invalid metadata target`      |
 | 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
-| 767 | `ERR_KEYINVALID`          | `:<InvalidKey>`                          |
 | 768 | `ERR_KEYNOTSET`           | `<Target> <Key> :key not set`            |
-| 769 | `ERR_KEYNOPERMISSION`     | `<Target> <Key> :permission denied`      |
 | 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
 | 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
 | 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
 | 773 | `ERR_METADATATOOMANYSUBS` | `<Key>`                                  |
 | 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
 | 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
-| 776 | `ERR_METADATAINVALIDSUBCOMMAND` | `<Subcommand> :invalid metadata subcommand` |
 
 Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
 
-| Label                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
-| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| `RPL_WHOISKEYVALUE`       |     |      |     |       |     |       |      |      | `WHOIS` |
-| `RPL_KEYVALUE`            | *   | *    | *   | *     |     |       |      |      |         |
-| `RPL_METADATAEND`         |     | *    | *   | *     | *   | *     | *    |      |         |
-| `ERR_METADATALIMIT`       |     |      | *   |       |     |       |      |      |         |
-| `ERR_TARGETINVALID`       | *   | *    | *   | *     | *   | *     | *    | *    |         |
-| `ERR_NOMATCHINGKEY`       | *   |      |     |       |     |       |      |      |         |
-| `ERR_KEYINVALID`          | *   |      | *   |       | *   | *     |      |      |         |
-| `ERR_KEYNOTSET`           |     |      | *   |       |     |       |      |      |         |
-| `ERR_KEYNOPERMISSION`     | *   | *    | *   |       | *   | *     |      |      |         |
-| `RPL_METADATASUBOK`       |     |      |     |       | *   |       |      |      |         |
-| `RPL_METADATAUNSUBOK`     |     |      |     |       |     | *     |      |      |         |
-| `RPL_METADATASUBS`        |     |      |     |       |     |       | *    |      |         |
-| `ERR_METADATATOOMANYSUBS` |     |      |     |       | *   |       |      |      |         |
-| `ERR_METADATASYNCLATER`   |     |      |     |       | *   |       |      | *    | `JOIN`  |
-| `ERR_METADATARATELIMIT`   |     |      | *   |       |     |       |      |      |         |
+| Label                              | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
+| ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| `RPL_WHOISKEYVALUE`                |     |      |     |       |     |       |      |      | `WHOIS` |
+| `RPL_KEYVALUE`                     | *   | *    | *   | *     |     |       |      |      |         |
+| `RPL_METADATAEND`                  |     | *    | *   | *     | *   | *     | *    |      |         |
+| `ERR_METADATALIMIT`                |     |      | *   |       |     |       |      |      |         |
+| `ERR_NOMATCHINGKEY`                | *   |      |     |       |     |       |      |      |         |
+| `ERR_KEYNOTSET`                    |     |      | *   |       |     |       |      |      |         |
+| `RPL_METADATASUBOK`                |     |      |     |       | *   |       |      |      |         |
+| `RPL_METADATAUNSUBOK`              |     |      |     |       |     | *     |      |      |         |
+| `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
+| `ERR_METADATATOOMANYSUBS`          |     |      |     |       | *   |       |      |      |         |
+| `ERR_METADATASYNCLATER`            |     |      |     |       | *   |       |      | *    | `JOIN`  |
+| `ERR_METADATARATELIMIT`            |     |      | *   |       |     |       |      |      |         |
+| `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
 
-Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
-
-Replies(3.2 deprecated):
+Replies:
 
 * `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined in the [server message](#metadata-server-message) section.
 * `RPL_METADATAEND` delimits the end of a sequence of metadata replies.
-
-Replies(3.3):
-
-The same as 3.2 for replies to valid requests.
-
-Errors(3.2 deprecated):
-
-* `ERR_TARGETINVALID` when a client refers to an invalid target.
-* `ERR_KEYINVALID` when a client refers to an invalid key.
-* `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target when they lack sufficient permission.
-* `ERR_METADATAINVALIDSUBCOMMAND` when a client calls a `METADATA` subcommand which is not defined.
-
-Errors(3.3) (non-normative human readible responses)
-
-* `FAIL METADATA TARGET_INVALID ExampleUser!lol :Invalid target.` when a client refers to an invalid target.
-* `FAIL METADATA KEY_INVALID %key% %target% :That is not a valid key.` when a client refers to an invalid key.
-* `FAIL METADATA KEY_NO_PERMISSION %key% %target% :You do not have permission to set %key% on %target%` when a client attempts to access or set a key on a target when they lack sufficient permission.
-* `FAIL METADATA INVALID_SUBCOMMAND destr0y :Invalid subcommand.` when a client calls a `METADATA` subcommand which is not defined.
 
 ### `RPL_WHOISKEYVALUE` numeric
 
@@ -387,12 +362,12 @@ All examples begin with the client not being subscribed to any keys.
 #### Capability value in `CAP LS` 1 
 
     C: CAP LS 302
-    S: CAP * LS :userhost-in-names draft/metadata=foo,maxsub=50,bar multi-prefix
+    S: CAP * LS :userhost-in-names draft/metadata-2=foo,maxsub=50,bar multi-prefix
 
 #### Capability value in `CAP LS` 2
 
     C: CAP LS 302
-    S: CAP * LS :draft/metadata=maxsub=25 multi-prefix invite-notify
+    S: CAP * LS :draft/metadata-2=maxsub=25 multi-prefix invite-notify
 
 -----
 
@@ -752,24 +727,11 @@ implementations' behaviour.
 
     :OperServ!OperServ@services.int METADATA user1 services.operclass oper:auspex :services-root
 
-## Errata
+## Relation of this specification with `metadata`/`metadata-notify`
 
-* In older, deprecated versions of the Metadata specification, the `metadata-notify` key subscribed you to all keys. Since we have now added the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, the capability no longer acts in this way.
-* Earlier version of this spec specified ERR_NOMATCHINGKEY with no `<Target>`.
-  This did not match examples and being specific with this numeric was desired.
-* Earlier version of this spec specified that the `<Value>` parameter of
-  `METADATA` events was required. It was decided `METADATA` events should also
-  be able to tell clients about metadata keys that have been removed.
-* Earlier versions of this spec were ambiguous about the behavior of
-  `METADATA SET`.
-* Earlier versions of this spec did not specify `metadata-notify` as OPTIONAL.
-* Due to discovered issues around rate-limiting and notifications being solved,
-  this specification has been deprecated for the time being.
-* Earlier versions of this spec lacked rate limiting protocol mechanics.
-* Earlier versions of this spec lacked support for delayed synchronization
-  and `METADATA SYNC`.
-  
-  ## Errata 3.3 (April 2022)
-  
- * Moved `ERR_*` replies to Standard Replies format
- * 
+Clients MUST NOT request both (`metadata` or `metadata-notify`) and (`draft/metadata-2` or `draft/metadata-notify-2`). Servers MUST NOT accept these requests either.
+
+* The `metadata-notify` key subscribed you to all keys. Since we have now added the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, `metadata-notify-2` does not act in this way.
+* Rate limiting protocol mechanics.
+* Support for delayed synchronization and `METADATA SYNC`.
+* Moved `ERR_*` replies to Standard Replies format
