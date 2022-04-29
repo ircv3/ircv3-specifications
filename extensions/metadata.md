@@ -282,9 +282,9 @@ The following Standard Replies codes are defined with these parameters:
 | ----------------------- | ---------------------------------------- |
 | `INVALID_TARGET`        | `<Target> :invalid metadata target`      |
 | `INVALID_KEY`           | `<InvalidKey> :invalid key`              |
+| `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
 | `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
 | `LIMIT_REACHED`         | `<Target> :metadata limit reached`       |
-| `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
 | `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> <Value> :too many changes`  |
 | `TOO_MANY_SUBS`         | `<Key> :too many subscriptions`          |
 
@@ -293,11 +293,11 @@ Reference table of Standard Replies codes and the `METADATA` subcommands or any 
 
 | Code                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| `TARGETINVALID`          | *   | *    | *   | *     | *   | *     | *    | *    |         |
-| `KEYINVALID`             | *   |      | *   |       | *   | *     |      |      |         |
-| `KEYNOPERMISSION`        | *   | *    | *   |       | *   | *     |      |      |         |
-| `LIMIT_REACHED`          |     |      | *   |       |     |       |      |      |         |
+| `INVALID_TARGET|         | *   | *    | *   | *     | *   | *     | *    | *    |         |
+| `INVALID_KEY`            | *   |      | *   |       | *   | *     |      |      |         |
 | `INVALID_SUBCOMMAND      |     |      |     |       |     |       |      |      | *       |
+| `KEY_NO_PERMISSION`      | *   | *    | *   |       | *   | *     |      |      |         |
+| `LIMIT_REACHED`          |     |      | *   |       |     |       |      |      |         |
 | `RATE_LIMITED`           |     |      | *   |       |     |       |      |      |         |
 | `TOO_MANY_SUBS`          |     |      |     |       | *   |       |      |      |         |
 
