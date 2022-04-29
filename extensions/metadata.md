@@ -207,7 +207,7 @@ This subcommand sets the key on the target to the given value. If no value is gi
 
 If the key is invalid, the server responsds with `FAIL METADATA KEY_INVALID` and fails the request.
 
-If the key is valid, but not set, and the client tries to remove the key, the server responds with `ERR_KEYNOTSET` and fails the request.
+If the key is valid, but not set, and the client tries to remove the key, the server responds with `FAIL METADATA KEY_NOT_SET` and fails the request.
 
 If the user cannot set keys on the given target, the server responds with `FAIL METADATA KEY_NO_PERMISSION` and fails the request.
 
@@ -217,9 +217,7 @@ Servers MAY respond with `FAIL METADATA RATE_LIMITED` and fail the request. When
 
 If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one).
 
-*Errors*: `ERR_KEYNOTSET`
-
-*Failures*: `FAIL METADATA LIMIT_REACHED`, `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`
+*Failures*: `FAIL METADATA LIMIT_REACHED`, `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`, `FAIL METADATA KEY_NOT_SET`
 
 ### METADATA CLEAR
 
@@ -302,6 +300,7 @@ The following Standard Replies codes are defined with these parameters:
 | `INVALID_KEY`           | `<InvalidKey> :invalid key`              |
 | `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
 | `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
+| `KEY_NOT_SET`           | `<Target> <Key> :key not set`            |
 | `LIMIT_REACHED`         | `<Target> :metadata limit reached`       |
 | `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> <Value> :too many changes`  |
 | `TOO_MANY_SUBS`         | `<Key> :too many subscriptions`          |
@@ -311,10 +310,11 @@ Reference table of Standard Replies codes and the `METADATA` subcommands or any 
 
 | Code                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| `INVALID_TARGET|         | *   | *    | *   | *     | *   | *     | *    | *    |         |
+| `INVALID_TARGET`         | *   | *    | *   | *     | *   | *     | *    | *    |         |
 | `INVALID_KEY`            | *   |      | *   |       | *   | *     |      |      |         |
-| `INVALID_SUBCOMMAND      |     |      |     |       |     |       |      |      | *       |
+| `INVALID_SUBCOMMAND`     |     |      |     |       |     |       |      |      | *       |
 | `KEY_NO_PERMISSION`      | *   | *    | *   |       | *   | *     |      |      |         |
+| `KEY_NOT_SET`            |     |      | *   |       |     |       |      |      |         |
 | `LIMIT_REACHED`          |     |      | *   |       |     |       |      |      |         |
 | `RATE_LIMITED`           |     |      | *   |       |     |       |      |      |         |
 | `TOO_MANY_SUBS`          |     |      |     |       | *   |       |      |      |         |
@@ -337,7 +337,6 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
 | 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
 | 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
-| 768 | `ERR_KEYNOTSET`           | `<Target> <Key> :key not set`            |
 | 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
 | 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
 | 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
@@ -350,7 +349,6 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 | `RPL_WHOISKEYVALUE`                |     |      |     |       |     |       |      |      | `WHOIS` |
 | `RPL_KEYVALUE`                     | *   | *    | *   | *     |     |       |      |      |         |
 | `ERR_NOMATCHINGKEY`                | *   |      |     |       |     |       |      |      |         |
-| `ERR_KEYNOTSET`                    |     |      | *   |       |     |       |      |      |         |
 | `RPL_METADATASUBOK`                |     |      |     |       | *   |       |      |      |         |
 | `RPL_METADATAUNSUBOK`              |     |      |     |       |     | *     |      |      |         |
 | `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
