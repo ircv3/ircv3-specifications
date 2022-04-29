@@ -65,6 +65,14 @@ When a channel's metadata is updated, all users in that channel who are subscrib
 
 On joining a channel, users will get the channel's current metadata sent to them with `METADATA` messages, and get the same information for all users who are in the channel. Specifically, they get that information for the keys they are subscribed to. The server may also tell them to request that information [at a later time](#metadata-sync).
 
+## Relation with other dependencies
+
+This specification depends on the [`batch`](../extensions/batch.html) capability which MUST be negotiated to use ``draft/metadata-2``. The order of capability negotiation is not significant and MUST not be enforced.
+
+This specification also uses the [standard replies](../extensions/standard-replies.html) framework.
+
+Clients MUST NOT request both (`metadata` or `metadata-notify`) and (`draft/metadata-2` or `draft/metadata-notify-2`). Servers MUST NOT accept these requests either.
+
 ## `draft/metadata-2` Capability
 
 The `draft/metadata-2` capability indicates that a server supports metadata, and provides any limits and information about the system that clients must be aware of. Clients MUST request this capability in order to receive [`METADATA` notifications](#notifications).
@@ -92,6 +100,15 @@ Values can take any form, but MUST be encoded using UTF-8.
 
 The expected handling of individual metadata keys SHOULD be defined and listed in the IRCv3 extension registry.
 
+## Batch type
+
+This specification adds the `metadata` batch type.
+
+This batch MUST be sent to clients on connection and as reply to successful `METADATA GET`, `METADATA LIST`, and `METADATA SYNC` subcommands.
+
+This batch type does not take any parameter, and clients MUST ignore them if any.
+
+
 ## Notifications
 
 Clients can either be subscribed to a key, or not subscribed to it. By default, clients are not subscribed to any keys. They can subscribe and unsubscribe from keys using the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands. The server MUST allow clients to subscribe to any valid keys, including privileged keys the client cannot access at the time of subscription.
@@ -108,7 +125,7 @@ If a channel/user the client is receiving updates for changes one of the keys th
 
 Here are additional cases where clients will receive `METADATA` messages:
 
-- Upon requesting the `metadata` capability, clients receive their non-transient metadata (for example, metadata stored by the server or by services). If none exists, the server MUST send a `RPL_METADATAEND` message instead.
+- Upon requesting the `metadata` capability, clients receive their non-transient metadata (for example, metadata stored by the server or by services) in a `metadata` batch with their own nick as target. If none exists, the server MUST send an empty batch instead.
 - When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
 - If `draft/metadata-notify-2` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user, or when one of their monitored users comes online.
 
@@ -151,13 +168,12 @@ The format of the `METADATA` server message is:
 This subcommand lets clients lookup keys on the given target.
 
 Multiple keys may be given.
-The response will be either:
 
-`RPL_KEYVALUE`
+The response will be a `metadata` batch containing:
 
-`FAIL METADATA KEY_INVALID`
-
-`FAIL METADATA NO_MATCHING_KEY`
+* `RPL_KEYVALUE`
+* `FAIL METADATA KEY_INVALID`
+* `ERR_NOMATCHINGKEY`
 
 for every key in order.
 
@@ -173,10 +189,10 @@ Servers MAY replace metadata which is considered not visible for the requesting 
 
 This subcommand lists all of the target's currently-set metadata keys along with their values.
 
-If the target is valid, the response is zero or more `RPL_KEYVALUE` events, followed by a `RPL_METADATAEND` event.
+If the target is valid, the response is a `metadata` batch containing zero or more `RPL_KEYVALUE` events.
 If the target is not valid, ONLY a `FAIL METADATA INVALID_TARGET` reply is sent.
 
-Servers MAY omit metadata which is considered not visible for the requesting user, or replace it with `FAIL METADATA KEY_NO_PERMISSION`.
+Servers MAY omit metadata which is considered not visible for the requesting user, or replace it with `FAIL METADATA KEY_NO_PERMISSION` within the batch.
 
 *Failures*: `FAIL METADATA KEY_NO_PERMISSION`.
 
@@ -196,7 +212,7 @@ Servers MAY respond to certain keys considered not settable by the requesting us
 
 Servers MAY respond with `FAIL METADATA RATE_LIMITED` and fail the request. When a client receives `FAIL METADATA RATE_LIMITED`, it SHOULD retry the `METADATA SET` request at a later time. If the `FAIL METADATA RATE_LIMITED` event contains the `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
 
-If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one), and one `RPL_METADATAEND` event.
+If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one).
 
 *Errors*: `ERR_KEYNOTSET`
 
@@ -212,7 +228,7 @@ If the user cannot clear keys on the given target, the server responds with `FAI
 
 Servers MAY omit certain keys which are considered not settable by the requesting user, or respond with `FAIL METADATA KEY_NO_PERMISSION` for each of those keys.
 
-If the request is successful, the server responds with one `RPL_KEYVALUE` event per cleared key and then one `RPL_METADATAEND` event.
+If the request is successful, the server responds with a `metadata` batch containing one `RPL_KEYVALUE` event per cleared key, and failure messages if any.
 
 *Failures*: `FAIL METADATA KEY_NO_PERMISSION`
 
@@ -237,7 +253,7 @@ The server processes each key in order, and:
 Once the server is finished processing keys, it responds with:
 * zero or more of this numeric in any order: `RPL_METADATASUBOK`,
 * zero or more of these standard reply codes: `FAIL METADATA INVALID_KEY`, `FAIL METADATA KEY_NO_PERMISSION`
-* and MAY respond with one `FAIL METADATA TOO_MANY_SUBS` reply. Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
+* and MAY respond with one `FAIL METADATA TOO_MANY_SUBS` reply.
 
 ### METADATA UNSUB
 
@@ -254,7 +270,6 @@ Servers process the given keys, and:
 Once the server is finished processing keys, it responds with:
 * zero or more of this numeric in any order: `RPL_METADATAUNSUBOK`
 * zero of more of this standard reply: `FAIL METADATA INVALID_KEY`
-* Finally, the server ends the reply with one `RPL_METADATAEND` numeric.
 
 ### METADATA SUBS
 
@@ -262,7 +277,7 @@ Once the server is finished processing keys, it responds with:
 
 This subcommand returns which keys the client is currently subscribed to.
 
-The server responds with zero or more `RPL_METADATASUBS` numerics and then one `RPL_METADATAEND` numeric. The server MAY return the keys in any order. The server MUST NOT list the same key multiple times in a response to this subcommand.
+The server responds with zero or more `RPL_METADATASUBS` numerics. The server MAY return the keys in any order. The server MUST NOT list the same key multiple times in a response to this subcommand.
 
 ### METADATA SYNC
 
@@ -270,7 +285,7 @@ The server responds with zero or more `RPL_METADATASUBS` numerics and then one `
 
 Clients use this subcommand to receive all subscribed metadata from the given target. If the target is a channel, it also syncs the metadata for all other users in that channel.
 
-If the sync cannot be performed at this time (due to load or other implementation-defined details), the server responds with a `ERR_METADATASYNCLATER` numeric. If the sync can be performed, the server responds with zero or more METADATA events.
+If the sync cannot be performed at this time (due to load or other implementation-defined details), the server responds with a `ERR_METADATASYNCLATER` numeric. If the sync can be performed, the server responds with a `metadata` batch containing zero or more METADATA events.
 
 For details, please see the [postponed synchronization](#postponed-synchronization) section.
 
@@ -318,7 +333,6 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | --- | ------------------------- | ---------------------------------------- |
 | 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
 | 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
-| 762 | `RPL_METADATAEND`         | `:end of metadata`                       |
 | 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
 | 768 | `ERR_KEYNOTSET`           | `<Target> <Key> :key not set`            |
 | 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
@@ -332,7 +346,6 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | `RPL_WHOISKEYVALUE`                |     |      |     |       |     |       |      |      | `WHOIS` |
 | `RPL_KEYVALUE`                     | *   | *    | *   | *     |     |       |      |      |         |
-| `RPL_METADATAEND`                  |     | *    | *   | *     | *   | *     | *    |      |         |
 | `ERR_NOMATCHINGKEY`                | *   |      |     |       |     |       |      |      |         |
 | `ERR_KEYNOTSET`                    |     |      | *   |       |     |       |      |      |         |
 | `RPL_METADATASUBOK`                |     |      |     |       | *   |       |      |      |         |
@@ -344,7 +357,6 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 Replies:
 
 * `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined in the [server message](#metadata-server-message) section.
-* `RPL_METADATAEND` delimits the end of a sequence of metadata replies.
 
 ### `RPL_WHOISKEYVALUE` numeric
 
@@ -378,7 +390,6 @@ All examples begin with the client not being subscribed to any keys.
 
     C: METADATA * SET url :http://www.example.com
     S: :irc.example.com RPL_KEYVALUE * url * :http://www.example.com
-    S: :irc.example.com RPL_METADATAEND :end of metadata
 
 #### Setting metadata on self, but the limit has been reached
 
@@ -394,7 +405,6 @@ All examples begin with the client not being subscribed to any keys.
 
     C: METADATA #example SET url :http://www.example.com
     S: :irc.example.com RPL_KEYVALUE #example url * :http://www.example.com
-    S: :irc.example.com RPL_METADATAEND :end of metadata
 
 #### Setting metadata on an invalid target
 
@@ -441,17 +451,38 @@ Thought: A non-normative retry value helps against automated spam while still be
 #### Listing metadata, with an implementation-defined visibility field
 
     C: METADATA user1 LIST
-    S: :irc.example.com RPL_KEYVALUE user1 url * :http://www.example.com
-    S: :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
-    S: :irc.example.com RPL_KEYVALUE user1 bot-likeliness-score visible-only-for-admin :42
-    S: :irc.example.com RPL_METADATAEND :end of metadata
+    S: :irc.example.com BATCH +VUN2ot metadata
+    S: @batch=VUN2ot :irc.example.com RPL_KEYVALUE user1 url * :http://www.example.com
+    S: @batch=VUN2ot :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
+    S: @batch=VUN2ot :irc.example.com RPL_KEYVALUE user1 bot-likeliness-score visible-only-for-admin :42
+    S: :irc.example.com BATCH -VUN2ot
 
 #### Getting several metadata keys from a user
 
     C: METADATA user1 GET blargh splot im.xmpp
-    S: FAIL METADATA NO_MATCHING_KEY user1 blargh :No matching key
-    S: FAIL METADATA NO_MATCHING_KEY user1 splot :No matching key
-    S: :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
+    S: :irc.example.com BATCH +gWkCiV metadata
+    S: @batch=gWkCiV ERR_NOMATCHINGKEY user1 blargh :No matching key
+    S: @batch=gWkCiV ERR_NOMATCHINGKEY user1 splot :No matching key
+    S: @batch=gWkCiV :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
+    S: :irc.example.com BATCH -gWkCiV
+
+#### Client joins a channel and syncs metadata immediately
+
+    C: JOIN #smallchan
+    S: modernclient!modernclient@example.com JOIN #smallchan
+    S: :irc.example.com 353 modernclient @ #smallchan :user1 user2 user3 user4 user5 ...
+    S: :irc.example.com 353 modernclient @ #smallchan :user51 user52 user53 user54 ...
+    S: :irc.example.com 353 modernclient @ #smallchan :user101 user102 user103 user104 ...
+    S: :irc.example.com 353 modernclient @ #smallchan :user151 user152 user153 user154 ...
+    S: :irc.example.com 366 modernclient #smallchan :End of /NAMES list.
+    C: METADATA #smallchan SYNC
+    S: :irc.example.com BATCH +UwZ67M metadata
+    S: @batch=UwZ67M :irc.example.com METADATA user2 bar * :second example value 
+    S: @batch=UwZ67M :irc.example.com METADATA user1 foo * :third example value
+    S: @batch=UwZ67M :irc.example.com METADATA user1 bar * :this is another example value
+    S: @batch=UwZ67M :irc.example.com METADATA user3 website * :www.example.com
+    ...and some more metadata messages
+    S: :irc.example.com BATCH -UwZ67M
 
 #### Client joins a channel and but needs to sync metadata later
 
@@ -476,15 +507,16 @@ Client waits 4 seconds:
 Client waits 6 more seconds:
 
     C: METADATA #bigchan SYNC
-    S: :irc.example.com METADATA user52 foo * :example value 1
-    S: :irc.example.com METADATA user2 bar * :second example value 
-    S: :irc.example.com METADATA user1 foo * :third example value
-    S: :irc.example.com METADATA user1 bar * :this is another example value
-    S: :irc.example.com METADATA user152 baz * :Lorem ipsum
-    S: :irc.example.com METADATA user3 website * :www.example.com
-    S: :irc.example.com METADATA user152 bar * :dolor sit amet
-
+    S: :irc.example.com BATCH +O5J6rk metadata
+    S: @batch=O5J6rk :irc.example.com METADATA user52 foo * :example value 1
+    S: @batch=O5J6rk :irc.example.com METADATA user2 bar * :second example value 
+    S: @batch=O5J6rk :irc.example.com METADATA user1 foo * :third example value
+    S: @batch=O5J6rk :irc.example.com METADATA user1 bar * :this is another example value
+    S: @batch=O5J6rk :irc.example.com METADATA user152 baz * :Lorem ipsum
+    S: @batch=O5J6rk :irc.example.com METADATA user3 website * :www.example.com
+    S: @batch=O5J6rk :irc.example.com METADATA user152 bar * :dolor sit amet
     ...and many more metadata messages
+    S: :irc.example.com BATCH -O5J6rk
 
 -----
 
@@ -494,10 +526,8 @@ Client waits 6 more seconds:
 
     C: METADATA * SUB avatar website foo bar
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website foo bar
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * UNSUB foo bar
     S: :irc.example.com RPL_METADATAUNSUBOK modernclient :bar foo
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Multiple `RPL_METADATASUBOK` numerics in reply to `METADATA SUB`
 
@@ -505,14 +535,12 @@ Client waits 6 more seconds:
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website
     S: :irc.example.com RPL_METADATASUBOK modernclient :foo
     S: :irc.example.com RPL_METADATASUBOK modernclient :bar baz
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Invalid key name in reply to subscription
 
     C: METADATA * SUB foo $url bar
     S: :irc.example.com RPL_METADATASUBOK modernclient :foo bar
     S: FAIL METADATA INVALID_KEY $url :Invalid key
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### "Subscribed to too many keys" error in reply to subscription 1
 
@@ -521,13 +549,10 @@ subscribe to some more keys, unsuccessfully.
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUB email city
     S: FAIL METADATA TOO_MANY_SUBS email :Too many subscriptions!
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :website avatar foo bar baz
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### "Subscribed to too many keys" error in reply to subscription 2
 
@@ -537,14 +562,11 @@ the server accepts the first 2 keys (`email`, `city`) but not the rest
 
     C: METADATA * SUB website avatar foo
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUB email city country bar baz
     S: FAIL METADATA TOO_MANY_SUBS country :Too many subscriptions!
     S: :irc.example.com RPL_METADATASUBOK modernclient :email city
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :website avatar city foo email
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### "Subscribed to too many keys" error in reply to subscription 3
 
@@ -557,14 +579,11 @@ appeared before the `website` key.
 
     C: METADATA * SUB avatar website
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUB foo website avatar
     S: FAIL METADATA TOO_MANY_SUBS website :Too many subscriptions!
     S: :irc.example.com RPL_METADATASUBOK modernclient :foo
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar foo website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Querying the list of subscribed keys 1
 
@@ -572,10 +591,8 @@ The server replies with a single `RPL_METADATASUBS` numeric.
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Querying the list of subscribed keys 2
 
@@ -583,49 +600,39 @@ The server replies with multiple `RPL_METADATASUBS` numerics.
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar
     S: :irc.example.com RPL_METADATASUBS modernclient :bar baz
     S: :irc.example.com RPL_METADATASUBS modernclient :foo website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Empty list of subscribed keys
 
 In this case, there are no `RPL_METADATASUB` numerics sent.
 
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
+    S: *no replies*
 
 #### Unsubscribing
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * UNSUB bar foo baz
     S: :irc.example.com RPL_METADATAUNSUBOK modernclient :baz foo bar
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Subscribing to the same key multiple times 1
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUB avatar website
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Subscribing to the same key multiple times 2
 
@@ -640,35 +647,26 @@ Once:
 
     C: METADATA * SUB avatar avatar
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 Twice:
 
     C: METADATA * SUB avatar avatar
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar avatar
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :avatar
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Unsubscribing from a non-subscribed key 1
 
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * UNSUB website
     S: :irc.example.com RPL_METADATAUNSUBOK modernclient :website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUB website
     S: :irc.example.com RPL_METADATASUBOK modernclient :website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Unsubscribing from a non-subscribed key 2
 
@@ -680,29 +678,23 @@ Once:
 
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * UNSUB website website
     S: :irc.example.com RPL_METADATAUNSUBOK modernclient :website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 Twice:
 
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * UNSUB website website
     S: :irc.example.com RPL_METADATAUNSUBOK modernclient :website website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Subscribing to a key which requires privileges but without privileges
 
     C: METADATA * SUB avatar secretkey website
     S: FAIL METADATA KEY_NO_PERMISSION secretkey modernclient :You do not have permission to do that.
     S: :irc.example.com RPL_METADATASUBOK modernclient :secretkey website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :secretkey website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### Subscribing to invalid keys and a key which requires privileges but without privileges
 
@@ -712,14 +704,12 @@ Twice:
     S: FAIL METADATA KEY_NO_PERMISSION secretkey2 modernclient :You do not have permission to do that.
     S: FAIL METADATA KEY_INVALID $invalid2 modernclient :Invalid key
     S: :irc.example.com RPL_METADATASUBOK modernclient :secretkey1 secretkey2 website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :secretkey1 secretkey2 website
-    S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 -----
 
-### Non-normative
+### Non-normative examples
 
 The following examples describe how an implementation might use certain features. Unlike previous examples, they are in no way intended to guide
 implementations' behaviour.
@@ -728,11 +718,24 @@ implementations' behaviour.
 
     :OperServ!OperServ@services.int METADATA user1 services.operclass oper:auspex :services-root
 
-## Relation of this specification with `metadata`/`metadata-notify`
+### Client implementation considerations
 
-Clients MUST NOT request both (`metadata` or `metadata-notify`) and (`draft/metadata-2` or `draft/metadata-notify-2`). Servers MUST NOT accept these requests either.
+*This section is not normative*
+
+While this is true of any batch, clients should take particular care not to
+pause processing of other messages while a `metadata` batch is open.
+As these batches can be potentially large, servers are likely to produce them
+asynchronously in order to avoid freezing delivery of more important messages.
+
+### Differences between this specification and `metadata`/`metadata-notify`
+
+*This section is not normative*
+
+This specification replaces the first `metadata` specification, by adding
+the following incompatible changes:
 
 * The `metadata-notify` key subscribed you to all keys. Since we have now added the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, `metadata-notify-2` does not act in this way.
 * Rate limiting protocol mechanics.
 * Support for delayed synchronization and `METADATA SYNC`.
 * Moved `ERR_*` replies to Standard Replies format
+* Use of batch instead of `RPL_METADATAEND` in situations where more than one `RPL_KEYVALUE` is sent.
