@@ -19,6 +19,10 @@ copyrights:
     name: "Daniel Oaks"
     period: "2021"
     email: "daniel@danieloaks.net"
+  -
+    name: "Valerie Pond"
+    period: "2022"
+    email: "v.a.pond@outlook.com"
 ---
 
 ## Notes for implementing work-in-progress version
@@ -91,6 +95,8 @@ The client will receive [`METADATA` messages](#metadata-server-message) about th
 
 Clients automatically receive metadata updates for themselves (excluding changes they make themselves), channels they are joined to, and other clients in the channels they are joined to. If the `metadata-notify` capability is requested, clients also receive metadata updates for the users they are currently monitoring.
 
+Servers MUST reply to erroneous requests using [Standard Replies](https://ircv3.net/specs/extensions/standard-replies)
+
 -----
 
 If a channel/user the client is receiving updates for changes one of the keys the client is subscribed to, they will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. Clients MAY also receive metadata notifications for keys they have not subscribed to, or even when they have not subscribed to any keys.
@@ -140,8 +146,15 @@ The format of the `METADATA` server message is:
 This subcommand lets clients lookup keys on the given target.
 
 Multiple keys may be given.
-The response will be either `RPL_KEYVALUE`, `ERR_KEYINVALID`
-or `ERR_NOMATCHINGKEY` for every key in order.
+The response will be either:
+
+`RPL_KEYVALUE`
+
+`FAIL METADATA KEY_INVALID`
+
+`FAIL METADATA NO_MATCHING_KEY`
+
+for every key in order.
 
 Servers MAY replace metadata which is considered not visible for the requesting user, with `ERR_NOMATCHINGKEY` or with `ERR_KEYNOPERMISSION`.
 
@@ -248,7 +261,7 @@ For details, please see the [postponed synchronization](#postponed-synchronizati
 
 ## Numerics
 
-The following numerics 760 through 775 are reserved for metadata, with these labels and parameters:
+The following numerics 760 through 775 are reserved for metadata, with these labels and parameters, but are here for reference after for METADATA 3.2 (deprecated) after a proposal to switch to Standard Replies (as mentioned above):
 
 | No. | Label                     | Parameters                               |
 | --- | ------------------------- | ---------------------------------------- |
@@ -291,17 +304,28 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 
 Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
 
-Replies:
+Replies(3.2 deprecated):
 
 * `RPL_KEYVALUE` reports the values of metadata keys. The `Visibility` parameter is defined in the [server message](#metadata-server-message) section.
 * `RPL_METADATAEND` delimits the end of a sequence of metadata replies.
 
-Errors:
+Replies(3.3):
+
+The same as 3.2 for replies to valid requests.
+
+Errors(3.2 deprecated):
 
 * `ERR_TARGETINVALID` when a client refers to an invalid target.
 * `ERR_KEYINVALID` when a client refers to an invalid key.
 * `ERR_KEYNOPERMISSION` when a client attempts to access or set a key on a target when they lack sufficient permission.
 * `ERR_METADATAINVALIDSUBCOMMAND` when a client calls a `METADATA` subcommand which is not defined.
+
+Errors(3.3) (non-normative human readible responses)
+
+* `FAIL METADATA TARGET_INVALID ExampleUser!lol :Invalid target.` when a client refers to an invalid target.
+* `FAIL METADATA KEY_INVALID %key% %target% :That is not a valid key.` when a client refers to an invalid key.
+* `FAIL METADATA KEY_NO_PERMISSION %key% %target% :You do not have permission to set %key% on %target%` when a client attempts to access or set a key on a target when they lack sufficient permission.
+* `FAIL METADATA INVALID_SUBCOMMAND destr0y :Invalid subcommand.` when a client calls a `METADATA` subcommand which is not defined.
 
 ### `RPL_WHOISKEYVALUE` numeric
 
@@ -340,12 +364,12 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata on self, but the limit has been reached
 
     C: METADATA * SET url :http://www.example.com
-    S: :irc.example.com ERR_METADATALIMIT * :metadata limit reached
+    S: FAIL METADATA LIMIT_REACHED :Metadata limit reached
 
 #### Setting metadata on another user, without permission
 
     C: METADATA user1 SET url :http://www.example.com
-    S: :irc.example.com ERR_KEYNOPERMISSION user1 url :permission denied
+    S: FAIL METADATA KEY_NO_PERMISSION url user1 :You do not have permission to set 'url' on 'user1'
 
 #### Setting metadata on channel
 
@@ -356,22 +380,24 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata on an invalid target
 
     C: METADATA $a:user SET url :http://www.example.com
-    S: :irc.example.com ERR_TARGETINVALID $a:user :invalid metadata target
+    S: FAIL METADATA INVALID_TARGET $a:user :Invalid target.
 
 #### Setting metadata with an invalid key
 
     C: METADATA user1 SET $url$ :http://www.example.com
-    S: :irc.example.com ERR_KEYINVALID $url$
+    S: FAIL METADATA INVALID_KEY $url$ user1 :Invalid key.
 
 #### Server rate-limits setting metadata and provides a RetryAfter value
 
     C: METADATA * SET url :http://www.example.com
-    S: :irc.example.com ERR_METADATARATELIMIT * url 5 :http://www.example.com
+    S: FAIL METADATA RATE_LIMIT url 5 :Rate-limit reached. You're going too fast! Try again in 5 seconds.
 
 #### Server rate-limits setting metadata with no RetryAfter value
 
     C: METADATA * SET url :http://www.example.com
-    S: :irc.example.com ERR_METADATARATELIMIT * url 5 :http://www.example.com
+    S: FAIL METADATA RATE_LIMIT url * :Rate-limit reached. You're going too fast!
+    
+Thought: A non-normative retry value helps against automated spam while still being descriptive for the end-user.
 
 -----
 
@@ -404,11 +430,13 @@ All examples begin with the client not being subscribed to any keys.
 #### Getting several metadata keys from a user
 
     C: METADATA user1 GET blargh splot im.xmpp
-    S: :irc.example.com ERR_NOMATCHINGKEY user1 blargh :no matching key
-    S: :irc.example.com ERR_NOMATCHINGKEY user1 splot :no matching key
+    S: FAIL METADATA NO_MATCHING_KEY user1 blargh :No matching key
+    S: FAIL METADATA NO_MATCHING_KEY user1 splot :No matching key
     S: :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
 
 #### Client joins a channel and but needs to sync metadata later
+
+To-do: Think of a better sync-later flow
 
 Client joins channel:
 
@@ -464,7 +492,7 @@ Client waits 6 more seconds:
 
     C: METADATA * SUB foo $url bar
     S: :irc.example.com RPL_METADATASUBOK modernclient :foo bar
-    S: :irc.example.com ERR_KEYINVALID modernclient $url :invalid metadata key
+    S: FAIL METADATA INVALID_KEY $url :Invalid key
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
 
 #### "Subscribed to too many keys" error in reply to subscription 1
@@ -476,7 +504,7 @@ subscribe to some more keys, unsuccessfully.
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUB email city
-    S: :irc.example.com ERR_METADATATOOMANYSUBS modernclient email
+    S: FAIL METADATA TOO_MANY_SUBS email :Too many subscriptions!
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
     S: :irc.example.com RPL_METADATASUBS modernclient :website avatar foo bar baz
@@ -492,7 +520,7 @@ the server accepts the first 2 keys (`email`, `city`) but not the rest
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUB email city country bar baz
-    S: :irc.example.com ERR_METADATATOOMANYSUBS modernclient country
+    S: FAIL METADATA TOO_MANY_SUBS country :Too many subscriptions!
     S: :irc.example.com RPL_METADATASUBOK modernclient :email city
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
@@ -512,7 +540,7 @@ appeared before the `website` key.
     S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUB foo website avatar
-    S: :irc.example.com ERR_METADATATOOMANYSUBS modernclient website
+    S: FAIL METADATA TOO_MANY_SUBS website :Too many subscriptions!
     S: :irc.example.com RPL_METADATASUBOK modernclient :foo
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
@@ -650,7 +678,7 @@ Twice:
 #### Subscribing to a key which requires privileges but without privileges
 
     C: METADATA * SUB avatar secretkey website
-    S: :irc.example.com ERR_KEYNOPERMISSION modernclient modernclient secretkey :permission denied
+    S: FAIL METADATA KEY_NO_PERMISSION secretkey modernclient :You do not have permission to do that.
     S: :irc.example.com RPL_METADATASUBOK modernclient :secretkey website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
@@ -660,10 +688,10 @@ Twice:
 #### Subscribing to invalid keys and a key which requires privileges but without privileges
 
     C: METADATA * SUB $invalid1 secretkey1 $invalid2 secretkey2 website
-    S: :irc.example.com ERR_KEYNOPERMISSION modernclient modernclient secretkey1 :permission denied
-    S: :irc.example.com ERR_KEYINVALID modernclient $invalid1 :invalid metadata key
-    S: :irc.example.com ERR_KEYNOPERMISSION modernclient modernclient secretkey2 :permission denied
-    S: :irc.example.com ERR_KEYINVALID modernclient $invalid2 :invalid metadata key
+    S: FAIL METADATA KEY_NO_PERMISSION secretkey1 modernclient :You do not have permission to do that.
+    S: FAIL METADATA KEY_INVALID $invalid1 modernclient :Invalid key
+    S: FAIL METADATA KEY_NO_PERMISSION secretkey2 modernclient :You do not have permission to do that.
+    S: FAIL METADATA KEY_INVALID $invalid2 modernclient :Invalid key
     S: :irc.example.com RPL_METADATASUBOK modernclient :secretkey1 secretkey2 website
     S: :irc.example.com RPL_METADATAEND modernclient :end of metadata
     C: METADATA * SUBS
@@ -697,3 +725,8 @@ implementations' behaviour.
 * Earlier versions of this spec lacked rate limiting protocol mechanics.
 * Earlier versions of this spec lacked support for delayed synchronization
   and `METADATA SYNC`.
+  
+  ## Errata 3.3 (April 2022)
+  
+ * Moved `ERR_*` replies to Standard Replies format
+ * 
