@@ -194,13 +194,13 @@ If the user cannot set keys on the given target, the server responds with `FAIL 
 
 Servers MAY respond to certain keys considered not settable by the requesting user, or otherwise disallowed by the server, with `FAIL METADATA KEY_NO_PERMISSION` and fail the request.
 
-Servers MAY respond with `ERR_METADATARATELIMIT` and fail the request. When a client receives `ERR_METADATARATELIMIT`, it SHOULD retry the `METADATA SET` request at a later time. If the `ERR_METADATARATELIMIT` event contains the `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
+Servers MAY respond with `FAIL METADATA RATE_LIMITED` and fail the request. When a client receives `FAIL METADATA RATE_LIMITED`, it SHOULD retry the `METADATA SET` request at a later time. If the `FAIL METADATA RATE_LIMITED` event contains the `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
 
 If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one), and one `RPL_METADATAEND` event.
 
-*Errors*: `ERR_METADATALIMIT`, `ERR_KEYNOTSET`, `ERR_METADATARATELIMIT`
+*Errors*: `ERR_METADATALIMIT`, `ERR_KEYNOTSET`
 
-*Failures*: `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`
+*Failures*: `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`
 
 ### METADATA CLEAR
 
@@ -284,15 +284,17 @@ The following Standard Replies codes are defined with these parameters:
 | `INVALID_KEY`           | `<InvalidKey> :invalid key`              |
 | `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
 | `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
+| `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> :<Value>`   |
 
 Reference table of Standard Replies codes and the `METADATA` subcommands or any other commands that produce them:
 
 | Code                               | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| `FAIL METADATA TARGETINVALID`      | *   | *    | *   | *     | *   | *     | *    | *    |         |
-| `FAIL METADATA KEYINVALID`         | *   |      | *   |       | *   | *     |      |      |         |
-| `FAIL METADATA KEYNOPERMISSION`    | *   | *    | *   |       | *   | *     |      |      |         |
-| `FAIL METADATA INVALID_SUBCOMMAND  |     |      |     |       |     |       |      |      | *       |
+| `TARGETINVALID`                    | *   | *    | *   | *     | *   | *     | *    | *    |         |
+| `KEYINVALID`                       | *   |      | *   |       | *   | *     |      |      |         |
+| `KEYNOPERMISSION`                  | *   | *    | *   |       | *   | *     |      |      |         |
+| `INVALID_SUBCOMMAND                |     |      |     |       |     |       |      |      | *       |
+| `RATE_LIMITED`                     |     |      | *   |       |     |       |      |      |         |
 
 Each subcommand section describes the reply and error numerics it expects from the server, but here are brief descriptions of numerics that are used for multiple subcommands:
 
@@ -320,7 +322,6 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
 | 773 | `ERR_METADATATOOMANYSUBS` | `<Key>`                                  |
 | 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
-| 775 | `ERR_METADATARATELIMIT`   | `<Target> <Key> <RetryAfter> :<Value>`   |
 
 Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
 
@@ -337,7 +338,6 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 | `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
 | `ERR_METADATATOOMANYSUBS`          |     |      |     |       | *   |       |      |      |         |
 | `ERR_METADATASYNCLATER`            |     |      |     |       | *   |       |      | *    | `JOIN`  |
-| `ERR_METADATARATELIMIT`            |     |      | *   |       |     |       |      |      |         |
 | `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
 
 Replies:
