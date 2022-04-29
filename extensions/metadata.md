@@ -94,7 +94,10 @@ Clients MUST silently ignore any unknown tokens.
 
 ## Keys and Values
 
-Key names MUST be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_.:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
+Key names follow this grammar:
+
+be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_./:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
+They follow [the same rules as message tag names](../extensions/message-tags.html#rules-for-naming-message-tags).
 
 Values can take any form, but MUST be encoded using UTF-8.
 
@@ -739,3 +742,4 @@ the following incompatible changes:
 * Support for delayed synchronization and `METADATA SYNC`.
 * Moved `ERR_*` replies to Standard Replies format
 * Use of batch instead of `RPL_METADATAEND` in situations where more than one `RPL_KEYVALUE` is sent.
+* Non-standard keys should now use a vendor prefix
