@@ -136,7 +136,7 @@ Here are additional cases where clients will receive `METADATA` messages:
 
 If the client joins a large channel, or the client is already on some channels and enables the `metadata` capability, the server may not be able to send the client all current metadata for their targets.
 
-In this case, the server MAY choose to respond with a `ERR_METADATASYNCLATER` numeric instead of propogating the current metadata of the targets. This numeric indicates that the specified target has some metadata set that the client SHOULD request synchronization of at a later time.
+In this case, the server MAY choose to respond with a `RPL_METADATASYNCLATER` numeric instead of propogating the current metadata of the targets. This numeric indicates that the specified target has some metadata set that the client SHOULD request synchronization of at a later time.
 
 The client can use the [`SYNC`](#metadata-sync) subcommand to request the sync of metadata for the given target. If the `[<RetryAfter>]` is given, the client SHOULD wait at least that many seconds before sending the sync request.
 
@@ -175,14 +175,12 @@ Multiple keys may be given.
 The response will be a `metadata` batch containing:
 
 * `RPL_KEYVALUE`
+* `RPL_KEYNOTSET`
 * `FAIL METADATA KEY_INVALID`
-* `ERR_NOMATCHINGKEY`
 
 for every key in order.
 
-Servers MAY replace metadata which is considered not visible for the requesting user, with `ERR_NOMATCHINGKEY` or with `FAIL METADATA KEY_NO_PERMISSION`.
-
-*Errors*: `ERR_NOMATCHINGKEY`
+Servers MAY replace metadata which is considered not visible for the requesting user, with `RPL_KEYNOTSET` or with `FAIL METADATA KEY_NO_PERMISSION`.
 
 *Failures*: `INVALID_KEY`, `KEY_NO_PERMISSION`
 
@@ -286,7 +284,7 @@ The server responds with zero or more `RPL_METADATASUBS` numerics. The server MA
 
 Clients use this subcommand to receive all subscribed metadata from the given target. If the target is a channel, it also syncs the metadata for all other users in that channel.
 
-If the sync cannot be performed at this time (due to load or other implementation-defined details), the server responds with a `ERR_METADATASYNCLATER` numeric. If the sync can be performed, the server responds with a `metadata` batch containing zero or more METADATA events.
+If the sync cannot be performed at this time (due to load or other implementation-defined details), the server responds with a `RPL_METADATASYNCLATER`. If the sync can be performed, the server responds with a `metadata` batch containing zero or more METADATA events.
 
 For details, please see the [postponed synchronization](#postponed-synchronization) section.
 
@@ -336,11 +334,11 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | --- | ------------------------- | ---------------------------------------- |
 | 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
 | 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
-| 766 | `ERR_NOMATCHINGKEY`       | `<Target> <Key> :no matching key`        |
+| 766 | `RPL_KEYNOTSET`           | `<Target> <Key> :key not set`            |
 | 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
 | 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
 | 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
-| 774 | `ERR_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
+| 774 | `RPL_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
 
 Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
 
@@ -348,11 +346,11 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | `RPL_WHOISKEYVALUE`                |     |      |     |       |     |       |      |      | `WHOIS` |
 | `RPL_KEYVALUE`                     | *   | *    | *   | *     |     |       |      |      |         |
-| `ERR_NOMATCHINGKEY`                | *   |      |     |       |     |       |      |      |         |
+| `RPL_KEYNOTSET`                    | *   |      |     |       |     |       |      |      |         |
 | `RPL_METADATASUBOK`                |     |      |     |       | *   |       |      |      |         |
 | `RPL_METADATAUNSUBOK`              |     |      |     |       |     | *     |      |      |         |
 | `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
-| `ERR_METADATASYNCLATER`            |     |      |     |       | *   |       |      | *    | `JOIN`  |
+| `RPL_METADATASYNCLATER`            |     |      |     |       | *   |       |      | *    | `JOIN`  |
 | `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
 
 Replies:
@@ -462,8 +460,8 @@ Thought: A non-normative retry value helps against automated spam while still be
 
     C: METADATA user1 GET blargh splot im.xmpp
     S: :irc.example.com BATCH +gWkCiV metadata
-    S: @batch=gWkCiV ERR_NOMATCHINGKEY user1 blargh :No matching key
-    S: @batch=gWkCiV ERR_NOMATCHINGKEY user1 splot :No matching key
+    S: @batch=gWkCiV RPL_KEYNOTSET user1 blargh :No matching key
+    S: @batch=gWkCiV RPL_KEYNOTSET user1 splot :No matching key
     S: @batch=gWkCiV :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
     S: :irc.example.com BATCH -gWkCiV
 
@@ -498,12 +496,12 @@ Client joins channel:
     S: :irc.example.com 353 modernclient @ #bigchan :user101 user102 user103 user104 ...
     S: :irc.example.com 353 modernclient @ #bigchan :user151 user152 user153 user154 ...
     S: :irc.example.com 366 modernclient #bigchan :End of /NAMES list.
-    S: :irc.example.com ERR_METADATASYNCLATER modernclient #bigchan 4
+    S: :irc.example.com RPL_METADATASYNCLATER modernclient #bigchan 4
 
 Client waits 4 seconds:
 
     C: METADATA #bigchan SYNC
-    S: :irc.example.com ERR_METADATASYNCLATER modernclient #bigchan 6
+    S: :irc.example.com RPL_METADATASYNCLATER modernclient #bigchan 6
 
 Client waits 6 more seconds:
 
