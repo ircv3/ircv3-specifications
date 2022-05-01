@@ -85,7 +85,7 @@ If the `draft/read-marker` capability is negotiated, after the last read timesta
 
 #### Read timestamp notes
 
-The last read timestamp of a target SHOULD only ever increase. If a client sends a `MARKREAD` command with a timestamp that is below or equal to the current known timestamp of the server, the server SHOULD reply with a `MARKREAD` command with the newer, previous value that was stored and ignore the client timestamp.
+The last read timestamp of a target MUST only ever increase. If a client sends a `MARKREAD` command with a timestamp that is below or equal to the current known timestamp of the server, the server MUST reply with a `MARKREAD` command with the newer, previous value that was stored and ignore the client timestamp.
 
 #### Errors and Warnings
 
