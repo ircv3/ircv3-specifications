@@ -48,7 +48,7 @@ Although Web Push has been designed for the Web, it can be used on other platfor
 
 ## Implementation
 
-The `webpush` capability allows clients to subscribe to Web Push and receive notifications for messages of interest.
+The `draft/webpush` capability allows clients to subscribe to Web Push and receive notifications for messages of interest.
 
 Once a client has subscribed, the server will send push notifications for a server-defined subset of IRC messages. Each push notification MUST contain exactly one IRC message as the payload, without the final CRLF.
 
@@ -56,25 +56,17 @@ The messages follow the same capabilities and the same `RPL_ISUPPORT` as when th
 
 Because of size limits on the payload of push notifications, servers MAY drop some or all message tags from the original message. Servers MUST NOT drop the `msgid` tag if present.
 
+## `VAPID` ISUPPORT token
+
+If the server supports [Voluntary Application Server Identification (VAPID)][RFC 8292] and the client has enabled the `draft/webpush` capability, the server MUST advertise its public key in the `VAPID` ISUPPORT token. This key can be used to verify notifications upon reception by the Web Push server.
+
+The value MUST be the [URL-safe base64-encoded][RFC 4648 section 5] public key usable with the Elliptic Curve Digital Signature Algorithm (ECDSA) over the P-256 curve. The value MUST NOT change over the lifetime of the connection to avoid race conditions.
+
 ## `WEBPUSH` Command
 
 A new `WEBPUSH` command is introduced. It has a case-insensitive subcommand:
 
     WEBPUSH <subcommand> <params...>
-
-### `VAPIDPUBKEY` Subcommand
-
-The `VAPIDPUBKEY` subcommand allows clients to query the [Voluntary Application Server Identification (VAPID)][RFC 8292] public key of the server. This can be used to verify notifications upon reception by the Web Push server.
-
-The client can query the VAPID public key by sending the command:
-
-    WEBPUSH VAPIDPUBKEY
-
-The server will reply with a [URL-safe base64-encoded][RFC 4648 section 5] public key usable with the Elliptic Curve Digital Signature Algorithm (ECDSA) over the P-256 curve.
-
-    WEBPUSH VAPIDPUBKEY <key>
-
-The VAPID public key sent by the server MUST remain constant over the lifetime of the connection.
 
 ### `REGISTER` Subcommand
 
@@ -89,7 +81,7 @@ The `<endpoint>` is an URL pointing to a push server, which can be used to send 
 - One public key with the name `p256dh` set to the client's P-256 ECDH public key.
 - One shared key with the name `auth` set to a 16-byte client-generated authentication secret.
 
-The server MUST use the VAPID public key sent as a reply to the `VAPIDPUBKEY` subcommand when sending push notifications. Servers MUST replace any previous subscription with the same `<endpoint>`.
+If the server has advertised the `VAPID` ISUPPORT token, they MUST use this VAPID public key when sending push notifications. Servers MUST replace any previous subscription with the same `<endpoint>`.
 
 If the registration is successful, the server MUST reply with a `WEBPUSH REGISTER` message:
 
