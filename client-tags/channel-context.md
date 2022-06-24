@@ -50,7 +50,7 @@ This section is non-normative.
 
 When clients receive a private PRIVMSG or NOTICE message from a user with this tag, they can display that message in the buffer specified in the tag, as if it was a channel message.
 
-Using this client tag, clients can maliciously pretend to send messages in a channel they have not joined, or pretend to send private messages in public. To prevent abuse, client implementations can ignore the tag when the sender does not belong to the specified channel, or explicitly show that the message is only visible to the recipient.
+To prevent abuse, client implementations might allow users to hide these messages when the sender does not belong to the specified channel.
 
 ## Examples
 
