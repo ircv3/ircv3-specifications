@@ -474,7 +474,6 @@ Thought: A non-normative retry value helps against automated spam while still be
     S: :irc.example.com 353 modernclient @ #smallchan :user101 user102 user103 user104 ...
     S: :irc.example.com 353 modernclient @ #smallchan :user151 user152 user153 user154 ...
     S: :irc.example.com 366 modernclient #smallchan :End of /NAMES list.
-    C: METADATA #smallchan SYNC
     S: :irc.example.com BATCH +UwZ67M metadata
     S: @batch=UwZ67M :irc.example.com METADATA user2 bar * :second example value 
     S: @batch=UwZ67M :irc.example.com METADATA user1 foo * :third example value
