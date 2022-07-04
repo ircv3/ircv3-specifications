@@ -65,7 +65,7 @@ When a channel's metadata is updated, all users in that channel who are subscrib
 
 On joining a channel, users will get the channel's current metadata sent to them with `METADATA` messages, and get the same information for all users who are in the channel. Specifically, they get that information for the keys they are subscribed to. The server may also tell them to request that information [at a later time](#metadata-sync).
 
-## Relation with other dependencies
+## Relation with other specifications
 
 This specification depends on the [`batch`](../extensions/batch.html) capability which MUST be negotiated to use ``draft/metadata-2``. The order of capability negotiation is not significant and MUST not be enforced.
 
@@ -351,7 +351,6 @@ Reference table of numerics and the `METADATA` subcommands or any other commands
 | `RPL_METADATAUNSUBOK`              |     |      |     |       |     | *     |      |      |         |
 | `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
 | `RPL_METADATASYNCLATER`            |     |      |     |       | *   |       |      | *    | `JOIN`  |
-| `RPL_METADATASUBS`                 |     |      |     |       |     |       | *    |      |         |
 
 Replies:
 
@@ -403,7 +402,7 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata on channel
 
     C: METADATA #example SET url :http://www.example.com
-    S: :irc.example.com RPL_KEYVALUE #example url * :http://www.example.com
+    S: :irc.example.com 761 #example url * :http://www.example.com
 
 #### Setting metadata on an invalid target
 
@@ -451,24 +450,24 @@ Thought: A non-normative retry value helps against automated spam while still be
 
     C: METADATA user1 LIST
     S: :irc.example.com BATCH +VUN2ot metadata
-    S: @batch=VUN2ot :irc.example.com RPL_KEYVALUE user1 url * :http://www.example.com
-    S: @batch=VUN2ot :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
-    S: @batch=VUN2ot :irc.example.com RPL_KEYVALUE user1 bot-likeliness-score visible-only-for-admin :42
+    S: @batch=VUN2ot :irc.example.com 761 user1 url * :http://www.example.com
+    S: @batch=VUN2ot :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
+    S: @batch=VUN2ot :irc.example.com 761 user1 bot-likeliness-score visible-only-for-admin :42
     S: :irc.example.com BATCH -VUN2ot
 
 #### Getting several metadata keys from a user
 
     C: METADATA user1 GET blargh splot im.xmpp
     S: :irc.example.com BATCH +gWkCiV metadata
-    S: @batch=gWkCiV RPL_KEYNOTSET user1 blargh :No matching key
-    S: @batch=gWkCiV RPL_KEYNOTSET user1 splot :No matching key
-    S: @batch=gWkCiV :irc.example.com RPL_KEYVALUE user1 im.xmpp * :user1@xmpp.example.com
+    S: @batch=gWkCiV 766 user1 blargh :No matching key
+    S: @batch=gWkCiV 766 user1 splot :No matching key
+    S: @batch=gWkCiV :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
     S: :irc.example.com BATCH -gWkCiV
 
 #### Client joins a channel and syncs metadata immediately
 
     C: JOIN #smallchan
-    S: modernclient!modernclient@example.com JOIN #smallchan
+    S: :modernclient!modernclient@example.com JOIN #smallchan
     S: :irc.example.com 353 modernclient @ #smallchan :user1 user2 user3 user4 user5 ...
     S: :irc.example.com 353 modernclient @ #smallchan :user51 user52 user53 user54 ...
     S: :irc.example.com 353 modernclient @ #smallchan :user101 user102 user103 user104 ...
@@ -489,18 +488,18 @@ To-do: Think of a better sync-later flow
 Client joins channel:
 
     C: JOIN #bigchan
-    S: modernclient!modernclient@example.com JOIN #bigchan
+    S: :modernclient!modernclient@example.com JOIN #bigchan
     S: :irc.example.com 353 modernclient @ #bigchan :user1 user2 user3 user4 user5 ...
     S: :irc.example.com 353 modernclient @ #bigchan :user51 user52 user53 user54 ...
     S: :irc.example.com 353 modernclient @ #bigchan :user101 user102 user103 user104 ...
     S: :irc.example.com 353 modernclient @ #bigchan :user151 user152 user153 user154 ...
     S: :irc.example.com 366 modernclient #bigchan :End of /NAMES list.
-    S: :irc.example.com RPL_METADATASYNCLATER modernclient #bigchan 4
+    S: :irc.example.com 774 modernclient #bigchan 4
 
 Client waits 4 seconds:
 
     C: METADATA #bigchan SYNC
-    S: :irc.example.com RPL_METADATASYNCLATER modernclient #bigchan 6
+    S: :irc.example.com 774 modernclient #bigchan 6
 
 Client waits 6 more seconds:
 
@@ -523,21 +522,21 @@ Client waits 6 more seconds:
 #### Basic subscriping and unsubscribing
 
     C: METADATA * SUB avatar website foo bar
-    S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website foo bar
+    S: :irc.example.com 770 modernclient :avatar website foo bar
     C: METADATA * UNSUB foo bar
-    S: :irc.example.com RPL_METADATAUNSUBOK modernclient :bar foo
+    S: :irc.example.com 771 modernclient :bar foo
 
 #### Multiple `RPL_METADATASUBOK` numerics in reply to `METADATA SUB`
 
     C: METADATA * SUB avatar website foo bar baz
-    S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website
-    S: :irc.example.com RPL_METADATASUBOK modernclient :foo
-    S: :irc.example.com RPL_METADATASUBOK modernclient :bar baz
+    S: :irc.example.com 770 modernclient :avatar website
+    S: :irc.example.com 770 modernclient :foo
+    S: :irc.example.com 770 modernclient :bar baz
 
 #### Invalid key name in reply to subscription
 
     C: METADATA * SUB foo $url bar
-    S: :irc.example.com RPL_METADATASUBOK modernclient :foo bar
+    S: :irc.example.com 770 modernclient :foo bar
     S: FAIL METADATA INVALID_KEY $url :Invalid key
 
 #### "Subscribed to too many keys" error in reply to subscription 1
@@ -546,11 +545,11 @@ The client first successfully subscribes to some keys and later it tries to
 subscribe to some more keys, unsuccessfully.
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient :website avatar foo bar baz
     C: METADATA * SUB email city
     S: FAIL METADATA TOO_MANY_SUBS email :Too many subscriptions!
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient :website avatar foo bar baz
 
 #### "Subscribed to too many keys" error in reply to subscription 2
 
@@ -559,12 +558,12 @@ the server accepts the first 2 keys (`email`, `city`) but not the rest
 (`country`, `bar`, `baz`).
 
     C: METADATA * SUB website avatar foo
-    S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo
+    S: :irc.example.com 770 modernclient :website avatar foo
     C: METADATA * SUB email city country bar baz
     S: FAIL METADATA TOO_MANY_SUBS country :Too many subscriptions!
-    S: :irc.example.com RPL_METADATASUBOK modernclient :email city
+    S: :irc.example.com 770 modernclient :email city
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :website avatar city foo email
+    S: :irc.example.com 770 modernclient :website avatar city foo email
 
 #### "Subscribed to too many keys" error in reply to subscription 3
 
@@ -576,16 +575,16 @@ subscribes to the `foo` key which was also in the second request, but it
 appeared before the `website` key.
 
     C: METADATA * SUB avatar website
-    S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website
+    S: :irc.example.com 770 modernclient :avatar website
     C: METADATA * SUB foo website avatar
     S: FAIL METADATA TOO_MANY_SUBS website :Too many subscriptions!
-    S: :irc.example.com RPL_METADATASUBOK modernclient :foo
+    S: :irc.example.com 770 modernclient :foo
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar foo website
+    S: :irc.example.com 772 modernclient :avatar foo website
 
 #### Querying the list of subscribed keys 1
 
-The server replies with a single `RPL_METADATASUBS` numeric.
+The server replies with a single `RPL_METADATASUBS` (`772`) numeric.
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
@@ -594,14 +593,14 @@ The server replies with a single `RPL_METADATASUBS` numeric.
 
 #### Querying the list of subscribed keys 2
 
-The server replies with multiple `RPL_METADATASUBS` numerics.
+The server replies with multiple `RPL_METADATASUBS` (`772`) numerics.
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient :website avatar foo bar baz
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar
-    S: :irc.example.com RPL_METADATASUBS modernclient :bar baz
-    S: :irc.example.com RPL_METADATASUBS modernclient :foo website
+    S: :irc.example.com 772 modernclient :avatar
+    S: :irc.example.com 772 modernclient :bar baz
+    S: :irc.example.com 772 modernclient :foo website
 
 #### Empty list of subscribed keys
 
@@ -613,30 +612,30 @@ In this case, there are no `RPL_METADATASUB` numerics sent.
 #### Unsubscribing
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient :website avatar foo bar baz
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
+    S: :irc.example.com 772 modernclient :avatar bar baz foo website
     C: METADATA * UNSUB bar foo baz
-    S: :irc.example.com RPL_METADATAUNSUBOK modernclient :baz foo bar
+    S: :irc.example.com 771 modernclient :baz foo bar
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar website
+    S: :irc.example.com 772 modernclient :avatar website
 
 #### Subscribing to the same key multiple times 1
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
+    S: :irc.example.com 779 modernclient :website avatar foo bar baz
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
+    S: :irc.example.com 772 modernclient :avatar bar baz foo website
     C: METADATA * SUB avatar website
-    S: :irc.example.com RPL_METADATASUBOK modernclient :avatar website
+    S: :irc.example.com 770 modernclient :avatar website
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
+    S: :irc.example.com 772 modernclient :avatar bar baz foo website
 
 #### Subscribing to the same key multiple times 2
 
 The client (erroneously) subscribes to the same key twice in the same command.
 The server is free to include the key being subscribed to in the
-`RPL_METADATASUBOK` numeric once or twice.
+`RPL_METADATASUBOK` (`770`) numeric once or twice.
 
 In both cases, the key will only appear once in the reply to a following
 `METADATA SUBS` command.
@@ -644,27 +643,27 @@ In both cases, the key will only appear once in the reply to a following
 Once:
 
     C: METADATA * SUB avatar avatar
-    S: :irc.example.com RPL_METADATASUBOK modernclient :avatar
+    S: :irc.example.com 770 modernclient :avatar
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar
+    S: :irc.example.com 772 modernclient :avatar
 
 Twice:
 
     C: METADATA * SUB avatar avatar
-    S: :irc.example.com RPL_METADATASUBOK modernclient :avatar avatar
+    S: :irc.example.com 770 modernclient :avatar avatar
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar
+    S: :irc.example.com 772 modernclient :avatar
 
 #### Unsubscribing from a non-subscribed key 1
 
     C: METADATA * SUBS
     C: METADATA * UNSUB website
-    S: :irc.example.com RPL_METADATAUNSUBOK modernclient :website
+    S: :irc.example.com 771 modernclient :website
     C: METADATA * SUBS
     C: METADATA * SUB website
-    S: :irc.example.com RPL_METADATASUBOK modernclient :website
+    S: :irc.example.com 771 modernclient :website
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :website
+    S: :irc.example.com 772 modernclient :website
 
 #### Unsubscribing from a non-subscribed key 2
 
@@ -675,24 +674,24 @@ command. The server is free to include the key being unsubscribed from in the
 Once:
 
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :website
+    S: :irc.example.com 772 modernclient :website
     C: METADATA * UNSUB website website
-    S: :irc.example.com RPL_METADATAUNSUBOK modernclient :website
+    S: :irc.example.com 772 modernclient :website
 
 Twice:
 
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :website
+    S: :irc.example.com 772 modernclient :website
     C: METADATA * UNSUB website website
-    S: :irc.example.com RPL_METADATAUNSUBOK modernclient :website website
+    S: :irc.example.com 771 modernclient :website website
 
 #### Subscribing to a key which requires privileges but without privileges
 
     C: METADATA * SUB avatar secretkey website
     S: FAIL METADATA KEY_NO_PERMISSION secretkey modernclient :You do not have permission to do that.
-    S: :irc.example.com RPL_METADATASUBOK modernclient :secretkey website
+    S: :irc.example.com 770 modernclient :avatar website
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :secretkey website
+    S: :irc.example.com 772 modernclient :avatar website
 
 #### Subscribing to invalid keys and a key which requires privileges but without privileges
 
@@ -701,9 +700,9 @@ Twice:
     S: FAIL METADATA KEY_INVALID $invalid1 modernclient :Invalid key
     S: FAIL METADATA KEY_NO_PERMISSION secretkey2 modernclient :You do not have permission to do that.
     S: FAIL METADATA KEY_INVALID $invalid2 modernclient :Invalid key
-    S: :irc.example.com RPL_METADATASUBOK modernclient :secretkey1 secretkey2 website
+    S: :irc.example.com 770 modernclient :website
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :secretkey1 secretkey2 website
+    S: :irc.example.com 772 modernclient :website
 
 -----
 
