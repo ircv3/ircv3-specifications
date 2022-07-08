@@ -84,7 +84,8 @@ The ABNF format of the `metadata` capability is:
 
 These are the defined tokens:
 
-* `maxsub`: the maximum number of keys a client is allowed in its subscripion list. See the [`SUB`](#metadata-sub) subcommand for more details.
+* `before-connect`: if present, indicates the server supports `METADATA` commands during connection registration
+* `maxsub`: the maximum number of keys a client is allowed in its subscription list. See the [`SUB`](#metadata-sub) subcommand for more details.
 * `maxkey`: the maximum number of keys a client is allowed to set on its own nickname.
 
 Clients MUST silently ignore any unknown tokens.
@@ -161,7 +162,7 @@ The format of the `METADATA` server message is:
 
 `Subcommand` is one of the subcommands listed below. The allowed params are described in each subcommand description.
 
-Clients MAY use this command during connection registration.
+Clients MAY use this command during connection registration if the server advertises the `before-connect` token.
 
 ### METADATA GET
 
