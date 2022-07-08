@@ -161,6 +161,8 @@ The format of the `METADATA` server message is:
 
 `Subcommand` is one of the subcommands listed below. The allowed params are described in each subcommand description.
 
+Clients MAY use this command during connection registration.
+
 ### METADATA GET
 
     METADATA <Target> GET key1 key2 ...
