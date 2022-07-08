@@ -43,11 +43,8 @@ The final version of the specification will use an unprefixed capability name.
 
 ## Introduction
 
-It is useful to associate metadata with one's IRC presence, e.g. to
-make one's homepage or non-IRC contact details more discoverable. There are
-several mechanisms for doing this, but they normally rely on the presence of
-services and aren't really suitable for transient metadata like a user's
-current location.
+It is useful to associate metadata with one's IRC presence, e.g. to make one's homepage or non-IRC contact details more discoverable.
+There are several mechanisms for doing this, but they normally rely on the presence of services and aren't really suitable for transient metadata like a user's current location.
 
 This feature lays out a command that can be used to set metadata, and a message that can be used to receive metadata updates from the server.
 
@@ -542,8 +539,7 @@ Client waits 6 more seconds:
 
 #### "Subscribed to too many keys" error in reply to subscription 1
 
-The client first successfully subscribes to some keys and later it tries to
-subscribe to some more keys, unsuccessfully.
+The client first successfully subscribes to some keys and later it tries to subscribe to some more keys, unsuccessfully.
 
     C: METADATA * SUB website avatar foo bar baz
     S: :irc.example.com 770 modernclient :website avatar foo bar baz
@@ -554,9 +550,7 @@ subscribe to some more keys, unsuccessfully.
 
 #### "Subscribed to too many keys" error in reply to subscription 2
 
-This is like the previous case, except when the second METADATA SUB happens
-the server accepts the first 2 keys (`email`, `city`) but not the rest
-(`country`, `bar`, `baz`).
+This is like the previous case, except when the second METADATA SUB happens the server accepts the first 2 keys (`email`, `city`) but not the rest (`country`, `bar`, `baz`).
 
     C: METADATA * SUB website avatar foo
     S: :irc.example.com 770 modernclient :website avatar foo
@@ -568,12 +562,8 @@ the server accepts the first 2 keys (`email`, `city`) but not the rest
 
 #### "Subscribed to too many keys" error in reply to subscription 3
 
-In this case, the client is trying to subscribe to a key that it is already
-subscribed to (`website`), but the key is not processed because the limit
-imposed by the server on the number of subscribed keys is reached before the
-`website` key is processed by the server. The client, however, successfully
-subscribes to the `foo` key which was also in the second request, but it
-appeared before the `website` key.
+In this case, the client is trying to subscribe to a key that it is already subscribed to (`website`), but the key is not processed because the limit imposed by the server on the number of subscribed keys is reached before the `website` key is processed by the server.
+The client, however, successfully subscribes to the `foo` key which was also in the second request, but it appeared before the `website` key.
 
     C: METADATA * SUB avatar website
     S: :irc.example.com 770 modernclient :avatar website
@@ -635,11 +625,9 @@ In this case, there are no `RPL_METADATASUB` numerics sent.
 #### Subscribing to the same key multiple times 2
 
 The client (erroneously) subscribes to the same key twice in the same command.
-The server is free to include the key being subscribed to in the
-`RPL_METADATASUBOK` (`770`) numeric once or twice.
+The server is free to include the key being subscribed to in the `RPL_METADATASUBOK` (`770`) numeric once or twice.
 
-In both cases, the key will only appear once in the reply to a following
-`METADATA SUBS` command.
+In both cases, the key will only appear once in the reply to a following `METADATA SUBS` command.
 
 Once:
 
@@ -668,9 +656,8 @@ Twice:
 
 #### Unsubscribing from a non-subscribed key 2
 
-The client (erroneously) unsubscribes from the same key twice in the same
-command. The server is free to include the key being unsubscribed from in the
-`RPL_METADATAUNSUBOK` numeric once or twice.
+The client (erroneously) unsubscribes from the same key twice in the same command.
+The server is free to include the key being unsubscribed from in the `RPL_METADATAUNSUBOK` numeric once or twice.
 
 Once:
 
@@ -709,8 +696,8 @@ Twice:
 
 ### Non-normative examples
 
-The following examples describe how an implementation might use certain features. Unlike previous examples, they are in no way intended to guide
-implementations' behaviour.
+The following examples describe how an implementation might use certain features.
+Unlike previous examples, they are in no way intended to guide implementations' behaviour.
 
 #### Notification for a user becoming an operator:
 
@@ -720,10 +707,8 @@ implementations' behaviour.
 
 *This section is not normative*
 
-While this is true of any batch, clients should take particular care not to
-pause processing of other messages while a `metadata` batch is open.
-As these batches can be potentially large, servers are likely to produce them
-asynchronously in order to avoid freezing delivery of more important messages.
+While this is true of any batch, clients should take particular care not to pause processing of other messages while a `metadata` batch is open.
+As these batches can be potentially large, servers are likely to produce them asynchronously in order to avoid freezing delivery of more important messages.
 
 As servers may rewrite values set by clients with `METADATA SET`, clients should check the response before storing it in any local cache.
 
@@ -731,8 +716,7 @@ As servers may rewrite values set by clients with `METADATA SET`, clients should
 
 *This section is not normative*
 
-This specification replaces the first `metadata` specification, by adding
-the following incompatible changes:
+This specification replaces the first `metadata` specification, by adding the following incompatible changes:
 
 * The `metadata-notify` key subscribed you to all keys. Since we have now added the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, `metadata-notify-2` does not act in this way.
 * Rate limiting protocol mechanics.
