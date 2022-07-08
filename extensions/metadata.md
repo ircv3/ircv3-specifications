@@ -214,6 +214,7 @@ Servers MAY respond to certain keys considered not settable by the requesting us
 Servers MAY respond with `FAIL METADATA RATE_LIMITED` and fail the request. When a client receives `FAIL METADATA RATE_LIMITED`, it SHOULD retry the `METADATA SET` request at a later time. If the `FAIL METADATA RATE_LIMITED` event contains the `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
 
 If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one).
+This new value MAY differ from the one sent by the client.
 
 *Failures*: `FAIL METADATA LIMIT_REACHED`, `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`, `FAIL METADATA KEY_NOT_SET`
 
@@ -723,6 +724,8 @@ While this is true of any batch, clients should take particular care not to
 pause processing of other messages while a `metadata` batch is open.
 As these batches can be potentially large, servers are likely to produce them
 asynchronously in order to avoid freezing delivery of more important messages.
+
+As servers may rewrite values set by clients with `METADATA SET`, clients should check the response before storing it in any local cache.
 
 ### Differences between this specification and `metadata`/`metadata-notify`
 
