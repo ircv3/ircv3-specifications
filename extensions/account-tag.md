@@ -21,9 +21,9 @@ username. (If the user is not identified to any services account, the tag MUST
 NOT be sent.)
 
 The tag MUST be added by the ircd to all commands sent by a user (e.g. PRIVMSG,
-MODE, NOTICE, and all others). The tag also MUST be added by the ircd to all
+MODE, NOTICE, and all others). The tag also SHOULD be added by the ircd to all
 numerics directly caused by the sender. For example, if the target user has
-"caller ID" enabled (e.g. user modes +R or +g in Charybdis), the tag MUST be
+"caller ID" enabled (e.g. user modes +R or +g in Charybdis), the tag SHOULD be
 added to numerics indicating blocked message attempts (numeric 718 aka
 `RPL_UMODEMSG`).
 
