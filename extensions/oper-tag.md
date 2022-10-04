@@ -27,7 +27,7 @@ The tag MUST be named `draft/oper`. The value of the tag, if specified, MUST ide
 The tag MUST be added by the ircd to all commands sent by a user (e.g. PRIVMSG,
 MODE, NOTICE, and all others) and numeric replies sent on behalf of the user.
 
-Servers supporting this capabilty MAY be configured to restrict visibility of this tag or its value.
+Servers supporting this capability MAY be configured to restrict visibility of this tag or its value.
 
 ## Example
 
