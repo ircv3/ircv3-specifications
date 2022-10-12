@@ -53,3 +53,7 @@ just the account name. Similarly, this extension does not deprecate
 extension does not.
 
 [message tag]: ../extensions/message-tags.html
+
+## Errata
+
+* Earlier version of this specification said that account tags MUST be added to numerics that were directly caused by a specific user. This was relaxed to SHOULD after it was found to be widely not implemented and a problem for existing implementations to implement.
