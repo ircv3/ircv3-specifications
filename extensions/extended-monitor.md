@@ -27,7 +27,7 @@ user goes offline or comes online. This specification extends MONITOR to also
 include AWAY, ACCOUNT, CHGHOST and SETNAME notifications.
 
 The `extended-monitor` capability advertises that the server supports sending
-such extended notifcations for monitored nicks. When enabled by the client:
+such extended notifications for monitored nicks. When enabled by the client:
 
 - If `away-notify` is also enabled, the client will get AWAY notifications for
   monitored nicks.
