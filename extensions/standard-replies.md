@@ -54,7 +54,9 @@ Reply codes (especially more widely-applicable ones such as `NO_SUCH_NICK`) may 
 
 This specification adds the `standard-replies` capability. This capability allows servers to send arbitrary standard replies other than ones enabled by a specific specification. It also allows clients to indicate support for receiving any well-formed standard reply, whether or not it is recognised and used.
 
-It is RECOMMENDED that servers use standard replies instead of vendor-specific error numerics or server notices for non-standardised features when responding to a client which supports this capability. It is NOT RECOMMENDED that servers which support this capability add new custom error numerics. Also, servers which support this capability SHOULD NOT replace standardised error numerics with a standard reply unless enabled to by some other specification.
+It is RECOMMENDED that servers use standard replies instead of vendor-specific error numerics or server notices for non-standardised features when responding to a client which supports this capability. It is NOT RECOMMENDED that servers which support this capability add new custom error numerics. Servers which support this capability SHOULD NOT replace standardised error numerics with standard replies, unless the replacement is explicitly described by some other specification.
+
+
 
 ## Examples
 
