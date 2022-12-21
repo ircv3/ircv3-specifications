@@ -21,12 +21,7 @@ implementing a compatible work-in-progress version.
 The final version of the specification will use an unprefixed tag name.
 
 ## Introduction
-
-This specification defines a client-only message tag to indicate the channel a private PRIVMSG or NOTICE should be displayed in.
-
-## Motivation
-
-Responding to PRIVMSG messages in channels with NOTICE messages in private is a widely-used IRC practice for bots, in order to prevent flooding a channel with messages only useful for a single user. Clients have developed heuristics for matching incoming private NOTICE to their channel context, but these heuristics are error-prone and difficult to implement for past messages with CHATHISTORY.
+Often times, "noisy" channel administration or other similar messages are sent privately via a PRIVMSG or NOTICE directly to the user, so as not to interrupt the public conversation taking place in a channel. However, because a client has no way of knowing which channel the received private notice is associated with, the text often appears in a channel or buffer window not associated with the source of the message. This specification defines a client tag to indicate which channel window a private PRIVMSG or NOTICE the client should display the message in. While these private messages will appear in the public channel window, they are still private and only viewable to the recipient. To properly work, the sender must place a channel-context message tag on the private message, and the client must recognize the channel-context message tag and redirect the message to the appropriate window.
 
 This tag enables clients to systematically know in which channel a private PRIVMSG or NOTICE should be displayed, because the sender can now communicate that information in the message.
 
