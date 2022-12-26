@@ -121,11 +121,11 @@ A client negotiates the `draft/persistence` capability and sees that persistence
 [c] NICK testuser
 [c] USER u s e r
 [c] AUTHENTICATE PLAIN
-[c] AUTHENTICATE amlsbGVzAGppbGxlcwBzZXNhbWU=
-[c] CAP END
 [s] AUTHENTICATE +
+[c] AUTHENTICATE amlsbGVzAGppbGxlcwBzZXNhbWU=
 [s] :irc.example.com 900 * * jilles :You are now logged in as jilles
 [s] :irc.example.com 903 * :Authentication successful
+[c] CAP END
 [s] :irc.example.com 001 testuser :Welcome to the example IRC network testuser
 [...]
 [s] :irc.example.com 005 testuser :TOPICLEN=390 UTF8ONLY WHOX draft/CHATHISTORY=1000 :are supported by this server
