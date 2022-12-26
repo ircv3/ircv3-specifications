@@ -85,7 +85,7 @@ If persistence cannot be accessed or modified due to an error, the `INTERNAL_ERR
 
     FAIL PERSISTENCE INTERNAL_ERROR :An error occurred
 
-Finally, servers MAY accept the change in client setting while not changing the effective setting. For example, persistence may be mandatory for all users, or it may be reserved for privileged users. In this event, the server MUST NOT send a `FAIL` response, but MUST send a `PERSISTENCE STATUS` response describing the current settings.
+Finally, servers MAY accept the change in client setting while not changing the effective setting. For example, persistence may be mandatory for all users, or it may be reserved for privileged users. In this event, the server MUST NOT send a `FAIL` response, but MUST send a `PERSISTENCE STATUS` response describing the current settings. The server MAY send a `WARN` or `NOTE` response explaining why the change was refused.
 
 ### Examples
 
