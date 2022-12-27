@@ -73,7 +73,7 @@ where `<client-setting>` takes one of the three values specified above; the serv
 
 #### Errors and Warnings
 
-Servers MUST NOT allow unauthenticated clients to become persistent, since there is no way for the client to reconnect in that case. Unauthenticated clients attempting to issue `GET` or `SET` MUST receive:
+Servers SHOULD NOT allow unauthenticated clients to become persistent, since there is currently no way for the client to reconnect in that case. Unauthenticated clients attempting to issue `GET` or `SET` SHOULD receive:
 
     FAIL PERSISTENCE ACCOUNT_REQUIRED :An account is required
 
