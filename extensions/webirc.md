@@ -45,12 +45,12 @@ These options are defined and may be sent by clients while connecting:
 - `secure`: This flag indicates that the client has a TLS-secured connection to the gateway. Servers MUST ONLY treat the connection as secure if this flag is sent and the connection from the gateway to the server is also secure with TLS.
 - `remote-port=<port>`: This flag indicates the remote port the client has connected to the gateway from.
 - `local-port=<port>`: This flag indicates the port the gateway accepted the client connection on (e.g. `6697`, `6667`).
-- `certfp-<algo>=<fingerprint>`: This flag indicates the tls client certificate fingerprint supplied to the WebIRC gateway by the user's actual client application.
-- `spkifp-<algo>=<fingerprint>`: This flag indicates the public key fingerprint for the tls client certificate supplied to the WebIRC gateway by the user's actual client application.
+- `certfp-<algo>=<fingerprint>`: This flag indicates the TLS client certificate fingerprint supplied to the WebIRC gateway by the user's actual client application.
+- `spkifp-<algo>=<fingerprint>`: This flag indicates the public key fingerprint for the TLS client certificate supplied to the WebIRC gateway by the user's actual client application.
 
 `<algo>` should be the hash algorithm used to produce the fingerprint supplied such as `sha-256`. Its value should be taken from IANA's [Hash Function Textual Names](https://www.iana.org/assignments/hash-function-text-names/hash-function-text-names.xhtml) registry, or if using an algorithm not listed should use a name consisting of only lower case letters, numbers or hyphens.
 
-`<fingerprint>` should be the hash of the certificate (certfp) or public key (spkifp) encoded in hexadecimal without colon (:) sepertators. Servers should accept either upper case or lower case hexadecimal characters.
+`<fingerprint>` should be the hash of the certificate (certfp) or public key (spkifp) encoded in hexadecimal without colon (:) separators. Servers should accept either upper case or lower case hexadecimal characters.
 
 Servers MUST be able to handle options that don't currently have defined values gaining values in the future. For example, they MUST treat the options `secure` and `secure=examplevalue123` in exactly the same way.
 
