@@ -51,7 +51,7 @@ Clients MUST ignore every token with a key that they don't understand.
 
 The only defined capability key so far is:
 
-* `max-bytes` - This defines the maximum allowed total byte length of multiline batch, as defined below *REQUIRED*
+* `max-bytes` - This defines the maximum allowed total byte length of a multiline batch's combined message value, as defined below *REQUIRED*
 * `max-lines` - This defines the maximum allowed number of lines in a multiline batch *RECOMMENDED*
 
 Only the last parameter of PRIVMSG and NOTICE are counted toward `max-bytes`; not origin, command, or target.
