@@ -54,6 +54,8 @@ The only defined capability key so far is:
 * `max-bytes` - This defines the maximum allowed total byte length of multiline batched content *REQUIRED*
 * `max-lines` - This defines the maximum allowed number of lines in a multiline batch content *RECOMMENDED*
 
+Only the last parameter of PRIVMSG and NOTICE are counted toward `max-bytes`; not origin, command, or target.
+
 ### Tags
 
 This specification adds the `draft/multiline-concat` message tag, which has no value and is used to send message lines that extend beyond the usual byte length limit. Its usage is described below.
