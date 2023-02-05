@@ -28,7 +28,7 @@ If the capability has been negotiated, servers MUST accept the `AWAY` command be
 
     AWAY *
 
-i.e. an `AWAY` message consisting of the single character `*`, as indicating that the user is not present for an unspecified reason.
+i.e. an `AWAY` message consisting of the single character `*`, as indicating that the user is not present for an unspecified reason. Clients MAY also send `AWAY *` post-registration to indicate that the user is no longer present for an unspecified reason.
 
 In its conventional form:
 
