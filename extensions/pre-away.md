@@ -38,7 +38,7 @@ the `AWAY` command MAY be used pre-registration to set a human-readable away mes
 
 If the client's nickname was not already present on the server, then `AWAY` pre-registration sets the away message but does not inhibit reporting of the change in nickname status, e.g. via [monitor][monitor].
 
-Clients receiving `*` as an away message (for example, in `301 RPL_AWAY` or [away-notify][away-notify]) SHOULD treat it as indicating that the user is not present for an unspecified reason. Servers MAY substitute a human-readable message for the `*` if it would otherwise be relayed as an away message.
+Clients that have negotiated this capability and subsequently receive `*` as an away message (for example, in `301 RPL_AWAY` or [away-notify][away-notify]) SHOULD treat it as indicating that the user is not present for an unspecified reason. Servers MAY substitute a human-readable message for the `*` if it would otherwise be relayed as an away message.
 
 ## Implementation considerations
 This section is non-normative.
