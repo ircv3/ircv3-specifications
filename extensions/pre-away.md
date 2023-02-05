@@ -22,9 +22,9 @@ Some IRC server implementations offer a mode of operation where a single nicknam
 Such implementations may wish to update publicly visible state depending on the status of the user's actual client connections. For example, if the user has no active connections, it may be desirable to mark them as AWAY, then mark them un-AWAY if they reconnect. However, a client implementation may wish to connect without active involvement from the user, e.g. to retrieve [chathistory][chathistory], in which case it would be undesirable to suggest that the user is present. This extension provides a mechanism for such clients to flag their connections as automatically initiated, so servers can disregard them for this or other purposes related to user presence.
 
 ## Implementation
-This specification introduces a new informational capability, `draft/pre-away`. Clients MAY request this capability; servers implementing this specification MUST acknowledge it if it is requested.
+This specification introduces a new capability, `draft/pre-away`. Clients wishing to make use of this specification MUST negotiate the capability; this gives the server more information about the context and meaning of the client's `AWAY` commands.
 
-Servers implementing this specification MUST accept the `AWAY` command before connection registration has completed, whether or not the `draft/pre-away` capability has been negotiated. The `AWAY` command has its normal semantics in this context, except servers SHOULD treat the form:
+If the capability has been negotiated, servers MUST accept the `AWAY` command before connection registration has completed. The `AWAY` command has its normal semantics, except that servers SHOULD treat the form:
 
     AWAY *
 
@@ -34,7 +34,7 @@ In its conventional form:
 
     AWAY :Gone to lunch.  Back in 5
 
-the `AWAY` command MAY be used pre-registration to set a human-readable away message associated with the connection as usual. Similarly, `AWAY` with no parameters, which normally indicates that the user is present, has no effect.
+the `AWAY` command MAY be used pre-registration to set a human-readable away message associated with the connection as usual. Similarly, `AWAY` with no parameters indicates that the user is present.
 
 If the client's nickname was not already present on the server, then `AWAY` pre-registration sets the away message but does not inhibit reporting of the change in nickname status, e.g. via [monitor][monitor].
 
