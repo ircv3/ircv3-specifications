@@ -330,7 +330,7 @@ An example of a vendor-prefixed client-only tag:
 
 A client-only tag `+example` with a value containing valid raw and escaped characters:
 
-* Raw value: `raw+:=,escaped; \`
+* Raw value: `raw+:=,escaped: \`
 * Escaped value: `raw+:=,escaped\:\s\\`
 
 In this example, plus signs, colons, equals signs and commas are transmitted raw in tag values; while semicolons, spaces and backslashes are escaped.
