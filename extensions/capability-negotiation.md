@@ -440,9 +440,10 @@ listed above.
 
 The full capability name MUST be treated as an opaque identifier.
 
-Capability names are case-sensitive. Typical capability names SHOULD be lowercase, and use
-hyphens (`-`) to separate words. For example: `echo-message`, `extended-join`,
-`invite-notify`, `draft/labeled-response`, `message-tags`.
+Capability names are case-sensitive, and MUST NOT start with a hyphen (`-`). Typical
+capability names SHOULD be lowercase, and use hyphens to separate words. For example:
+`echo-message`, `extended-join`, `invite-notify`, `draft/labeled-response`,
+`message-tags`.
 
 There are different types of capability names, which are described below.
 
@@ -542,4 +543,6 @@ appropriate features.
 Previous versions of this spec did not mention how servers handle clients attempting to downgrade
 their CAP LS version. It has been clarified that clients MAY NOT downgrade this.
 
-Clarify that multiline LS and LIST replies must only be used for CAP 302
+Clarified that multiline LS and LIST replies must only be used for CAP 302.
+
+Previous versions of this spec did not state that capability names MUST NOT start with a hyphen.
