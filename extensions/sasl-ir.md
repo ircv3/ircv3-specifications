@@ -16,7 +16,7 @@ Software implementing this work-in-progress specification MUST NOT use the unpre
 
 ## Introduction
 
-Clients can use the [SASL extension](sasl-3.1.html) to authenticate against IRC servers. Some SASL mechanisms are client-first, ie. the client sends an initial response to start the authentication exchange.
+Clients can use the [SASL extension](sasl-3.1.html) to authenticate against IRC servers. Some SASL mechanisms are client-first, i.e. the client sends an initial response to start the authentication exchange.
 
 This extension updates the first `AUTHENTICATE` command to accept an initial response, to avoid a roundtrip in the SASL exchange.
 
