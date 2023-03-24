@@ -40,7 +40,11 @@ aborted. Clients SHOULD be prepared for timeouts at all times during the SASL
 authentication.
 
 There are two forms of the AUTHENTICATE command: initial client message and
-later messages.
+later messages. Since there is no way besides ordering to make the difference
+between these two forms, servers SHOULD avoid logging or formatting error
+messages with the arguments of the AUTHENTICATE command to prevent secrets from
+being leaked (e.g. in case a client doesn't wait for the server's initial empty
+challenge before sending credentials).
 
 The initial client message specifies the SASL mechanism to be used. (When this
 is received, the IRCD will attempt to establish an association with a SASL
