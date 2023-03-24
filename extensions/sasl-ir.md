@@ -22,7 +22,7 @@ This extension updates the first `AUTHENTICATE` command to accept an initial res
 
 ## Implementation
 
-Servers supporting this extension MUST advertise the `draft/sasl-ir` capability. Servers MUST accept the new form of the `AUTHENTICATE` command even if the capability hasn't been explciitly enabled by the client.
+Servers supporting this extension MUST advertise the `draft/sasl-ir` capability. Servers MUST accept the new form of the `AUTHENTICATE` command even if the capability hasn't been explicitly enabled by the client.
 
 The initial `AUTHENTICATE` command is extended to accept an extra argument for the initial response:
 
