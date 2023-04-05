@@ -23,7 +23,7 @@ The `NOTE` message indicates some informational message about a given command/fu
 
 The `FAIL`, `WARN`, and `NOTE` messages have the same format. Here, we describe the basic format (using `<type>` as a placeholder for the specific message type), before covering some of the differences of each message type.
 
-    <type> <command> <code> [<context>...] <description>
+    <type> <command> <code> [<context>...] :<description>
 
 Some non-normative examples:
 
