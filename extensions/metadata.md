@@ -339,9 +339,9 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
 | 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
 | 766 | `RPL_KEYNOTSET`           | `<Target> <Key> :key not set`            |
-| 770 | `RPL_METADATASUBOK`       | `:<Key1> [<Key2> ...]`                   |
-| 771 | `RPL_METADATAUNSUBOK`     | `:<Key1> [<Key2> ...]`                   |
-| 772 | `RPL_METADATASUBS`        | `:<Key1> [<Key2> ...]`                   |
+| 770 | `RPL_METADATASUBOK`       | `<Key1> [<Key2> ...]`                   |
+| 771 | `RPL_METADATAUNSUBOK`     | `<Key1> [<Key2> ...]`                   |
+| 772 | `RPL_METADATASUBS`        | `<Key1> [<Key2> ...]`                   |
 | 774 | `RPL_METADATASYNCLATER`   | `<Target> [<RetryAfter>]`                |
 
 Reference table of numerics and the `METADATA` subcommands or any other commands that produce them:
@@ -524,21 +524,21 @@ Client waits 6 more seconds:
 #### Basic subscriping and unsubscribing
 
     C: METADATA * SUB avatar website foo bar
-    S: :irc.example.com 770 modernclient :avatar website foo bar
+    S: :irc.example.com 770 modernclient avatar website foo bar
     C: METADATA * UNSUB foo bar
-    S: :irc.example.com 771 modernclient :bar foo
+    S: :irc.example.com 771 modernclient bar foo
 
 #### Multiple `RPL_METADATASUBOK` numerics in reply to `METADATA SUB`
 
     C: METADATA * SUB avatar website foo bar baz
-    S: :irc.example.com 770 modernclient :avatar website
-    S: :irc.example.com 770 modernclient :foo
-    S: :irc.example.com 770 modernclient :bar baz
+    S: :irc.example.com 770 modernclient avatar website
+    S: :irc.example.com 770 modernclient foo
+    S: :irc.example.com 770 modernclient bar baz
 
 #### Invalid key name in reply to subscription
 
     C: METADATA * SUB foo $url bar
-    S: :irc.example.com 770 modernclient :foo bar
+    S: :irc.example.com 770 modernclient foo bar
     S: FAIL METADATA KEY_INVALID $url :Invalid key
 
 #### "Subscribed to too many keys" error in reply to subscription 1
@@ -546,23 +546,23 @@ Client waits 6 more seconds:
 The client first successfully subscribes to some keys and later it tries to subscribe to some more keys, unsuccessfully.
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com 770 modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient website avatar foo bar baz
     C: METADATA * SUB email city
     S: FAIL METADATA TOO_MANY_SUBS email :Too many subscriptions!
     C: METADATA * SUBS
-    S: :irc.example.com 770 modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient website avatar foo bar baz
 
 #### "Subscribed to too many keys" error in reply to subscription 2
 
 This is like the previous case, except when the second METADATA SUB happens the server accepts the first 2 keys (`email`, `city`) but not the rest (`country`, `bar`, `baz`).
 
     C: METADATA * SUB website avatar foo
-    S: :irc.example.com 770 modernclient :website avatar foo
+    S: :irc.example.com 770 modernclient website avatar foo
     C: METADATA * SUB email city country bar baz
     S: FAIL METADATA TOO_MANY_SUBS country :Too many subscriptions!
-    S: :irc.example.com 770 modernclient :email city
+    S: :irc.example.com 770 modernclient email city
     C: METADATA * SUBS
-    S: :irc.example.com 770 modernclient :website avatar city foo email
+    S: :irc.example.com 770 modernclient website avatar city foo email
 
 #### "Subscribed to too many keys" error in reply to subscription 3
 
@@ -570,32 +570,32 @@ In this case, the client is trying to subscribe to a key that it is already subs
 The client, however, successfully subscribes to the `foo` key which was also in the second request, but it appeared before the `website` key.
 
     C: METADATA * SUB avatar website
-    S: :irc.example.com 770 modernclient :avatar website
+    S: :irc.example.com 770 modernclient avatar website
     C: METADATA * SUB foo website avatar
     S: FAIL METADATA TOO_MANY_SUBS website :Too many subscriptions!
     S: :irc.example.com 770 modernclient :foo
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar foo website
+    S: :irc.example.com 772 modernclient avatar foo website
 
 #### Querying the list of subscribed keys 1
 
 The server replies with a single `RPL_METADATASUBS` (`772`) numeric.
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com 770 modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient website avatar foo bar baz
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar bar baz foo website
+    S: :irc.example.com 772 modernclient avatar bar baz foo website
 
 #### Querying the list of subscribed keys 2
 
 The server replies with multiple `RPL_METADATASUBS` (`772`) numerics.
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com 770 modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient website avatar foo bar baz
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar
-    S: :irc.example.com 772 modernclient :bar baz
-    S: :irc.example.com 772 modernclient :foo website
+    S: :irc.example.com 772 modernclient avatar
+    S: :irc.example.com 772 modernclient bar baz
+    S: :irc.example.com 772 modernclient foo website
 
 #### Empty list of subscribed keys
 
@@ -607,24 +607,24 @@ In this case, there are no `RPL_METADATASUB` numerics sent.
 #### Unsubscribing
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com 770 modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient website avatar foo bar baz
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar bar baz foo website
+    S: :irc.example.com 772 modernclient avatar bar baz foo website
     C: METADATA * UNSUB bar foo baz
-    S: :irc.example.com 771 modernclient :baz foo bar
+    S: :irc.example.com 771 modernclient baz foo bar
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar website
+    S: :irc.example.com 772 modernclient avatar website
 
 #### Subscribing to the same key multiple times 1
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com 779 modernclient :website avatar foo bar baz
+    S: :irc.example.com 779 modernclient website avatar foo bar baz
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar bar baz foo website
+    S: :irc.example.com 772 modernclient avatar bar baz foo website
     C: METADATA * SUB avatar website
-    S: :irc.example.com 770 modernclient :avatar website
+    S: :irc.example.com 770 modernclient avatar website
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar bar baz foo website
+    S: :irc.example.com 772 modernclient avatar bar baz foo website
 
 #### Subscribing to the same key multiple times 2
 
@@ -636,27 +636,27 @@ In both cases, the key will only appear once in the reply to a following `METADA
 Once:
 
     C: METADATA * SUB avatar avatar
-    S: :irc.example.com 770 modernclient :avatar
+    S: :irc.example.com 770 modernclient avatar
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar
+    S: :irc.example.com 772 modernclient avatar
 
 Twice:
 
     C: METADATA * SUB avatar avatar
-    S: :irc.example.com 770 modernclient :avatar avatar
+    S: :irc.example.com 770 modernclient avatar avatar
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar
+    S: :irc.example.com 772 modernclient avatar
 
 #### Unsubscribing from a non-subscribed key 1
 
     C: METADATA * SUBS
     C: METADATA * UNSUB website
-    S: :irc.example.com 771 modernclient :website
+    S: :irc.example.com 771 modernclient website
     C: METADATA * SUBS
     C: METADATA * SUB website
-    S: :irc.example.com 771 modernclient :website
+    S: :irc.example.com 771 modernclient website
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :website
+    S: :irc.example.com 772 modernclient website
 
 #### Unsubscribing from a non-subscribed key 2
 
@@ -666,24 +666,24 @@ The server is free to include the key being unsubscribed from in the `RPL_METADA
 Once:
 
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :website
+    S: :irc.example.com 772 modernclient website
     C: METADATA * UNSUB website website
-    S: :irc.example.com 772 modernclient :website
+    S: :irc.example.com 772 modernclient website
 
 Twice:
 
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :website
+    S: :irc.example.com 772 modernclient website
     C: METADATA * UNSUB website website
-    S: :irc.example.com 771 modernclient :website website
+    S: :irc.example.com 771 modernclient website website
 
 #### Subscribing to a key which requires privileges but without privileges
 
     C: METADATA * SUB avatar secretkey website
     S: FAIL METADATA KEY_NO_PERMISSION modernclient secretkey :You do not have permission to do that.
-    S: :irc.example.com 770 modernclient :avatar website
+    S: :irc.example.com 770 modernclient avatar website
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :avatar website
+    S: :irc.example.com 772 modernclient avatar website
 
 #### Subscribing to invalid keys and a key which requires privileges but without privileges
 
@@ -692,9 +692,9 @@ Twice:
     S: FAIL METADATA KEY_INVALID $invalid1 :Invalid key
     S: FAIL METADATA KEY_NO_PERMISSION modernclient secretkey2 :You do not have permission to do that.
     S: FAIL METADATA KEY_INVALID $invalid2 :Invalid key
-    S: :irc.example.com 770 modernclient :website
+    S: :irc.example.com 770 modernclient website
     C: METADATA * SUBS
-    S: :irc.example.com 772 modernclient :website
+    S: :irc.example.com 772 modernclient website
 
 -----
 
