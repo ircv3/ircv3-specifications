@@ -100,7 +100,7 @@ They follow [the same rules as message tag names](../extensions/message-tags.htm
 
 Values can take any form, but MUST be encoded using UTF-8.
 
-The expected handling of individual metadata keys SHOULD be defined and listed in the IRCv3 extension registry.
+The expected handling of individual metadata keys SHOULD be [defined and listed in the IRCv3 extension registry](../registry.html).
 
 ## Batch type
 
