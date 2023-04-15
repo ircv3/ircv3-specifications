@@ -25,7 +25,7 @@ copyrights:
     email: "v.a.pond@outlook.com"
   -
     name: "Val Lorentz"
-    period: "2022"
+    period: "2022-2023"
     email: "progval+ircv3@progval.net"
 ---
 
@@ -388,7 +388,7 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata on self
 
     C: METADATA * SET url :http://www.example.com
-    S: :irc.example.com RPL_KEYVALUE * url * :http://www.example.com
+    S: :irc.example.com 761 * url * :http://www.example.com
 
 #### Setting metadata on self, but the limit has been reached
 
@@ -581,9 +581,9 @@ The client, however, successfully subscribes to the `foo` key which was also in 
 The server replies with a single `RPL_METADATASUBS` (`772`) numeric.
 
     C: METADATA * SUB website avatar foo bar baz
-    S: :irc.example.com RPL_METADATASUBOK modernclient :website avatar foo bar baz
+    S: :irc.example.com 770 modernclient :website avatar foo bar baz
     C: METADATA * SUBS
-    S: :irc.example.com RPL_METADATASUBS modernclient :avatar bar baz foo website
+    S: :irc.example.com 772 modernclient :avatar bar baz foo website
 
 #### Querying the list of subscribed keys 2
 
