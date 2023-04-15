@@ -461,7 +461,7 @@ Thought: A non-normative retry value helps against automated spam while still be
     S: :irc.example.com BATCH +gWkCiV metadata
     S: @batch=gWkCiV 766 client user1 blargh :No matching key
     S: @batch=gWkCiV 766 client user1 splot :No matching key
-    S: @batch=gWkCiV :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
+    S: @batch=gWkCiV :irc.example.com 761 client user1 im.xmpp * :user1@xmpp.example.com
     S: :irc.example.com BATCH -gWkCiV
 
 #### Client joins a channel and syncs metadata immediately
