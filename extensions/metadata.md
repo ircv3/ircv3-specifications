@@ -85,8 +85,8 @@ The ABNF format of the `metadata` capability is:
 These are the defined tokens:
 
 * `before-connect`: if present, indicates the server supports `METADATA` commands during connection registration
-* `maxsub`: the maximum number of keys a client is allowed in its subscription list. See the [`SUB`](#metadata-sub) subcommand for more details.
-* `maxkey`: the maximum number of keys a client is allowed to set on its own nickname.
+* `max-subs`: the maximum number of keys a client is allowed in its subscription list. See the [`SUB`](#metadata-sub) subcommand for more details.
+* `max-keys`: the maximum number of keys a client is allowed to set on its own nickname.
 
 Clients MUST silently ignore any unknown tokens.
 
@@ -372,12 +372,12 @@ All examples begin with the client not being subscribed to any keys.
 #### Capability value in `CAP LS` 1 
 
     C: CAP LS 302
-    S: CAP * LS :userhost-in-names draft/metadata-2=foo,maxsub=50,bar multi-prefix
+    S: CAP * LS :userhost-in-names draft/metadata-2=foo,max-subs=50,bar multi-prefix
 
 #### Capability value in `CAP LS` 2
 
     C: CAP LS 302
-    S: CAP * LS :draft/metadata-2=maxsub=25 multi-prefix invite-notify
+    S: CAP * LS :draft/metadata-2=max-subs=25 multi-prefix invite-notify
 
 -----
 
