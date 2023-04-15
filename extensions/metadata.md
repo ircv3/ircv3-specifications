@@ -214,7 +214,7 @@ Servers MAY respond to certain keys considered not settable by the requesting us
 
 Servers MAY respond with `FAIL METADATA RATE_LIMITED` and fail the request. When a client receives `FAIL METADATA RATE_LIMITED`, it SHOULD retry the `METADATA SET` request at a later time. If the `FAIL METADATA RATE_LIMITED` event contains the `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
 
-If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one).
+If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value if any, or `RPL_KEYNOTSET` if not.
 This new value MAY differ from the one sent by the client.
 
 *Failures*: `FAIL METADATA LIMIT_REACHED`, `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`, `FAIL METADATA KEY_NOT_SET`, `FAIL METADATA VALUE_INVALID`
@@ -337,7 +337,7 @@ The following numerics 760 through 775 are reserved for metadata, with these lab
 | No. | Label                     | Parameters                               |
 | --- | ------------------------- | ---------------------------------------- |
 | 760 | `RPL_WHOISKEYVALUE`       | `<Target> <Key> <Visibility> :<Value>`   |
-| 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility>[ :<Value>]` |
+| 761 | `RPL_KEYVALUE`            | `<Target> <Key> <Visibility> :<Value>` |
 | 766 | `RPL_KEYNOTSET`           | `<Target> <Key> :key not set`            |
 | 770 | `RPL_METADATASUBOK`       | `<Key1> [<Key2> ...]`                   |
 | 771 | `RPL_METADATAUNSUBOK`     | `<Key1> [<Key2> ...]`                   |
