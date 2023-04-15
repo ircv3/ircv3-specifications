@@ -217,7 +217,7 @@ Servers MAY respond with `FAIL METADATA RATE_LIMITED` and fail the request. When
 If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value (or lack of one).
 This new value MAY differ from the one sent by the client.
 
-*Failures*: `FAIL METADATA LIMIT_REACHED`, `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`, `FAIL METADATA KEY_NOT_SET`
+*Failures*: `FAIL METADATA LIMIT_REACHED`, `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`, `FAIL METADATA KEY_NOT_SET`, `FAIL METADATA VALUE_INVALID`
 
 ### METADATA CLEAR
 
@@ -304,6 +304,7 @@ The following Standard Replies codes are defined with these parameters:
 | `LIMIT_REACHED`         | `<Target> :metadata limit reached`       |
 | `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> <Value> :too many changes`  |
 | `TOO_MANY_SUBS`         | `<Key> :too many subscriptions`          |
+| `VALUE_INVALID`         | `:value is too long or not UTF8`         |
 
 
 Reference table of Standard Replies codes and the `METADATA` subcommands or any other commands that produce them:
@@ -312,6 +313,7 @@ Reference table of Standard Replies codes and the `METADATA` subcommands or any 
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | `INVALID_TARGET`         | *   | *    | *   | *     | *   | *     | *    | *    |         |
 | `KEY_INVALID`            | *   |      | *   |       | *   | *     |      |      |         |
+| `VALUE_INVALID`          |     |      | *   |       |     |       |      |      |         |
 | `SUBCOMMAND_INVALID`     |     |      |     |       |     |       |      |      | *       |
 | `KEY_NO_PERMISSION`      | *   | *    | *   |       | *   | *     |      |      |         |
 | `KEY_NOT_SET`            |     |      | *   |       |     |       |      |      |         |
