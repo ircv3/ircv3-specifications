@@ -363,8 +363,6 @@ When a user runs `WHOIS` on a user with metadata, a subset of that metadata MAY 
 
 ## Examples
 
-These examples show the labels of the numerics (e.g. `RPL_METADATASUBOK`) instead of their number (e.g. `775`) in order to aid understanding. In a real implementation, messages always contain the number of the numeric.
-
 All examples begin with the client not being subscribed to any keys.
 
 -----
@@ -388,7 +386,7 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata on self
 
     C: METADATA * SET url :http://www.example.com
-    S: :irc.example.com 761 * url * :http://www.example.com
+    S: :irc.example.com 761 client * url * :http://www.example.com
 
 #### Setting metadata on self, but the limit has been reached
 
@@ -403,7 +401,7 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata on channel
 
     C: METADATA #example SET url :http://www.example.com
-    S: :irc.example.com 761 #example url * :http://www.example.com
+    S: :irc.example.com 761 client #example url * :http://www.example.com
 
 #### Setting metadata on an invalid target
 
@@ -451,17 +449,17 @@ Thought: A non-normative retry value helps against automated spam while still be
 
     C: METADATA user1 LIST
     S: :irc.example.com BATCH +VUN2ot metadata
-    S: @batch=VUN2ot :irc.example.com 761 user1 url * :http://www.example.com
-    S: @batch=VUN2ot :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
-    S: @batch=VUN2ot :irc.example.com 761 user1 bot-likeliness-score visible-only-for-admin :42
+    S: @batch=VUN2ot :irc.example.com 761 client user1 url * :http://www.example.com
+    S: @batch=VUN2ot :irc.example.com 761 client user1 im.xmpp * :user1@xmpp.example.com
+    S: @batch=VUN2ot :irc.example.com 761 client user1 bot-likeliness-score visible-only-for-admin :42
     S: :irc.example.com BATCH -VUN2ot
 
 #### Getting several metadata keys from a user
 
     C: METADATA user1 GET blargh splot im.xmpp
     S: :irc.example.com BATCH +gWkCiV metadata
-    S: @batch=gWkCiV 766 user1 blargh :No matching key
-    S: @batch=gWkCiV 766 user1 splot :No matching key
+    S: @batch=gWkCiV 766 client user1 blargh :No matching key
+    S: @batch=gWkCiV 766 client user1 splot :No matching key
     S: @batch=gWkCiV :irc.example.com 761 user1 im.xmpp * :user1@xmpp.example.com
     S: :irc.example.com BATCH -gWkCiV
 
