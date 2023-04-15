@@ -418,12 +418,12 @@ All examples begin with the client not being subscribed to any keys.
 #### Server rate-limits setting metadata and provides a RetryAfter value
 
     C: METADATA * SET url :http://www.example.com
-    S: FAIL METADATA RATE_LIMIT url 5 :Rate-limit reached. You're going too fast! Try again in 5 seconds.
+    S: FAIL METADATA RATE_LIMITED url 5 :Rate-limit reached. You're going too fast! Try again in 5 seconds.
 
 #### Server rate-limits setting metadata with no RetryAfter value
 
     C: METADATA * SET url :http://www.example.com
-    S: FAIL METADATA RATE_LIMIT url * :Rate-limit reached. You're going too fast!
+    S: FAIL METADATA RATE_LIMITED url * :Rate-limit reached. You're going too fast!
     
 Thought: A non-normative retry value helps against automated spam while still being descriptive for the end-user.
 
