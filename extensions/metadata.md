@@ -302,7 +302,7 @@ The following Standard Replies codes are defined with these parameters:
 | `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
 | `KEY_NOT_SET`           | `<Target> <Key> :key not set`            |
 | `LIMIT_REACHED`         | `<Target> :metadata limit reached`       |
-| `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> <Value> :too many changes`  |
+| `RATE_LIMITED`          | `<Target> <Key> <RetryAfter> :too many changes`  |
 | `TOO_MANY_SUBS`         | `<Key> :too many subscriptions`          |
 | `VALUE_INVALID`         | `:value is too long or not UTF8`         |
 
@@ -326,8 +326,8 @@ Each subcommand section describes the reply and error numerics it expects from t
 ### Examples
 
 * `FAIL METADATA TARGET_INVALID ExampleUser!lol :Invalid target.` when a client refers to an invalid target.
-* `FAIL METADATA KEY_INVALID %key% %target% :That is not a valid key.` when a client refers to an invalid key.
-* `FAIL METADATA KEY_NO_PERMISSION %key% %target% :You do not have permission to set %key% on %target%` when a client attempts to access or set a key on a target when they lack sufficient permission.
+* `FAIL METADATA KEY_INVALID %key% :That is not a valid key.` when a client refers to an invalid key.
+* `FAIL METADATA KEY_NO_PERMISSION %target% %key% :You do not have permission to set %key% on %target%` when a client attempts to access or set a key on a target when they lack sufficient permission.
 * `FAIL METADATA SUBCOMMAND_INVALID destr0y :Invalid subcommand.` when a client calls a `METADATA` subcommand which is not defined.
 
 ## Numerics
@@ -399,7 +399,7 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata on another user, without permission
 
     C: METADATA user1 SET url :http://www.example.com
-    S: FAIL METADATA KEY_NO_PERMISSION url user1 :You do not have permission to set 'url' on 'user1'
+    S: FAIL METADATA KEY_NO_PERMISSION user1 url :You do not have permission to set 'url' on 'user1'
 
 #### Setting metadata on channel
 
@@ -414,17 +414,17 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata with an invalid key
 
     C: METADATA user1 SET $url$ :http://www.example.com
-    S: FAIL METADATA KEY_INVALID $url$ user1 :Invalid key.
+    S: FAIL METADATA KEY_INVALID $url$ :Invalid key.
 
 #### Server rate-limits setting metadata and provides a RetryAfter value
 
     C: METADATA * SET url :http://www.example.com
-    S: FAIL METADATA RATE_LIMITED url 5 :Rate-limit reached. You're going too fast! Try again in 5 seconds.
+    S: FAIL METADATA RATE_LIMITED * url 5 :Rate-limit reached. You're going too fast! Try again in 5 seconds.
 
 #### Server rate-limits setting metadata with no RetryAfter value
 
     C: METADATA * SET url :http://www.example.com
-    S: FAIL METADATA RATE_LIMITED url * :Rate-limit reached. You're going too fast!
+    S: FAIL METADATA RATE_LIMITED * url * :Rate-limit reached. You're going too fast!
     
 Thought: A non-normative retry value helps against automated spam while still being descriptive for the end-user.
 
@@ -680,7 +680,7 @@ Twice:
 #### Subscribing to a key which requires privileges but without privileges
 
     C: METADATA * SUB avatar secretkey website
-    S: FAIL METADATA KEY_NO_PERMISSION secretkey modernclient :You do not have permission to do that.
+    S: FAIL METADATA KEY_NO_PERMISSION modernclient secretkey :You do not have permission to do that.
     S: :irc.example.com 770 modernclient :avatar website
     C: METADATA * SUBS
     S: :irc.example.com 772 modernclient :avatar website
@@ -688,10 +688,10 @@ Twice:
 #### Subscribing to invalid keys and a key which requires privileges but without privileges
 
     C: METADATA * SUB $invalid1 secretkey1 $invalid2 secretkey2 website
-    S: FAIL METADATA KEY_NO_PERMISSION secretkey1 modernclient :You do not have permission to do that.
-    S: FAIL METADATA KEY_INVALID $invalid1 modernclient :Invalid key
-    S: FAIL METADATA KEY_NO_PERMISSION secretkey2 modernclient :You do not have permission to do that.
-    S: FAIL METADATA KEY_INVALID $invalid2 modernclient :Invalid key
+    S: FAIL METADATA KEY_NO_PERMISSION modernclient secretkey1 :You do not have permission to do that.
+    S: FAIL METADATA KEY_INVALID $invalid1 :Invalid key
+    S: FAIL METADATA KEY_NO_PERMISSION modernclient secretkey2 :You do not have permission to do that.
+    S: FAIL METADATA KEY_INVALID $invalid2 :Invalid key
     S: :irc.example.com 770 modernclient :website
     C: METADATA * SUBS
     S: :irc.example.com 772 modernclient :website
