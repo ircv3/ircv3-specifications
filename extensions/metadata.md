@@ -298,7 +298,7 @@ The following Standard Replies codes are defined with these parameters:
 | ----------------------- | ---------------------------------------- |
 | `INVALID_TARGET`        | `<Target> :invalid metadata target`      |
 | `KEY_INVALID`           | `<InvalidKey> :invalid key`              |
-| `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
+| `SUBCOMMAND_INVALID`    | `<SubCommand> :invalid subcommand`       |
 | `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
 | `KEY_NOT_SET`           | `<Target> <Key> :key not set`            |
 | `LIMIT_REACHED`         | `<Target> :metadata limit reached`       |
@@ -312,7 +312,7 @@ Reference table of Standard Replies codes and the `METADATA` subcommands or any 
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | `INVALID_TARGET`         | *   | *    | *   | *     | *   | *     | *    | *    |         |
 | `KEY_INVALID`            | *   |      | *   |       | *   | *     |      |      |         |
-| `INVALID_SUBCOMMAND`     |     |      |     |       |     |       |      |      | *       |
+| `SUBCOMMAND_INVALID`     |     |      |     |       |     |       |      |      | *       |
 | `KEY_NO_PERMISSION`      | *   | *    | *   |       | *   | *     |      |      |         |
 | `KEY_NOT_SET`            |     |      | *   |       |     |       |      |      |         |
 | `LIMIT_REACHED`          |     |      | *   |       |     |       |      |      |         |
@@ -326,7 +326,7 @@ Each subcommand section describes the reply and error numerics it expects from t
 * `FAIL METADATA TARGET_INVALID ExampleUser!lol :Invalid target.` when a client refers to an invalid target.
 * `FAIL METADATA KEY_INVALID %key% %target% :That is not a valid key.` when a client refers to an invalid key.
 * `FAIL METADATA KEY_NO_PERMISSION %key% %target% :You do not have permission to set %key% on %target%` when a client attempts to access or set a key on a target when they lack sufficient permission.
-* `FAIL METADATA INVALID_SUBCOMMAND destr0y :Invalid subcommand.` when a client calls a `METADATA` subcommand which is not defined.
+* `FAIL METADATA SUBCOMMAND_INVALID destr0y :Invalid subcommand.` when a client calls a `METADATA` subcommand which is not defined.
 
 ## Numerics
 
