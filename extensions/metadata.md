@@ -87,6 +87,7 @@ These are the defined tokens:
 * `before-connect`: if present, indicates the server supports `METADATA` commands during connection registration
 * `max-subs`: the maximum number of keys a client is allowed in its subscription list. See the [`SUB`](#metadata-sub) subcommand for more details.
 * `max-keys`: the maximum number of keys a client is allowed to set on its own nickname.
+* `max-value-bytes`: the maximum size of values a client is allowed to set. Servers MAY send longer values.
 
 Clients MUST silently ignore any unknown tokens.
 
