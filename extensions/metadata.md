@@ -183,7 +183,7 @@ for every key in order.
 
 Servers MAY replace metadata which is considered not visible for the requesting user, with `RPL_KEYNOTSET` or with `FAIL METADATA KEY_NO_PERMISSION`.
 
-*Failures*: `INVALID_KEY`, `KEY_NO_PERMISSION`
+*Failures*: `KEY_INVALID`, `KEY_NO_PERMISSION`
 
 ### METADATA LIST
 
@@ -247,13 +247,13 @@ The server processes each key in order, and:
 >
 > If the client successfully subscribes to a key, or is already subscribed to a requested key, that key MUST appear in a `RPL_METADATASUBOK` reply numeric.
 >
-> If the key's name is invalid, the server sends a `FAIL METADATA INVALID_KEY` reply to the client and continues processing keys.
+> If the key's name is invalid, the server sends a `FAIL METADATA KEY_INVALID` reply to the client and continues processing keys.
 >
 > If the client does not have permission to view a given key, the server sends a `FAIL METADATA KEY_NO_PERMISSION` reply to the client and continues processing keys. However, the subscription MUST still be successful, and that key MUST appear in a `RPL_METADATASUBOK` reply numeric. In this case, the `FAIL METADATA KEY_NO_PERMISSION` reply serves as a warning indicating that the client will not receive `METADATA` messages about this key unless it gains the necessary (implementation defined) privileges later.
 
 Once the server is finished processing keys, it responds with:
 * zero or more of this numeric in any order: `RPL_METADATASUBOK`,
-* zero or more of these standard reply codes: `FAIL METADATA INVALID_KEY`, `FAIL METADATA KEY_NO_PERMISSION`
+* zero or more of these standard reply codes: `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`
 * and MAY respond with one `FAIL METADATA TOO_MANY_SUBS` reply.
 
 ### METADATA UNSUB
@@ -266,11 +266,11 @@ Servers process the given keys, and:
 
 > If the client successfully unsubscribes from a key, or is not subscribed to a requested key, that key MUST appear in a `RPL_METADATAUNSUBOK` reply numeric.
 >
-> If the key's name is invalid, the server sends a `FAIL METADATA INVALID_KEY` reply to the client and continues processing keys.
+> If the key's name is invalid, the server sends a `FAIL METADATA KEY_INVALID` reply to the client and continues processing keys.
 
 Once the server is finished processing keys, it responds with:
 * zero or more of this numeric in any order: `RPL_METADATAUNSUBOK`
-* zero of more of this standard reply: `FAIL METADATA INVALID_KEY`
+* zero of more of this standard reply: `FAIL METADATA KEY_INVALID`
 
 ### METADATA SUBS
 
@@ -297,7 +297,7 @@ The following Standard Replies codes are defined with these parameters:
 | Code                    | Parameters                               |
 | ----------------------- | ---------------------------------------- |
 | `INVALID_TARGET`        | `<Target> :invalid metadata target`      |
-| `INVALID_KEY`           | `<InvalidKey> :invalid key`              |
+| `KEY_INVALID`           | `<InvalidKey> :invalid key`              |
 | `INVALID_SUBCOMMAND`    | `<SubCommand> :invalid subcommand`       |
 | `KEY_NO_PERMISSION`     | `<Target> <Key> :permission denied`      |
 | `KEY_NOT_SET`           | `<Target> <Key> :key not set`            |
@@ -311,7 +311,7 @@ Reference table of Standard Replies codes and the `METADATA` subcommands or any 
 | Code                     | GET | LIST | SET | CLEAR | SUB | UNSUB | SUBS | SYNC | Other   |
 | ---    | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | `INVALID_TARGET`         | *   | *    | *   | *     | *   | *     | *    | *    |         |
-| `INVALID_KEY`            | *   |      | *   |       | *   | *     |      |      |         |
+| `KEY_INVALID`            | *   |      | *   |       | *   | *     |      |      |         |
 | `INVALID_SUBCOMMAND`     |     |      |     |       |     |       |      |      | *       |
 | `KEY_NO_PERMISSION`      | *   | *    | *   |       | *   | *     |      |      |         |
 | `KEY_NOT_SET`            |     |      | *   |       |     |       |      |      |         |
@@ -412,7 +412,7 @@ All examples begin with the client not being subscribed to any keys.
 #### Setting metadata with an invalid key
 
     C: METADATA user1 SET $url$ :http://www.example.com
-    S: FAIL METADATA INVALID_KEY $url$ user1 :Invalid key.
+    S: FAIL METADATA KEY_INVALID $url$ user1 :Invalid key.
 
 #### Server rate-limits setting metadata and provides a RetryAfter value
 
@@ -537,7 +537,7 @@ Client waits 6 more seconds:
 
     C: METADATA * SUB foo $url bar
     S: :irc.example.com 770 modernclient :foo bar
-    S: FAIL METADATA INVALID_KEY $url :Invalid key
+    S: FAIL METADATA KEY_INVALID $url :Invalid key
 
 #### "Subscribed to too many keys" error in reply to subscription 1
 
