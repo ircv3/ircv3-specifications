@@ -88,6 +88,7 @@ The following codes are defined, with sample plain text descriptions.
 
 * `FAIL REDACT REDACT_FORBIDDEN <target> <target-msgid> :You are not authorised to delete this message`
 * `FAIL REDACT REDACT_WINDOW_EXPIRED <target> <target-msgid> <window> :You can no longer edit this message`
+* `FAIL REDACT UNKNOWN_MSGID <target> <target-msgid> <window> :This message does not exist or is too old`
 
 ## Client implementation considerations
 
