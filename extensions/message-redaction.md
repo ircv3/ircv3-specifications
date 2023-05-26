@@ -49,6 +49,7 @@ them to be redacted.
 ### Capability
 
 This specification adds the `draft/message-redaction` capability.
+Clients MUST ignore this capability's value, if any.
 
 Implementations that negotiate these capabilities indicate that they are
 capable of handling the respective commands and message tags described below.
