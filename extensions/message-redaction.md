@@ -156,22 +156,22 @@ Deleting a PRIVMSG:
 
     C: PRIVMSG #channel :an example
     S: @msgid=123 :nick!u@h PRIVMSG #channel :an example
-    C: DELETE #channel 123 :bad example
-    S: @msgid=124 :nick!u@h DELETE #channel 123 :bad example
+    C: REDACT #channel 123 :bad example
+    S: @msgid=124 :nick!u@h REDACT #channel 123 :bad example
 
 Deleting a TAGMSG:
 
     C: @draft/react=🤞TAGMSG #channel
     S: @msgid=123;draft/react=🤞TAGMSG #channel
-    C: DELETE #channel 123
-    S: @msgid=124 :nick@u@h DELETE #channel 123
+    C: REDACT #channel 123
+    S: @msgid=124 :nick@u@h REDACT #channel 123
 
 Deleting someone else's PRIVMSG:
 
     C: PRIVMSG #channel :join my network for cold hard chats
     S: @msgid=123 :nick!u@h PRIVMSG #channel :join my network for cold hard chats
-    C: DELETE #channel 123 spam
-    S: @msgid=124 :nick!u@h DELETE #channel 123 spam
+    C: REDACT #channel 123 spam
+    S: @msgid=124 :nick!u@h REDACT #channel 123 spam
 
 
 [`echo-message`]: ../extensions/echo-message.html
