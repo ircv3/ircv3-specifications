@@ -28,8 +28,8 @@ The final version of the specification will use an unprefixed capability name.
 ## Introduction
 
 This specification enables messages to be deleted.
-Use cases include retracting accidentally sent messages and moderation,
-removing a [`+draft/react` client tag][], amongst others.
+Use cases include retracting accidentally sent messages moderation,
+and removing a [`+draft/react` client tag][], amongst others.
 These are cosmetic use cases and do not provide any operational security
 guarantees.
 
