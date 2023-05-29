@@ -126,6 +126,10 @@ If a message is redacted while a client is disconnected (or parted from a channe
 a message it saw is redacted, servers may send the `REDACT` command in a `chathistory`
 batch when it re-joins the channel.
 
+If servers use predictable or guessable `msgid`s, they should considered whether errors
+returned on `REDACT` may leak a message's existence to users who did not receive it
+(in a channel they are/were not in or in private messages).
+
 ### Fallback
 
 Server implementations might choose to inform clients that haven't negotiated
