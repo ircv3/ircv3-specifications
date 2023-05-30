@@ -108,6 +108,11 @@ allow users to attempt to delete any message via some mechanism.
 
 Clients SHOULD NOT provide a default reason if users do not provide one.
 
+When a `REDACT` command's `msgid` parameter references a known message not in
+the `target`'s history, clients MUST ignore it.
+This allows servers to safely relay `REDACT` commands targeting messages which they
+did not keep in their history.
+
 ## Server implementation considerations
 
 *This section is non-normative.*
