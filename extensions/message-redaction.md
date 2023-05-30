@@ -100,7 +100,7 @@ Redacted messages MAY be hidden entirely from the primary message log,
 but a deletion log SHOULD be made available.
 
 For the purposes of user interface, clients MAY assume that their own messages
-are editable.
+are redactable.
 However, this will not always be the case, and there could be other messages
 that they have permission to act on.
 Pending a mechanism for discovering redaction permissions, clients SHOULD
