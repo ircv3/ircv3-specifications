@@ -177,10 +177,10 @@ Deleting a TAGMSG:
 
 Deleting someone else's PRIVMSG:
 
-    C: PRIVMSG #channel :join my network for cold hard chats
-    S: @msgid=123 :nick!u@h PRIVMSG #channel :join my network for cold hard chats
-    C: REDACT #channel 123 spam
-    S: @msgid=124 :nick!u@h REDACT #channel 123 spam
+    C1: PRIVMSG #channel :join my network for cold hard chats
+    S:  @msgid=123 :nick!u@h PRIVMSG #channel :join my network for cold hard chats
+    C2: REDACT #channel 123 spam
+    S:  @msgid=124 :chanop!u@h REDACT #channel 123 spam
 
 
 [`echo-message`]: ../extensions/echo-message.html
