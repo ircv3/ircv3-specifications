@@ -41,9 +41,8 @@ Clients wishing to use these capabilities MUST negotiate the [`message-tags`][]
 capability with the server.
 Additionally, this capability relies on messages being sent with the
 [`msgid`][] tag, and message ids MUST NOT contain spaces.
-Clients SHOULD negotiate the [`echo-message`][] and [`labeled-response`][]
-capabilities in order to receive message IDs for their own messages, to allow
-them to be redacted.
+Clients SHOULD negotiate the [`echo-message`][] capabilities in order to receive
+message IDs for their own messages, to allow them to be redacted.
 
 
 ### Capability
@@ -185,7 +184,6 @@ Deleting someone else's PRIVMSG:
 
 [`echo-message`]: ../extensions/echo-message.html
 [`+draft/react` client tag]: ../client-tags/react.html
-[`labeled-response`]: ../extensions/labeled-response.html
 [standard replies]: ../extensions/standard-replies.html
 [`message-tags`]: ../extensions/message-tags.html
 [`msgid`]: ../extensions/message-tags.html
