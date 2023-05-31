@@ -138,7 +138,7 @@ returned on `REDACT` may leak a message's existence to users who did not receive
 ### Fallback
 
 Server implementations might choose to inform clients that haven't negotiated
-the capability that an edit or deletion has taken place.
+the capability that a deletion has taken place.
 The fallback method used (if any) is left up to server implementations, but
 could take the form of a standard NOTICE or PRIVMSG with information about the
 action.
