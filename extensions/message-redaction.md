@@ -77,7 +77,8 @@ If the client is authorised to delete the message, the server:
 After a message is redacted, [`chathistory`][] responses SHOULD either:
 
 * exclude it entirely
-* replace it with the `REDACT` message with the same value as `@msgid` tag
+* replace its second parameter and/or tags with a placeholder and
+  add the `REDACT` message to the response (not counting toward message limits)
 * add the `REDACT` message to the response (not counting toward message limits)
 
 ### Errors
