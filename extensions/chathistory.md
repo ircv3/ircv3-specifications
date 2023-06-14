@@ -125,6 +125,10 @@ The order of returned messages within the batch is implementation-defined, but S
 
 Servers SHOULD provide clients with a consistent message order that is valid across the lifetime of a single connection, and which determinately orders any two messages (even if they share a timestamp); this will allow BEFORE, AFTER, and BETWEEN queries that use msgids for pagination to function as expected. This order SHOULD coincide with the order in which messages are returned within a response batch. It need not coincide with the delivery order of messages when they were relayed on any particular server.
 
+#### `draft/chathistory-context` tag
+
+The server may choose to return additional, related messages alongside regular chat history. Such messages MUST be tagged with the `draft/chathistory-context` tag and MUST immediately follow their parent message. Context messages MUST NOT be counted towards the message limit. Context messages are sent at the server's discretion and MAY include reacts, redacts, edits, etc.
+
 #### Errors and Warnings
 Errors are returned using the standard replies syntax.
 
