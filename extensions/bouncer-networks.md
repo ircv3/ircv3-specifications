@@ -270,7 +270,7 @@ Adding a new network:
     C: BOUNCER ADDNETWORK name=OFTC;host=irc.oftc.net
     S: BOUNCER NETWORK 7dwsw name=OFTC;host=irc.oftc.net;state=connecting
     S: BOUNCER ADDNETWORK 7dwsw
-    S: BOUNCER NETWORK 7dwsw status=connected
+    S: BOUNCER NETWORK 7dwsw state=connected
 
 Changing an existing network:
 
