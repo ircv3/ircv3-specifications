@@ -56,6 +56,7 @@ spam.
 To prevent perceived input lag, clients may choose not to wait for an acknowledgment from the server before displaying sent messages to users. Clients may instead choose to display a temporary local message that is replaced once the `echo-message` acknowledgment is received. However, correlating these is not straightforward, as the server may modify them before acknowledgment. There are also additional complications for self-targeted private messages.
 
 The [`labeled-response`](./labeled-response.html) specification addresses this limitation.
+When the `labeled-response` capability is negotiated, servers MUST provide the `label` tag on echoes of messages sent with the label.
 
 ## Examples
 
@@ -79,3 +80,5 @@ formatting and sends the final version back:
 Previous versions of this specification didn't include the Limitations section.
 
 Previous versions of this specification didn't allow for faked messages when filtering spam.
+
+Previous versions of this specification did not make labels mandatory on echoed messages.
