@@ -149,7 +149,7 @@ Here is a handy table of the available `CAP` subcommands and which side sends th
 Some subcommands may include a space-separated list of capabilities as their final parameter.
 The list of capabilities MUST be parsed and processed from left to right and capabilities
 SHOULD only be sent once per command. If a capability with values is sent multiple times, the
-last one received takes priority.
+last one received takes priority. Clients MUST ignore any trailing whitespace.
 
 If a client sends a subcommand which is not in the list above or otherwise issues an
 invalid command, then numeric `410` (`ERR_INVALIDCAPCMD`) should be sent.  The first parameter
@@ -546,3 +546,6 @@ their CAP LS version. It has been clarified that clients MAY NOT downgrade this.
 Clarified that multiline LS and LIST replies must only be used for CAP 302.
 
 Previous versions of this spec did not state that capability names MUST NOT start with a hyphen.
+
+Previous versions of this spec did not state that space-separated capability lists may end with
+a trailing space.
