@@ -30,6 +30,9 @@ state, as well as when a user joins and has an away message set.
 (Note that AWAY will not be sent for joining users with no away
 message set.)
 
+Clients should not be sent AWAY messages to notify them of their own away
+status (as they can rely on `RPL_NOWAWAY` and `RPL_UNAWAY`).
+
 The format of the AWAY message is as follows:
 
     :nick!user@host AWAY [:message]
@@ -46,3 +49,9 @@ To fully track the away state of users, clients should:
    state of all users in that channel.
 
 3) Update state appropriately upon receiving an AWAY message.
+
+## Erratum
+
+The previous version of this specification did not explicitly say
+users should not get notifications of their own away status with AWAY.
+This was clarified in 2023
