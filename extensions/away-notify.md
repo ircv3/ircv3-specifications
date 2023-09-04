@@ -30,7 +30,7 @@ state, as well as when a user joins and has an away message set.
 (Note that AWAY will not be sent for joining users with no away
 message set.)
 
-Clients should not be sent AWAY messages to notify them of their own away
+Clients SHOULD NOT be sent AWAY messages to notify them of their own away
 status (as they can rely on `RPL_NOWAWAY` and `RPL_UNAWAY`).
 
 The format of the AWAY message is as follows:
