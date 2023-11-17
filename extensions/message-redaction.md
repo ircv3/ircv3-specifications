@@ -62,7 +62,8 @@ The command is defined as follows:
 
     REDACT <target> <msgid> [:reason]
 
-Where `<msgid>` is the id of the message to be redacted.
+Where `<msgid>` is the id of the message to be redacted, which MUST be a
+`PRIVMSG`, `NOTICE`, or `TAGMSG`.
 
 If the client is authorised to delete the message, the server:
 
