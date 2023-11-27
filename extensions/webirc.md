@@ -47,6 +47,7 @@ These options are defined and may be sent by clients while connecting:
 - `local-port=<port>`: This flag indicates the port the gateway accepted the client connection on (e.g. `6697`, `6667`).
 - `certfp-<algo>=<fingerprint>`: This flag indicates the TLS client certificate fingerprint supplied to the WebIRC gateway by the user's actual client application.
 - `spkifp-<algo>=<fingerprint>`: This flag indicates the public key fingerprint for the TLS client certificate supplied to the WebIRC gateway by the user's actual client application.
+- `identd=<identd-response>`: This flag indicates the gateway has done an [ident lookup](https://en.wikipedia.org/wiki/Ident_protocol) and received a response, which it is passing on to the IRCd.
 
 `<algo>` should be the hash algorithm used to produce the fingerprint supplied such as `sha-256`. Its value should be taken from IANA's [Hash Function Textual Names](https://www.iana.org/assignments/hash-function-text-names/hash-function-text-names.xhtml) registry, or if using an algorithm not listed should use a name consisting of only lower case letters, numbers or hyphens.
 
