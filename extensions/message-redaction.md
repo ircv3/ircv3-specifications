@@ -79,7 +79,9 @@ After a message is redacted, [`chathistory`][] responses SHOULD either:
 * exclude it entirely
 * replace its content and/or tags with a placeholder and
   add the `REDACT` message to the response (not counting toward message limits)
+  after the redacted message
 * add the `REDACT` message to the response (not counting toward message limits)
+  after the redacted message
 
 ### Errors
 
