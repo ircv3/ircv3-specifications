@@ -127,9 +127,7 @@ Such use cases might include:
 * Allowing channel moderators or server admins to delete unwelcome messages from others
 * Specifying a cut-off time after which message edits are no longer allowed
 
-If a message is redacted while a client is disconnected (or parted from a channel) while
-a message it saw is redacted, servers may send the `REDACT` command in a `chathistory`
-batch when it re-joins the channel.
+If a message is redacted while a client is not present in a channel, servers may send the `REDACT` command in a `chathistory` batch when it re-joins the channel.
 
 If servers use predictable or guessable `msgid`s, they should consider whether errors
 returned on `REDACT` may leak a message's existence to users who did not receive it
