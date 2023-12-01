@@ -37,12 +37,12 @@ guarantees.
 
 ### Dependencies
 
-Clients wishing to use these capabilities MUST negotiate the [`message-tags`][]
+Clients wishing to use this capability MUST negotiate the [`message-tags`][]
 capability with the server.
 Additionally, this capability relies on messages being sent with the
 [`msgid`][] tag, and message ids MUST NOT contain spaces.
-Clients SHOULD negotiate the [`echo-message`][] capabilities in order to receive
-message IDs for their own messages, to allow them to be redacted.
+Clients SHOULD negotiate the [`echo-message`][] capability in order to receive
+message IDs for their own messages, so they can be redacted.
 
 
 ### Capability
@@ -50,8 +50,8 @@ message IDs for their own messages, to allow them to be redacted.
 This specification adds the `draft/message-redaction` capability.
 Clients MUST ignore this capability's value, if any.
 
-Implementations that negotiate these capabilities indicate that they are
-capable of handling the respective commands and message tags described below.
+Implementations that negotiate this capability indicate that they are
+capable of handling the command described below.
 
 
 ### Command
@@ -68,9 +68,9 @@ Where `<msgid>` is the id of the message to be redacted, which MUST be a
 If the client is authorised to delete the message, the server:
 
 * SHOULD forward this `REDACT`, with an appropriate prefix, to the target
-  recipients which negotiated the `draft/message-redaction` capability, in the
+  recipients that have negotiated the `draft/message-redaction` capability, in the
   same way as PRIVMSG messages.
-* MUST not forward this `REDACT` to target recipients which did not negotiated
+* MUST not forward this `REDACT` to target recipients that have not negotiated
   this capability (see "Fallback" below)
 
 ### Chat history
@@ -88,7 +88,7 @@ This specification defines `FAIL` messages using the [standard replies][]
 framework for notifying clients of errors with message editing and deletion.
 The following codes are defined, with sample plain text descriptions.
 
-* `FAIL REDACT INVALID_TARGET the_given_target :You cannot delete messages from the_given_target`
+* `FAIL REDACT INVALID_TARGET <target> :You cannot delete messages from <target>`
 * `FAIL REDACT REDACT_FORBIDDEN <target> <target-msgid> :You are not authorised to delete this message`
 * `FAIL REDACT REDACT_WINDOW_EXPIRED <target> <target-msgid> <window> :You can no longer edit this message`
 * `FAIL REDACT UNKNOWN_MSGID <target> <target-msgid> :This message does not exist or is too old`
@@ -117,7 +117,7 @@ did not keep in their history.
 
 ## Server implementation considerations
 
-*This section is non-normative.*
+This section is non-normative.
 
 A key motivation for specifying this capability as a server tag, rather than
 a client-only message tag, is to enable more granular redaction permissions.
