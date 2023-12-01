@@ -39,8 +39,6 @@ guarantees.
 
 Clients wishing to use this capability MUST negotiate the [`message-tags`][]
 capability with the server.
-Additionally, this capability relies on messages being sent with the
-[`msgid`][] tag, and message ids MUST NOT contain spaces.
 Clients SHOULD negotiate the [`echo-message`][] capability in order to receive
 message IDs for their own messages, so they can be redacted.
 
