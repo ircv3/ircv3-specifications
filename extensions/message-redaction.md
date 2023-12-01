@@ -58,11 +58,12 @@ To redact a message, a client MUST negotiate the `draft/message-redaction`
 capability and send a `REDACT` command to a target nickname or channel.
 The command is defined as follows:
 
-    REDACT <target> <msgid> [:reason]
+    REDACT <target> <msgid> [<reason>]
 
 Where `<msgid>` is the id of the message to be redacted, which MUST be a
 `PRIVMSG`, `NOTICE`, or `TAGMSG`.
 
+An optional `<reason>` MAY be provided. As the last parameter, it MAY contain spaces.
 If the client is authorised to delete the message, the server:
 
 * SHOULD forward this `REDACT`, with an appropriate prefix, to the target
