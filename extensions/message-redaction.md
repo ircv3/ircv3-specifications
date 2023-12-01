@@ -77,7 +77,7 @@ If the client is authorised to delete the message, the server:
 After a message is redacted, [`chathistory`][] responses SHOULD either:
 
 * exclude it entirely
-* replace its second parameter (if it is a `PRIVMSG` or `NOTICE`) and/or tags with a placeholder and
+* replace its content and/or tags with a placeholder and
   add the `REDACT` message to the response (not counting toward message limits)
 * add the `REDACT` message to the response (not counting toward message limits)
 
