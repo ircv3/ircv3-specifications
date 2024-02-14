@@ -33,7 +33,7 @@ A bearer token is an opaque string of bytes. Bearer tokens MUST NOT contain the 
 
 In order to authenticate to a server by means of a bearer token, a client first obtains a bearer token of the desired type, then authenticates via the `PLAIN` mechanism of SASL, as defined by [RFC 4616](https://datatracker.ietf.org/doc/html/rfc4616) and encoded in the IRCv3 client-to-server protocol as defined by the [SASL extension](sasl-3.1.html).
 
-The client prepends the ASCII characters `*bearer*` to the bearer token type to obtain the PLAIN authentication identity (`authcid`); for example, `oauth2` becomes `*bearer*oauth2`. The client then authenticates via PLAIN with this authentication identity and the bearer token itself as the password (`passwd`). The client MUST either omit the optional authorization identity (`authzid`), or use the authcid again as the authzid.
+The client prepends the ASCII characters `*bearer*` to the bearer token type to obtain the PLAIN authentication identity (`authcid`); for example, `oauth2` becomes `*bearer*oauth2`. The client then authenticates via PLAIN with this authentication identity and the bearer token itself as the password (`passwd`). The client SHOULD omit the optional authorization identity (`authzid`).
 
 ## Bearer token types
 
