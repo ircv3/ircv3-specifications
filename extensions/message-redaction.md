@@ -202,5 +202,5 @@ Deleting someone else's PRIVMSG:
 [`+draft/react` client tag]: ../client-tags/react.html
 [standard replies]: ../extensions/standard-replies.html
 [`message-tags`]: ../extensions/message-tags.html
-[`msgid`]: ../extensions/message-tags.html
-[`chathistory`]: ../extensions/message-tags.html
+[`msgid`]: ../extensions/message-ids.html
+[`chathistory`]: ../extensions/chathistory.html
