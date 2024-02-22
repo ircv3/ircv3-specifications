@@ -136,6 +136,20 @@ If servers use predictable or guessable `msgid`s, they should consider whether e
 returned on `REDACT` may leak a message's existence to users who did not receive it
 (in a channel they are/were not in or in private messages).
 
+### Message validation
+
+To implement validation, servers require a mechanism for determining the permissions of
+a particular edit or delete action.
+The user requesting the action would need to be compared against properties of
+the message, given only the message ID and target.
+
+Servers with message history storage could look up the message properties from the ID,
+but this might not be possible or desirable in all cases.
+Another mechanism could involve encoding any required properties within the message ID
+itself, e.g. the account ID, timestamp, etc. Servers might choose to encrypt this
+information if it isn't usually public facing. Any information encoded in a message ID
+is still opaque and not intended to be parsed by clients.
+
 ### Fallback
 
 Server implementations might choose to inform clients that haven't negotiated
