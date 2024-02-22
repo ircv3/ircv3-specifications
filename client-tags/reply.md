@@ -9,17 +9,6 @@ copyrights:
     email: "james@irccloud.com"
 ---
 
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `+reply` tag name. Instead, implementations SHOULD use the
-`+draft/reply` tag name to be interoperable with other software
-implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed tag name.
-
 ## Introduction
 
 This specification defines a client-only message tag to indicate replies to other messages
@@ -34,7 +23,7 @@ Clients wishing to use this tag MUST negotiate the [`message-tags`](../extension
 
 The reply tag is sent by a client with the client-only prefix `+` and its value references the server provided ID of another message:
 
-    +draft/reply=<msgid>
+    +reply=<msgid>
 
 ## Client implementation considerations
 
@@ -49,5 +38,5 @@ In this situation, it might make more sense to leave the reply in place chronolo
 In this example, a `PRIVMSG` is sent to a channel with an ID provided by the server. A client sends a reply to this message and the server sends an echo-message back to the client.
 
     S: @msgid=123 :nick!user@host PRIVMSG #channel :Hello!
-    C: @+draft/reply=123 PRIVMSG #channel :Hello to you!
-    S: @msgid=456;+draft/reply=123 :nick2!user2@host2 PRIVMSG #channel :Hello to you!
+    C: @+reply=123 PRIVMSG #channel :Hello to you!
+    S: @msgid=456;+reply=123 :nick2!user2@host2 PRIVMSG #channel :Hello to you!
