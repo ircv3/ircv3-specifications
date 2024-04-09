@@ -83,6 +83,9 @@ After a message is redacted, [`chathistory`][] responses SHOULD either:
 * add the `REDACT` message to the response (not counting toward message limits)
   after the redacted message
 
+In the latter case, `REDACT` responses MUST be present even if `draft/event-playback`
+is not negotiated.
+
 ### Errors
 
 This specification defines `FAIL` messages using the [standard replies][]
