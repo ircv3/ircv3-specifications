@@ -130,7 +130,7 @@ Such use cases might include:
 * Allowing channel moderators or server admins to delete unwelcome messages from others
 * Specifying a cut-off time after which message edits are no longer allowed
 
-Servers may send `REDACT` commands in [`chathistory` batches]) sent to clients on joining a channel.
+Servers may send `REDACT` commands in [`chathistory` batches] sent to clients on joining a channel.
 
 If servers use predictable or guessable `msgid`s, they should consider whether errors
 returned on `REDACT` may leak a message's existence to users who did not receive it
