@@ -188,7 +188,7 @@ Deleting a TAGMSG:
     C: @draft/react=🤞TAGMSG #channel
     S: @msgid=123;draft/react=🤞TAGMSG #channel
     C: REDACT #channel 123
-    S: :nick@u@h REDACT #channel 123
+    S: :nick!u@h REDACT #channel 123
 
 Deleting someone else's PRIVMSG:
 
