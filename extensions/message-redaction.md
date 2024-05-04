@@ -77,11 +77,11 @@ If the client is authorised to delete the message, the server:
 After a message is redacted, [`chathistory`][] responses SHOULD either:
 
 * exclude it entirely
-* replace its content and/or tags with a placeholder and
-  add the `REDACT` message to the response (not counting toward message limits)
-  after the redacted message
-* add the `REDACT` message to the response (not counting toward message limits)
-  after the redacted message
+* include a `REDACT` message after the redacted message, which doesn't count towards message limits.
+  The redacted message's content and/or tags MAY be replaced with a placeholder.
+
+The `draft/event-playback` capability is not required in order to include `REDACT` messages
+in `chathistory` responses.
 
 ### Errors
 
