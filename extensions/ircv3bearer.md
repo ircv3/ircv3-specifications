@@ -29,7 +29,7 @@ A bearer token is an opaque string of bytes. Bearer tokens MUST NOT contain the 
 
 In order to authenticate to a server by means of a bearer token, a client first obtains a bearer token of the desired type, then initiates a SASL conversation with the server using the mechanism `IRCV3BEARER`. This mechanism consists of a single message from the client to the server, having the form:
 
-    <message>   ::= [authzid] NUL <token_type> <token>
+    <message>   ::= [authzid] NUL <token_type> NUL <token>
 
 where the optional authzid (authorization identity) is as specified by [RFC 4616](https://datatracker.ietf.org/doc/html/rfc4616).
 
