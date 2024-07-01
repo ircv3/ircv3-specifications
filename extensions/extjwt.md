@@ -83,6 +83,18 @@ Eg:
 [S -> C] EXTJWT #channel * SBsb25nIHZhbHVlIiwiY2xhaW03Ijoic29tZSBsb25nIHZhbHVlIiwiY2xhaW04Ijoic29tZSBsb25nZXIgdmFsdWUgdG8gbWFrZSBzdXJlIHRoaXMgdG9rZW4gaXMgdG9vIGxvbmcgdG8gc2VuZCBvbiBvbmUgSVJDIDUxMiBjaGFyYWN0ZXIgbGluZSJ9.wxRb7lH9OjENg_dTmPrDglBsN3Z17g1eEGJdp9Jsbqg
 ~~~
 
+#### Errors
+
+Along with numeric errors where appropriate this specification defines a few errors using [standard-replies](https://ircv3.net/specs/extensions/) with example plain text descriptions.
+
+`ERR_NEEDMOREPARAMS` (461) - Not enough parameters sent to EXTJWT.
+
+`ERR_NOSUCHCHANNEL` (403) - Requested channel does not exist.
+
+`:irc.example.com FAIL EXTJWT NO_SUCH_SERVICE :You specified an invalid JSON Web Token profile` - Token requested for a service profile that does not exist.
+
+`:irc.example.com FAIL EXTJWT UNKNOWN_ERROR :Failed to generate JSON Web Token` - There was an error generating the token.
+
 #### Notes on the token expiry claim
 
 When generating a token, the expiry (exp) claim must be configured with enough length of time for the token to be used but also be short enough that the token does not last indefinately, leaving the user with a valid token after the user has left a channel or changed its network modes.
