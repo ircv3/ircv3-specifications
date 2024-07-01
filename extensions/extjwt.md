@@ -27,13 +27,12 @@ The JWT token (https://jwt.io/) is a base64 encoded JSON payload that is signed 
 * `exp` `1529917513` Expiry time for this token.
 * `iss` `"irc.example.org"` The server name that generated this token.
 * `sub` `"somenick"` The nick of the user that generated this token.
-* `vfy` `"https://irc.example.org/extjwtverify/?t=%s"` The URL that can verify this token.
 * `account` `"somenick"` The account name of the user that generated this token. Empty if not logged in.
 * `umodes` `["o"]` User modes the IRCd wishes to disclose. Eg, if the user is an operator.
 
 When an external service is opened with this token in its URL, the external service verifies that the token has not been tampered with by one of two methods:
-1. If the external service has a shared secret for this IRC network, it can now verify the token directly.
-2. The external service can make a HTTP GET request to the URL given in the `vfy` claim, replacing `%s` with the token string. The request MUST be responded to with a HTTP 200 status if the token has been verified, or a HTTP 401 status if the token is invalid.
+1. If the external service has a pre-shared secret for this IRC network, it can now verify the token directly.
+2. The external service can make a HTTP GET request to a pre-shared URL, replacing `%s` with the token string. The request MUST be responded to with a HTTP 200 status if the token has been verified, or a HTTP 401 status if the token is invalid.
 
 Once successfully verified, the external service can then use the available claims in the token to create any required user accounts and log the user in automatically.
 
@@ -59,8 +58,9 @@ The client will send at minimum `EXTJWT *` to the server to request a new JWT to
 * `account` String; The account name of the user that requested this token. Empty if not available.
 * `umodes` []String; An array of user modes the IRCd may want to disclose. Eg, if the user is an operator.
 
-Optionaly, the JWT token MAY contain the following claim to provide the external service a way to verify the token:
-* `vfy` String; A HTTP URL to verify the token.
+If the command sent by the client includes a service name, Eg. `EXTJWT * jitsi`, the server MUST then reply with the service name as its `service_name` parameter, along with the JWT token containing the above claims and also the following claims relevant to the service:
+
+* `service` String; The configured service name that can be used to verify the token, with either a pre-shared key or url.
 
 If the command sent by the client includes a channel name, Eg. `EXTJWT #channel`, the server MUST then reply with the channel name as its `requested_target` parameter, along with the JWT token containing the above claims and also the following claims relevant to the channel at that time:
 
@@ -136,15 +136,4 @@ Where the replied token is decoded into:
 Where the replied token is decoded into:
 ~~~json
 {"exp":1529917513,"iss":"irc.example.org","sub":"testnick","account":"testnick","umodes":[],"channel":"#channel","joined":1529917501,"cmodes":["o"]}
-~~~
-
-#### A server responding with a verification (`vfy`) claim
-~~~
-[C -> S] EXTJWT #channel forum.example.org
-[S -> C] EXTJWT #channel forum.example.org eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mjk5MTc1MTMsImlzcyI6ImlyYy5leGFtcGxlLm9yZyIsInZmeSI6Imh0dHBzOi8vaXJjLmV4YW1wbGUub3JnL2V4dGp3dD90PSVzIiwic3ViIjoidGVzdG5pY2siLCJhY2NvdW50IjoidGVzdG5pY2siLCJ1bW9kZXMiOltdLCJjaGFubmVsIjoiI2NoYW5uZWwiLCJqb2luZWQiOjE1Mjk5MTc1MDEsImNtb2RlcyI6WyJvIl19.WhZpr-m2v2T6y1tlLFukX3pvk4k-tiQLzlW-poR74fk
-~~~
-
-Where the replied token is decoded into:
-~~~json
-{"exp":1529917513,"iss":"irc.example.org",vfy":"https://irc.example.org/extjwt?t=%s","sub":"testnick","account":"testnick","umodes":[],"channel":"#channel","joined":1529917501,"cmodes":["o"]}
 ~~~
