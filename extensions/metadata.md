@@ -135,7 +135,7 @@ Here are additional cases where clients will receive `METADATA` messages:
 
 If the client joins a large channel, or the client is already on some channels and enables the `metadata` capability, the server may not be able to send the client all current metadata for their targets.
 
-In this case, the server MAY choose to respond with a `RPL_METADATASYNCLATER` numeric instead of propogating the current metadata of the targets. This numeric indicates that the specified target has some metadata set that the client SHOULD request synchronization of at a later time.
+In this case, the server MUST respond with a `RPL_METADATASYNCLATER` numeric instead of propagating the current metadata of the targets. This numeric indicates that the specified target has some metadata set that the client SHOULD request synchronization of at a later time.
 
 The client can use the [`SYNC`](#metadata-sync) subcommand to request the sync of metadata for the given target. If the `[<RetryAfter>]` is given, the client SHOULD wait at least that many seconds before sending the sync request.
 
