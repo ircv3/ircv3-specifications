@@ -49,12 +49,11 @@ Before connection registration, the server MAY send only a subset of the full
 `RPL_ISUPPORT` list. In that case, the server MUST send a `RPL_ISUPPORT` list
 when connection registration completes with entries previously omitted.
 
-If the client enables `draft/extended-isupport` after connection registration,
-the server MUST send one or more `RPL_ISUPPORT` messages. If the client
-enables, disables and then enables again `draft/extended-isupport` at any time,
-the server MUST send one or more `RPL_ISUPPORT` messages. If the client
-requests the `draft/extended-isupport` capability while it's already enabled,
-the server MUST NOT send any `RPL_ISUPPORT` messages in response.
+The server MUST send one or more `RPL_ISUPPORT` messages when the capability is
+enabled, including after connection registration or if the client enables,
+disables and then enables again the capability. If the client requests the
+`draft/extended-isupport` capability while it's already enabled, the server
+MUST NOT send any `RPL_ISUPPORT` messages in response.
 
 ### `draft/isupport` batch
 
