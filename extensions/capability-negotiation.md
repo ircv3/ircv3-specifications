@@ -311,6 +311,7 @@ which is not enabled, the server MUST continue processing the REQ subcommand as 
 handling this capability was successful.
 
 The capability identifier set must be accepted as a whole, or rejected entirely.
+The order of capabilities within the list is not significant.
 
 Clients SHOULD ensure that their list of requested capabilities is not too long to be
 replied to with a single ACK or NAK message. If a REQ's final parameter gets sufficiently
