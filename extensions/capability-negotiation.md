@@ -550,3 +550,6 @@ Previous versions of this spec did not state that capability names MUST NOT star
 
 Previous versions of this spec did not state that space-separated capability lists may end with
 a trailing space.
+
+Previous versions of this spec did not state that the order of capabilities within a single
+CAP REQ line is not meaningful.
