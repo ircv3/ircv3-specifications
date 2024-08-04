@@ -50,10 +50,8 @@ Before connection registration, the server MAY send only a subset of the full
 when connection registration completes with entries previously omitted.
 
 The server MUST send one or more `RPL_ISUPPORT` messages when the capability is
-enabled, including after connection registration or if the client enables,
-disables and then enables again the capability. If the client requests the
-`draft/extended-isupport` capability while it's already enabled, the server
-MUST NOT send any `RPL_ISUPPORT` messages in response.
+enabled, including after connection registration or if the disables then
+re-enables the capability.
 
 ### `draft/isupport` batch
 
