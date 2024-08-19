@@ -29,11 +29,11 @@ Sometimes when you send a message to a user you don't want to bother them immedi
 
 ### Dependencies
 
-Clients wishing to use this tag MUST negotiate the [`message-tags`](../extensions/message-tags.html) capability with the server. Additionally, this tag MUST be used in conjunction with the [`+draft/reply`](./reply.html) client tag.
+Clients wishing to use this tag MUST negotiate the [`message-tags`](../extensions/message-tags.html) capability with the server.
 
 ### Format
 
-The reply tag is sent by a client with the client-only prefix `+`. The format of this tag is:
+The notify tag is sent by a client with the client-only prefix `+`. The format of this tag is:
 
     +draft/notify=<value>
 
