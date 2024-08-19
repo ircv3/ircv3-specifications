@@ -59,7 +59,7 @@ An example of a notify-active message sent to a user. Without the notify tag it 
 
 An example of a notify-online message sent to a user. Without the notify tag it might notify *Sadie* when they are not attached to their client.
 
-    C: @+draft/notify=never PRIVMSG Sadie :Are you busy? No worries if not.
+    C: @+draft/notify=online PRIVMSG Sadie :Are you busy? No worries if not.
 
 ## Implementation Considerations
 
