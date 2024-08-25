@@ -370,7 +370,7 @@ Example removing a capability:
 The ACK subcommand is sent by the server to acknowledge a client-sent REQ, and let the client
 know that their requested capabilities have been enabled.
 
-The format of a `CAP NAK` message is:
+The format of a `CAP ACK` message is:
 
     CAP <nick> ACK :[-]<extension 1> [[-]<extension 2> ... [[-]<extension n>]]]
 
