@@ -25,17 +25,24 @@ entries. However, `RPL_ISUPPORT` is only sent by servers after connection
 registration. This undermines the usefulness of `RPL_ISUPPORT`: some of the
 metadata would be useful to clients prior to connection registration. This
 extension adds a mechanism to send `RPL_ISUPPORT` messages before connection
-registration, as well as an end of `RPL_ISUPPORT` list indication.
+registration, as well as a dedicated command to request the `ISUPPORT` list and
+a batch for `RPL_ISUPPORT` messages.
 
 ## Implementation
+
+### `ISUPPORT` command
+
+A new `ISUPPORT` command is introduced to request the full `RPL_ISUPPORT` list.
+When receiving this command, the server MUST reply with one or more
+`RPL_ISUPPORT` messages (grouped inside a `draft/isupport` batch if the `batch`
+and `draft/extended-isupport` capabilities are enabled, see below).
 
 ### `draft/extended-isupport` capability
 
 When the `draft/extended-isupport` capability is enabled by the client, the
-server MUST send one or more `RPL_ISUPPORT` messages (grouped inside a
-`draft/isupport` batch if the `batch` capability is enabled). The capability
-MAY be enabled by the client before connection registration completes (ie,
-before the client sends `CAP END`, and before the server sends `RPL_WELCOME`).
+server MUST accept `ISUPPORT` commands before connection registration
+completes (ie, before the client sends `CAP END`, and before the server sends
+`RPL_WELCOME`).
 
 Before connection registration completes, while `draft/extended-isupport` is
 enabled, the server MAY send updates to the key-value entries via subsequent
@@ -48,10 +55,6 @@ registration completes, if it already sent all information.
 Before connection registration, the server MAY send only a subset of the full
 `RPL_ISUPPORT` list. In that case, the server MUST send a `RPL_ISUPPORT` list
 when connection registration completes with entries previously omitted.
-
-The server MUST send one or more `RPL_ISUPPORT` messages when the capability is
-enabled, including after connection registration or if the disables then
-re-enables the capability.
 
 ### `draft/isupport` batch
 
@@ -75,6 +78,7 @@ Enabling the capability:
     S: :irc.example.org CAP * LS :multi-prefix sasl batch draft/extended-isupport
     C: CAP REQ batch draft/extended-isupport
     S: :irc.example.org CAP * ACK :batch draft/extended-isupport
+    C: ISUPPORT
     S: :irc.example.org BATCH +asdf draft/isupport
     S: @batch=asdf :irc.example.org 005 * NETWORK=Example NICKLEN=30 FOO=bar
     S: :irc.example.org BATCH -asdf
