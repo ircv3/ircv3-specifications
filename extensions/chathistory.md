@@ -59,12 +59,12 @@ If `MSGREFTYPES` is missing, clients SHOULD assume the server supports both and 
 ### `CHATHISTORY` Command
 The client can request message history content by sending the `CHATHISTORY` command to the server. This command has the following general syntax:
 
-    CHATHISTORY <subcommand> <target> <timestamp | msgid> [<timestamp | msgid>] <limit>
+    CHATHISTORY <subcommand> <target> <timestamp | msgid> [<timestamp | msgid | cursor>] <limit>
     CHATHISTORY TARGETS <timestamp> <timestamp> <limit>
 
 The `target` parameter specifies a single buffer (channel or nickname) from which history is to be retrieved. If a nickname is given as the `target` then the server SHOULD include history sent between the current user and the target nickname, including outgoing messages ("self messages"). The server SHOULD attempt to include history involving other nicknames if either the current user or the target nickname has changed during the requested timeframe.
 
-A `timestamp` parameter MUST have the format `timestamp=YYYY-MM-DDThh:mm:ss.sssZ`, as in the [server-time][server-time] extension. A `msgid` parameter MUST have the format `msgid=foobar`, as in the [message-ids][message-ids] extension.
+A `timestamp` parameter MUST have the format `timestamp=YYYY-MM-DDThh:mm:ss.sssZ`, as in the [server-time][server-time] extension. A `msgid` parameter MUST have the format `msgid=foobar`, as in the [message-ids][message-ids] extension. A `cursor` parameter MUST have the format `cursor=foobar`.
 
 If the `batch` capability was negotiated, the server MUST reply to a successful `CHATHISTORY` command using a [`batch`][batch]. For subcommands that return message history (i.e. all subcommands other than `TARGETS`), the batch MUST have type `chathistory` and take a single additional parameter, the canonical name of the target being queried. For `TARGETS`, the batch MUST have type `draft/chathistory-targets`. If no content exists to return, the server SHOULD return an empty batch in order to avoid the client waiting for a reply.
 
@@ -76,19 +76,19 @@ The following subcommands are used to return message history relative to `timest
 
 #### `BEFORE`
 
-    CHATHISTORY BEFORE <target> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
+    CHATHISTORY BEFORE <target> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234 | cursor=1234> <limit>
 
 Request up to `limit` number of messages before and excluding the given `timestamp` or `msgid`. Only one timestamp or msgid MUST be given, not both.
 
 #### `AFTER`
 
-    CHATHISTORY AFTER <target> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
+    CHATHISTORY AFTER <target> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234 | cursor=1234> <limit>
 
 Request up to `limit` number of messages after and excluding the given `timestamp` or `msgid`. Only one timestamp or msgid MUST be given, not both.
 
 #### `LATEST`
 
-    CHATHISTORY LATEST <target> <* | timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
+    CHATHISTORY LATEST <target> <* | timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234 | cursor=1234> <limit>
 
 Request up to `limit` number of the most recent messages that have been sent. If a `timestamp` or `msgid` is given, the returned messages are restricted to those sent after and excluding that timestamp or msgid; if a `*` is given, no such restriction applies. If a `*` is not given, only one timestamp or msgid MUST be given, not both.
 
@@ -104,9 +104,17 @@ This is useful for retrieving conversation context around a single message.
 
 #### `BETWEEN`
 
-    CHATHISTORY BETWEEN <target> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
+    CHATHISTORY BETWEEN <target> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234 | cursor=1234> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ | msgid=1234> <limit>
 
 Request up to `limit` number of messages between the given `timestamp` or `msgid` values. With respect to the limit, the returned messages MUST be counted starting from and excluding the first message selector, while finishing on and excluding the second. This may be forwards or backwards in time.
+
+#### `CURSORS`
+
+All commands above MAY return a `CHATHISTORY CURSORS` message. There MUST NOT be more than one message returned. If returned, that message MUST be the first one in the batch.
+
+    CHATHISTORY CURSORS <target> <next> [prev]
+
+`next` is a a cursor which can be used to query the next page of messages. `prev` is a cursor which can be used to query the previous page of messages, it MUST only be returned in response to `CHATHISTORY AROUND`.
 
 #### `TARGETS`
 
