@@ -57,7 +57,9 @@ Server administrators can setup lists of allowed or blocked keys, and may also r
 
 On joining a server, clients have to configure their 'metadata key [subscriptions](#metadata-sub)'. This is a list of which keys the client understands and wants to get updates about (for example, they may subscribe to a `status` key if they support user-set statuses). By default, this subscription list is empty.
 
-When a channel's metadata is updated, all users in that channel who are subscribed to the changed key will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. When a user's metadata is updated, all users either sharing a channel with that user or [monitoring](https://ircv3.net/specs/extensions/monitor.html#monitor-command) them will receive a `METADATA` message notifying them of the change.
+When metadata is updated, users who have subscribed to the changed key will receive a [`METADATA` message](#metadata-server-message) notifying them of the change.
+
+For channel metadata, this applies only to subscribers who are members of the updated channel. For user metadata, this applies only to subscribers who either share a channel with the updated user or are [monitoring](https://ircv3.net/specs/extensions/monitor.html#monitor-command) them.
 
 On joining a channel, users will get the channel's current metadata sent to them with `METADATA` messages, and get the same information for all users who are in the channel. Specifically, they get that information for the keys they are subscribed to. The server may also tell them to request that information [at a later time](#metadata-sync).
 
