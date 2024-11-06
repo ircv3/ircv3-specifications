@@ -67,7 +67,7 @@ This specification depends on the [`batch`](../extensions/batch.html) capability
 
 This specification also uses the [standard replies](../extensions/standard-replies.html) framework.
 
-Clients MUST NOT request both (`metadata` or `metadata-notify`) and (`draft/metadata-2`). Servers MUST NOT accept these requests either.
+Clients MUST NOT request both `metadata-notify` and `draft/metadata-2`. Servers MUST NOT accept these requests either.
 
 ## `draft/metadata-2` Capability
 
