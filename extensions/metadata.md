@@ -728,7 +728,7 @@ As servers may rewrite values set by clients with `METADATA SET`, clients should
 
 This specification replaces the first `metadata` specification, by adding the following incompatible changes:
 
-* The `metadata-notify` key subscribed you to all keys. Since we have now added the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, it is no longer deemed useful.
+* The `metadata-notify` cap subscribed you to all keys. With the addition of explicit [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, this is no longer the case.
 * Rate limiting protocol mechanics.
 * Support for delayed synchronization and `METADATA SYNC`.
 * Moved `ERR_*` replies to Standard Replies format
