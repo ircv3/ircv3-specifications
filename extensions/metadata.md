@@ -1,6 +1,8 @@
 ---
 title: Metadata
 layout: spec
+redirect_from:
+  - /specs/core/metadata-3.2.html
 work-in-progress: true
 copyrights:
   -
@@ -716,7 +718,7 @@ As these batches can be potentially large, servers are likely to produce them as
 
 As servers may rewrite values set by clients with `METADATA SET`, clients should check the response before storing it in any local cache.
 
-### Differences between this specification and `metadata`/`metadata-notify`
+### Differences between this specification and `metadata-notify`
 
 *This section is not normative*
 
