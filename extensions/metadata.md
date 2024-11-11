@@ -36,9 +36,8 @@ copyrights:
 This is a work-in-progress specification.
 
 Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `metadata-2` or `metadata-notify-2` capability names.
-Instead, implementations SHOULD use the `draft/metadata-2` and
-`draft/metadata-notify-2` capability name to be interoperable with other
+unprefixed `metadata-2` capability name.
+Instead, implementations SHOULD use the `draft/metadata-2` capability name to be interoperable with other
 software implementing a compatible work-in-progress version.
 
 The final version of the specification will use an unprefixed capability name.
@@ -60,7 +59,9 @@ Server administrators can setup lists of allowed or blocked keys, and may also r
 
 On joining a server, clients have to configure their 'metadata key [subscriptions](#metadata-sub)'. This is a list of which keys the client understands and wants to get updates about (for example, they may subscribe to a `status` key if they support user-set statuses). By default, this subscription list is empty.
 
-When a channel's metadata is updated, all users in that channel who are subscribed to the changed key will receive a [`METADATA` message](#metadata-server-message) notifying them of the change. When a user's metadata is updated, all users sharing a channel with that user (and all users who have [`draft/metadata-notify-2` requested](#notifications) and are [Monitoring](https://ircv3.net/specs/extensions/monitor.html#monitor-command) that user) will receive a `METADATA` message notifying them of the change.
+When metadata is updated, users who have subscribed to the changed key will receive a [`METADATA` message](#metadata-server-message) notifying them of the change.
+
+For channel metadata, this applies only to subscribers who are members of the updated channel. For user metadata, this applies only to subscribers who either share a channel with the updated user or are [monitoring](https://ircv3.net/specs/extensions/monitor.html#monitor-command) them.
 
 On joining a channel, users will get the channel's current metadata sent to them with `METADATA` messages, and get the same information for all users who are in the channel. Specifically, they get that information for the keys they are subscribed to. The server may also tell them to request that information [at a later time](#metadata-sync).
 
@@ -70,7 +71,7 @@ This specification depends on the [`batch`](../extensions/batch.html) capability
 
 This specification also uses the [standard replies](../extensions/standard-replies.html) framework.
 
-Clients MUST NOT request both (`metadata` or `metadata-notify`) and (`draft/metadata-2` or `draft/metadata-notify-2`). Servers MUST NOT accept these requests either.
+Clients MUST NOT request both `metadata-notify` and `draft/metadata-2`. Servers MUST NOT accept these requests either.
 
 ## `draft/metadata-2` Capability
 
@@ -119,7 +120,12 @@ Clients can either be subscribed to a key, or not subscribed to it. By default, 
 
 The client will receive [`METADATA` messages](#metadata-server-message) about the keys they are subscribed to. They can also use the [`GET`](#metadata-get) and [`LIST`](#metadata-list) subcommands to receive information about keys they are not subscribed to.
 
-Clients automatically receive metadata updates for themselves (excluding changes they make themselves), channels they are joined to, and other clients in the channels they are joined to. If the `draft/metadata-notify-2` capability is requested, clients also receive metadata updates for the users they are currently monitoring.
+Clients automatically receive metadata updates for:
+
+* themselves (excluding changes they make themselves)
+* channels they are joined to,
+* other clients in the channels they are joined to, and
+* users they are currently monitoring.
 
 Servers MUST reply to erroneous requests using [Standard Replies](https://ircv3.net/specs/extensions/standard-replies)
 
@@ -131,7 +137,7 @@ Here are additional cases where clients will receive `METADATA` messages:
 
 - Upon requesting the `metadata` capability, clients receive their non-transient metadata (for example, metadata stored by the server or by services) in a `metadata` batch with their own nick as target. If none exists, the server MUST send an empty batch instead.
 - When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
-- If `draft/metadata-notify-2` is negotiated, clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user, or when one of their monitored users comes online.
+- Clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user, or when one of their monitored users comes online.
 
 ## Postponed synchronization
 
@@ -722,9 +728,9 @@ As servers may rewrite values set by clients with `METADATA SET`, clients should
 
 *This section is not normative*
 
-This specification replaces the first `metadata` specification, by adding the following incompatible changes:
+This specification replaces an earlier deprecated `metadata-notify` specification, by adding the following incompatible changes:
 
-* The `metadata-notify` key subscribed you to all keys. Since we have now added the [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, `metadata-notify-2` does not act in this way.
+* The `metadata-notify` cap subscribed you to all keys. With the addition of explicit [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, this is no longer the case.
 * Rate limiting protocol mechanics.
 * Support for delayed synchronization and `METADATA SYNC`.
 * Moved `ERR_*` replies to Standard Replies format
