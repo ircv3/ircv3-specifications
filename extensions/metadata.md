@@ -726,7 +726,7 @@ As servers may rewrite values set by clients with `METADATA SET`, clients should
 
 *This section is not normative*
 
-This specification replaces the first `metadata` specification, by adding the following incompatible changes:
+This specification replaces an earlier deprecated `metadata-notify` specification, by adding the following incompatible changes:
 
 * The `metadata-notify` cap subscribed you to all keys. With the addition of explicit [`SUB`](#metadata-sub) and [`UNSUB`](#metadata-unsub) subcommands, this is no longer the case.
 * Rate limiting protocol mechanics.
