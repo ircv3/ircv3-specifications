@@ -29,7 +29,7 @@ This specification adds a new batch type and tag sent by clients and servers to 
 
 IRC messages have been traditionally limited by the line-based nature of the protocol and the line length limit of 512. To work around these limitations, client implementations split longer messages into multiple lines, and users need to rely on snippet hosting services to send multiple lines without flooding the chat or having their messages interrupted by other users.
 
-Mulitline messages allow for a more coherent experience that avoids the disconnected messages that result from these workarounds.
+Multiline messages allow for a more coherent experience that avoids the disconnected messages that result from these workarounds.
 
 ## Architecture
 
