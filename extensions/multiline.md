@@ -184,7 +184,7 @@ This section is non-normative.
 
 NOTE: In these examples, `<SPACE>` indicates a space character which would otherwise not be clearly visible.
 
-Client sending a mutliline batch
+Client sending a multiline batch
 
     Client: BATCH +123 draft/multiline #channel
     Client: @batch=123 PRIVMSG #channel hello
