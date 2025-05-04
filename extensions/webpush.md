@@ -117,6 +117,20 @@ If the server cannot fullfill a client command due to an internal error, the `IN
 FAIL WEBPUSH INTERNAL_ERROR <command> <endpoint> <message>
 ```
 
+If the server cannot fullfill a `REGISTER` command due to too many active registrations, the `MAX_REGISTRATIONS` error code SHOULD be returned:
+
+```
+FAIL WEBPUSH MAX_REGISTRATIONS REGISTER <endpoint> <message>
+```
+
+## Security considerations
+
+According to RFC 8030 section 8, HTTP over TLS MUST be used for push endpoints.
+
+Push endpoints sent by the client are arbitrary HTTPS URLs, thus may be used by malicious clients to probe or access internal network resources. IRC servers SHOULD ensure that HTTP request hosts don't resolve to loopback or private IPs.
+
+IRC servers SHOULD define limits in terms of number of registered push endpoints and notification rate.
+
 [RFC 8030]: https://datatracker.ietf.org/doc/html/rfc8030
 [RFC 8291]: https://datatracker.ietf.org/doc/html/rfc8291
 [RFC 8292]: https://datatracker.ietf.org/doc/html/rfc8292
