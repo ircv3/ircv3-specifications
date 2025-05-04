@@ -125,11 +125,21 @@ FAIL WEBPUSH MAX_REGISTRATIONS REGISTER <endpoint> <message>
 
 ## Security considerations
 
-According to RFC 8030 section 8, HTTP over TLS MUST be used for push endpoints.
+According to RFC 8030 section 8, HTTP over TLS MUST be used for push endpoints. Servers MUST check that push endpoints use the "https" scheme.
 
 Push endpoints sent by the client are arbitrary HTTPS URLs, thus may be used by malicious clients to probe or access internal network resources. IRC servers SHOULD ensure that HTTP request hosts don't resolve to loopback or private IPs.
 
-IRC servers SHOULD define limits in terms of number of registered push endpoints and notification rate.
+IRC servers SHOULD define limits in terms of number of registered push endpoints and notification rate. IRC servers SHOULD expire old subscriptions if they aren't refreshed or if they keep failing for a while.
+
+IRC servers SHOULD occasionally rotate their VAPID keys, by generating new keys for future IRC connections (old keys must be kept at hand for existing subscriptions).
+
+## Implementation considerations
+
+Clients SHOULD regularly renew in-use subscriptions by re-sending an identical `WEBPUSH REGISTER` command (e.g. daily), to avoid subscription expiration.
+
+Clients SHOULD unregister any previous subscription when their push endpoint changes, by sending a `WEBPUSH UNREGISTER` command, to keep the number of active subscriptions as low as possible and avoid reaching limits.
+
+IRC servers SHOULD gracefully handle slow or failing push endpoints. Some push servers might be temporarily unavailable due to an outage, and some push servers might permanently go offline without prior notice.
 
 [RFC 8030]: https://datatracker.ietf.org/doc/html/rfc8030
 [RFC 8291]: https://datatracker.ietf.org/doc/html/rfc8291
