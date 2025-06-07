@@ -13,7 +13,7 @@ copyrights:
 ## Notes for implementing work-in-progress version
 This specification relies on the Standard Replies framework.
 
-Software implementing this work-in-progress specification MUST NOT use the unprefixed account-registration capability name. Instead, implementations SHOULD use the draft/privacy capability name to be interoperable with other software implementing a compatible work-in-progress version.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `draft/privacy` capability name. Instead, implementations SHOULD use the `draft/privacy` capability name to be interoperable with other software implementing a compatible work-in-progress version.
 The final version of the specification will use an unprefixed capability name.
 
 ## 1. Motivation
