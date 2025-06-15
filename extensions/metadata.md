@@ -101,7 +101,7 @@ Key names follow this grammar:
 be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_./:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
 They follow [the same rules as message tag names](../extensions/message-tags.html#rules-for-naming-message-tags).
 
-Values can take any form, but MUST be encoded using UTF-8.
+Values can take any form, but MUST be encoded using UTF-8. The empty string is a valid value.
 
 The expected handling of individual metadata keys SHOULD be [defined and listed in the IRCv3 extension registry](../registry.html).
 
