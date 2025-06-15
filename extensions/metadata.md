@@ -231,7 +231,7 @@ This new value MAY differ from the one sent by the client.
 
     METADATA <Target> CLEAR
 
-This subcommand removes all metadata from the target, equivalently to using `METADATA SET` on all currently-set keys with an empty value.
+This subcommand removes all metadata from the target, equivalently to using `METADATA SET` on all currently-set keys with no value.
 
 If the user cannot clear keys on the given target, the server responds with `FAIL METADATA KEY_NO_PERMISSION` with an asterisk (`*`) in the `<Key>` field and fails the request.
 
