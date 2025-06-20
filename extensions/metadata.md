@@ -136,7 +136,7 @@ If a channel/user the client is receiving updates for changes one of the keys th
 
 Here are additional cases where clients will receive `METADATA` messages:
 
-- Upon requesting the `metadata` capability, clients receive their non-transient metadata (for example, metadata stored by the server or by services) in a `metadata` batch with their own nick as target. If none exists, the server MUST send an empty batch instead.
+- If the `metadata` capability was negotiated during connection registration, clients receive their current metadata (any metadata stored by the server or by services, plus any metadata set by the client during connection registration via `before-connect`) in a `metadata` batch with their own nick as target as part of the registration burst, i.e. before `RPL_ENDOFMOTD` or `ERR_NOMOTD`. If none exists, the server MUST send an empty batch instead.
 - When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
 - Clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user, or when one of their monitored users comes online.
 
