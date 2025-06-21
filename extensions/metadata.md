@@ -79,7 +79,7 @@ The ABNF format of the `metadata` capability is:
     capability ::= 'metadata' ['=' tokens]
     tokens     ::= token [',' token]*
     token      ::= key ['=' value]
-    key        ::= <sequence of a-zA-Z0-9_./:- not starting with :>
+    key        ::= <sequence of a-zA-Z0-9_./->
     value      ::= <utf8>
 
 These are the defined tokens:
