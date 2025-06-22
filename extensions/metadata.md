@@ -108,7 +108,7 @@ This specification adds the `metadata` batch type.
 
 This batch MUST be sent to clients on connection and as reply to successful `METADATA GET`, `METADATA LIST`, and `METADATA SYNC` subcommands.
 
-This batch type takes one parameter. This parameter contains the target for which the metadata was requested, allowing the client to correctly process empty batches. Since a batch sent in response to `METADATA SYNC` on a channel may contain metadata on users as well as the channel itself, clients MUST NOT assume that all metadata in the batch applies to the entity referenced in the batch parameter.
+This batch type takes one parameter and client MUST ignore extra parameters. This parameter contains the target for which the metadata was requested, allowing the client to correctly process empty batches. Since a batch sent in response to `METADATA SYNC` on a channel may contain metadata on users as well as the channel itself, clients MUST NOT assume that all metadata in the batch applies to the entity referenced in the batch parameter.
 
 
 ## Notifications
