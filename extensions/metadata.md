@@ -67,7 +67,7 @@ On joining a channel, users will get the channel's current metadata sent to them
 
 ## Relation with other specifications
 
-This specification depends on the [`batch`](../extensions/batch.html) capability which MUST be negotiated to use ``draft/metadata-2``. The order of capability negotiation is not significant and MUST not be enforced.
+This specification depends on the [`batch`](../extensions/batch.html) capability which MUST be negotiated to use ``draft/metadata-2``. The order of capability negotiation is not significant and MUST NOT be enforced.
 
 This specification also uses the [standard replies](../extensions/standard-replies.html) framework.
 
@@ -102,14 +102,19 @@ Values can take any form, but MUST be encoded using UTF-8. The empty string is a
 
 The expected handling of individual metadata keys SHOULD be [defined and listed in the IRCv3 extension registry](../registry.html).
 
-## Batch type
+## Batch types
 
-This specification adds the `metadata` batch type.
+This specification adds the `metadata` and `metadata-subs` batch types.
 
-This batch MUST be sent to clients on connection and as reply to successful `METADATA GET`, `METADATA LIST`, and `METADATA SYNC` subcommands.
+The `metadata` batch type MUST be sent to clients under the following circumstances:
 
-This batch type takes one parameter and client MUST ignore extra parameters. This parameter contains the target for which the metadata was requested, allowing the client to correctly process empty batches. Since a batch sent in response to `METADATA SYNC` on a channel may contain metadata on users as well as the channel itself, clients MUST NOT assume that all metadata in the batch applies to the entity referenced in the batch parameter.
+* To enclose 0 or more `761 RPL_KEYVALUE` responses to `METADATA GET` or `METADATA LIST`
+* To enclose 0 or more `METADATA` commands in response to `METADATA SYNC`
+* To enclose 0 or more `METADATA` commands in response to a metadata-capable client completing connection registration and receiving its own metadata
 
+It takes one parameter and clients MUST ignore extra parameters. This parameter contains the target for which the metadata was requested, allowing the client to correctly process empty batches. Since a batch sent in response to `METADATA SYNC` on a channel may contain metadata on users as well as the channel itself, clients MUST NOT assume that all metadata in the batch applies to the entity referenced in the batch parameter.
+
+The `metadata-subs` batch type MUST be sent to clients in response to the `SUBS` subcommand, to enclose 0 or more `772 RPL_METADATASUBS` replies. It takes no parameters and clients MUST ignore any parameters sent.
 
 ## Notifications
 
@@ -283,7 +288,7 @@ Once the server is finished processing keys, it responds with:
 
 This subcommand returns which keys the client is currently subscribed to.
 
-The server responds with zero or more `RPL_METADATASUBS` numerics. The server MAY return the keys in any order. The server MUST NOT list the same key multiple times in a response to this subcommand.
+The server responds with a `metadata-subs` batch containing zero or more `RPL_METADATASUBS` numerics. The server MAY return the keys in any order. The server MUST NOT list the same key multiple times in a response to this subcommand.
 
 ### METADATA SYNC
 
