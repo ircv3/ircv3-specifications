@@ -706,6 +706,35 @@ Twice:
 
 -----
 
+### Setting keys and subscribing with `before-connect`
+
+    C: CAP LS 302
+    S: :metadata.test CAP * LS :batch message-tags draft/metadata-2=before-connect,max-subs=100,max-keys=100
+    C: CAP REQ :batch message-tags draft/metadata-2
+    S: :metadata.test CAP * ACK :batch message-tags draft/metadata-2
+    C: METADATA * SUB display-name
+    S: :metadata.test 770 * display-name
+    C: METADATA * SET display-name :a b c
+    S: :metadata.test 761 * * display-name * :a b c
+    C: NICK abc
+    C: USER u s e r
+    C: CAP END
+    S: :metadata.test 001 abc :Welcome to the MetadataTesting IRC Network abc
+    S: [redacted registration burst messages]
+    S: :metadata.test BATCH +1 metadata
+    S: @batch=1 :metadata.test 761 abc abc display-name * :a b c
+    S: :metadata.test BATCH -1
+    S: [redacted registration burst messages]
+    S: :metadata.test 376 abc :End of MOTD command
+    C: METADATA * LIST
+    S: :metadata.test BATCH +2 metadata
+    S: @batch=2 :metadata.test 761 abc abc display-name * :a b c
+    S: :metadata.test BATCH -2
+    C: METADATA * SUBS
+    S: :metadata.test 772 abc display-name
+
+-----
+
 ### Non-normative examples
 
 The following examples describe how an implementation might use certain features.
