@@ -168,7 +168,7 @@ The format of the `METADATA` server message is:
 
 `Subcommand` is one of the subcommands listed below. The allowed params are described in each subcommand description.
 
-Clients MAY use this command during connection registration if the server advertises the `before-connect` token. Clients that have not completed connection registration MUST use `*` to target themselves, since they have not been assigned a nickname.
+Clients MAY use this command during connection registration if the server advertises the `before-connect` token. Clients that have not completed connection registration MUST use `*` to target themselves, since they have not been assigned a nickname, even if they sent a `NICK` command.
 
 ### METADATA GET
 
