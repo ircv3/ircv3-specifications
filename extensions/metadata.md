@@ -82,7 +82,7 @@ The ABNF format of the `metadata` capability is:
     capability ::= 'metadata' ['=' tokens]
     tokens     ::= token [',' token]*
     token      ::= key ['=' value]
-    key        ::= <sequence of a-zA-Z0-9_./:->
+    key        ::= <sequence of one or more a-z0-9_./->
     value      ::= <utf8>
 
 These are the defined tokens:
@@ -96,10 +96,7 @@ Clients MUST silently ignore any unknown tokens.
 
 ## Keys and Values
 
-Key names follow this grammar:
-
-be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_./:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
-They follow [the same rules as message tag names](../extensions/message-tags.html#rules-for-naming-message-tags).
+Key names are restricted to the ranges `a-z`, `0-9`, and `_./-`. The empty string is an invalid value.
 
 Values can take any form, but MUST be encoded using UTF-8. The empty string is a valid value.
 
