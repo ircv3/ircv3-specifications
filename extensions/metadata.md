@@ -733,7 +733,9 @@ Twice:
     S: @batch=2 :metadata.test 761 abc abc display-name * :a b c
     S: :metadata.test BATCH -2
     C: METADATA * SUBS
-    S: :metadata.test 772 abc display-name
+    S: :metadata.test BATCH +3 metadata-subs
+    S: @batch=3 :metadata.test 772 abc display-name
+    S: :metadata.test BATCH -3
 
 -----
 
