@@ -67,7 +67,7 @@ On joining a channel, users will get the channel's current metadata sent to them
 
 ## Relation with other specifications
 
-This specification depends on the [`batch`](../extensions/batch.html) capability which MUST be negotiated to use ``draft/metadata-2``. The order of capability negotiation is not significant and MUST not be enforced.
+This specification depends on the [`batch`](../extensions/batch.html) capability which MUST be negotiated to use ``draft/metadata-2``. The order of capability negotiation is not significant and MUST NOT be enforced.
 
 This specification also uses the [standard replies](../extensions/standard-replies.html) framework.
 
@@ -82,7 +82,7 @@ The ABNF format of the `metadata` capability is:
     capability ::= 'metadata' ['=' tokens]
     tokens     ::= token [',' token]*
     token      ::= key ['=' value]
-    key        ::= <sequence of a-zA-Z0-9_./:->
+    key        ::= <sequence of one or more a-z0-9_./->
     value      ::= <utf8>
 
 These are the defined tokens:
@@ -96,23 +96,25 @@ Clients MUST silently ignore any unknown tokens.
 
 ## Keys and Values
 
-Key names follow this grammar:
+Key names are restricted to the ranges `a-z`, `0-9`, and `_./-`. The empty string is an invalid value.
 
-be restricted to the ranges `A-Z`, `a-z`, `0-9`, and `_./:-` and are case-insensitive. Key names MUST NOT start with a colon (`:`).
-They follow [the same rules as message tag names](../extensions/message-tags.html#rules-for-naming-message-tags).
-
-Values can take any form, but MUST be encoded using UTF-8.
+Values can take any form, but MUST be encoded using UTF-8. The empty string is a valid value.
 
 The expected handling of individual metadata keys SHOULD be [defined and listed in the IRCv3 extension registry](../registry.html).
 
-## Batch type
+## Batch types
 
-This specification adds the `metadata` batch type.
+This specification adds the `metadata` and `metadata-subs` batch types.
 
-This batch MUST be sent to clients on connection and as reply to successful `METADATA GET`, `METADATA LIST`, and `METADATA SYNC` subcommands.
+The `metadata` batch type MUST be sent to clients under the following circumstances:
 
-This batch type does not take any parameter, and clients MUST ignore them if any.
+* To enclose 0 or more `761 RPL_KEYVALUE` responses to `METADATA GET` or `METADATA LIST`
+* To enclose 0 or more `METADATA` commands in response to `METADATA SYNC`
+* To enclose 0 or more `METADATA` commands in response to a metadata-capable client completing connection registration and receiving its own metadata
 
+It takes one parameter and clients MUST ignore extra parameters. This parameter contains the target for which the metadata was requested, allowing the client to correctly process empty batches. Since a batch sent in response to `METADATA SYNC` on a channel may contain metadata on users as well as the channel itself, clients MUST NOT assume that all metadata in the batch applies to the entity referenced in the batch parameter.
+
+The `metadata-subs` batch type MUST be sent to clients in response to the `SUBS` subcommand, to enclose 0 or more `772 RPL_METADATASUBS` replies. It takes no parameters and clients MUST ignore any parameters sent.
 
 ## Notifications
 
@@ -135,7 +137,7 @@ If a channel/user the client is receiving updates for changes one of the keys th
 
 Here are additional cases where clients will receive `METADATA` messages:
 
-- Upon requesting the `metadata` capability, clients receive their non-transient metadata (for example, metadata stored by the server or by services) in a `metadata` batch with their own nick as target. If none exists, the server MUST send an empty batch instead.
+- If the `metadata` capability was negotiated during connection registration, clients receive their current metadata (any metadata stored by the server or by services, plus any metadata set by the client during connection registration via `before-connect`) in a `metadata` batch with their own nick as target as part of the registration burst, i.e. before `RPL_ENDOFMOTD` or `ERR_NOMOTD`. If none exists, the server MUST send an empty batch instead.
 - When subscribing to a key, clients SHOULD receive the current value of that key for channels/users they are receiving updates for.
 - Clients SHOULD receive the current values of keys they are subscribed to when they [`MONITOR`](https://ircv3.net/specs/extensions/monitor.html#monitor-command) a user, or when one of their monitored users comes online.
 
@@ -171,7 +173,7 @@ The format of the `METADATA` server message is:
 
 `Subcommand` is one of the subcommands listed below. The allowed params are described in each subcommand description.
 
-Clients MAY use this command during connection registration if the server advertises the `before-connect` token.
+Clients MAY use this command during connection registration if the server advertises the `before-connect` token. Clients that have not completed connection registration MUST use `*` to target themselves, since they have not been assigned a nickname, even if they sent a `NICK` command.
 
 ### METADATA GET
 
@@ -231,7 +233,7 @@ This new value MAY differ from the one sent by the client.
 
     METADATA <Target> CLEAR
 
-This subcommand removes all metadata from the target, equivalently to using `METADATA SET` on all currently-set keys with an empty value.
+This subcommand removes all metadata from the target, equivalently to using `METADATA SET` on all currently-set keys with no value.
 
 If the user cannot clear keys on the given target, the server responds with `FAIL METADATA KEY_NO_PERMISSION` with an asterisk (`*`) in the `<Key>` field and fails the request.
 
@@ -286,7 +288,7 @@ Once the server is finished processing keys, it responds with:
 
 This subcommand returns which keys the client is currently subscribed to.
 
-The server responds with zero or more `RPL_METADATASUBS` numerics. The server MAY return the keys in any order. The server MUST NOT list the same key multiple times in a response to this subcommand.
+The server responds with a `metadata-subs` batch containing zero or more `RPL_METADATASUBS` numerics. The server MAY return the keys in any order. The server MUST NOT list the same key multiple times in a response to this subcommand.
 
 ### METADATA SYNC
 
@@ -703,6 +705,37 @@ Twice:
     S: :irc.example.com 770 modernclient website
     C: METADATA * SUBS
     S: :irc.example.com 772 modernclient website
+
+-----
+
+### Setting keys and subscribing with `before-connect`
+
+    C: CAP LS 302
+    S: :metadata.test CAP * LS :batch message-tags draft/metadata-2=before-connect,max-subs=100,max-keys=100
+    C: CAP REQ :batch message-tags draft/metadata-2
+    S: :metadata.test CAP * ACK :batch message-tags draft/metadata-2
+    C: METADATA * SUB display-name
+    S: :metadata.test 770 * display-name
+    C: METADATA * SET display-name :a b c
+    S: :metadata.test 761 * * display-name * :a b c
+    C: NICK abc
+    C: USER u s e r
+    C: CAP END
+    S: :metadata.test 001 abc :Welcome to the MetadataTesting IRC Network abc
+    S: [redacted registration burst messages]
+    S: :metadata.test BATCH +1 metadata
+    S: @batch=1 :metadata.test METADATA abc display-name * :a b c
+    S: :metadata.test BATCH -1
+    S: [redacted registration burst messages]
+    S: :metadata.test 376 abc :End of MOTD command
+    C: METADATA * LIST
+    S: :metadata.test BATCH +2 metadata
+    S: @batch=2 :metadata.test 761 abc abc display-name * :a b c
+    S: :metadata.test BATCH -2
+    C: METADATA * SUBS
+    S: :metadata.test BATCH +3 metadata-subs
+    S: @batch=3 :metadata.test 772 abc display-name
+    S: :metadata.test BATCH -3
 
 -----
 
