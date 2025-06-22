@@ -724,7 +724,7 @@ Twice:
     S: :metadata.test 001 abc :Welcome to the MetadataTesting IRC Network abc
     S: [redacted registration burst messages]
     S: :metadata.test BATCH +1 metadata
-    S: @batch=1 :metadata.test 761 abc abc display-name * :a b c
+    S: @batch=1 :metadata.test METADATA abc display-name * :a b c
     S: :metadata.test BATCH -1
     S: [redacted registration burst messages]
     S: :metadata.test 376 abc :End of MOTD command
