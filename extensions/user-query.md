@@ -80,20 +80,20 @@ If the user query cannot be opened or closed due to an error, the `INTERNAL_ERRO
 Sending the list of opened user queries after connection registration:
 
     S: 422 yannick :No message of the day
-    S: yannick JOIN #ircv3
-    S: yannick QUERYUSER gustave
+    S: :yannick!yan@example.org JOIN #ircv3
+    S: :yannick!yan@example.org QUERYUSER gustave
 
 Opening a new user query:
 
     C: QUERYUSER sophie
-    S: yannick QUERYUSER sophie
+    S: :yannick!yan@example.org QUERYUSER sophie
 
 Closing an existing user query:
 
     C: UNQUERYUSER sophie
-    S: yannick UNQUERYUSER sophie
+    S: :yannick!yan@example.org UNQUERYUSER sophie
 
 The server automatically opens a user query when receiving a message:
 
-    S: yannick QUERYUSER sophie
-    S: sophie PRIVMSG yannick :Hi there!
+    S: :yannick!yan@example.org QUERYUSER sophie
+    S: :sophie!so@example.com PRIVMSG yannick :Hi there!
