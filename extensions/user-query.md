@@ -75,6 +75,10 @@ If the user query cannot be opened or closed due to an error, the `INTERNAL_ERRO
 
     FAIL QUERYUSER INTERNAL_ERROR <nick> :The user query could not be opened
 
+### Implementation considerations
+
+Servers SHOULD automatically close old user queries to prevent the list of user queries from growing unbounded. For instance, this can be achieved by closing old user queries when the number of opened user queries reaches a limit, or closing user queries after an expiration timeout.
+
 ### Examples
 
 Sending the list of opened user queries after connection registration:
