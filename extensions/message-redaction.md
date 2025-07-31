@@ -102,6 +102,10 @@ surreptitious redaction. This could be done via a tool tip, or a separate log.
 Redacted messages MAY be hidden entirely from the primary message log,
 but a deletion log SHOULD be made available.
 
+Clients MAY chose to display the content of redacted messages to their user,
+for example through configuration or following the user's explicit request to see
+a specific message.
+
 For the purposes of user interface, clients MAY assume that their own messages
 are redactable.
 However, this will not always be the case, and there could be other messages
