@@ -100,7 +100,7 @@ Key names are restricted to the ranges `a-z`, `0-9`, and `_./-`. The empty strin
 
 Values can take any form, but MUST be encoded using UTF-8. The empty string is a valid value.
 
-The expected handling of individual metadata keys SHOULD be [defined and listed in the IRCv3 extension registry](../registry.html).
+The expected handling of individual metadata keys SHOULD be [defined and listed in the IRCv3 extension registry](https://ircv3.net/registry).
 
 ## Batch types
 
