@@ -1,6 +1,7 @@
 ---
 title: "`extended-isupport` Extension"
 layout: spec
+work-in-progress: true
 copyrights:
   -
     name: "Simon Ser"
