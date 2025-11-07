@@ -23,7 +23,7 @@ IRC server implementations may wish to defer authentication to various external 
 
 Servers implementing this specification MUST implement [capability negotiation at level 302 or higher](capability-negotiation.html), as well as the [sasl capability](sasl-3.1.html).
 
-A bearer token type is a case-sensitive identifier conforming to the [message tags](message-tags.html) grammar for `<key_name>` tokens. This specification defines two bearer token types, `oauth2` and `jwt`. Additional bearer token types may be defined; they SHOULD either use a vendor prefix, or be registered with IRCv3.
+A bearer token type is a case-sensitive identifier conforming to the [message tags](message-tags.html) grammar for `<key_name>` tokens. This specification defines three bearer token types, `oauth2`, `jwt`, and `opaque`. Additional bearer token types may be defined; they SHOULD either use a vendor prefix, or be registered with IRCv3.
 
 A bearer token is an opaque string of bytes. Bearer tokens MUST NOT contain the NUL byte.
 
@@ -38,6 +38,8 @@ where the optional authzid (authorization identity) is as specified by [RFC 4616
 The `oauth2` bearer token type is intended to transport OAuth 2.0 bearer tokens, as defined by [RFC 6750](https://datatracker.ietf.org/doc/html/rfc6750).
 
 The `jwt` bearer token type is intended to transport JSON Web Tokens (JWT), as defined by [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519).
+
+The `opaque` bearer token type is intended to transport arbitrary implementation-defined tokens.
 
 ## Examples
 
@@ -68,4 +70,4 @@ This specification does not specify how token types are to be discovered, or how
 
 Extraction of the IRC account name (or other applicable IRC-level authentication data) from the token is left implementation-defined, as part of the validation process. However, the `oauth2` token type is intended for validation via an [OAuth 2.0 introspection endpoint](https://datatracker.ietf.org/doc/html/rfc7662#section-2); in this case, the server will typically validate the `active` member of the introspection response, then use the `username` member as the client's IRC account name. For the `jwt` token type, possibilities include using the local-part of a `sub` claim formatted as an e-mail address, using the `preferred_username` claim as defined by the [IANA JWT claims registry](https://www.iana.org/assignments/jwt/jwt.xhtml), or using a custom claim.
 
-Since the base64-encoded size of a PLAIN response containing a bearer token is likely to exceed 400 bytes, clients should implement the ability to emit multi-line `AUTHENTICATE` responses, as defined in the [SASL](sasl-3.1.html) specification. Servers should accept multi-line `AUTHENTICATE` responses long enough to accommodate any valid token that can arise in practice.
+Since the base64-encoded size of an IRCV3BEARER response containing a bearer token is likely to exceed 400 bytes, clients should implement the ability to emit multi-line `AUTHENTICATE` responses, as defined in the [SASL](sasl-3.1.html) specification. Servers should accept multi-line `AUTHENTICATE` responses long enough to accommodate any valid token that can arise in practice.
