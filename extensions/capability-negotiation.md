@@ -184,7 +184,7 @@ The server MUST accept the `CAP` command at any time, including after registrati
 The LS subcommand is used to list the capabilities supported by the server.  The client
 should send an LS subcommand with no other arguments to solicit a list of all capabilities.
 
-The format of a server-sent `CAP LS` message is:
+The format of a client-sent `CAP LS` message is:
 
     CAP LS [<version>]
 
