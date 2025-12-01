@@ -29,7 +29,7 @@ This specification adds a new batch type and tag sent by clients and servers to 
 
 IRC messages have been traditionally limited by the line-based nature of the protocol and the line length limit of 512. To work around these limitations, client implementations split longer messages into multiple lines, and users need to rely on snippet hosting services to send multiple lines without flooding the chat or having their messages interrupted by other users.
 
-Mulitline messages allow for a more coherent experience that avoids the disconnected messages that result from these workarounds.
+Multiline messages allow for a more coherent experience that avoids the disconnected messages that result from these workarounds.
 
 ## Architecture
 
@@ -51,8 +51,10 @@ Clients MUST ignore every token with a key that they don't understand.
 
 The only defined capability key so far is:
 
-* `max-bytes` - This defines the maximum allowed total byte length of multiline batched content *REQUIRED*
-* `max-lines` - This defines the maximum allowed number of lines in a multiline batch content *RECOMMENDED*
+* `max-bytes` - This defines the maximum allowed total byte length of a multiline batch's combined message value, as defined below *REQUIRED*
+* `max-lines` - This defines the maximum allowed number of lines in a multiline batch *RECOMMENDED*
+
+Only the last parameter of PRIVMSG and NOTICE are counted toward `max-bytes`; not origin, command, or target.
 
 ### Tags
 

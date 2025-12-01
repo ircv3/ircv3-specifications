@@ -185,6 +185,15 @@ an additional capability.
     S: :jaguar.test 001 jilles :Welcome to the jillestest Internet Relay Chat Network jilles
     (usual welcome messages)
 
+The client is using a long password and splits its response into two chunks.
+
+    C: AUTHENTICATE PLAIN
+    S: AUTHENTICATE +
+    C: AUTHENTICATE AGVtZXJzaW9uAEVzdCB1dCBiZWF0YWUgb21uaXMgaXBzYW0uIFF1aXMgZnVnaWF0IGRlbGVuaXRpIHRvdGFtIHF1aS4gSXBzdW0gcXVhbSBhIGRvbG9ydW0gdGVtcG9yYSB2ZWxpdCBsYWJvcnVtIG9kaXQuIEV0IHNhZXBlIHZvbHVwdGF0ZSBzZWQgY3VtcXVlIHZlbC4gVm9sdXB0YXMgc2ludCBhYiBwYXJpYXR1ciBsaWJlcm8gdmVyaXRhdGlzIGNvcnJ1cHRpLiBWZXJvIGl1cmUgb21uaXMgdWxsYW0uIFZlcm8gYmVhdGFlIGRvbG9yZXMgZmFjZXJlIGZ1Z2lhdCBpcHNhbS4gRWEgZXN0IHBhcmlhdHVyIG1pbmltYSBub2JpcyBz
+    C: AUTHENTICATE dW50IGF1dCB1dC4gRG9sb3JlcyB1dCBsYXVkYW50aXVtIG1haW9yZXMgdGVtcG9yaWJ1cyB2b2x1cHRhdGVzLiBSZWljaWVuZGlzIGltcGVkaXQgb21uaXMgZXQgdW5kZSBkZWxlY3R1cyBxdWFzIGFiLiBRdWFlIGVsaWdlbmRpIG5lY2Vzc2l0YXRpYnVzIGRvbG9yaWJ1cyBtb2xlc3RpYXMgdGVtcG9yYSBtYWduYW0gYXNzdW1lbmRhLg==
+    S: :irc.example.org 900 emersion emersion!emersion@emersion.fr emersion :You are now logged in as emersion
+    S: :irc.example.org 903 emersion :SASL authentication successful
+
 ## Numerics used by this extension
 
 `900` aka `RPL_LOGGEDIN` is sent when the user's account name is set (whether by SASL or otherwise).

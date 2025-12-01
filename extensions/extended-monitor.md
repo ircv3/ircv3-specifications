@@ -1,7 +1,6 @@
 ---
 title: "`extended-monitor` Extension"
 layout: spec
-work-in-progress: true
 extends:
   - monitor
   - away-notify
@@ -14,19 +13,6 @@ copyrights:
     email: "contact@emersion.fr"
     period: "2021"
 ---
-
-
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `extended-monitor` capability name. Instead, implementations SHOULD
-use the `draft/extended-monitor` capability name to be interoperable with other
-software implementing a compatible work-in-progress version.
-
-The final version of the specification will use an unprefixed capability name.
-
 
 ## Description
 
@@ -41,7 +27,7 @@ user goes offline or comes online. This specification extends MONITOR to also
 include AWAY, ACCOUNT, CHGHOST and SETNAME notifications.
 
 The `extended-monitor` capability advertises that the server supports sending
-such extended notifcations for monitored nicks. When enabled by the client:
+such extended notifications for monitored nicks. When enabled by the client:
 
 - If `away-notify` is also enabled, the client will get AWAY notifications for
   monitored nicks.

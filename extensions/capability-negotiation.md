@@ -131,6 +131,14 @@ with several subcommands.  The command added is named `CAP`.  `CAP` takes a sing
 required subcommand, optionally followed by a single parameter. Each subcommand defines any
 further parameters.
 
+The format of a client-sent `CAP` message is:
+
+    CAP <subcommand> [<parameters>...]
+
+The format of a server-sent `CAP` message is:
+
+    CAP <nick> <subcommand> [<parameters>...]
+
 The subcommands for `CAP` are: `LS`, `LIST`, `REQ`, `ACK`, `NAK`, `NEW`, `DEL`, and `END`.
 
 Here is a handy table of the available `CAP` subcommands and which side sends them:
@@ -149,7 +157,7 @@ Here is a handy table of the available `CAP` subcommands and which side sends th
 Some subcommands may include a space-separated list of capabilities as their final parameter.
 The list of capabilities MUST be parsed and processed from left to right and capabilities
 SHOULD only be sent once per command. If a capability with values is sent multiple times, the
-last one received takes priority.
+last one received takes priority. Clients MUST ignore any trailing whitespace.
 
 If a client sends a subcommand which is not in the list above or otherwise issues an
 invalid command, then numeric `410` (`ERR_INVALIDCAPCMD`) should be sent.  The first parameter
@@ -175,6 +183,18 @@ The server MUST accept the `CAP` command at any time, including after registrati
 
 The LS subcommand is used to list the capabilities supported by the server.  The client
 should send an LS subcommand with no other arguments to solicit a list of all capabilities.
+
+The format of a client-sent `CAP LS` message is:
+
+    CAP LS [<version>]
+
+The format of a server-sent `CAP LS` message is:
+
+    CAP <nick> LS :[<extension 1> ... [<extension n>]]
+
+The format of a server-sent `CAP LS` message, with `CAP LS 302` is:
+
+    CAP <nick> LS [*] :[<extension 1> ... [<extension n>]]
 
 If a server receives an `LS` subcommand while client registration is in progress, it MUST
 suspend registration until an `END` subcommand is received from the client.
@@ -286,6 +306,18 @@ The LIST subcommand is used to list the capabilities enabled on the client's con
 The client should send a LIST subcommand with no other arguments to solicit a list of
 enabled capabilities.
 
+The format of a client-sent `CAP LIST` message is:
+
+    CAP LIST
+
+The format of a server-sent `CAP LIST` message is:
+
+    CAP <nick> LIST :[<extension 1> ... [<extension n>]]
+
+The format of a server-sent `CAP LIST` message, with `CAP LIST 302` is:
+
+    CAP <nick> LIST [*] :[<extension 1> ... [<extension n>]]
+
 When sent by the server, the last parameter is a space-separated list of capabilities.
 If no capabilities are enabled, an empty parameter must be sent.
 
@@ -305,6 +337,10 @@ The REQ subcommand is used to request a change in capabilities associated with t
 connection. The last parameter is a space-separated list of capabilities. Each capability
 identifier may be prefixed with a dash (`-`) to designate that the capability should be
 disabled.
+
+The format of a `CAP REQ` message is:
+
+    CAP REQ :<extension 1> [[-]<extension 2> ... [[-]<extension n>]]
 
 If a client requests a capability which is already enabled, or tries to disable a capability
 which is not enabled, the server MUST continue processing the REQ subcommand as though
@@ -334,6 +370,10 @@ Example removing a capability:
 The ACK subcommand is sent by the server to acknowledge a client-sent REQ, and let the client
 know that their requested capabilities have been enabled.
 
+The format of a `CAP ACK` message is:
+
+    CAP <nick> ACK :[-]<extension 1> [[-]<extension 2> ... [[-]<extension n>]]]
+
 The last parameter is a space-separated list of capabilities. Each capability name may be
 prefixed with a dash (`-`), indicating that this capability has been disabled as requested.
 
@@ -341,10 +381,15 @@ If an ACK reply originating from the server is spread across multiple lines, a c
 change capabilities until the last ACK of the set is received. Equally, a server MUST NOT
 change the capabilities of the client until the last ACK of the set has been sent.
 
+
 ### The CAP NAK subcommand
 
 The NAK subcommand designates that the requested capability change was rejected.  The server
 MUST NOT make any change to any capabilities if it replies with a NAK subcommand.
+
+The format of a `CAP NAK` message is:
+
+    CAP <nick> NAK :<extension 1> [<extension 2> ... [<extension n>]]
 
 The last parameter is a space-separated list of capabilities.
 
@@ -358,6 +403,10 @@ Example:
 The END subcommand signals to the server that capability negotiation is complete and requests
 that the server continue with client registration. If the client is already registered, this
 command MUST be ignored by the server.
+
+The format of a `CAP END` message is:
+
+    CAP END
 
 ### The CAP NEW subcommand
 
@@ -440,9 +489,10 @@ listed above.
 
 The full capability name MUST be treated as an opaque identifier.
 
-Capability names are case-sensitive. Typical capability names SHOULD be lowercase, and use
-hyphens (`-`) to separate words. For example: `echo-message`, `extended-join`,
-`invite-notify`, `draft/labeled-response`, `message-tags`.
+Capability names are case-sensitive, and MUST NOT start with a hyphen (`-`). Typical
+capability names SHOULD be lowercase, and use hyphens to separate words. For example:
+`echo-message`, `extended-join`, `invite-notify`, `draft/labeled-response`,
+`message-tags`.
 
 There are different types of capability names, which are described below.
 
@@ -542,4 +592,11 @@ appropriate features.
 Previous versions of this spec did not mention how servers handle clients attempting to downgrade
 their CAP LS version. It has been clarified that clients MAY NOT downgrade this.
 
-Clarify that multiline LS and LIST replies must only be used for CAP 302
+Clarified that multiline LS and LIST replies must only be used for CAP 302.
+
+Previous versions of this spec did not state that capability names MUST NOT start with a hyphen.
+
+Previous versions of this spec did not state that space-separated capability lists may end with
+a trailing space.
+
+Previous versions of this spec did not give formats for commands other than `CAP NEW` and `CAP DEL`.

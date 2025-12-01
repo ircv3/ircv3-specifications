@@ -50,6 +50,13 @@ Reply codes (especially more widely-applicable ones such as `NO_SUCH_NICK`) may 
 
 `<description>` is a required final parameter, containing a plain-text description of the reply message. For example, for a `FAIL` message, the description should clearly state what error occurred, and how the user should act to resolve it. Implementers should write their descriptions to be easily understood by end users, for example _"Passwords must contain lowercase and uppercase letters, and be 8 or more characters"_ is a more clear description than _"Password consistency and strength enumerability (sec/* internal) check failed"_.
 
+### Capabilities
+
+This specification adds the `standard-replies` capability. This capability allows servers to send arbitrary standard replies other than ones enabled by a specific specification. It also allows clients to indicate support for receiving any well-formed standard reply, whether or not it is recognised and used.
+
+It is RECOMMENDED that servers use standard replies instead of vendor-specific error numerics or server notices for non-standardised features when responding to a client which supports this capability. It is NOT RECOMMENDED that servers which support this capability add new custom error numerics. Servers which support this capability SHOULD NOT replace standardised error numerics with standard replies, unless the replacement is explicitly described by some other specification.
+
+
 
 ## Examples
 
