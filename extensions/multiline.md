@@ -251,7 +251,7 @@ And this works the same
 Final concatenated message:
 
 <pre>
-this is not bold <strong>but this is, and this is still bold</strong> but this is not
+this is not bold <strong>but this is, and this is still bold </strong>but this is not
 </pre>
 
 ### Error cases
