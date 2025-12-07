@@ -372,7 +372,7 @@ Replies:
 
 ### `RPL_WHOISKEYVALUE` numeric
 
-When a user runs `WHOIS` on a user with metadata, a subset of that metadata MAY be sent with `RPL_WHOISKEYVALUE` numerics. This subset MUST be chosen explicitly, and optimised for keys that can be easily read by users. For a complete view of user metadata, see the [`LIST`](#metadata-list) subcommand.
+When a user with the capability enabled runs `WHOIS` on a user with metadata set, a subset of that metadata MAY be sent with `RPL_WHOISKEYVALUE` numerics.
 
 ## Examples
 
