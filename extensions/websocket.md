@@ -1,7 +1,6 @@
 ---
 title: WebSocket support
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: Shivaram Lingamneni
