@@ -21,6 +21,9 @@ put into a *single* `netjoin` batch. Both types have 2 arguments, which are
 the names of the servers that are splitting or joining, or *.net *.split
 and *.net *.join if the server has chosen to hide links.
 
+Servers MAY additionally send AWAYs and MODEs within the same `netjoin` batch
+containing the JOINs.
+
 Clients that do not understand the `netsplit` and `netjoin` batch types
 can safely interpret the batched QUITs and JOINs as standard QUITs
 and JOINs.
@@ -49,4 +52,5 @@ An example netjoin is as follows:
 ## Errata
 
 For consistency with capabilities and tags these types were renamed to lower case
-(from `NETSPLIT` to `netsplit`).
+(from `NETSPLIT` to `netsplit`). Additionally, clarification was added that AWAY
+and MODE may also optionally appear within `netjoin` batches.
