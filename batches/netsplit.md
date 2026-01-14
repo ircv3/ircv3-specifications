@@ -19,10 +19,11 @@ When a netsplit occurs, the server MUST put all resulting QUITs into
 a single `netsplit` batch. Similarly, all netjoin-related JOINs MUST be
 put into a *single* `netjoin` batch. Both types have 2 arguments, which are
 the names of the servers that are splitting or joining, or *.net *.split
-and *.net *.join if the server has chosen to hide links.
-
-Servers MAY additionally send AWAYs and MODEs within the same `netjoin` batch
-containing the JOINs.
+and *.net *.join if the server has chosen to hide links. Servers MAY
+include additional data within these batches relevant to the state of
+joined or split clients, such as AWAY status to clients who have enabled the
+[`away-notify` capability][away-notify] and MODEs for channel operator,
+voice, or other channel status.
 
 Clients that do not understand the `netsplit` and `netjoin` batch types
 can safely interpret the batched QUITs and JOINs as standard QUITs
@@ -52,5 +53,8 @@ An example netjoin is as follows:
 ## Errata
 
 For consistency with capabilities and tags these types were renamed to lower case
-(from `NETSPLIT` to `netsplit`). Additionally, clarification was added that AWAY
-and MODE may also optionally appear within `netjoin` batches.
+(from `NETSPLIT` to `netsplit`). Additionally, clarification was added that
+messages beyond JOIN and QUIT that are relevant to client state tracking may also
+appear within these batches.
+
+[away-notify]: ../extensions/away-notify.html
