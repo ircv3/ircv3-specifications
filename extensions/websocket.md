@@ -48,4 +48,4 @@ Servers may wish to support legacy clients that do not negotiate a subprotocol. 
 
 Similarly, clients may wish to support legacy servers that are unaware of subprotocols. The [standard JavaScript API](https://fetch.spec.whatwg.org/#websocket-opening-handshake) for WebSockets will [fail the WebSocket connection](https://tools.ietf.org/html/rfc6455#section-7.1.7) if none of the client's desired subprotocols could be negotiated. In this case, the client could attempt another connection without subprotocol negotiation.
 
-Some servers may support non-standards-compliant configurations where only one subprotocol is accepted. Clients seeking maximum compatibility with these server configurations can initially request both subprotocols.
+Some servers might support non-standard configurations where only one subprotocol is accepted. Clients can request both subprotocols to ensure compatibility with these server configurations.
