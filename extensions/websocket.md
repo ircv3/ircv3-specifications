@@ -23,6 +23,7 @@ We define two [WebSocket subprotocols](https://tools.ietf.org/html/rfc6455#secti
 If `binary.ircv3.net` is negotiated, then client and server will exchange binary messages; if `text.ircv3.net` is negotiated, then they will exchange text messages.  If no subprotocol is successfully negotiated, server and client MAY implement fallbacks designed for compatibility with legacy software; the exact behavior is left implementation-defined.
 
 In all cases, the message format is the same: each message MUST consist of a single IRC line, except that servers and clients MUST NOT include trailing `\r` or `\n` characters in the message.
+Maximum message size is reduced by two bytes accordingly (ie. to 510 bytes by default for the non-tags part of a message), to account for the server automatically inserting `\r\n`.
 
 Servers MUST NOT relay non-UTF-8 content to clients using text messages, since this may result in those clients being disconnected by the browser. Servers MAY replace non-UTF-8 bytes with the UTF-8 encoding of the Unicode replacement character `�` (`U+FFFD`).
 
