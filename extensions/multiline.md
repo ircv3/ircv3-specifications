@@ -49,7 +49,7 @@ The capability MUST be advertised by servers with a REQUIRED value: a comma (`,`
 
 Clients MUST ignore every token with a key that they don't understand.
 
-The only defined capability key so far is:
+The following capability keys are defined:
 
 * `max-bytes` - This defines the maximum allowed total byte length of a multiline batch's combined message value, as defined below *REQUIRED*
 * `max-lines` - This defines the maximum allowed number of `PRIVMSG` or `NOTICE` commands in a multiline batch *RECOMMENDED*
