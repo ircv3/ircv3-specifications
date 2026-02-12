@@ -77,6 +77,8 @@ The combined message value of a multiline batch is defined as the concatenation 
 
 Each line feed used to join line messages contributes one byte towards the `max-bytes` limit. No line feed is appended to the final line message of a batch.
 
+All lines contribute towards the `max-lines` limit, including lines that use the `draft/multiline-concat` tag.
+
 Servers MUST NOT reject blank lines other than in the following cases:
 
 * Clients MUST NOT send blank lines with the `draft/multiline-concat` tag.
