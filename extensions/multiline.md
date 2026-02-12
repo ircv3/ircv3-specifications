@@ -49,10 +49,10 @@ The capability MUST be advertised by servers with a REQUIRED value: a comma (`,`
 
 Clients MUST ignore every token with a key that they don't understand.
 
-The only defined capability key so far is:
+The following capability keys are defined:
 
 * `max-bytes` - This defines the maximum allowed total byte length of a multiline batch's combined message value, as defined below *REQUIRED*
-* `max-lines` - This defines the maximum allowed number of lines in a multiline batch *RECOMMENDED*
+* `max-lines` - This defines the maximum allowed number of `PRIVMSG` or `NOTICE` commands in a multiline batch *RECOMMENDED*
 
 Only the last parameter of PRIVMSG and NOTICE are counted toward `max-bytes`; not origin, command, or target.
 
@@ -76,6 +76,8 @@ When receiving a well-formed multiline message batch, implementations MUST colle
 The combined message value of a multiline batch is defined as the concatenation of the messages from each individual line within the batch. Line messages are joined by a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case that line's message is directly joined with the previous line's message with no separation.
 
 Each line feed used to join line messages contributes one byte towards the `max-bytes` limit. No line feed is appended to the final line message of a batch.
+
+All lines contribute towards the `max-lines` limit, including lines that use the `draft/multiline-concat` tag.
 
 Servers MUST NOT reject blank lines other than in the following cases:
 
