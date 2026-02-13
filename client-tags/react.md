@@ -32,7 +32,7 @@ This tag provides a means of communicating with context-sensitive, potentially n
 
 ### Dependencies
 
-Clients wishing to use this tag MUST negotiate the [`message-tags`](../extensions/message-tags.html) capability with the server. Additionally, this tag MUST be used in conjunction with the [`+draft/reply`](./reply.html) client tag.
+Clients wishing to use this tag MUST negotiate the [`message-tags`](../extensions/message-tags.html) capability with the server. Additionally, this tag MUST be used in conjunction with the [`+reply`](./reply.html) client tag.
 
 ### Format
 
@@ -66,17 +66,17 @@ This specification doesn't define any restrictions on what can be sent as the re
 In this example, a `TAGMSG` is sent to a channel with an ID provided by the server. A client sends a reaction reply to this message and the server sends an echo-message back to the client.
 
     S: @msgid=123 :nick!user@host PRIVMSG #channel :Hello!
-    C: @+draft/reply=123;+draft/react=lol TAGMSG #channel
-    S: @msgid=456;+draft/reply=123;+draft/react=lol :nick2!user2@host2 TAGMSG #channel
+    C: @+reply=123;+draft/react=lol TAGMSG #channel
+    S: @msgid=456;+reply=123;+draft/react=lol :nick2!user2@host2 TAGMSG #channel
 
 An example of an emoticon reaction
 
-    C: @+draft/reply=123;+draft/react=:) TAGMSG #channel
+    C: @+reply=123;+draft/react=:) TAGMSG #channel
 
 An example of an emoji reaction
 
-    C: @+draft/reply=123;+draft/react=👋 TAGMSG #channel
+    C: @+reply=123;+draft/react=👋 TAGMSG #channel
 
 An example of a reaction sent as a `PRIVMSG` with an additional message body
 
-    C: @+draft/reply=123;+draft/react=lol PRIVMSG #channel :lol
+    C: @+reply=123;+draft/react=lol PRIVMSG #channel :lol
