@@ -22,13 +22,13 @@ The final version of the specification will use unprefixed tag names.
 
 ## Introduction
 
-This specification defines a client-only message tag to indicate reactions and unreactions to other messages
+This specification defines client-only message tags to indicate reactions and unreactions to other messages
 
 ## Motivation
 
 This tag provides a means of communicating with context-sensitive, potentially non-textual reactions. It allows chat participants to respond to each other with text, symbols, emoticons, or emoji that don't necessarily appear as full messages, but instead as lightweight annotations, displayed adjacent to a parent message.
 
-While most IRC users do not expect messages to be removable, reactions are meant to be sent quickly, changed based on opinion and removed if sent accidentally. For this reason, it is common for implementations of emoji reactions in other protocols allow an unreaction feature.
+While most IRC users do not expect messages to be removable, reactions are meant to be sent quickly, changed based on opinion and removed if sent accidentally. For this reason, it is common for implementations of emoji reactions in other protocols to allow an unreaction feature.
 
 ## Architecture
 
