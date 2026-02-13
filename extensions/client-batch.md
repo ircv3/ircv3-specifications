@@ -63,8 +63,14 @@ Servers MUST use `FAIL` messages from the [standard replies][] framework
 to notify clients of errors with client-initiated batches.
 The command is `BATCH` and the following codes are defined:
 
+* `INVALID_REFTAG <reference-tag>`: the provided reference tag contains
+  disallowed characters, all past and future messages in this batch
+  will be ignored.
 * `TIMEOUT <reference-tag>`: the batch was left open for too long,
   all past and future messages in this batch will be ignored.
+* `UNKNOWN_TYPE <reference-tag> <type>`: the batch type is not recognized
+  by the server, all past and future messages in this batch will be
+  ignored.
 
 ## Implementation considerations
 
