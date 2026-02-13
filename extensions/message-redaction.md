@@ -28,10 +28,9 @@ The final version of the specification will use an unprefixed capability name.
 ## Introduction
 
 This specification enables messages to be deleted.
-Use cases include retracting accidentally sent messages, moderation,
-and removing a [`+draft/react` client tag][], amongst others.
-These are cosmetic use cases and do not provide any operational security
-guarantees.
+Use cases include retracting accidentally sent messages and moderation,
+amongst others. These are cosmetic use cases and do not provide any operational
+security guarantees.
 
 ## Architecture
 
@@ -203,7 +202,6 @@ Deleting someone else's PRIVMSG:
 
 
 [`echo-message`]: ../extensions/echo-message.html
-[`+draft/react` client tag]: ../client-tags/react.html
 [standard replies]: ../extensions/standard-replies.html
 [`message-tags`]: ../extensions/message-tags.html
 [`msgid`]: ../extensions/message-ids.html
