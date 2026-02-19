@@ -14,19 +14,21 @@ copyrights:
 This is a work-in-progress specification.
 
 Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `+react` tag name. Instead, implementations SHOULD use the
-`+draft/react` tag name to be interoperable with other software
+unprefixed `+react` or `+unreact` tag names. Instead, implementations SHOULD use the
+`+draft/react` and `+draft/unreact` tag names to be interoperable with other software
 implementing a compatible work-in-progress version.
 
-The final version of the specification will use an unprefixed tag name.
+The final version of the specification will use unprefixed tag names.
 
 ## Introduction
 
-This specification defines a client-only message tag to indicate reactions to other messages
+This specification defines client-only message tags to indicate reactions and unreactions to other messages
 
 ## Motivation
 
 This tag provides a means of communicating with context-sensitive, potentially non-textual reactions. It allows chat participants to respond to each other with text, symbols, emoticons, or emoji that don't necessarily appear as full messages, but instead as lightweight annotations, displayed adjacent to a parent message.
+
+While most IRC users do not expect messages to be removable, reactions are meant to be sent quickly, changed based on opinion and removed if sent accidentally. For this reason, it is common for implementations of emoji reactions in other protocols to allow an unreaction feature.
 
 ## Architecture
 
@@ -40,7 +42,13 @@ The react tag is sent by a client with the client-only prefix `+`. The value has
 
     +draft/react=<reaction>
 
-This tag MAY be attached to an empty message.
+The unreact tag is sent by a client with the client-only prefix `+`. The value has no restrictions.
+
+    +draft/unreact=<reaction>
+
+These tags MAY be attached to an empty message.
+
+The `+draft/react` and `+draft/unreact` tags MUST NOT both be attached to a single message.
 
 ## Client implementation considerations
 
@@ -80,3 +88,11 @@ An example of an emoji reaction
 An example of a reaction sent as a `PRIVMSG` with an additional message body
 
     C: @+reply=123;+draft/react=lol PRIVMSG #channel :lol
+
+An example of a reaction and unreaction sent as a `TAGMSG`s
+
+    S: @msgid=123 :nick!user@host PRIVMSG #football :They won!
+    C: @+reply=123;+draft/react=🇦🇷 TAGMSG #football
+    S: @msgid=124 :nick!user@host PRIVMSG #football :Actually it was Germany...
+    C: @+reply=123;+draft/unreact=🇦🇷 TAGMSG #football
+    C: @+reply=123;+draft/react=🇩🇪 TAGMSG #football
