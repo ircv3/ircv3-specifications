@@ -1,7 +1,6 @@
 ---
 title: "`reply` client tag"
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: "James Wheare"
