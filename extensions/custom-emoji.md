@@ -13,9 +13,9 @@ copyrights:
 
 This is a work-in-progress specification.
 
-Software implementing this work-in-progress specification MUST NOT use the unprefixed `EMOJI` ISUPPORT name, the `emoji` channel METADATA name, or the `+emoji` tag name. Instead, implementations SHOULD use the `draft/EMOJI` ISUPPORT name, the `draft/emoji` channel METADATA name, and the `+draft/emoji` tag name to be interoperable with other software implementing a compatible work-in-progress version.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `EMOJI` ISUPPORT name or the `emoji` channel METADATA name. Instead, implementations SHOULD use the `draft/EMOJI` ISUPPORT name and the `draft/emoji` channel METADATA name to be interoperable with other software implementing a compatible work-in-progress version.
 
-The final version of the specification will use unprefixed ISUPPORT, channel METADATA, and tag names.
+The final version of the specification will use unprefixed ISUPPORT and channel METADATA names.
 
 ## Introduction
 
@@ -23,56 +23,71 @@ This specification introduces the ability for servers and channels to define pac
 
 ## Dependencies
 
-Clients wishing to display or send custom emoji MUST negotiate the [`message-tags`](message-tags.html) capability with the server. Clients SHOULD additionally negotiate the [`metadata-2`](metadata.html) capability with the server so they can interact with custom emoji packs defined on a per-channel basis.
+If the server advertises the [`metadata-2`](metadata.html) capability, clients MUST negotiate this capability with the server so they can interact with custom emoji packs defined on a per-channel basis.
 
 ## Format
 
-The emoji tag is sent by a client with the client-only prefix `+`. The value is a comma-separated (`,`) list of shortcode=packid pairs, with an optional suffix for each shortcode, as defined by the following ABNF grammar.
+A custom emoji is defined by the following ABNF grammar.
 
 ```
-value       = emoji-def *("," emoji-def)
-emoji-def   = shortcode ["~" suffix] "=" pack-id
-shortcode   = 1*40(ALPHA / DIGIT / %x21-2B / %x2E-2F / %x3B-3C / %x3E-3F / %x5B-60 / %x7B-7D)
-              ; All ASCII numbers, letters, and symbols EXCEPT FOR ,=@:~
-suffix      = 1*3DIGIT
-pack-id     = 1*(ALPHA / DIGIT / %x21-2B / %x2E-2F / %x3A-3C / %x3E-40 / %x5B-60 / %x7B-7E)
-              ; All ASCII numbers, letters, and symbols EXCEPT FOR ,=
+emoji-value = ":" shortcode ["/" pack-id] ":"
+shortcode   = 1*ustr
+pack-id     = 1*(ustr / "/")
+ustr        = %x0021-002E   / %x0030-0039   / %x003B-007E   / %x00A1-00AC   / %x00AE-05FF
+            / %x0606-061B   / %x061D-06DC   / %x06DE-070E   / %x0710-088F   / %x0892-08E1
+            / %x08E3-167F   / %x1681-180D   / %x180F-1FFF   / %x2010-2027   / %x2030-205E
+            / %x2065        / %x2070-2FFF   / %x3001-D7FF   / %x7000-FEFE   / %xFFF0-FFF8
+            / %xFFFC-110BC  / %x110BE-110CC / %x110CE-1342F / %x13440-1BC9F / %x1BCA4-1D172
+            / %x1D17B-E0000 / %xE0002-E001F / %xE0080-10FFFF
+            ; All Unicode characters **EXCEPT FOR** Cc (Control), Cf (Format), Cs (Surrogate),
+            ; Zl (Line Separator), Zp (Paragraph Separator), Zs (Space Separator),
+            ; as well as "/" (solidus, U+002F) and ":" (colon, U+003A)
+            ; This corresponds to the regex class [^\p{Cc}\p{Cf}\p{Cs}\p{Zl}\p{Zp}\p{Zs}/:]
 ```
 
-The ordering of pairs within the tag is not meaningful. The same shortcode and suffix combination MUST NOT appear more than once within the emoji tag. Implementations receiving the same shortcode and suffix combination multiple times SHOULD disregard all but the final occurrence.
+When receiving a PRIVMSG, NOTICE, or [reaction](../client-tags/react.html), implementations search for all occurrences of emoji-value, and MAY replace those strings with the associated custom emoji image for the provided shortcode from the emoji pack whose id matches pack-id. Implementations SHOULD perform Unicode normalization using Form C (canonical decomposition followed by canonical composition) on the message before attempting emoji replacements. If a given emoji-value did not specify a particular pack-id, implementations MUST use the following algorithm to determine the corresponding pack-id:
 
-Implementations MUST treat shortcodes and suffixes as case-sensitive opaque identifiers and MUST NOT perform any validation that would reject the message if an invalid shortcode or suffix is used, although implementations SHOULD disregard such shortcodes when performing emoji replacement described below. This allows future modifications to the format.
+1. If the message is in a channel, look up the shortcode within the emoji pack document specified by that channel's `draft/emoji` METADATA.
+2. If step 1 fails to produce a shortcode mapping, look up the shortcode within the emoji pack document specified by ISUPPORT `draft/EMOJI`.
+3. If steps 1 and 2 fail to produce a shortcode mapping, an implementation MAY attempt to resolve the pack-id via other means (such as a local cache of known packs).
+4. If a shortcode is defined in multiple emoji packs within the same emoji pack document, implementations MUST use the pack-id corresponding to the final occurrence of that shortcode.
 
-When receiving a PRIVMSG, NOTICE, or [reaction](../client-tags/react.html) with an emoji tag, clients search for all occurrences of the exact substrings of each shortcode and optional suffix surrounded by a colon (`:`) on each side outside of monospaced contexts, and MAY replace those strings with the associated custom emoji image for the provided shortcode from the emoji pack whose id matches pack-id. Whether any particular shortcode is replaced with an associated custom emoji is an implementation decision for the client (see Client implementation considerations below).
+If an emoji-value specifies a pack-id beginning with a channel prefix, implementations SHOULD query the `draft/emoji` channel METADATA for the channel whose name matches pack-id and use the emoji pack document from that metadata value, if any, to resolve the shortcode to a custom emoji image.
 
-A monospaced context is a portion of the message body beginning with the monospace formatting code 0x11 and ending with either the monospace formatting code 0x11 again or the format reset code 0x0F. Even if a client does not support 0x11 for formatting text as monospaced, it MUST NOT replace custom emoji shortcodes within such contexts with the associated images. This allows for an easy way of "escaping" emoji shortcodes that would otherwise be replaced by images.
+Whether any particular emoji-value is replaced with an associated custom emoji is an implementation decision (see Client implementation considerations below).
 
 *[[Begin non-normative example--*
 
-For example, upon receiving a message with the tag `+draft/emoji=lol=server,lol~1=#coolpeople/default,lol~01=#coolpeople/pack2`, the client would search for the string `:lol:` within the message body and replace all occurrences of that string outside of monospaced contexts with the `lol` emoji from the `server` emoji pack. It will similarly replace `:lol~1:` with the `lol` emoji from the `#coolpeople/default` emoji pack and `:lol~01:` with the `lol` emoji from the `#coolpeople/pack2` emoji pack.
+For example, a client receives the following message:
+
+    :nick!user@example.com PRIVMSG #channel ::wave: Hello! :smile/#otherchannel:
+
+The client will attempt to replace `:wave:` first with an emoji with the shortcode `wave` specified in the emoji pack document linked to by `METADATA #channel GET draft/emoji`. If no emoji packs exist in that metadata, the client then attempts to resolve the `wave` shortcode from the emoji pack document linked to by RPL_ISUPPORT `draft/EMOJI`. If that also fails, the client uses any other internal mappings it wishes (for example, the user may have explicitly installed an emoji pack to the client providing the `wave` shortcode, or a client may have a default mapping of `wave` to the standard 👋 emoji).
+
+The client then attempts to replace `:smile/#otherchannel:` with an emoji whose pack-id equals `#otherchannel`. Since this pack-id begins with a channel type prefix, the client first attempts to resolve the pack by obtaining the emoji pack document linked to by `METADATA #otherchannel GET draft/emoji`, and if that document specifies the `#otherchannel` emoji pack with a `smile` shortcode, the client uses it.
 
 *--End non-normative example]]*
 
 ## Emoji pack document
 
-An emoji pack document is a valid JSON array containing zero or more emoji packs, as described below. All strings in an emoji pack document MUST be valid UTF-8. If any portion of an emoji pack document is invalid, the behavior is implementation-defined. For example, a client MAY choose to disregard the entire document, even if it contains some valid packs, or it may choose to only disregard invalid packs.
+An emoji pack document is a valid JSON array containing zero or more emoji packs, as described below. All strings in an emoji pack document MUST be valid UTF-8 and MUST be normalized using Unicode normalization form C (canonical decomposition followed by canonical composition). If any portion of an emoji pack document is invalid, the behavior is implementation-defined. For example, a client MAY choose to disregard the entire document, even if it contains some valid packs, or it may choose to only disregard invalid packs.
 
 An emoji pack is a JSON object containing the following keys:
 
-- `id` (string): An emoji pack MUST contain this key. It is an internal identifier and MUST be unique across all emoji packs in the emoji pack document. The value MUST be a string conforming to the pack-id production of the emoji tag ABNF grammar in the Format section.
+- `id` (string): An emoji pack MUST contain this key. It is an internal identifier and MUST be unique across all emoji packs in the emoji pack document. The value MUST be a string conforming to the pack-id production of the ABNF grammar in the Format section.
 - `name` (string): An emoji pack MUST contain this key. It is a display name for the pack to be used by clients in their UIs wherever they see fit. The value MUST be a string of at least 1 byte long and SHOULD NOT contain newlines or other non-printable characters. Clients MAY truncate or alter the value for proper display in their UIs.
 - `description` (string): An emoji pack SHOULD contain this key. If it does, the value MUST be a string of any length. The value for this key is a description of the emoji pack.
 - `authors` (array): An emoji pack SHOULD contain this key. If it does, the value MUST be an array with 0 or more items, and all array items MUST be strings. Each array item is an author for the emoji pack and/or the emojis within the pack. This specification does not define any particular format for the strings within the author list, and clients SHOULD expect the values to vary wildly.
 - `homepage` (string): An emoji pack MAY contain this key. If it does, the value MUST be a string that is a valid URL a user can visit to learn more about the pack.
 - `required` (array): An emoji pack MAY contain this key. If it does, the value MUST be an array with 0 or more items, and all array items MUST be strings. The value describes specification extensions that the client MUST understand in order to properly use this emoji pack. If a client does not understand all of the items, it MUST NOT attempt to use, install, or render this emoji pack.
-- `emoji` (object): An emoji pack MUST contain this key. The value MUST be an object mapping emoji shortcodes to the data for that emoji. Object keys beginning with the at sign (`@`) are treated as metadata for later extensions to this specification and MUST NOT be interpreted by the client as emoji shortcodes. All other keys are shortcodes, which MUST be strings conforming to the shortcode production of the ABNF grammar in the Format section. The values of shortcode keys MUST an emoji object. The `emoji` object MUST contain at least one valid shortcode to emoji object mapping.
+- `emoji` (object): An emoji pack MUST contain this key. The value MUST be an object mapping emoji shortcodes to the data for that emoji. Object keys are shortcodes, which MUST be strings conforming to the shortcode production of the ABNF grammar in the Format section. The values of shortcode keys MUST an emoji object. The `emoji` object MUST contain at least one valid shortcode to emoji object mapping.
 
 An emoji object is a JSON object containing the following keys:
 
 - `url` (string): An emoji object MUST contain this key. Its value MUST be a string containing a valid URL to obtain the emoji image data.
-- `alt` (string): An emoji object SHOULD contain this key. Its value MUST be a string of any length and has the same [use-cases as the alt attribute](https://www.w3.org/WAI/tutorials/images/decision-tree/) on an `<img>` HTML element.
+- `alt` (string): An emoji object SHOULD contain this key. Its value MUST be a string of any length and provides replacement text to use for when the image is unavailable.
 
-To allow for future extensibility, clients MUST ignore unrecognized keys within the emoji pack object.
+To allow for future extensibility, clients MUST ignore unrecognized keys within emoji packs and emoji objects. This specification intentionally does not define any mechanisms to create or manage emoji pack documents. Other specifications may define such mechanisms.
 
 *[[Begin non-normative example--*
 
@@ -81,7 +96,7 @@ An example emoji pack document which defines two emoji packs is below. The secon
 ```json
 [
     {
-        "id": "#coolchannel/default",
+        "id": "#coolchannel",
         "name": "#coolchannel",
         "description": "Default emoji pack for #coolchannel",
         "authors": [
@@ -99,7 +114,6 @@ An example emoji pack document which defines two emoji packs is below. The secon
                 "url": "https://example.com/this.jpg",
                 "alt": "the word 'this' with an arrow pointing upwards at the preceding message"
             },
-            "@comment": "data URL below truncated in this example for brevity",
             "thonk": {
                 "url": "data:image/png;base64,iVBORw0KGgoAAAAN...ErkJggg==",
                 "alt": ""
@@ -152,13 +166,21 @@ While there is no update notification message built into this specification for 
 
 Clients should implement defensive coding practices around image parsing, as there is a chance image data is malicious. This is especially relevant for SVG support as SVG natively supports scripting capabilities that could run client-side and could contain external XML entities causing additional web traffic or broken parsing, but security vulnerabilities do exist with image processing libraries in general. Clients should be strict in what they accept and reject any malformed image data.
 
-If a client is unwilling or unable to render any particular emoji image, they have a choice of displaying the alt text or leaving the shortcode as-is in the message body. In general, leaving the shortcode as-is is likely the best choice, as it doesn't potentially introduce arbitrarily-long content that users on other clients are unlikely to see. The alt text could still be exposed as a tooltip when hovering over the shortcode, for example.
+If a client is unwilling or unable to render any particular emoji image, they have a choice of displaying the alt text or leaving the shortcode as-is in the message body. In general, prefer to display the alternate text (even if it is empty). This could be in conjunction with a "broken image" placeholder where the alt text is presented via tooltip. However, if the shortcode does not map to any known valid emoji, then the shortcode should be left as-is in the message (as it likely is referring to something other than an emoji, such as a snippet of programming source code). Clients may also choose to leave shortcodes as-is even if they map to valid emoji if they are found within certain contexts such as multiline code blocks.
+
+When processing [multiline](multiline.html) batches, an open question becomes whether emoji replacement is performed before or after combining lines tagged with `+draft/multiline-concat` together. Because shortcodes and pack-ids have no length constraints, it is entirely possible for a client to choose to split an emoji into multiple lines of a multiline batch. As such, it is also probably a good idea to perform emoji replacement on the final multiline message (after concatenating all lines tagged with `+draft/multiline-concat` and then peforming Unicode normalization with NFC on the result of that operation). This could result in emoji being displayed for clients supporting multiline while they would not be displayed for clients without multiline support due to the line splitting, but the resulting user experience is arguably better for clients which do support multiline.
 
 ## Server implementation considerations
 
 This section is non-normative.
 
 A server may wish to rewrite URLs to and within emoji pack documents to a server-controlled space, downloading the JSON and all relevant images locally. This allows for vetting of pack ids (if the server wishes to enforce any particular naming convention for pack ids to prevent channels from extending or overriding server packs), virus scans on images, stronger guarantees that the URL will remain available for clients to fetch, and the ability to prevent clients from leaking IP addresses to third party websites.
+
+## Emoji pack author considerations
+
+This section is non-normative.
+
+A pack-id matching the channel name for emoji defined in channel metadata allows those emoji to be "shared" between multiple channels. If this behavior is undesirable, avoid using the channel name as a pack-id. When filling the `alt` property for custom emoji, the [alt attribute decision tree](https://www.w3.org/WAI/tutorials/images/decision-tree/) might be useful to determine how to define the property value.
 
 ## Emoji pack document schema
 
@@ -208,25 +230,22 @@ A [JSON schema](https://json-schema.org/specification) usable for an emoji pack 
             "emoji": {
                 "description": "A mapping of shortcode to emoji URL for emoji in this pack",
                 "type": "object",
-                "patternProperties": {
-                    "^[a-zA-Z0-9!-+\\-./;<>?[-`{|}]{1,40}$": {
-                        "type": "object",
-                        "required": ["url"],
-                        "properties": {
-                            "url": {
-                                "description": "The URL of the emoji image",
-                                "type": "string",
-                                "format": "uri"
-                            },
-                            "alt": {
-                                "description": "Alt text of the emoji image for accessibility",
-                                "type": "string"
-                            }
+                "propertyNames": {"pattern": "^[^\\p{Cc}\\p{Cf}\\p{Cs}\\p{Zl}\\p{Zp}\\p{Zs}/:]+$"},
+                "additionalProperties": {
+                    "type": "object",
+                    "required": ["url"],
+                    "properties": {
+                        "url": {
+                            "description": "The URL of the emoji image",
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "alt": {
+                            "description": "Alt text of the emoji image for accessibility",
+                            "type": "string"
                         }
-                    },
-                    "^@.+$": {}
+                    }
                 },
-                "additionalProperties": false,
                 "minProperties": 1
             }
         }
