@@ -60,7 +60,7 @@ when connection registration completes with entries previously omitted.
 ### `draft/isupport` batch
 
 The server MUST group all `RPL_ISUPPORT` messages inside a `draft/isupport`
-batch when the [`batch`][] and `draft/extended-isupport` capabilities are
+batch when the [`batch`][batch] and `draft/extended-isupport` capabilities are
 enabled. The server MUST NOT send any unbatched `RPL_ISUPPORT` message while
 both of these capabilities are enabled. The order in which the capabilities are
 enabled is not significant.
@@ -93,3 +93,5 @@ Sending a change:
     S: :irc.example.org BATCH +asdf draft/isupport
     S: @batch=asdf :irc.example.org 005 * CHANNELLEN=64 NICKLEN=42 -FOO
     S: :irc.example.org BATCH -asdf
+
+[batch]: ../extensions/batch.html
