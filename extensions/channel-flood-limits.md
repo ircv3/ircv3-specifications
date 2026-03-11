@@ -1,12 +1,13 @@
-# Channel Flood Limits
-
-Copyright © 2026 Valware <v.a.pond@outlook.com>
-
-Unlimited redistribution and modification of this document is allowed provided
-that the above copyright notice and this permission notice remains intact.
-
-This specification is a work-in-progress and may have major incompatible changes
-without warning.
+---
+title: "Channel Flood Limits"
+layout: spec
+work-in-progress: true
+copyrights:
+  -
+    name: "Valware"
+    period: "2026"
+    email: "v.a.pond@outlook.com"
+---
 
 ## Notes for implementing work-in-progress version
 
