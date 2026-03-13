@@ -21,11 +21,11 @@ username. (If the user is not identified to any services account, the tag MUST
 NOT be sent.)
 
 The tag MUST be added by the ircd to all commands sent by a user (e.g. PRIVMSG,
-MODE, NOTICE, and all others). The tag also MUST be added by the ircd to all
+MODE, NOTICE, and all others). The tag also SHOULD be added by the ircd to all
 numerics directly caused by the sender. For example, if the target user has
-"caller ID" enabled (e.g. user modes +R or +g in Charybdis), the tag MUST be
+"caller ID" enabled (e.g. user modes +R or +g in Charybdis), the tag SHOULD be
 added to numerics indicating blocked message attempts (numeric 718 aka
-`RPL_UMODEMSG`).
+`RPL_UMODEGMSG`).
 
 Example (demonstrated using the `account-notify` capability):
 
@@ -53,3 +53,7 @@ just the account name. Similarly, this extension does not deprecate
 extension does not.
 
 [message tag]: ../extensions/message-tags.html
+
+## Errata
+
+* Earlier version of this specification said that account tags MUST be added to numerics that were directly caused by a specific user. This was relaxed to SHOULD after it was found to be widely not implemented and a problem for existing implementations to implement.

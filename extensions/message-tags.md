@@ -248,8 +248,8 @@ An example where only the `+foo` and `+example/bar` client-only tags are blocked
 
 ## Security considerations
 
-Client-only tags should be treated as untrusted data. They can contain any value
-and are not validated by servers in any way. The server MAY unescape tag values
+Client-only tags should be treated as untrusted data. They can contain any value and
+clients cannot assume servers validate them in any way. The server MAY unescape tag values
 after receiving data and escape those values before sending them out.
 
 Tags without the client-only prefix MUST be removed by the server before being relayed

@@ -29,7 +29,7 @@ This specification adds a new batch type and tag sent by clients and servers to 
 
 IRC messages have been traditionally limited by the line-based nature of the protocol and the line length limit of 512. To work around these limitations, client implementations split longer messages into multiple lines, and users need to rely on snippet hosting services to send multiple lines without flooding the chat or having their messages interrupted by other users.
 
-Mulitline messages allow for a more coherent experience that avoids the disconnected messages that result from these workarounds.
+Multiline messages allow for a more coherent experience that avoids the disconnected messages that result from these workarounds.
 
 ## Architecture
 
@@ -49,10 +49,12 @@ The capability MUST be advertised by servers with a REQUIRED value: a comma (`,`
 
 Clients MUST ignore every token with a key that they don't understand.
 
-The only defined capability key so far is:
+The following capability keys are defined:
 
-* `max-bytes` - This defines the maximum allowed total byte length of multiline batched content *REQUIRED*
-* `max-lines` - This defines the maximum allowed number of lines in a multiline batch content *RECOMMENDED*
+* `max-bytes` - This defines the maximum allowed total byte length of a multiline batch's combined message value, as defined below *REQUIRED*
+* `max-lines` - This defines the maximum allowed number of `PRIVMSG` or `NOTICE` commands in a multiline batch *RECOMMENDED*
+
+Only the last parameter of PRIVMSG and NOTICE are counted toward `max-bytes`; not origin, command, or target.
 
 ### Tags
 
@@ -74,6 +76,8 @@ When receiving a well-formed multiline message batch, implementations MUST colle
 The combined message value of a multiline batch is defined as the concatenation of the messages from each individual line within the batch. Line messages are joined by a single line feed (`\n`) byte unless the `draft/multiline-concat` message tag is sent, in which case that line's message is directly joined with the previous line's message with no separation.
 
 Each line feed used to join line messages contributes one byte towards the `max-bytes` limit. No line feed is appended to the final line message of a batch.
+
+All lines contribute towards the `max-lines` limit, including lines that use the `draft/multiline-concat` tag.
 
 Servers MUST NOT reject blank lines other than in the following cases:
 
@@ -182,7 +186,7 @@ This section is non-normative.
 
 NOTE: In these examples, `<SPACE>` indicates a space character which would otherwise not be clearly visible.
 
-Client sending a mutliline batch
+Client sending a multiline batch
 
     Client: BATCH +123 draft/multiline #channel
     Client: @batch=123 PRIVMSG #channel hello

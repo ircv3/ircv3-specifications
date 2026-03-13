@@ -14,6 +14,10 @@ copyrights:
     name: "Shivaram Lingamneni"
     period: "2020"
     email: "slingamn@cs.stanford.edu"
+  -
+    name: "Val Lorentz"
+    period: "2022"
+    email: "progval+ircv3@progval.net"
 ---
 
 ## Notes for implementing work-in-progress version
@@ -36,9 +40,21 @@ Full support for this extension requires support for the [`batch`][batch], [`ser
 
 The `draft/chathistory` capability MUST be negotiated. This allows the server and client to behave differently when history is available and can be queried. In particular, if a client requests this capability, the server (or bouncer) SHOULD NOT play back any history that would otherwise be sent automatically.
 
-An ISUPPORT token MUST be sent to the client to state the maximum number of messages a client can request in a single command, e.g., `CHATHISTORY=50`. If `0`, the client SHOULD assume that there is no maximum number of messages.
-
 The `draft/event-playback` capability MAY be negotiated. This allows the client to signal that it is capable of receiving and correctly processing lines that would normally produce a local state change (such as `JOIN` or `MODE`) in its history batches.
+
+### ISUPPORT tokens
+
+This specification defines two ISUPPORT tokens.
+
+`CHATHISTORY` MUST be sent to the client to state the maximum number of messages a client can request in a single command, e.g., `CHATHISTORY=50`. If `0`, the client SHOULD assume that there is no maximum number of messages.
+
+`MSGREFTYPES` SHOULD be sent, with a comma-separated list of types of message references they support as parameter to `CHATHISTORY` commands, in order of decreasing preference. Clients MUST ignore any type they do not support. The currently defined list of types is:
+
+* `timestamp`, to reference messages by their timestamp
+* `msgid`, to reference them by their `msgid`
+
+If `MSGREFTYPES` is missing, clients SHOULD assume the server supports both and has no preference.
+
 
 ### `CHATHISTORY` Command
 The client can request message history content by sending the `CHATHISTORY` command to the server. This command has the following general syntax:
@@ -52,7 +68,7 @@ A `timestamp` parameter MUST have the format `timestamp=YYYY-MM-DDThh:mm:ss.sssZ
 
 If the `batch` capability was negotiated, the server MUST reply to a successful `CHATHISTORY` command using a [`batch`][batch]. For subcommands that return message history (i.e. all subcommands other than `TARGETS`), the batch MUST have type `chathistory` and take a single additional parameter, the canonical name of the target being queried. For `TARGETS`, the batch MUST have type `draft/chathistory-targets`. If no content exists to return, the server SHOULD return an empty batch in order to avoid the client waiting for a reply.
 
-If the client has not negotiated the `draft/event-playback` capability, the server MUST NOT send any lines other than `PRIVMSG` and `NOTICE` in the reply batch. If the client has negotiated `draft/event-playback`, the server SHOULD send additional lines relevant to the chat history, including but not limited to `TAGMSG`, `JOIN`, `PART`, `QUIT`, `MODE`, `TOPIC`, and `NICK`.
+If the client has not negotiated the `draft/event-playback` capability, the server MUST NOT send any lines other than `PRIVMSG` and `NOTICE` in the reply batch, unless allowed by a capability negotiated by the client. If the client has negotiated `draft/event-playback`, the server SHOULD send additional lines relevant to the chat history, including but not limited to `TAGMSG`, `JOIN`, `PART`, `QUIT`, `MODE`, `TOPIC`, and `NICK`.
 
 #### Subcommands
 
@@ -98,7 +114,7 @@ Unlike the other subcommands, `TARGETS` does not return message history. Instead
 
     CHATHISTORY TARGETS <timestamp=YYYY-MM-DDThh:mm:ss.sssZ> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ> <limit>
 
-The parameters have the same semantics as `BETWEEN`, except that they MUST be timestamps and not msgids. Returned messages have the syntax:
+The parameters have the same semantics as `BETWEEN`, except that they MUST be timestamps and not msgids, and they match against the latest message stored for the target (i.e. a target is not returned if its latest message is outside of the selection parameters, even if it has other messages inside them). Returned messages have the syntax:
 
     CHATHISTORY TARGETS <nickname | channel name> <YYYY-MM-DDThh:mm:ss.sssZ>
 
@@ -108,6 +124,10 @@ where the timestamp is the time of the latest message in the channel history or 
 The order of returned messages within the batch is implementation-defined, but SHOULD be ascending time order or some approximation thereof, regardless of the subcommand used. The `server-time` tag on each message SHOULD be the time at which the message was received by the IRC server. The `msgid` tag that identifies each individual message in a response MUST be the `msgid` tag as originally sent by the IRC server.
 
 Servers SHOULD provide clients with a consistent message order that is valid across the lifetime of a single connection, and which determinately orders any two messages (even if they share a timestamp); this will allow BEFORE, AFTER, and BETWEEN queries that use msgids for pagination to function as expected. This order SHOULD coincide with the order in which messages are returned within a response batch. It need not coincide with the delivery order of messages when they were relayed on any particular server.
+
+#### `draft/chathistory-context` tag
+
+The server may choose to return additional, related messages alongside regular chat history. Such messages MUST be tagged with the `draft/chathistory-context` tag and MUST immediately follow their parent message. Context messages MUST NOT be counted towards the message limit. Context messages are sent at the server's discretion and MAY include reacts, redacts, edits, etc.
 
 #### Errors and Warnings
 Errors are returned using the standard replies syntax.
@@ -128,6 +148,10 @@ If the target does not exist or the client does not have permissions to query it
 If no message history can be returned due to an error, the `MESSAGE_ERROR` error code SHOULD be returned:
 
     FAIL CHATHISTORY MESSAGE_ERROR the_given_command the_given_target [extra_context] :Messages could not be retrieved
+
+If a client used a reference type (`timestamp=` or `msgid=`) the server does not support, the `INVALID_MSGREFTYPE` error code SHOULD be returned:
+
+    FAIL CHATHISTORY INVALID_MSGREFTYPE the_given_command the_given_target [extra_context] :msgid-based history requests are not supported
 
 ### Examples
 
