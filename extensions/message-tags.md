@@ -153,7 +153,7 @@ Clients that receive a `TAGMSG` command MUST NOT display them in the message his
 
 Full tag names, including any vendor prefixes MUST be treated as an opaque identifier.
 
-There are two tag namespaces:
+There are three tag namespaces:
 
 ### Vendor-Specific
 
