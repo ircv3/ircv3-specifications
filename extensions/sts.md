@@ -44,6 +44,8 @@ If any required part is missing from the STS policy, clients MUST continue as if
 
 Servers MAY advertise all STS policy parts together on both secure and insecure connections. Clients MUST only respect each policy part on the appropriate connection type.
 
+If any required key does not exist, clients MUST silently ignore the policy.
+
 See the [capability negotiation](../core/capability-negotiation.html) specification for more information about capabilities with values.
 
 ### Mechanism
@@ -91,6 +93,23 @@ Preload list providers MUST only consider hosts for inclusion after validating t
 Servers SHOULD be prepared to offer secure connections for the long term when enabling a preload policy. Timely removal of hostnames from preload lists might not be possible.
 
 Preload list providers SHOULD consider STS persistence policy durations and MAY set minimum duration requirements prior to inclusion. Clients using preload lists SHOULD consider how their release cycle compares to any duration requirements imposed by list providers.
+
+### The `if-host-match` and `port-if-match` keys
+
+Sometimes, third-parties create domain aliases that point towards IRC networks (for example, setting `irc.ircv3.net` as a `CNAME` of `irc.example.com`). Unfortunately, this means that TLS certificate validation does not work on the alias, and the network will not be able to use STS without breaking clients that do connect using the alias (e.g. if a user connects via `irc.ircv3.net`, they will not be able to validate the TLS certificate as the cert is valid for `irc.example.com`).
+
+Networks that require this sort of control over connection upgrades can advertise these two keys. Servers that advertise these two keys MUST NOT advertise the regular `port` key:
+
+- `if-host-match`: List of hostnames and hostname patterns to match against, separated by pipes (`|`). This uses regular IRC 'glob' syntax, where `?` matches any single character and `*` matches zero or more characters.
+- `port-if-match`: This is the port to connect to.
+
+If the hostname that the client connected to is matched by the `if-host-match` list, the client MUST follow the regular STS process using the `port-if-match` key as the TLS port to connect to.
+
+Advertising these two keys and not advertising the `port` key means that only clients who understand how to process the `if-host-match` key will follow the STS policy.
+
+Example 1: `irc.ircv3.net` is an alias of the canonical server `irc.example.com`. Alice connects to `irc.ircv3.net` and sees the capability: `"sts=duration=1,if-host-match=*.example.com,port-if-match=6697"`. Because Alice connected to `irc.ircv3.net` and does not see a pattern matching that, Alice does not perform an STS upgrade.
+
+Example 2: Alice connects to `irc.example.com` and sees the capability: `"sts=duration=1,if-host-match=*.example.net|*.example.com,port-if-match=6697"`. The pattern `*.example.com` matches `irc.example.com`, so Alice connects to port `6697` and follows the STS process as usual.
 
 ### Server Name Indication
 
@@ -317,3 +336,10 @@ A client securely connects to a server, which advertises an STS policy and opts 
 
     Secure Client: CAP LS 302
            Server: CAP * LS :sts=duration=2592000,preload
+
+
+## Errata
+
+New versions of this specification add the `if-host-match` and `port-if-match` keys, which allows some installations to not advertise the `port` key.
+
+Previous versions of this specification only implied that clients ignore poicies that do not include required keys. The specification now explicitly states that clients ignore these invalid policies.
