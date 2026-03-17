@@ -417,6 +417,8 @@ The NEW subcommand signals that the server supports one or more new capabilities
 sent at any time. Clients that support `CAP NEW` messages SHOULD respond with a `CAP REQ`
 message if they wish to enable one or more of the newly-offered capabilities.
 
+The NEW subcommand can also update the value of an existing capability.
+
 The format of a `CAP NEW` message is:
 
     CAP <nick> NEW :<extension 1> [<extension 2> ... [<extension n>]]
@@ -434,6 +436,11 @@ Example with following `REQ`:
     Server: :irc.example.com CAP tester NEW :away-notify extended-join
     Client: CAP REQ :extended-join away-notify
     Server: :irc.example.com CAP tester ACK :extended-join away-notify
+
+Example updating an existing capability:
+
+    Server: :irc.example.com CAP modernclient NEW :sasl=PLAIN
+    Server: :irc.example.com CAP modernclient NEW :sasl=PLAIN,EXTERNAL
 
 ### The CAP DEL subcommand
 
@@ -600,3 +607,6 @@ Previous versions of this spec did not state that space-separated capability lis
 a trailing space.
 
 Previous versions of this spec did not give formats for commands other than `CAP NEW` and `CAP DEL`.
+
+Previous versions of this spec didn't explicitly state that `CAP NEW` can update existing
+capabilities. This has been clarified and an example has been added.

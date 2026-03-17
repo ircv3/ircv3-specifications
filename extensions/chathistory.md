@@ -114,7 +114,7 @@ Unlike the other subcommands, `TARGETS` does not return message history. Instead
 
     CHATHISTORY TARGETS <timestamp=YYYY-MM-DDThh:mm:ss.sssZ> <timestamp=YYYY-MM-DDThh:mm:ss.sssZ> <limit>
 
-The parameters have the same semantics as `BETWEEN`, except that they MUST be timestamps and not msgids. Returned messages have the syntax:
+The parameters have the same semantics as `BETWEEN`, except that they MUST be timestamps and not msgids, and they match against the latest message stored for the target (i.e. a target is not returned if its latest message is outside of the selection parameters, even if it has other messages inside them). Returned messages have the syntax:
 
     CHATHISTORY TARGETS <nickname | channel name> <YYYY-MM-DDThh:mm:ss.sssZ>
 
@@ -124,6 +124,10 @@ where the timestamp is the time of the latest message in the channel history or 
 The order of returned messages within the batch is implementation-defined, but SHOULD be ascending time order or some approximation thereof, regardless of the subcommand used. The `server-time` tag on each message SHOULD be the time at which the message was received by the IRC server. The `msgid` tag that identifies each individual message in a response MUST be the `msgid` tag as originally sent by the IRC server.
 
 Servers SHOULD provide clients with a consistent message order that is valid across the lifetime of a single connection, and which determinately orders any two messages (even if they share a timestamp); this will allow BEFORE, AFTER, and BETWEEN queries that use msgids for pagination to function as expected. This order SHOULD coincide with the order in which messages are returned within a response batch. It need not coincide with the delivery order of messages when they were relayed on any particular server.
+
+#### `draft/chathistory-context` tag
+
+The server may choose to return additional, related messages alongside regular chat history. Such messages MUST be tagged with the `draft/chathistory-context` tag and MUST immediately follow their parent message. Context messages MUST NOT be counted towards the message limit. Context messages are sent at the server's discretion and MAY include reacts, redacts, edits, etc.
 
 #### Errors and Warnings
 Errors are returned using the standard replies syntax.
