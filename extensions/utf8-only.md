@@ -22,7 +22,7 @@ This specification introduces a new token `UTF8ONLY` that servers can include in
 If a client implementing this specification sees this token, they MUST set their outgoing encoding to UTF-8 without requiring any user intervention. This allows clients to work transparently on networks that only allow UTF-8 traffic.
 
 ## The `INVALID_UTF8` standard replies code
-This is a code that can be used with the [standard replies](https://ircv3.net/specs/extensions/standard-replies) specification. When sent with the `FAIL` command, it indicates that the client's message was rejected because it contained invalid UTF-8 data. When sent with the `WARN` command, it indicates that the message was modified but still accepted.
+This is a code that can be used with the [standard replies](https://ircv3.net/specs/extensions/standard-replies) specification. When sent with the `FAIL` command, it indicates that the client's message was rejected because it contained invalid UTF-8 data. When sent with the `WARN` command, it indicates that the message was modified but still accepted. If the server is unable to parse the sent command then it MAY send a `FAIL` command with no command name (i.e. `*`).
 
 ## Examples
 
@@ -41,7 +41,16 @@ Client: PRIVMSG #ircv3 :<non-utf-8 message>
 Server: WARN PRIVMSG INVALID_UTF8 :Your message was not correctly encoded as UTF-8 and had to be modified
 ```
 
+```
+Client: <non-utf-8 command>
+Server: FAIL * INVALID_UTF8 :Message rejected, your IRC software MUST use UTF-8 encoding on this network
+```
+
 ## Implementation considerations
 This section is non-normative.
 
 Implementations must ensure that if they truncate messages to meet a length limit, they do not do so in the middle of a UTF-8-encoded codepoint.
+
+## Errata
+
+A previous version of this specification did not make it clear how to respond to use the INVALID_UTF8 standard reply when a command name could not be decoded. This has been resolved by making it clear how to handle this.
