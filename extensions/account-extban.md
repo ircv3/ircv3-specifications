@@ -1,19 +1,12 @@
 ---
 title: Account Extended Ban
 layout: spec
-work-in-progress: true
 copyrights:
   -
     name: "June McEnroe"
     email: "june@causal.agency"
     period: "2021-2022"
 ---
-
-
-## Notes for implementing work-in-progress version
-
-This is a work-in-progress specification.
-
 
 ## Introduction
 
