@@ -179,7 +179,7 @@ typical method is to add `-0.x` to the name, where `x` is a version number. For 
 
 ### Standardized
 
-Reserved names for which a corresponding document exists in the [IRCv3 Extension Registry][registry].
+A non-prefixed global namespace of reserved names for which a corresponding document exists in the [IRCv3 Extension Registry][registry].
 
 The IRCv3 Working Group reserves the right to reuse names which have not been submitted
 to the registry. If you do not wish to submit your tag then you MUST use a vendor-specific
