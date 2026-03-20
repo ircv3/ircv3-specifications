@@ -71,6 +71,19 @@ The only defined capability keys so far are:
  * `custom-account-name` - if present, the account name can be different
    from the user's current nickname
 
+### ISUPPORT token
+
+This specification also defines the `draft/ACCOUNTREQUIRED` ISUPPORT token. If
+present, it indicates that the connection to the server cannot be completed
+unless the clients authenticates, typically via SASL. Note, the absence of this
+token does not indicate that connection registration can be completed without
+authentication; it may be disallowed due to specific properties of the
+connection (e.g. an untrustworthy IP address), which will be indicated instead
+by `FAIL * ACCOUNT_REQUIRED`. If the capability value
+`draft/account-registration=before-connect` is advertised, clients should
+respond to both of these conditions by suggesting that the user register an
+account.
+
 ### Commands
 
     REGISTER <account> {<email> | "*"} <password>
