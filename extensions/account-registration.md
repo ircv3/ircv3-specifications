@@ -91,10 +91,12 @@ If the client sends `REGISTER` before completing connection registration,
 and receives a `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`, it SHOULD make
 a second attempt after it receives the welcome message.
 
-    VERIFY <account> <code>
+    VERIFY {<account> | "*"} <code>
     
 The `VERIFY` command completes a registration that required verification
 (eg. via email or CAPTCHA).
+
+If `<account>` is `*`, then this value is the user's current nickname.
 
 ### Responses
 
