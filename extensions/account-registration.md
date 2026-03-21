@@ -49,7 +49,10 @@ This specification uses [standard replies][] framework.
 ### Capability
 
 This specification adds the `draft/account-registration` capability, whose
-presence signifies that the server accepts the `REGISTER` command.
+presence signifies that the server supports account registration.
+
+The client MUST enable the `draft/account-registration` capability before using
+the `REGISTER` and `VERIFY` commands defined by this specification.
 
 The capability MAY be advertised by servers with an OPTIONAL value:
 a comma (`,`) (0x2C) separated list of tokens. Each token consists of a key
