@@ -69,10 +69,18 @@ The only defined capability keys so far are:
  * `before-connect` - if present, indicates the server supports early
    registration, so it MUST NOT use
    `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`
- * `email-required` - if present, registrations require a valid email address
-   to process
+
  * `custom-account-name` - if present, the account name can be different
    from the user's current nickname
+
+ * `email-required` - if present, registrations require a valid email address
+   to process
+
+* `max-password-length=<num>` - if present, passwords are restricted to a
+  maximum length of `<num>` bytes. `<num>` MUST be a non-zero positive integer.
+
+* `min-password-length=<num>` - if present, passwords are restricted to a
+  minimum length of `<num>` bytes. `<num>` MUST be a non-zero positive integer.
 
 ### Commands
 
