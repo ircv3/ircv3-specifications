@@ -76,8 +76,8 @@ The only defined capability keys so far are:
 
 ### Commands
 
-    REGISTER <account> {<email> | "*"} <password>
-    
+    REGISTER {<account> | "*"} {<email> | "*"} <password>
+
 The `REGISTER` command informs the server of a request to register
 an account named for the current nick of the requestor.
 
