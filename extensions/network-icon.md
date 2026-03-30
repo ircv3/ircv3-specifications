@@ -29,7 +29,7 @@ The `NETWORK` ISUPPORT token allows servers to advertise their network name. Thi
 
 If a server publishes a `draft/ICON` ISUPPORT token, the value MUST be a URL to an image. This image SHOULD be square. The URL SHOULD use the "https" scheme.
 
-The URL MAY contain the `{size}` template variable that clients MUST replace with an integer to request a specific image size in pixels.  Clients MUST treat this template variable as a hint and MUST NOT assume that they will get the exact same size image back as requested.
+The URL MAY contain the `{size}` template variable that clients MAY replace with an integer to request a specific image size in pixels.  Clients MUST treat this template variable as a hint and MUST NOT assume that they will get the exact same size image back as requested. Servers advertising a URL with the `{size}` variable SHOULD serve a default size when the literal string {size} is requested, in order to support clients that do not perform URL template interpolation.
 
 Servers MAY implement [extended-isupport](extended-isupport.html) to allow clients to fetch the network icon before connection registration.
 
