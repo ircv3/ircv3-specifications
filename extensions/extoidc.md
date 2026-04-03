@@ -49,6 +49,26 @@ The client SHOULD then utilize the `extoidc info` command to get the required in
 
 Once the end-user has either consented or rejected the authorization request, the client SHALL either use the `extoidc authorize` or `extoidc reject` commands corresponding to the user action.
 
+### Diagram
+
+```mermaid
+sequenceDiagram
+	actor Alice
+	participant Server
+	participant RP@{ "type" : "control" } as Relying Party
+    Alice->>Server: /extoidc token
+	Server-->>Alice: signed JWT with UUID
+   	Alice->>RP: JWT from server
+	RP->>Server:Authentication Request with JWT
+	Server->>Server: Validate JWT signature
+	Server->>Alice:Do you authorize this authentication request?
+	Alice->>Server: Who is it? (/extoidc info)
+	Server-->>Alice: Info about RP & claim requests
+	Alice-->>Server: Authorize authentication (/extoidc authorize)
+	Server->>RP:Authentication Response & claim data
+	Server->>Server:Invalidate JWT
+```
+
 ## OpenID Connect
 
 Servers SHALL implement a discoverable [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html) provider with a published JSON Web Key Set that is used to sign tokens.
@@ -100,6 +120,6 @@ It should provide the information in an array containing the following items:
 
 ### `extoidc config`
 
-#### `extoidcDC config claims [LANG]`
+#### `extoidc config claims [LANG]`
 
 This subcommand provides user-facing descriptions for OpenID Connect claims advertised by the server. Upon receipt of the command, the server SHALL return a dictionary of claims and their associated descriptions.
