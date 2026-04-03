@@ -27,25 +27,28 @@ If the server advertises the [`metadata-2`](metadata.html) capability, clients M
 
 ## Format
 
-A custom emoji is defined by the following ABNF grammar.
+A custom emoji is defined by the following [ABNF grammar](https://www.rfc-editor.org/rfc/rfc5234), extended with the `^` character indicating the beginning of the text line.
 
 ```
-emoji-value = ":" shortcode ["/" pack-id] ":"
-shortcode   = 1*ustr
-pack-id     = 1*(ustr / "/")
-ustr        = %x0021-002E   / %x0030-0039   / %x003B-007E   / %x00A1-00AC   / %x00AE-05FF
-            / %x0606-061B   / %x061D-06DC   / %x06DE-070E   / %x0710-088F   / %x0892-08E1
-            / %x08E3-167F   / %x1681-180D   / %x180F-1FFF   / %x2010-2027   / %x2030-205E
-            / %x2065        / %x2070-2FFF   / %x3001-D7FF   / %x7000-FEFE   / %xFFF0-FFF8
-            / %xFFFC-110BC  / %x110BE-110CC / %x110CE-1342F / %x13440-1BC9F / %x1BCA4-1D172
-            / %x1D17B-E0000 / %xE0002-E001F / %xE0080-10FFFF
-            ; All Unicode characters **EXCEPT FOR** Cc (Control), Cf (Format), Cs (Surrogate),
-            ; Zl (Line Separator), Zp (Paragraph Separator), Zs (Space Separator),
-            ; as well as "/" (solidus, U+002F) and ":" (colon, U+003A)
-            ; This corresponds to the regex class [^\p{Cc}\p{Cf}\p{Cs}\p{Zl}\p{Zp}\p{Zs}/:]
+emoji-string = ^ 1*emoji-value
+             / SP 1*emoji-value
+             ; custom emoji must either appear at the beginning of the line or after a space
+emoji-value  = ":" shortcode ["/" pack-id] ":"
+shortcode    = 1*ustr
+pack-id      = 1*(ustr / "/")
+ustr         = %x0021-002E   / %x0030-0039   / %x003B-007E   / %x00A1-00AC   / %x00AE-05FF
+             / %x0606-061B   / %x061D-06DC   / %x06DE-070E   / %x0710-088F   / %x0892-08E1
+             / %x08E3-167F   / %x1681-180D   / %x180F-1FFF   / %x2010-2027   / %x2030-205E
+             / %x2065        / %x2070-2FFF   / %x3001-D7FF   / %x7000-FEFE   / %xFFF0-FFF8
+             / %xFFFC-110BC  / %x110BE-110CC / %x110CE-1342F / %x13440-1BC9F / %x1BCA4-1D172
+             / %x1D17B-E0000 / %xE0002-E001F / %xE0080-10FFFF
+             ; All Unicode characters **EXCEPT FOR** Cc (Control), Cf (Format), Cs (Surrogate),
+             ; Zl (Line Separator), Zp (Paragraph Separator), Zs (Space Separator),
+             ; as well as "/" (solidus, U+002F) and ":" (colon, U+003A)
+             ; This corresponds to the regex class [^\p{Cc}\p{Cf}\p{Cs}\p{Zl}\p{Zp}\p{Zs}/:]
 ```
 
-When receiving a PRIVMSG, NOTICE, or [reaction](../client-tags/react.html), implementations search for all occurrences of emoji-value, and MAY replace those strings with the associated custom emoji image for the provided shortcode from the emoji pack whose id matches pack-id. Implementations SHOULD perform Unicode normalization using Form C (canonical decomposition followed by canonical composition) on the message before attempting emoji replacements. If a given emoji-value did not specify a particular pack-id, implementations MUST use the following algorithm to determine the corresponding pack-id:
+When receiving a PRIVMSG, NOTICE, or [reaction](../client-tags/react.html), implementations search for all occurrences of emoji-string, and MAY replace emoji-values within those strings with the associated custom emoji image for the provided shortcode from the emoji pack whose id matches pack-id. Implementations SHOULD perform Unicode normalization using Form C (canonical decomposition followed by canonical composition) on the message before attempting emoji replacements. If a given emoji-value did not specify a particular pack-id, implementations MUST use the following algorithm to determine the corresponding pack-id:
 
 1. If the message is in a channel, look up the shortcode within the emoji pack document specified by that channel's `draft/emoji` METADATA.
 2. If step 1 fails to produce a shortcode mapping, look up the shortcode within the emoji pack document specified by ISUPPORT `draft/EMOJI`.
@@ -60,9 +63,11 @@ Whether any particular emoji-value is replaced with an associated custom emoji i
 
 For example, a client receives the following message:
 
-    :nick!user@example.com PRIVMSG #channel ::wave: Hello! :smile/#otherchannel:
+    :nick!user@example.com PRIVMSG #channel ::wave: Hello:there:! :smile/#otherchannel:
 
 The client will attempt to replace `:wave:` first with an emoji with the shortcode `wave` specified in the emoji pack document linked to by `METADATA #channel GET draft/emoji`. If no emoji packs exist in that metadata, the client then attempts to resolve the `wave` shortcode from the emoji pack document linked to by RPL_ISUPPORT `draft/EMOJI`. If that also fails, the client uses any other internal mappings it wishes (for example, the user may have explicitly installed an emoji pack to the client providing the `wave` shortcode, or a client may have a default mapping of `wave` to the standard 👋 emoji).
+
+The client does NOT attempt to replace `:there:` with any custom emoji because it is not at the beginning of the line and it is not preceded by a space.
 
 The client then attempts to replace `:smile/#otherchannel:` with an emoji whose pack-id equals `#otherchannel`. Since this pack-id begins with a channel type prefix, the client first attempts to resolve the pack by obtaining the emoji pack document linked to by `METADATA #otherchannel GET draft/emoji`, and if that document specifies the `#otherchannel` emoji pack with a `smile` shortcode, the client uses it.
 
@@ -168,7 +173,7 @@ Clients should implement defensive coding practices around image parsing, as the
 
 If a client is unwilling or unable to render any particular emoji image, they have a choice of displaying the alt text or leaving the shortcode as-is in the message body. In general, prefer to display the alternate text (even if it is empty). This could be in conjunction with a "broken image" placeholder where the alt text is presented via tooltip. However, if the shortcode does not map to any known valid emoji, then the shortcode should be left as-is in the message (as it likely is referring to something other than an emoji, such as a snippet of programming source code). Clients may also choose to leave shortcodes as-is even if they map to valid emoji if they are found within certain contexts such as multiline code blocks.
 
-When processing [multiline](multiline.html) batches, an open question becomes whether emoji replacement is performed before or after combining lines tagged with `+draft/multiline-concat` together. Because shortcodes and pack-ids have no length constraints, it is entirely possible for a client to choose to split an emoji into multiple lines of a multiline batch. As such, it is also probably a good idea to perform emoji replacement on the final multiline message (after concatenating all lines tagged with `+draft/multiline-concat` and then peforming Unicode normalization with NFC on the result of that operation). This could result in emoji being displayed for clients supporting multiline while they would not be displayed for clients without multiline support due to the line splitting, but the resulting user experience is arguably better for clients which do support multiline.
+When processing [multiline batches](multiline.html), an open question becomes whether emoji replacement is performed before or after combining lines tagged with `+draft/multiline-concat` together. Because shortcodes and pack-ids have no length constraints, it is entirely possible for a client to choose to split an emoji into multiple lines of a multiline batch. As such, it is also probably a good idea to perform emoji replacement on the final multiline message (after concatenating all lines tagged with `+draft/multiline-concat` and then peforming Unicode normalization with NFC on the result of that operation). This could result in emoji being displayed for clients supporting multiline while they would not be displayed for clients without multiline support due to the line splitting, but the resulting user experience is arguably better for clients which do support multiline.
 
 ## Server implementation considerations
 
