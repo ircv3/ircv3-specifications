@@ -20,7 +20,7 @@ implementing a compatible work-in-progress version.
 
 ## Description
 
-The `draft/oper` capability causes the server to add a [message tag][] to messages sent by a user who is currently an IRC operator.
+The `draft/oper-tag` capability causes the server to add a [message tag][] to messages sent by a user who is currently an IRC operator.
 
 The tag MUST be named `draft/oper`. The value of the tag, if specified, MUST identify the operator.
 
