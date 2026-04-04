@@ -49,6 +49,49 @@ a) The `X-Session-Token` provided after either the creation or a previous reques
 
 b) A `EXTOIDC` token to begin an authentication session with. The provider SHALL begin a CIBA authentication session and SHALL immediately return a `401 Unauthorized`  and a new `X-Session-Token` to indicate that the authorization session has not been completed.
 
-Providers SHALL include an `X-Session-Token` with each successful request after an `EXTOIDC` CIBA session.
+Providers SHALL ensure the valid authentication status for an `X-Session-Token` and that usage of a valid `X-Session-Token` does not require a new CIBA authentication session. Providers SHALL include an `X-Session-Token` with each successful request after an `EXTOIDC` CIBA session. Clients SHALL replace any existing `X-Session-Token` with one provided in the `X-Session-Token` header in a given response.
+
+> [!TIP]
+> Providers may "staple" `X-Session-Token` tokens to avoid storing perpetually a list of authenticated token IDs, since any `X-Session-Token` provided on a subsequent request shall replace any previous token. This is demonstrated in the Diagram below.
 
 Once the upload is completed, the upload URL is now usable to point to the file in IRC conversation and can be managed with either an unexpired `X-Session-Token` or by starting a new `EXTOIDC` session.
+
+## Diagram
+
+```mermaid
+sequenceDiagram
+  actor Alice
+	participant Server
+	participant Provider@{"type": "boundary"} as Provider Root
+	Alice-->Server: Establish IRC connection
+	Server-->>Alice: ISUPPORT data advertising<br> OBJECTSTORAGE provider root
+  Alice->>Server: /extoidc token
+	Server-->>Alice: signed extoidc JWT
+  Alice->>Provider: File upload session creation request with extoidc JWT
+  create participant UploadResource@{"type": "entity"} as Upload Resource
+  Provider->UploadResource: Create upload resource
+  Provider->>Provider: Create session JWT with<br> upload resource as subject, and <br>in-memory record of the associated id
+  par
+    Provider-->>Alice: Upload resource URL and session JWT
+  and
+    Provider->>Server:Authentication Request with extoidc JWT
+    Server->>Server: Validate extoidc JWT
+    Server-)Alice:Do you authorize this authentication request?
+    Alice->>Server: Who is it? (/extoidc info)
+    Server-->>Alice: Info about RP & claim requests
+    Alice-->>Server: Authorize authentication (/extoidc authorize)
+    par
+      Server->>Provider:Authentication Response & claim data
+      Provider->>Provider:Save session JWT ID and<br>authentication status to in-memory record
+    and
+      Server->>Server:Revoke extoidc JWT
+    end
+	end
+	Alice->>UploadResource:Uploads chunk using tus.io spec, provides session JWT
+	UploadResource->>UploadResource: Verifies session JWT is authenticated and<br> discards in-memory record of session JWT
+	UploadResource-->>Alice: Returns "stapled" session JWT marked as authenticated
+	loop
+		Alice->>UploadResource: Uploads chunk using tus.io spec, providing stapled session JWT
+	end
+	Alice->>Server: Sends upload resource URL as<br> reference to file in IRC message
+```
