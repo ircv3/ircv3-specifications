@@ -37,7 +37,7 @@ The client SHALL utilize the `extoidc token` command to issue a single-use token
 
 The client SHALL present the token to the Relying Party to begin an authentication session.
 
-The Relying Party MAY send an Authentication Request to the server to begin a CIBA session, and SHALL present the token as a `login_token_hint`.
+The Relying Party MAY send an Authentication Request to the server to begin a CIBA session, and SHALL present the token as a `login_hint_token`.
 
 Upon receipt of an Authentication Request, the server SHALL validate the signature and ID of the token. Once validated, the server SHALL notify the client of a pending authorization request with a `standard-reply` in the following format:
 
@@ -113,10 +113,10 @@ After the failure is consumed by the Relying Party, the server and client SHALL 
 
 This subcommand fetches the info of the Relying Party as registered with the server, as well as the requested claim scopes and other information of the authentication request for a given session ID.
 
-It should provide the information in an array containing the following items:
+It should provide the information in a JSON string array containing the following items:
 
 0. A relying party metadata object, as defined in [OpenID Connect Dynamic Client Registration § 2](https://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata)
-1. The full [Authentication Request](https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) sent by the Relying Party, **with the exception of the login_token_hint, which contains the shared secret.**
+1. The full [Authentication Request](https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) sent by the Relying Party, **with the exception of the login_hint_token, which contains the shared secret.**
 
 ### `extoidc config`
 
