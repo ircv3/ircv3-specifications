@@ -49,7 +49,10 @@ This specification uses [standard replies][] framework.
 ### Capability
 
 This specification adds the `draft/account-registration` capability, whose
-presence signifies that the server accepts the `REGISTER` command.
+presence signifies that the server supports account registration.
+
+The client MUST enable the `draft/account-registration` capability before using
+the `REGISTER` and `VERIFY` commands defined by this specification.
 
 The capability MAY be advertised by servers with an OPTIONAL value:
 a comma (`,`) (0x2C) separated list of tokens. Each token consists of a key
@@ -66,15 +69,23 @@ The only defined capability keys so far are:
  * `before-connect` - if present, indicates the server supports early
    registration, so it MUST NOT use
    `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`
- * `email-required` - if present, registrations require a valid email address
-   to process
+
  * `custom-account-name` - if present, the account name can be different
    from the user's current nickname
 
+ * `email-required` - if present, registrations require a valid email address
+   to process
+
+* `max-password-length=<num>` - if present, passwords are restricted to a
+  maximum length of `<num>` bytes. `<num>` MUST be a non-zero positive integer.
+
+* `min-password-length=<num>` - if present, passwords are restricted to a
+  minimum length of `<num>` bytes. `<num>` MUST be a non-zero positive integer.
+
 ### Commands
 
-    REGISTER <account> {<email> | "*"} <password>
-    
+    REGISTER {<account> | "*"} {<email> | "*"} <password>
+
 The `REGISTER` command informs the server of a request to register
 an account named for the current nick of the requestor.
 
@@ -88,10 +99,12 @@ If the client sends `REGISTER` before completing connection registration,
 and receives a `FAIL REGISTER COMPLETE_CONNECTION_REQUIRED`, it SHOULD make
 a second attempt after it receives the welcome message.
 
-    VERIFY <account> <code>
+    VERIFY {<account> | "*"} <code>
     
 The `VERIFY` command completes a registration that required verification
 (eg. via email or CAPTCHA).
+
+If `<account>` is `*`, then this value is the user's current nickname.
 
 ### Responses
 
