@@ -76,7 +76,8 @@ The server will send a 906 numeric.
 
 If authentication fails, a 904 or 905 numeric will be sent and the
 client MAY retry from the `AUTHENTICATE <mechanism>` command.
-If authentication is successful, a 900 and 903 numeric will be sent.
+If authentication is successful, the server MAY send a 900 numeric and then
+MUST send a 903 numeric.
 
 If the client attempts to issue the AUTHENTICATE command after already
 authenticating successfully, the server MUST reject it with a 907 numeric.
