@@ -24,7 +24,7 @@ When a server relays a client's chat message (`PRIVMSG` or `NOTICE`) to other cl
 :nick!user@host PRIVMSG #channel :hello world\r\n
 ```
 
-In this example, `nick!user@host` is the client's NUH (tuple of nickname, username/ident, and hostname, sent as the "source" or "prefix" of the relayed message. `#channel` is the target, and `hello world` is the message content. The total budget for the relayed message is 512 bytes. In order for the client to ensure that its message can be relayed without truncation or rejection for exceeding the 512-byte limit, it must be able to compute the total length of the metadata that the server will add to the message.
+In this example, `nick!user@host` is the client's NUH (tuple of nickname, username/ident, and hostname, sent as the "source" or "prefix" of the relayed message), `#channel` is the target, and `hello world` is the message content. The total budget for the relayed message is 512 bytes. In order for the client to ensure that its message can be relayed without truncation or rejection for exceeding the 512-byte limit, it must be able to compute the total length of the metadata that the server will add to the message.
 
 The client typically has direct visibility into the length of the message target, since it sends it in the outgoing message to the server. Furthermore, the client generally has an accurate view of its own nickname as assigned by the server, first from the `001 RPL_WELCOME` line received after connection registration and then from `NICK` lines pushed to the client on any nickname update. This leaves the user and hostname components. At present, there is no robust mechanism for the client to track the values of these components, which are assigned by the server as part of connection registration and may be updated unilaterally by the server at any time. Various workarounds exist in the wild, such as sending `USERHOST` or `WHO` for for the client's own nickname after connection registration, or using the [`chghost`](/specs/extensions/chghost.html) capability. However, all such methods suffer from one or more of the following problems:
 
@@ -39,7 +39,7 @@ This specification introduces a new capability, `draft/whoami`, and a new comman
 The `WHOAMI` command is sent under the following circumstances:
 
 1. If the client requested the capability during connection registration, as part of the registration burst, between the final `005 RPL_ISUPPORT` and the beginning of the `LUSERS` numerics (typically beginning with `251 RPL_LUSERCLIENT`)
-2. Any time after connection registration when the client's NUH changes (for example, a nickname change, or the activation or deactivation of a vhost or cloak)
+2. Any time after connection registration when the client's NUH changes (for example, a nickname change, or the activation or deactivation of a vhost or cloak), whether in response to an explicit client action or not
 
 It has the following syntax:
 
@@ -82,7 +82,13 @@ A client enables a vhost and receives `WHOAMI` reflecting their new hostname:
 
 ```
 C: PRIVMSG HostServ :SET alice mush.room
-S: :alice!~u@mush.room WHOAMI
+S: :alice_!~u@mush.room WHOAMI
+```
+
+A server administrator deactivates the client's vhost, causing the client to receive `WHOAMI` without explicit action:
+
+```
+S: :alice_!~u@bery6muzcsynw.irc WHOAMI
 ```
 
 ## Implementation considerations
