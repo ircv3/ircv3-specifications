@@ -30,6 +30,7 @@ The client typically has direct visibility into the length of the message target
 
 * Server implementations may penalize or delay the client for sending the command (`WHO`)
 * The response type is not guaranteed to contain the actual username and hostname seen by the server (`USERHOST`)
+* There is a window in between completing connection registration and receiving the desired response in which the NUH is not known, necessitating use of a fallback value (`WHO` and `USERHOST`)
 * The client is not guaranteed to receive updates about changes to their hostname (`WHO`, `USERHOST`, and even `CHGHOST`, where updates about the client's own NUH are only mandated at the SHOULD level)
 
 ## Description
