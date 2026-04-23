@@ -25,19 +25,21 @@ The final version of the specification will use an unprefixed capability name, I
 
 This specification introduces the ability for clients to request authentication tokens which may be passed to other services, and for those services to be able to validate said tokens and retrieve a list of pre-configured authorization claims for the token.
 
-Previous attempts have been made to specify authentication to external (non-IRC) services, however none of them provide robust security and leave the validation aspect implementation-defined. This specification aims to solve these challenges by defining both the means of generating and validating a token, as well as a workflow that works best with the most secure token type (single-use OTPs) but can be extended for stateless servers to support something else instead (such as JWT). Generated tokens are associated with any number of claims and are tied to one specific pre-defined (by network opers) external service to prevent token confusion attacks wherein a token generated for one service is passed to a different one to exploit differing sets of per-service claims. This is meant to be a framework that other specifications as well as custom per-network services can use to handle authentication and authorization decisions for external services in a well-defined and consistent manner.
+There are two primary issues surrounding an authentication layer meant to be interoperable among many parties: security and well-defined APIs that each party is able to use to operate on tokens. This specification aims to solve these challenges by defining both the means of generating and validating a token, as well as a workflow that works best with the most secure token type (single-use OTPs) but can be extended for stateless servers to support something else instead (such as JWT). Generated tokens are associated with any number of claims and are tied to one specific pre-defined (by network opers) external service to prevent token confusion attacks wherein a token generated for one service is passed to a different one to exploit differing sets of per-service claims. This is meant to be a framework that other specifications as well as custom per-network services can use to handle authentication and authorization decisions for external services in a well-defined and consistent manner.
 
 This specification makes no assumptions that the external service is run by the same people who run the network vs. a 3rd party. It is also not tied exclusively to HTTP, although generated tokens are certainly usable there via e.g. the Authorization header. Token validation runs through the same IRC endpoint that clients use to avoid the need for networks to deploy additional services specifically for this specification.
 
 ## Dependencies
 
-This specification depends on the [`batch`][] capability which MUST be negotiated to use the `TOKEN GENERATE` or `TOKEN VALIDATE` commands. This specification additionally defines the optional `draft/authtoken` capability. The order of capability negotiation is not significant and MUST NOT be enforced.
+This specification depends on the [`batch`][] capability which MUST be negotiated to use the `TOKEN` command. This specification additionally defines the `draft/authtoken` capability. The order of capability negotiation is not significant and MUST NOT be enforced.
 
 This specification additionally makes use of the [standard replies][] and [client-initiated batch][] frameworks.
 
 ## Capability
 
-To allow for authentication tokens larger than one IRC protocol line, servers MAY support and advertise the `draft/authtoken` capability. If a server does not advertise this capability, it MUST NOT generate any tokens longer than 200 bytes in response to a `TOKEN GENERATE` command.
+If a client negotiates the `draft/authtoken` capability prior to completing registration with the network, the output of the `TOKEN SERVICELIST` subcommand MUST be attached to the registration burst any time after sending ISUPPORT and before sending any LUSERS or MOTD output.
+
+Clients who negotiate the `draft/authtoken` capability MUST additionally be notified on any changes to the service list. These notifications take the form `TOKEN NEW <service key> <url>` and `TOKEN DEL <service key>`. Servers MAY omit `TOKEN DEL` if an existing service is changing its URL (sending only `TOKEN NEW` with the updated URL).
 
 Servers MUST NOT require that clients negotiate the `draft/authtoken` capability before making use of the `TOKEN` command.
 
@@ -81,36 +83,33 @@ Syntax:
 TOKEN SERVICELIST
 ```
 
-The `TOKEN SERVICELIST` subcommand provides a list of all recognized service keys as well as their corresponding URLs. The description parameter provides some sort of description about the service.
+The `TOKEN SERVICELIST` subcommand provides a list of all recognized service keys as well as their corresponding URLs. The description parameter provides some sort of description about the service. This command provides the main discoverability mechanism for which services are defined on the network, avoiding the need for per-service ISUPPORT tokens or informational capabilities.
 
-Each line of output is one service with the following syntax:
+When receiving the `TOKEN SERVICELIST` command or providing an automatic service listing during a registration burst, the server MUST reply with a list of one or more services inside of a `draft/authtoken` batch. Both parameters in the `BATCH` message MUST be set to asterisk (`*`). If no services are defined, the server MUST reply with a `NOTE TOKEN NO_SERVICES` message.
 
-```
-NOTE TOKEN SERVICE <service> <url> :<description>
-```
-
-After all lines of output are sent, the server MUST send the following `NOTE` message:
+Each service is a `TOKEN` message with the following syntax:
 
 ```
-NOTE TOKEN END_OF_LIST :End of service list
+TOKEN SERVICE <service> <url> :<description>
 ```
 
-The text of the final parameter MAY vary wildly between implementations.
+URLs MUST be 250 bytes in length or less, in order to ensure adequate space within the IRC protocol line for the description parameter in this message and the token parameter on other `TOKEN` messages for single-line tokens. The description parameter is a textual description of the service as defined by the server's operators.
 
 *[[Begin non-normative example--*
 
-A user sends `TOKEN SERVICELIST` to list all services and receives the following output. One line is for the draft FILEHOST service and the other is for a user-defined QDB service.
+A user sends `TOKEN SERVICELIST` to list all services and receives the following output. One line is for the draft FILEHOST service and the other is for a user-defined QDB service under the vendor "example.com" namespace.
 
 ```
-NOTE TOKEN SERVICE FILEHOST https://upload.example.com :file upload service
-NOTE TOKEN SERVICE QDB https://qdb.example.com :Quote Database
-NOTE TOKEN END_OF_LIST :End of service list
+BATCH +a draft/authtoken * *
+@batch=a TOKEN SERVICE FILEHOST https://upload.example.com :file upload service
+@batch=a TOKEN SERVICE example.com/QDB https://qdb.example.com :Quote Database
+BATCH -a
 ```
 
-A user sends `TOKEN SERVICELIST` on a network where no services are configured. As such, they receive only the end-of-list marker:
+A user sends `TOKEN SERVICELIST` on a network where no services are configured. As such, they receive a note that no services are defined.
 
 ```
-NOTE TOKEN END_OF_LIST foobar :End of service list
+NOTE TOKEN NO_SERVICES :No services are defined for this network.
 ```
 
 *--End non-normative example]]*
@@ -219,6 +218,8 @@ If a non-batched `TOKEN VALIDATE` command exceeds IRC line length protocol limit
 
 The reply to a batched `TOKEN VALIDATE` command is equivalent to that of a non-batched `TOKEN VALIDATE` command, and all of the other considerations of non-batched `TOKEN VALIDATE` commands apply to batched ones as well, such as servers validating the service and URL parameters and potentially requiring some level of authentication before accepting the command.
 
+Clients MUST NOT send batched `TOKEN VALIDATE` commands for tokens that are 200 bytes or less in length.
+
 Example of a client sending a multiline token.
 
 ```
@@ -239,7 +240,7 @@ BATCH -a
 
 ## Service keys
 
-Service keys are specified by IRCv3 extensions, vendor-specific types MUST be prefixed the same way as how vendor-specific capabilities are prefixed. See [capability negotiation][] for the exact details.
+Service keys are specified by IRCv3 extensions; vendor-specific types MUST be prefixed the same way as how vendor-specific capabilities are prefixed. Custom user-defined services provided by networks SHOULD NOT use unprefixed names for their service keys. See [capability negotiation][] for the exact details.
 
 The full service key MUST be treated as a case-insensitive identifier.
 
@@ -264,19 +265,19 @@ This section is non-normative.
 
 For maximum security, generated tokens should be single-use and have short expiration periods (10-15 minutes) before they can no longer be validated. Providing a random string as the token is sufficient for this, instead of some other format where claims are embedded directly within the token. When listing the claims for such a random string token in the reply to `TOKEN VERIFY`, evaluating things such as channel access at the time `TOKEN VERIFY` is sent rather than caching the original value may make sense so that events such as temporary opping or split-riding can be used to elevate privileges with an external service. Alternatively, make use of the ACLs in the services database rather than actual current op access on a channel to derive permissions-based claims.
 
-For tokens that carry claim data, such as JWTs, the expiration period should similarly be short. For servers which carry state data regarding generated tokens, the "jti" claim for JWTs (or a similar type of claim for other token types) should be used to prevent token re-use.
+For tokens that carry claim data, such as JWTs, the expiration period should similarly be short. For servers which carry state data regarding generated tokens, the "jti" claim for JWTs (or a similar type of claim for other token types) should be used to prevent token re-use. All such tokens containing claim data should be signed. For tokens where interactive validation is expected, signing with a secret key is sufficient as the key does not need to be shared between multiple parties. For tokens where non-interactive validation is possible or expected, signing with public key encryption is preferable to avoid sharing secrets between multiple parties and so other parties cannot spoof signed tokens. If signing is employed with shared secrets despite the previous advice, a different shared secret should be used per service.
 
 ## External service implementation considerations
 
 This section is non-normative.
 
-This specification defines a validation flow wherein the external service receives a token via some means from a client, connects to an IRC port, and issues a `TOKEN VALIDATE` command to transform that token into a list of claims. This is robust and works with all token types potentially generated by `TOKEN GENERATE`, and allows the external service to delegate token validity checking to the IRC server (allowing for token revocation to occur and avoiding other potential causes of security issues).
+This specification defines a validation flow wherein the external service receives a token via some means from a client, connects to an IRC port, and issues a `TOKEN VALIDATE` command to transform that token into a list of claims. This is robust and works with all token types potentially generated by `TOKEN GENERATE` (including claims-bearing tokens such as JWTs), and allows the external service to delegate token validity checking to the IRC server (allowing for token revocation to occur and avoiding other potential causes of security issues).
 
 If a service chooses to validate tokens itself rather than using `TOKEN VALIDATE`, it should keep all of the following in mind to prevent security issues:
 
 - The service must validate that the token is intended for that service, to avoid token confusion attacks. Using URL-based validation (i.e. checking that one of the claims of the token matches the URL of the service) is a good way to do this. For JWT, this would be the "aud" claim.
 - The service must validate that the token came from the IRC server it is expecting tokens to come from. For JWT, this would be the "iss" claim.
-- The service must validate that the token is signed by the IRC server with a secure algorithm and that the signature is valid. The signing keys (recommended) or secrets (not recommended) should be pre-shared out of band.
+- The service must validate that the token is signed by the IRC server with a secure algorithm and that the signature is valid. Public keys used to validate signatures should be pre-shared out of band.
 - The service should keep track of tokens it has already seen to prevent token replay attacks--tokens should be single-use. For JWT, this would be the "jti" claim, along with some stateful tracking of previously-seen IDs.
 - The service must validate that the token has not expired. For JWT, this would be a combination of the "exp" and "nbf" claims.
 - The service should validate that the token was generated recently (e.g. within the past 10-15 minutes), to discourage the use of long-lived tokens and prevent vulnerabilities from leaked tokens due to lack of ability to check revocation. For JWT, this would be the "iat" claim.
@@ -299,21 +300,19 @@ The following standard replies are defined with these parameters. The text of th
 | `FAIL` | `TIMEOUT`          | `:Timeout exceeded while waiting for the complete token to validate`                |
 | `FAIL` | `UNKNOWN_COMMAND`  | `<command> :No such subcommand TOKEN <command>`                                     |
 | `FAIL` | `UNKNOWN_SERVICE`  | `<service> :No external service named <service> is defined`                         |
-| `NOTE` | `END_OF_LIST`      | `:End of service/claims list`                                                       |
-| `NOTE` | `SERVICE`          | `<service> <url> :<description>`                                                    |
+| `NOTE` | `NO_SERVICES`      | `:No services are defined for this network`                                         |
 
 Reference table of standard replies codes and the TOKEN subcommands that produce them:
 
 | Code               | SERVICELIST | GENERATE | VALIDATE | Other |
 | ------------------ | :---------: | :------: | :------: | :---: |
 | `ACCOUNT_REQUIRED` |             | *        |          |       |
-| `END_OF_LIST`      | *           |          |          |       |
 | `INTERNAL_ERROR`   | *           | *        | *        |       |
 | `INVALID_SCOPE`    |             | *        |          |       |
 | `INVALID_TOKEN`    |             |          | *        |       |
 | `NEED_CAPABILITY`  |             | *        | *        |       |
 | `NO_PERMISSIONS`   |             | *        | *        |       |
-| `SERVICE`          | *           |          |          |       |
+| `NO_SERVICES`      | *           |          |          |       |
 | `TIMEOUT`          |             |          | *        |       |
 | `UNKNOWN_COMMAND`  |             |          |          | *     |
 | `UNKNOWN_SERVICE`  |             | *        |          |       |
