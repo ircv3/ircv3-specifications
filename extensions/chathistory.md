@@ -66,6 +66,8 @@ The `target` parameter specifies a single buffer (channel or nickname) from whic
 
 A `timestamp` parameter MUST have the format `timestamp=YYYY-MM-DDThh:mm:ss.sssZ`, as in the [server-time][server-time] extension. A `msgid` parameter MUST have the format `msgid=foobar`, as in the [message-ids][message-ids] extension.
 
+A `limit` parameter MUST be a positive integer. Servers should attempt to return exactly `limit` messages (or as many as available), but MAY return more or fewer due to implementation constraints. The `draft/chathistory-end` tag indicates whether more messages are available.
+
 If the `batch` capability was negotiated, the server MUST reply to a successful `CHATHISTORY` command using a [`batch`][batch]. For subcommands that return message history (i.e. all subcommands other than `TARGETS`), the batch MUST have type `chathistory` and take a single additional parameter, the canonical name of the target being queried. For `TARGETS`, the batch MUST have type `draft/chathistory-targets`. If no content exists to return, the server SHOULD return an empty batch in order to avoid the client waiting for a reply.
 
 If the client has not negotiated the `draft/event-playback` capability, the server MUST NOT send any lines other than `PRIVMSG` and `NOTICE` in the reply batch, unless allowed by a capability negotiated by the client. If the client has negotiated `draft/event-playback`, the server SHOULD send additional lines relevant to the chat history, including but not limited to `TAGMSG`, `JOIN`, `PART`, `QUIT`, `MODE`, `TOPIC`, and `NICK`.
@@ -129,6 +131,10 @@ Servers SHOULD provide clients with a consistent message order that is valid acr
 
 The server may choose to return additional, related messages alongside regular chat history. Such messages MUST be tagged with the `draft/chathistory-context` tag and MUST immediately follow their parent message. Context messages MUST NOT be counted towards the message limit. Context messages are sent at the server's discretion and MAY include reacts, redacts, edits, etc.
 
+#### `draft/chathistory-end` tag
+
+To signal that no more messages are available, servers SHOULD attach a `draft/chathistory-end` message tag without a value to the first `BATCH` message in the `chathistory` or `draft/chathistory-targets` batch. This indicates to the client that trying to request the next page of results will return an empty batch.
+
 #### Errors and Warnings
 Errors are returned using the standard replies syntax.
 
@@ -158,7 +164,7 @@ If a client used a reference type (`timestamp=` or `msgid=`) the server does not
 Requesting the latest conversation upon joining a channel
 ~~~~
 [c] CHATHISTORY LATEST #channel * 50
-[s] :irc.host BATCH +ID chathistory #channel
+[s] @draft/chathistory-end :irc.host BATCH +ID chathistory #channel
 [s] @batch=ID;msgid=1234;time=2019-01-04T14:33:26.123Z :nick!ident@host PRIVMSG #channel :message
 [s] @batch=ID;msgid=1235;time=2019-01-04T14:33:38.123Z :nick!ident@host NOTICE #channel :message
 [s] @batch=ID;msgid=1238;time=2019-01-04T14:34:17.123Z;+client-tag=val :nick!ident@host PRIVMSG #channel :ACTION message
@@ -168,7 +174,7 @@ Requesting the latest conversation upon joining a channel
 Requesting further message history than our client currently has
 ~~~~
 [c] CHATHISTORY BEFORE bob timestamp=2019-01-04T14:34:17.123Z 50
-[s] :irc.host BATCH +ID chathistory bob
+[s] @draft/chathistory-end :irc.host BATCH +ID chathistory bob
 [s] @batch=ID;msgid=1234;time=2019-01-04T14:34:09.123Z :bob!ident@host PRIVMSG alice :hello
 [s] @batch=ID;msgid=1235;time=2019-01-04T14:34:10.123Z :alice!ident@host PRIVMSG bob :hi! how are you?
 [s] @batch=ID;msgid=1238;time=2019-01-04T14:34:16.123Z; :bob!ident@host PRIVMSG alice :I'm good, thank you!
@@ -197,7 +203,7 @@ A client with full support for BATCH, message IDs, and deduplication can fill in
         retrieved_count += len(messages)
         earliest_message = messages[0]
         display(deduplicate_messages)
-        if earliest_message.timestamp < lower_bound:
+        if earliest_message.timestamp < lower_bound or 'draft/chathistory-end' in messages.tags:
             break
         upper_bound = earliest_message.msgid
 
