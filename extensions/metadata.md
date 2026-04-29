@@ -239,7 +239,7 @@ If the user cannot clear keys on the given target, the server responds with `FAI
 
 Servers MAY omit certain keys which are considered not settable by the requesting user, or respond with `FAIL METADATA KEY_NO_PERMISSION` for each of those keys.
 
-If the request is successful, the server responds with a `metadata` batch containing one `RPL_KEYVALUE` event per cleared key, and failure messages if any.
+If the request is successful, the server responds with a `metadata` batch containing one `RPL_KEYNOTSET` event per cleared key, and failure messages if any.
 
 *Failures*: `FAIL METADATA KEY_NO_PERMISSION`
 
@@ -769,3 +769,7 @@ This specification replaces an earlier deprecated `metadata-notify` specificatio
 * Moved `ERR_*` replies to Standard Replies format
 * Use of batch instead of `RPL_METADATAEND` in situations where more than one `RPL_KEYVALUE` is sent.
 * Non-standard keys should now use a vendor prefix
+
+## Errata
+
+* A previous version of this specification sent `RPL_KEYVALUE` as the response to `METADATA CLEAR`. This was changed to `RPL_KEYNOTSET` to simplify client processsing.
