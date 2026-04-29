@@ -79,6 +79,8 @@ Each line feed used to join line messages contributes one byte towards the `max-
 
 All lines contribute towards the `max-lines` limit, including lines that use the `draft/multiline-concat` tag.
 
+Each message in the batch starts with the default formatting state; as if messages were joined by a format reset character (`\x0f`).
+
 Servers MUST NOT reject blank lines other than in the following cases:
 
 * Clients MUST NOT send blank lines with the `draft/multiline-concat` tag.
@@ -186,6 +188,8 @@ This section is non-normative.
 
 NOTE: In these examples, `<SPACE>` indicates a space character which would otherwise not be clearly visible.
 
+### Normal usage
+
 Client sending a multiline batch
 
     Client: BATCH +123 draft/multiline #channel
@@ -210,15 +214,51 @@ Server sending messages to clients without multiline support
     Server: @account=account :n!u@h PRIVMSG #channel :how is<SPACE>
     Server: @account=account :n!u@h PRIVMSG #channel :everyone?
 
-Final concatenated message
+Final concatenated message:
 
-    hello
+<pre>
+hello
 
-    how is everyone?
+how is everyone?
+</pre>
 
 This example is also valid if every instance of PRIVMSG is replaced with NOTICE.
 
+### Formatting
+
+Formatting control codes must be repeated at the beginning of each line:
+
+    Client: BATCH +123 draft/multiline #channel
+    Client: @batch=123 PRIVMSG #channel :this is not bold, <0x02>but this is
+    Client: @batch=123 PRIVMSG #channel :<0x02>and this is still bold
+    Client: @batch=123 PRIVMSG #channel :but this is not
+    Client: BATCH -123
+
+Final concatenated message:
+
+<pre>
+this is not bold <strong>but this is</strong>
+<strong>and this is still bold</strong>
+but this is not
+</pre>
+
 ---
+
+And this works the same
+
+    Client: BATCH +123 draft/multiline #channel
+    Client: @batch=123 PRIVMSG #channel :this is not bold, <0x02>but this is,<SPACE>
+    Client: @batch=123;draft/multiline-concat PRIVMSG #channel :<0x02>this is still bold,<SPACE>
+    Client: @batch=123;draft/multiline-concat PRIVMSG #channel :but this is not
+    Client: BATCH -123
+
+Final concatenated message:
+
+<pre>
+this is not bold <strong>but this is, and this is still bold </strong>but this is not
+</pre>
+
+### Error cases
 
 Invalid multiline batch target
 
