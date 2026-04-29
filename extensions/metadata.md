@@ -769,3 +769,7 @@ This specification replaces an earlier deprecated `metadata-notify` specificatio
 * Moved `ERR_*` replies to Standard Replies format
 * Use of batch instead of `RPL_METADATAEND` in situations where more than one `RPL_KEYVALUE` is sent.
 * Non-standard keys should now use a vendor prefix
+
+## Errata
+
+* A previous version of this specification sent `RPL_KEYVALUE` as the response to `METADATA CLEAR`. This was changed to `RPL_KEYNOTSET` to simplify client processsing.
