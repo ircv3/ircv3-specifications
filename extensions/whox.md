@@ -77,6 +77,9 @@ MUST be used:
 - Any syntactically correct placeholder can be used for `[oplevel]` when the
   server doesn't support op levels, for instance `n/a`.
 
+Servers MAY return multiple or all applicable prefixes in the `[flags]` (`f`)
+field, regardless of whether [`multi-prefix`](multi-prefix.html) is enabled.
+
 Clients SHOULD ignore the values of the hop count (`d`) and the channel op
 level (`o`) fields, because they are ill-defined and unreliable.
 
