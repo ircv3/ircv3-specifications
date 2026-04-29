@@ -239,7 +239,7 @@ If the user cannot clear keys on the given target, the server responds with `FAI
 
 Servers MAY omit certain keys which are considered not settable by the requesting user, or respond with `FAIL METADATA KEY_NO_PERMISSION` for each of those keys.
 
-If the request is successful, the server responds with a `metadata` batch containing one `RPL_KEYVALUE` event per cleared key, and failure messages if any.
+If the request is successful, the server responds with a `metadata` batch containing one `RPL_KEYNOTSET` event per cleared key, and failure messages if any.
 
 *Failures*: `FAIL METADATA KEY_NO_PERMISSION`
 
