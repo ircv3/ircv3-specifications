@@ -228,6 +228,8 @@ A hyphen `-` (0x2D) indicates that a block is negated, i.e. when certain client-
 
 An empty or missing `CLIENTTAGDENY` matches the default case and indicates that all client-only tags are allowed.
 
+Servers MUST NOT advertise the same tag twice in the list, negated or otherwise.
+
 #### `CLIENTTAGDENY` examples
 
 An example where all client-only tags are allowed (omitting the token entirely is recommended instead)
