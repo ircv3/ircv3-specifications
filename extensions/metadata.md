@@ -224,7 +224,7 @@ Servers MAY respond to certain keys considered not settable by the requesting us
 
 Servers MAY respond with `FAIL METADATA RATE_LIMITED` and fail the request. When a client receives `FAIL METADATA RATE_LIMITED`, it SHOULD retry the `METADATA SET` request at a later time. If the `FAIL METADATA RATE_LIMITED` event contains the `<RetryAfter>` parameter, the parameter value MUST be a positive integer indicating the minimum number of seconds the client should wait before retrying the request.
 
-If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value if any, or `RPL_KEYNOTSET` if not.
+If the request is successful, the server carries out the requested change and responds with one `RPL_KEYVALUE` event, representing the new value if any, or `RPL_KEYNOTSET` if no value is set.
 This new value MAY differ from the one sent by the client.
 
 *Failures*: `FAIL METADATA LIMIT_REACHED`, `FAIL METADATA KEY_INVALID`, `FAIL METADATA KEY_NO_PERMISSION`, `FAIL METADATA RATE_LIMITED`, `FAIL METADATA KEY_NOT_SET`, `FAIL METADATA VALUE_INVALID`
@@ -767,5 +767,7 @@ This specification replaces an earlier deprecated `metadata-notify` specificatio
 * Rate limiting protocol mechanics.
 * Support for delayed synchronization and `METADATA SYNC`.
 * Moved `ERR_*` replies to Standard Replies format
+* The `RPL_KEYNOTSET(766)` numeric replaces the `ERR_NOMATCHINGKEY` numeric in previous versions. It is no longer an error response and has a different meaning. For the error response see the `KEY_NOT_SET` standard reply.
+* The numerics `RPL_METADATASUBOK(770)`, `RPL_METADATAUNSUBOK(771)`, `RPL_METADATASUBS(772)` changed from using a space separated final parameter `:<Key1> [<Key2> ...]` to a list of individual parameters `<Key1> [<Key2> ...]`.
 * Use of batch instead of `RPL_METADATAEND` in situations where more than one `RPL_KEYVALUE` is sent.
 * Non-standard keys should now use a vendor prefix
