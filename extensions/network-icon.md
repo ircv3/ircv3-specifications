@@ -10,7 +10,7 @@ copyrights:
   -
     name: "Sadie Powell"
     period: "2026"
-    email: "sadie@witchery.services"
+    email: "sadie@sadiepowell.dev"
 ---
 
 ## Notes for implementing work-in-progress version
