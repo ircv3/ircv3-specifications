@@ -13,10 +13,7 @@ copyrights:
 
 This is a work-in-progress specification.
 
-Software implementing this work-in-progress specification MUST NOT use the
-unprefixed `oper` tag name. Instead, implementations SHOULD use the
-`draft/oper` tag name to be interoperable with other software
-implementing a compatible work-in-progress version.
+Software implementing this work-in-progress specification MUST NOT use the unprefixed `oper` tag name. Instead, implementations SHOULD use the `draft/oper` tag name to be interoperable with other software implementing a compatible work-in-progress version.
 
 ## Description
 
@@ -24,8 +21,7 @@ The `draft/oper-tag` capability causes the server to add a [message tag][] to me
 
 The tag MUST be named `draft/oper`. The value of the tag, if specified, MUST identify the operator.
 
-The tag MUST be added by the ircd to all commands sent by a user (e.g. PRIVMSG,
-MODE, NOTICE, and all others) and SHOULD be added to any numeric replies sent on behalf of the user.
+The tag MUST be added by the ircd to all commands sent by a user (e.g. PRIVMSG, MODE, NOTICE, and all others) and SHOULD be added to any numeric replies sent on behalf of the user.
 
 Servers supporting this capability MAY be configured to restrict visibility of this tag or its value.
 
