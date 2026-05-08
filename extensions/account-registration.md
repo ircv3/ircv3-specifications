@@ -11,6 +11,10 @@ copyrights:
     name: "Val Lorentz"
     period: "2021"
     email: "progval+ircv3@progval.net"
+  -
+    name: "Sadie Powell"
+    period: "2026"
+    email: "sadie@sadiepowell.dev"
 ---
 
 ## Notes for implementing work-in-progress version
