@@ -7,6 +7,10 @@ copyrights:
     name: "David Schultz"
     period: "2022"
     email: "me@zpld.me"
+  -
+    name: "Sadie Powell"
+    period: "2026"
+    email: "sadie@sadiepowell.dev"
 ---
 
 ## Notes for implementing work-in-progress version
@@ -17,20 +21,21 @@ Software implementing this work-in-progress specification MUST NOT use the unpre
 
 ## Description
 
-The `draft/oper-tag` capability causes the server to add a [message tag][] to messages sent by a user who is currently an IRC operator.
+The `draft/oper-tag` capability causes the server to add the `draft/oper` and `draft/oper-role` [message tags][] to messages sent by a user who is currently an IRC operator.
 
-The tag MUST be named `draft/oper`. The value of the tag, if specified, MUST identify the operator.
+The `draft/oper` tag marks a user as an IRC operator. The value of this tag, if specified, MUST uniquely identify the operator.
 
-The tag MUST be added by the ircd to all commands sent by a user (e.g. PRIVMSG, MODE, NOTICE, and all others) and SHOULD be added to any numeric replies sent on behalf of the user.
+The `draft/oper-role` tag shows the role that a IRC operator has on a network (e.g. NetAdmin). This tag MUST only be sent on messages that have the `draft/oper`tag.
 
-Servers supporting this capability MAY be configured to restrict visibility of this tag or its value.
+Servers supporting this capability MAY be configured to restrict visibility of the tags or their values. For users who can see the tags they MUST be added by the IRC server to all commands sent by a user (e.g. `PRIVMSG`, `MODE`, `NOTICE`, etc) and SHOULD be added to any numeric replies sent on behalf of the user (e.g. `RPL_WHOSPCRPL`).
 
 ## Example
 
-Consider that I am identified to the `launchd` operator account while chatting with the `lunchd` nickname. I will send messages to three users with different configured levels of visibility.
+Consider that I am identified to the `launchd` operator account while chatting with the `lunchd` nickname. I will send messages to four users with different configured levels of visibility.
 
     @draft/oper=launchd :lunchd PRIVMSG full_access_friend :it's me!
     @draft/oper :lunchd PRIVMSG partial_access_friend :you can see I'm an oper
+    @draft/oper;draft/oper-role=NetAdmin :lunchd PRIVMSG partial_access_friend2 :you can see I'm an oper and my role
     :lunchd PRIVMSG unprivileged_friend :don't mind me
 
-[message tag]: ../extensions/message-tags
+[message tags]: ../extensions/message-tags
