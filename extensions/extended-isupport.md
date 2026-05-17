@@ -91,8 +91,6 @@ When the `draft/extended-isupport` capability is enabled, the syntax of an
                 /  ( key )                      ; flag form
                 /  ( "-" key )                  ; deletion form
 
-The `+=` delimiter is treated atomically and MUST NOT be split across two
-tokens.
 
 The append form is defined as byte-wise concatenation. The client
 performs no interpretation of either the current value or the appended
