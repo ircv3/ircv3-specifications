@@ -128,8 +128,8 @@ holds:
 - `KEY+=value` sets the value to the byte-wise concatenation of the
   current value and `value`. If no value is currently held (the token has
   not been advertised in this session, or was deleted), the result is
-  simply `value`; the server is responsible for emitting the appended
-  chunk without a leading separator in that case.
+  simply `value`. Whether the resulting bytes form a well-formed value
+  for the token is the token specification's concern, not this one's.
 - `-KEY` removes the value entirely; a subsequent `KEY+=value` then
   behaves as in the unset case above.
 - `KEY+=` (append form with an empty value) is a no-op.
@@ -177,7 +177,6 @@ the token's grammar.
 
 The resulting value held by the client is `foo,bar,baz,qux,quux,corge`. A
 later plain `=` resets the accumulation; a later `-EXAMPLELIST` clears
-it. If `EXAMPLELIST` were unset (or had just been deleted), the first
-chunk would use `=` without a leading separator: `EXAMPLELIST=qux,...`.
+it.
 
 [batch]: ../extensions/batch.html
