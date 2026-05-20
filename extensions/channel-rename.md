@@ -5,7 +5,7 @@ work-in-progress: true
 copyrights:
   -
     name: "Sadie Powell"
-    email: "sadie@witchery.services"
+    email: "sadie@sadiepowell.dev"
     period: "2017-2018"
   -
     name: "James Wheare"

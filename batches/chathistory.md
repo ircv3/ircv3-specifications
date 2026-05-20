@@ -7,7 +7,7 @@ copyrights:
   -
     name: "Sadie Powell"
     period: "2015"
-    email: "sadie@witchery.services"
+    email: "sadie@sadiepowell.dev"
 ---
 
 ## Description
