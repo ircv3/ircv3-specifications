@@ -89,11 +89,19 @@ A client receives a `CHGHOST` line for another user, which does not impact its o
 S: :bob!~u@pjux5q38e6a8i.irc CHGHOST ~u chess.board
 ```
 
+A client with the `setname` capability receives a `SETNAME` line for another user, which does not impact its own prefix or realname:
+
+```
+C: CAP REQ setname
+S: CAP ACK setname
+S: :bob!~u@chess.board SETNAME :Robert Tweedle
+```
+
 ## Implementation considerations
 
 This section is non-normative.
 
-Clients can determine whether a `CHGHOST` line applies to themselves using their view of their own nickname, tracked via `001` and `NICK` messages from the server. Servers implementing operations that may change nickname, user, and/or hostname simultaneously should ensure that clients receive the updates in an appropriate order.
+Clients can determine whether a `CHGHOST` or `SETNAME` line applies to themselves using their view of their own nickname, tracked via `001` and `NICK` messages from the server. Servers implementing operations that may change nickname, user, hostname, and/or realname simultaneously should ensure that clients receive the updates in an appropriate order.
 
 If the client knows its current prefix from parsing `SETNAME`, `NICK`, and `CHGHOST`, it can expect to successfully send messages of length `498 - (len(prefix) + len(target))` bytes. (The 14 missing bytes, relative to the 512-byte limit, are as follows: 1 byte for the `:` character preceding the relayed prefix, 1 byte for the space after it, 7 bytes for the command `PRIVMSG`, 1 byte for the space between command and target, 1 byte for the space between target and message content, 1 byte for the `:` character typically inserted to send the message content as a trailing parameter, and 2 bytes for the final `\r\n`.)
 
