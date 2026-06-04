@@ -75,7 +75,8 @@ Server supporting light and dark colour scheme icons:
     S: (image optimised for dark backgrounds)
 
 [`Accept`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept
-[HTTP client hints]: https://datatracker.ietf.org/doc/html/rfc8942
+[`Accept-CH`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept-CH)
+[HTTP client hints]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Client_hints
 [`Sec-CH-Prefers-Color-Scheme`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-Prefers-Color-Scheme
 [`Sec-CH-Prefers-Reduced-Motion`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-Prefers-Reduced-Motion
 [`Sec-CH-Prefers-Reduced-Transparency`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-Prefers-Reduced-Transparency
