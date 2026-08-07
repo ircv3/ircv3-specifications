@@ -91,6 +91,30 @@ When a client sends a private message to its own nick, `echo-message` will resul
 
 Both methods assume that the server will acknowledge all successful messages, or return a labeled error response, but differ in their attitude towards the semantics of sending and receiving.
 
+### Batched vs. non-batched responses
+
+This section is non-normative.
+
+Servers may give a batched or non-batched response, based on whether the reply consists of more than one message.
+
+However, it's difficult to know which will be generated in advance for a given request.
+
+It might depend on server configuration, modes, or in some cases, may change as a result of future extensions.
+
+For example, `MODE MyNick`:
+
+    Client: @label=sdGoz6kZKS MODE MyNick
+    Server: @label=sdGoz6kZKS :irc.example.com 221 MyNick +itwxz
+
+`MODE MyNick` as an oper:
+
+    Client: @label=CtmpopxyQ6 :irc.example.com BATCH +B0aLFZRI labeled-response
+    Server: @batch=B0aLFZRI :irc.example.com 221 MyNick +iostwxz
+    Server: @batch=B0aLFZRI :irc.example.com 008 MyNick +bcdfkoqsBOS :Server notice mask
+    Server: :irc.example.com BATCH -B0aLFZRI
+
+Clients may prefer to handle all labeled responses as if they were a BATCH, even in the single message case, for robustness and compatibility.
+
 ## Bouncer implementation considerations
 
 This section is non-normative.
