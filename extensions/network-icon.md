@@ -11,6 +11,10 @@ copyrights:
     name: "Sadie Powell"
     period: "2026"
     email: "sadie@sadiepowell.dev"
+  -
+    name: "internet-catte"
+    period: "2026"
+    email: "catte@libera.chat"
 ---
 
 ## Notes for implementing work-in-progress version
@@ -33,6 +37,10 @@ The URL MAY contain the `{size}` template variable that clients MAY replace with
 
 Servers MAY implement [extended-isupport](extended-isupport.html) to allow clients to fetch the network icon before connection registration.
 
+Clients MAY send the [`Accept`] HTTP header to indicate their supported image formats. Servers MAY support interpreting the [`Accept`] HTTP header to send clients their preferred image format.
+
+Servers MAY support requesting different icons using [HTTP client hints], including [`Sec-CH-Prefers-Color-Scheme`] for colour scheme-optimised variants, [`Sec-CH-Prefers-Reduced-Motion`] for non-animated variants, [`Sec-CH-Prefers-Reduced-Transparency`] for variants without a transparent background, and [`Sec-CH-DPR`] for high-DPI-optimised variants.
+
 ## Examples
 
 This section is non-normative.
@@ -44,3 +52,32 @@ Server using an SVG icon:
 Server using a PNG icon that can be scaled using the `{size}` template variable:
 
     S: :irc.example.org 005 * NETWORK=Example draft/ICON=https://example.net/icon.png?size={size} :are supported by this server
+
+Server supporting light and dark colour scheme icons:
+
+    S: :irc.example.org 005 * NETWORK=Example draft/ICON=https://example.org/icon.png :are supported by this server
+
+    C: GET /icon.png HTTP/1.1
+    C: Host: example.org
+
+    S: HTTP/1.1 200 OK
+    S: Content-Type: image/png
+    S: Accept-CH: Sec-CH-Prefers-Color-Scheme
+    S: Vary: Sec-CH-Prefers-Color-Scheme
+    S: (default image)
+
+    C: GET /icon.png HTTP/1.1
+    C: Host: example.org
+    C: Sec-CH-Prefers-Color-Scheme: "dark"
+
+    S: HTTP/1.1 200 OK
+    S: Content-Type: image/png
+    S: (image optimised for dark backgrounds)
+
+[`Accept`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept
+[`Accept-CH`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept-CH)
+[HTTP client hints]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Client_hints
+[`Sec-CH-Prefers-Color-Scheme`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-Prefers-Color-Scheme
+[`Sec-CH-Prefers-Reduced-Motion`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-Prefers-Reduced-Motion
+[`Sec-CH-Prefers-Reduced-Transparency`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-Prefers-Reduced-Transparency
+[`Sec-CH-DPR`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-DPR
