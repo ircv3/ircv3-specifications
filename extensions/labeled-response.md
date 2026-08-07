@@ -40,6 +40,8 @@ Clients requesting this capability indicate that they are capable of handling th
 
 Servers advertising this capability indicate that they are capable of handling the message tag described below from clients, and will use the same tag and value in their response. They will also send the batch type and `ACK` response described below where required.
 
+The value, if present, MUST be a comma (`,`) separated list of flags. The only currently defined flag is `strict`; its semantics are given below.
+
 ### Batch types
 
 This specification adds the `labeled-response` batch type, described below.
@@ -50,9 +52,9 @@ This specification adds the `label` message tag, which has a required value.
 
 This tag MAY be sent by a client for any messages that need to be correlated with a response from the server.
 
-For any message received from a client that includes this tag, the server MUST include the same tag and value in any response required from this message where it is feasible to do so. Servers MUST include the tag in exactly one logical message.
+For any message received from a client that includes this tag, the server MUST include the same tag and value in any response produced from this message, in cases where it is feasible to do so. Servers advertising the `strict` flag MUST include the tag and value in the absence of exceptional runtime conditions, such as a network partition or similar unrecoverable runtime error.
 
-If a response consists of more than one message, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `label` tag. The batch type MUST be one of:
+Servers MUST include the tag in at most one logical message. If a response consists of more than one message, a batch MUST be used to group them into a single logical response. The start of the batch MUST be tagged with the `label` tag. The batch type MUST be one of:
 
 * An existing type applicable to the entire response
 * `labeled-response`
@@ -80,7 +82,9 @@ There are some cases where a server might not produce a labeled response, or eve
 * the local server has already begun responding when the netsplit occurs, so the batched response ends early.
 * the local server receives a response from the remote server after the netsplit resolves, and sends a `WHOIS` response to the client, potentially without any label.
 
-Clients should handle these cases as they would normally for a server without support for labeled responses.
+In addition to this, some server implementations may not label certain responses even under normal operating conditions; this behavior is allowed by the basic `labeled-response` capability, but is disallowed under `labeled-response=strict`.
+
+Typical clients should handle these cases as they would normally for a server without support for labeled responses. Other clients that require a server supporting `labeled-response` with the `strict` flag may wish to process only labeled responses, discarding unlabeled ones. In either case, clients should be resilient to failure conditions on the server side; for example, in the event that a labeled response never arrives, they should not leak resources.
 
 In the case of `echo-message` (see example below), a client can use labeled responses to correlate a server's acknowledgment of their own messages with a temporary message displayed locally. The temporary message can be displayed to the user immediately in a pending state to reduce perceived lag, and then removed once a labeled response from the server is received.
 
