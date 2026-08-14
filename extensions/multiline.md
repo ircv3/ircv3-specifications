@@ -67,6 +67,7 @@ This specification adds the `draft/multiline` batch type.
 In addition to the base batch parameters (reference-tag and type) a multiline batch has one additional parameter, the target recipient.
 
 Multiline batches MUST only contain one or more PRIVMSG lines, or one or more NOTICE lines. These lines MUST all have a target which matches the batch target.
+All messages inside the batch MUST share the same source. The source of the opening BATCH messages MUST have the same source as the messages contained within the batch. 
 
 When receiving a well-formed multiline message batch, implementations MUST collect the message content from each line in the batch and wait until the full batch has been received before processing the message. Processing in this context refers to:
 
