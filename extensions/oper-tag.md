@@ -23,7 +23,7 @@ Software implementing this work-in-progress specification MUST NOT use the unpre
 
 The `draft/oper-tag` capability causes the server to add the `draft/oper` and `draft/oper-role` [message tags][] to messages sent by a user who is currently an IRC operator.
 
-The `draft/oper` tag marks a user as an IRC operator. The value of this tag, if specified, MUST uniquely identify the operator.
+The `draft/oper` tag marks a user as an IRC operator. The value of this tag, if specified, MUST be the operator's name (e.g. from the `<name>` parameter of the `OPER <name> <password>` command).
 
 The `draft/oper-role` tag shows the role that a IRC operator has on a network (e.g. NetAdmin). This role is purely descriptive and has no consistent meaning between networks. This tag MUST only be sent on messages that have the `draft/oper`tag.
 
