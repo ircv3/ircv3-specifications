@@ -25,7 +25,7 @@ The `draft/oper-tag` capability causes the server to add the `draft/oper` and `d
 
 The `draft/oper` tag marks a user as an IRC operator. The value of this tag, if specified, MUST uniquely identify the operator.
 
-The `draft/oper-role` tag shows the role that a IRC operator has on a network (e.g. NetAdmin). This tag MUST only be sent on messages that have the `draft/oper`tag.
+The `draft/oper-role` tag shows the role that a IRC operator has on a network (e.g. NetAdmin). This role is purely descriptive and has no consistent meaning between networks. This tag MUST only be sent on messages that have the `draft/oper`tag.
 
 Servers supporting this capability MAY be configured to restrict visibility of the tags or their values. For users who can see the tags they MUST be added by the IRC server to all commands sent by a user (e.g. `PRIVMSG`, `MODE`, `NOTICE`, etc) and SHOULD be added to any numeric replies sent on behalf of the user (e.g. `RPL_WHOSPCRPL`).
 
