@@ -80,7 +80,7 @@ e.g. by collapsing them into one message.
 Client MAY ignore the type and process messages one by one.
 For example, that happens if the type is unknown to the client.
 
-Current batch types are documented on the [IRCv3 registry`](/registry).
+Current batch types are documented on the [IRCv3 registry`](/registry#batches).
 
 To submit a new batch type please follow the extension submission procedure
 [found here](/participation.html).
