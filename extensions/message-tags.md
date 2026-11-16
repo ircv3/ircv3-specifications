@@ -97,7 +97,7 @@ But there is also a generic capability for negotiating tag usage.
 The `message-tags` capability allows clients to indicate support for
 receiving any well-formed tag, whether or not it is recognised or used. It also frees servers from having to filter individual message tags for each client response.
 
-The `message-tags` capability is the only guarantee that an implementation supports the full tag format. Following the robustness principle, implementations that use tags MUST support the full message tag format. However, implementations SHOULD NOT assume support for all tags when an individual tag capability is negotiated.
+The `message-tags` capability is the only guarantee that an implementation supports the full tag format. Following the robustness principle, implementations of the `message-tags` capability MUST support the full message tag format, including the ability to parse arbitrary tags at any point during the connection. However, implementations SHOULD NOT assume support for all tags when an individual tag capability is negotiated.
 
 This capability enables the use of client-only tags and the `TAGMSG` command, described below.
 
@@ -375,7 +375,7 @@ A `TAGMSG` sent by a client with an un-prefixed tag that has no specified behavi
 
 ## Errata
 
-Previous versions of this spec did not explicitly state that tag names are case-sensitive, though it was implied by their "opacity" 
+Previous versions of this spec did not explicitly state that tag names are case-sensitive, though it was implied by their "opacity".
 
 Previous versions of this spec did not specify that the full tag name MUST be parsed as
 an opaque identifier. This was added to improve client resiliency.
@@ -392,6 +392,8 @@ tag values.
 Previous versions of this spec did not specify the UTF8 encoding for tag values
 
 Previous versions of this spec did not define the `CLIENTTAGDENY` `RPL_ISUPPORT` token and were unclear about moderation allowances for client-only tags.
+
+Previous versions of this spec did not explicitly state that implementations of the `message-tags` capability MUST accept lines with arbitrary tags at any time.
 
 [rfc1459]: http://tools.ietf.org/html/rfc1459#section-2.3.1
 [privmsg]: https://tools.ietf.org/html/rfc2812#section-3.3.1
