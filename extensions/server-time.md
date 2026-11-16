@@ -38,7 +38,7 @@ Precision of the time is one millisecond.
 
 If the `time` is presented in a message received from a server, a client SHOULD treat the message as having occurred at the given time instead of its current time.
 
-Servers MAY include the timestamp in messages when they see fit but MUST NOT do so before acknowledging the client capability using `CAP ACK`.
+Servers MAY include the timestamp in messages when they see fit, but MUST NOT do so before the client has requested the `server-time` capability using `CAP REQ`, or otherwise indicated their ability to receive tags.
 Clients MAY choose to simplify parsing by accepting timestamps at any point in the connection (e.g. even before `CAP REQ`).
 
 Servers offering this capability for all messages SHOULD also offer the `echo-message` capability to allow clients to keep a consistent chronology of events.
@@ -62,4 +62,6 @@ John joined #chan during the leap second of June 2012 (notice the :60)
 
 ## Errata
 
-Previous versions of the specification didn't recommend `echo-message`
+Previous versions of the specification didn't recommend `echo-message`.
+
+Previous versions of this specification could have been interpreted as requiring servers to suppress the `time` tag on the `CAP ACK` line acknowledging the negotiation of `server-time`.
